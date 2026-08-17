@@ -1,0 +1,28 @@
+{
+  "paper": "PhysioAgent PoC (AGENT-04)",
+  "n_claims": 2,
+  "n_grounded": 2,
+  "n_artifact_mismatch": 0,
+  "n_ungrounded": 0,
+  "claims": [
+    {
+      "id": "mean_hr",
+      "statement": "mean heart rate (MLII), bpm",
+      "expect": 72.03,
+      "artifact": 72.03,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_rr",
+      "statement": "mean RR interval (MLII), ms",
+      "expect": 832.99,
+      "artifact": 832.9861,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ],
+  "unsourced_decimal_tokens": []
+}

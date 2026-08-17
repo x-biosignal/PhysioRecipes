@@ -1,0 +1,35 @@
+{
+  "id": "sleep-stage-sleepedf",
+  "title": "The spectral fingerprints of sleep stages, recovered against expert hypnograms",
+  "modality": ["eeg", "sleep", "spectral"],
+  "packages": ["PhysioEEG", "PhysioIO", "PhysioCore"],
+  "dataset": {
+    "name": "Sleep-EDF Database Expanded (sleep-cassette)",
+    "version": "1.0.0 (PhysioNet)",
+    "record": "SC4001 + SC4011 nights; EEG Fpz-Cz + Pz-Oz @ 100 Hz, 30 s epochs, expert-scored hypnograms",
+    "url": "https://physionet.org/content/sleep-edfx/1.0.0/",
+    "public": true,
+    "citation": "Kemp B, Zwinderman AH, Tuk B, Kamphuisen HAC, Oberye JJL. Analysis of a sleep-dependent neuronal feedback loop: the slow-wave microcontinuity of the EEG. IEEE Trans Biomed Eng. 2000;47(9):1185-94. Goldberger AL, et al. PhysioNet. Circulation. 2000;101(23):e215-20."
+  },
+  "proposition": "Grouped by the expert hypnogram, the ecosystem recovers the textbook per-stage EEG spectra: deep sleep (N3) is the most delta-dominated / slowest spectrum (relative delta 0.92 night 1, 0.91 night 2 - the highest of all five stages), the spectrum slows monotonically as sleep deepens (relative delta rises N1 < N2 < N3), and N2 carries the sigma-band spindle peak - reproduced across both nights.",
+  "opdag": ["readEDF", "eegSleepStage"],
+  "claims": [
+    { "id": "n3_reldelta_s1", "statement": "N3 relative delta power, night 1 (highest of all stages)", "value": 0.9221, "artifact": "artifacts/stage_signature_SC4001.csv", "status": "PASS" },
+    { "id": "n3_reldelta_s2", "statement": "N3 relative delta power, night 2 (reproduces the deep-sleep peak)", "value": 0.9111, "artifact": "artifacts/stage_signature_SC4011.csv", "status": "PASS" },
+    { "id": "deltarise_s1",   "statement": "relative delta increase from N1 to N3, night 1 (spectrum slows with depth)", "value": 0.2934, "artifact": "artifacts/stage_signature_SC4001.csv", "status": "PASS" },
+    { "id": "n2_relsigma_s1", "statement": "N2 relative sigma (spindle band) power, night 1 (peak among stages)", "value": 0.0204, "artifact": "artifacts/stage_signature_SC4001.csv", "status": "PASS" },
+    { "id": "n2_relsigma_s2", "statement": "N2 relative sigma (spindle band) power, night 2 (reproduces the spindle peak)", "value": 0.0282, "artifact": "artifacts/stage_signature_SC4011.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "Expert AASM manual sleep scoring - the hypnograms distributed with Sleep-EDF - used to group each 30 s epoch by its true stage",
+    "data": "REAL - Sleep-EDF Expanded (PhysioNet), nights SC4001 and SC4011, EEG Fpz-Cz + Pz-Oz",
+    "artifacts": ["artifacts/stage_signature_SC4001.csv", "artifacts/stage_signature_SC4011.csv", "artifacts/epochs_SC4001.csv", "artifacts/epochs_SC4011.csv", "artifacts/staging_agreement.csv"],
+    "all_pass": true,
+    "note": "Aggregate acceptance: the four canonical per-stage spectral relations hold in BOTH nights - (1) N3 has the highest relative delta of the five stages; (2) relative delta rises N1 < N2 < N3; (3) relative beta falls N1 > N2 > N3; (4) N2 has the highest relative sigma (spindle band). What does NOT reproduce, reported honestly: the built-in one-threshold spectral classifier does not match the expert hypnogram (agreement 0.089 / 0.048) - on these frontal, delta-dominated ambulatory spectra it collapses to N3 - so eegSleepStage is used here as the per-epoch spectral feature extractor, not as a validated scorer. Wake also sits off the depth ladder (relative delta ~0.81-0.85) because the frontal Fpz-Cz derivation picks up ocular/movement activity when awake; the fingerprint orders the SLEEP stages by depth, it does not separate wake."
+  },
+  "open_questions": [
+    { "q": "The convenience classifier in eegSleepStage (a single relative-power threshold) does not reproduce expert scoring on this ambulatory frontal montage (agreement < 10%); whether artifact rejection plus richer features/channels would recover clinical-grade automatic staging is a real question, but building an automatic scorer is out of this case's scope. Documented, not escalated.", "artifact": "artifacts/staging_agreement.csv", "escalate": null }
+  ],
+  "reference_tools": ["mne 1.12 (hypnogram annotation parsing only)"],
+  "status": "validated"
+}

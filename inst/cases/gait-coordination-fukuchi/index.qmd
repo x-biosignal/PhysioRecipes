@@ -1,0 +1,138 @@
+---
+title: "How the hip and knee coordinate in walking: continuous relative phase and vector coding"
+subtitle: "A worked inter-joint coordination case study on public sagittal gait kinematics"
+categories: [gait, biomechanics, coordination, kinematics, validated]
+author: "Yusuke Matsui"
+date: "2026-08-17"
+---
+
+> **What this case shows** — smoothness describes *one* joint; **coordination**
+> describes how *two* move together. On real **sagittal** hip and knee angles the
+> ecosystem recovers the same hip-knee coordination with two independent methods:
+> **continuous relative phase** gives a mean absolute relative phase of **84°**
+> (the joints are substantially *out of phase*, not in lockstep), and **vector
+> coding** finds the modal pattern is **distal / knee-led** (**0.36**), with
+> **in-phase 0.29**, **proximal / hip-led 0.20** and **anti-phase 0.15** — the
+> knee's large, fast swing excursion leading the smaller, slower hip arc.
+> **What reproduces, and what doesn't** — the coordination *structure* reproduces
+> (two methods agree); the coordination *variability* reported here is
+> **between-subject/speed**, not stride-to-stride motor noise, so no
+> treadmill-vs-overground difference is claimed. **Integrity note** — an earlier
+> version used the `…AngleX` columns, which in WBDS are the small non-sagittal
+> components, not flexion/extension; this corrected version uses the **sagittal Z
+> axis**, which changes the reading from "in-phase / hip-led" (an axis artefact)
+> to the knee-led, out-of-phase structure above.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — quantify inter-joint coordination in three moves: **phase-angle**
+each joint from its phase portrait → **relative phase** (CRP) or **coupling angle**
+(vector coding) between the pair → summarise as MARP / pattern proportions, and
+their **variability** across cycles.
+**Way of thinking** — coordination is a *relationship*, not a single trace: read
+CRP and vector coding *together* (they answer "how much out of phase" and "which
+joint leads"), pick the right **plane** (sagittal = the Z flexion axis here, not
+the small X component), and be strict that a pooled *variability* measures
+heterogeneity, not motor noise.
+**Ecosystem usage** — `continuousRelativePhase()`, `vectorCoding()`,
+`coordinationVariability()` (PhysioMoCap) on joint-angle time series from any
+reader (`readC3D`/`readMOT`/…) via `calculateJointAngles()`.
+:::
+
+## Proposition
+
+On real sagittal gait kinematics, continuous relative phase (MARP **84°**) and
+vector coding (distal / knee-led **0.36** the modal pattern, in-phase 0.29,
+proximal 0.20, anti-phase 0.15) recover the same hip-knee coordination — the
+knee's dominant swing excursion leading the hip, with the joints substantially out
+of phase — two independent methods agreeing on the structure.
+
+## Question & goal
+
+**The question is a movement-quality one.** Rehabilitation and sports science ask
+not just *how much* a joint moves but *how the joints coordinate* — hip-knee
+through swing and stance. The Fukuchi dataset was built to provide *reference gait
+kinematics* — hip, knee and ankle angles for 42 healthy adults across speeds and
+conditions — precisely so coordination and its norms can be studied. We ask: do
+CRP and vector coding, on these real sagittal angles, agree on the hip-knee
+coordination?
+
+## Challenge & approach
+
+Coordination methods are easy to compute and easy to misread — starting with the
+**plane**: the sagittal (flexion) angle is the Z axis (~40–68° range), not the
+small X component. We take the sagittal hip and knee angles over the gait cycle,
+compute the **continuous relative phase** (each joint's phase-plane angle, then
+their difference) and the **vector-coding coupling angle** (the angle-angle
+diagram's orientation, binned into in/anti/proximal/distal), and — carefully — the
+**coordination variability** across cycles, flagging that a cohort-pooled
+variability is not stride-to-stride motor noise.
+
+## Data
+
+**WBDS** (Fukuchi et al. 2018) — 42 adults, 3D motion capture, **sagittal**
+(`RHipAngleZ`, `RKneeAngleZ`) hip and knee angles over the gait cycle. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Hip-knee continuous relative phase through the gait cycle (left), the hip-knee
+angle-angle loop underlying vector coding (centre) and the between-cohort
+coordination variability (right).](artifacts/figure.png)
+
+*How to read this:* on the left, the CRP swings well away from zero — the joints
+move substantially out of phase through the cycle (MARP 84°). In the centre, the
+angle-angle loop; the vector-coding coupling angle at each step names the
+coordination (steep, knee-dominated segments = distal / knee-led). On the right,
+the deviation phase — a pooled cohort measure, not one person's strides.
+
+| quantity | value |
+|---|---|
+| MARP (hip-knee) | **84°** |
+| vector coding: distal / in-phase / proximal / anti-phase | **0.36 / 0.29 / 0.20 / 0.15** |
+| between-cohort deviation phase | ~35° (not stride-to-stride) |
+| treadmill trial-cycles analysed | 328 |
+
+## Conclusion
+
+Two independent coordination methods agree, on real sagittal gait, that the hip
+and knee are predominantly **knee-led (distal)** and substantially **out of
+phase** — the knee's large swing excursion leading the hip, not simple in-phase
+lockstep. The transferable takeaway: **read CRP and vector coding together to
+describe how joints coordinate, choose the correct plane, and be strict that a
+pooled variability measures heterogeneity, not the stride-to-stride motor noise
+that flags pathology.**
+
+## Open questions
+
+- Cycle-to-cycle coordination variability — the motor-control marker elevated in
+  injury and neurological disease — needs continuous multi-stride joint-angle
+  streams, which this ensemble-averaged dataset does not provide. *Documented, not
+  escalated.*
+
+## Using this in your own analysis
+
+| step | function | package |
+|---|---|---|
+| joint angles from markers/IMU | `calculateJointAngles()` | PhysioMoCap |
+| continuous relative phase (+ MARP) | `continuousRelativePhase()` | PhysioMoCap |
+| vector coding (coupling angle + patterns) | `vectorCoding()` | PhysioMoCap |
+| coordination variability | `coordinationVariability()` | PhysioMoCap |
+| inferential test on the angles | `rayleighTest()` / `watsonWilliamsTest()` | PhysioMoCap |
+
+**Choosing the parameters:** normalise each cycle to 0–100 %, pick the **plane**
+and joint pair whose coordination you care about (sagittal thigh-shank, hip-knee),
+and for variability use **cycles from one person at one speed** (stride-to-stride)
+— never a pooled cohort, which measures heterogeneity. Pair with the smoothness
+case (`adlReachTask` / SPARC) for single-signal quality.
+
+```r
+library(PhysioMoCap)
+crp <- continuousRelativePhase(hip_angle, knee_angle)   # + $marp
+vc  <- vectorCoding(hip_angle, knee_angle)              # $proportions
+coordinationVariability(hip_cycles, knee_cycles, "crp") # stride-to-stride SD
+```
+
+One line for the technical reader: every number traces to
+[`artifacts/coordination_summary.csv`](artifacts/coordination_summary.csv) and
+[`artifacts/coordination_variability.csv`](artifacts/coordination_variability.csv),
+re-checked by [`audit.py`](audit.py) and `tools/validate_case.py`.

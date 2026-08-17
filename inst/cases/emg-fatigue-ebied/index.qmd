@@ -1,0 +1,206 @@
+---
+title: "Muscle fatigue as a falling median frequency, recovered on real sustained-contraction EMG"
+subtitle: "A worked spectral-fatigue case study on public surface EMG"
+categories: [emg, fatigue, spectral, zenodo, validated]
+author: "Yusuke Matsui"
+date: "2026-08-12"
+---
+
+> **What this case shows** — as a muscle holds a heavy load and tires, the
+> ecosystem recovers the textbook **myoelectric fatigue signature**: the EMG
+> power spectrum slides toward lower frequencies, so its **median frequency**
+> falls over the 120-second hold. Across the cohort the median frequency drops
+> from **63.3 Hz to 58.2 Hz** (a **final/initial ratio of 0.92**), in **14 of
+> 15** subjects. **What reproduces, and what doesn't** — the *decline* reproduces
+> and is what fatigue research keys on; the **absolute** frequency numbers do
+> **not** transfer, because this recording was sampled at only 200 Hz with a
+> 50 Hz notch sitting inside the EMG band, which shifts where the median lands.
+> One subject (**sub4**) barely fatigues — reported, not hidden. **How to read
+> it** — left, one subject's median frequency trending down through the hold;
+> right, every subject's fatigue index (final ÷ initial frequency), with 1.0
+> meaning "no fatigue".
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — answer *"is this muscle fatiguing, and by how much?"* in three
+moves: **window** the EMG through the sustained effort → **track** the spectrum's
+median frequency window by window → **summarise** the change with a final-vs-initial
+index.
+**Way of thinking** — fatigue is a *trend within one recording*, not an absolute
+number: read the direction and size of the median-frequency shift, and trust it
+because a fixed acquisition (sampling rate, notch) cannot manufacture a downward
+slope. Report the subjects who don't fatigue rather than averaging them away.
+**Ecosystem usage** — chain one function per role, I/O → analysis
+(`PhysioExperiment` → `emgFatigue` → `emgFatigueIndex`), letting the shared data
+model carry the signal between steps. The final section turns this into a
+step-by-step you can adapt to your own EMG.
+:::
+
+## Proposition
+
+On real 120-second sustained-contraction surface EMG, the power-spectrum
+**median frequency (MDF) falls** over the hold — cohort mean final/initial ratio
+**0.918**, an **8.2 %** drop from **63.3 Hz** to **58.2 Hz** — the classic
+myoelectric fatigue signature, present in **14 of 15** subjects.
+
+## Question & goal
+
+**The question comes from the dataset's own design.** This dataset (Ebied et al.,
+2021) was collected for one purpose: to **analyse upper-limb muscle fatigue from
+multi-channel surface EMG**. Fifteen healthy subjects held a **6 kg** load with
+the elbow flexed to 90° for **120 seconds** — a protocol designed to *drive the
+muscle into fatigue* — while eight EMG channels recorded the effort. The
+physiology the protocol targets is well established: as a muscle fatigues, motor
+unit conduction velocity slows and firing patterns change, and the EMG power
+spectrum **compresses toward lower frequencies** — a *decrease* in its median
+frequency over time (De Luca, 1984). So we ask the dataset's own question: does
+the ecosystem recover that fatigue signature, and does it hold across the cohort
+rather than in a single lucky trace?
+
+## Challenge & approach
+
+Median frequency is noisy window to window, and its absolute value depends on the
+acquisition (sampling rate, filtering) — so fatigue must be read as a **trend
+within each recording**, not an absolute Hz value compared across setups. The
+recipe windows each channel through the hold, computes the spectrum's median
+frequency per window, and reduces the whole time course to one number — the ratio
+of the final to the initial median frequency:
+
+```
+PhysioExperiment(raw = time × 8 channels, sr = 200)  →  emgFatigue()  →  emgFatigueIndex()
+```
+
+`emgFatigue()` produces the median-frequency time course (the left panel);
+`emgFatigueIndex()` collapses it to a **fatigue index** (final ÷ initial median
+frequency, < 1 = fatigue) per channel, which we average over the eight channels
+per subject and then across the cohort. Because the pipeline is deterministic
+(FFT-based, no randomness), the numbers replay exactly.
+
+## Data
+
+**Multi-channel Surface EMG Dataset for Fatigue analysis** (Ebied et al., 2021) —
+public on Zenodo (<https://doi.org/10.5281/zenodo.5189275>), CC-BY-4.0. Fifteen
+healthy subjects, **8-channel** surface EMG at **200 Hz** (50 Hz notch),
+**6 kg** load at 90° elbow flexion, **120 s** sustained isometric contraction.
+The exact archive used is listed in
+[`artifacts/data_sources.json`](artifacts/data_sources.json). *Ebied A, Awadallah
+AM, Abbass MA, El-Sharkawy Y. Upper Limb Muscle Fatigue Analysis Using
+Multi-channel Surface EMG. 2020 NILES, 423–427. doi:10.1109/NILES50944.2020.9257909.*
+
+## Results
+
+![Left: for the representative subject (sub15), the channel-averaged EMG median frequency trends downward through the 120 s hold (orange = linear fit). Right: the fatigue index (final ÷ initial median frequency) for all 15 subjects; 14 fall below the 1.0 "no-fatigue" line, one (sub4) sits on it.](artifacts/figure.png)
+
+*How to read this:* the fatigue index is each subject's final median frequency
+divided by its initial one, averaged over the eight channels — below 1 means the
+spectrum shifted down (fatigue), and how far below 1 is how much.
+
+**Cohort summary** ([`artifacts/fatigue_cohort.csv`](artifacts/fatigue_cohort.csv)):
+
+| Quantity | Value |
+|---|---|
+| Subjects with a median-frequency decline (index < 1) | **14 of 15** |
+| Mean fatigue index (final ÷ initial MDF) | **0.918** |
+| Mean median-frequency change over the hold | **−8.2 %** |
+| Mean initial → final median frequency | **63.3 Hz → 58.2 Hz** |
+| Mean channels showing a decline (of 8) | 6.7 |
+
+**Spread across subjects**
+([`artifacts/fatigue_per_subject.csv`](artifacts/fatigue_per_subject.csv)): the
+decline ranges from **−18.4 %** (sub13, index 0.816) down to essentially flat at
+**+0.1 %** (sub4, index 1.001, the one non-fatiguing subject). The representative
+trace above (sub15, **−7.9 %**, slope **−0.051 Hz/s**) is the subject closest to
+the cohort mean.
+
+At the cohort level the median frequency compresses downward under the sustained
+load — the myoelectric fatigue signature — recovered end-to-end from the public
+recordings.
+
+## Conclusion
+
+On real sustained-contraction EMG the ecosystem reproduces the classic fatigue
+signature: as the muscle tires, the spectrum's median frequency falls, in 14 of
+15 subjects and by ~8 % on average. The transferable lesson is to read fatigue as
+the **direction and size of a within-recording frequency shift** — robust to the
+acquisition — rather than as an absolute frequency, and to report the subjects
+who don't fatigue instead of averaging them into a tidy mean.
+
+## Open questions
+
+One subject (sub4) shows essentially no median-frequency decline under this
+6 kg / 120 s load (index 1.001). Whether that reflects lower relative effort,
+genuine fatigue resistance, or electrode placement cannot be resolved from a
+single recording — documented, not escalated to a research question.
+
+## Using this in your own analysis
+
+This case is a worked example of **spectral fatigue tracking** — the pattern for
+any "is this muscle fatiguing, and by how much?" question.
+
+**The general recipe** (three steps, the same for any fatigue analysis):
+
+1. **Get your EMG into the data model** — build a `PhysioExperiment` from your
+   time × channels matrix (or read it with the matching `read*` function), setting
+   the sampling rate.
+2. **Track the median frequency** through the effort with `emgFatigue()`, which
+   windows each channel and returns the spectrum's median and mean frequency per
+   window.
+3. **Summarise the shift** with `emgFatigueIndex()` — the final ÷ initial median
+   frequency (below 1 = fatigue) — and read the *trend*, not the absolute Hz.
+
+**Which functions, and how they compose.** Each step is one ecosystem function,
+picked by *role* — I/O → analysis:
+
+| Step | Function | Package |
+|---|---|---|
+| put a signal matrix into the data model | `PhysioExperiment()` | PhysioCore |
+| windowed median/mean-frequency time course | `emgFatigue()` | PhysioEMG |
+| final-vs-initial fatigue index per channel | `emgFatigueIndex()` | PhysioEMG |
+
+They chain because `emgFatigue()` and `emgFatigueIndex()` both consume the same
+`PhysioExperiment` — the shared data model is what lets the tools snap together,
+so you compose the analysis by naming the steps, not by reshaping matrices
+between them.
+
+**Choosing the parameters.**
+
+- **`window_sec` / `overlap`** — a ~0.5–1.0 s window with 50 % overlap trades
+  spectral resolution against how finely you track the trend; widen it for a
+  smoother, slower estimate.
+- **`initial_pct` / `final_pct`** (in `emgFatigueIndex()`) — the fractions of the
+  hold that define "initial" and "final"; the 20 % default compares the first and
+  last fifth, which is robust to the ragged start/end of a contraction.
+- **Sampling rate and filtering set the frequency band.** Here 200 Hz sampling
+  caps the spectrum at 100 Hz and a 50 Hz notch sits inside it, so the absolute
+  median frequency is acquisition-specific — read the *shift*, and prefer ≥ 1 kHz
+  sampling when you can, to keep the full EMG band.
+
+**Applying it to your own hypothesis.** Swap in your own sustained-effort EMG,
+keep the window → median-frequency → index recipe, and compare the fatigue index
+across muscles, loads, or before/after an intervention. The same "trend within a
+recording" logic underlies the amplitude side of fatigue (`emgAmplitudeFeatures()`
+for RMS/ARV creep) and the synergy-level view of coordinated muscle activity
+([`emg-synergy-grabmyo`](../emg-synergy-grabmyo/)).
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioCore); library(PhysioEMG)
+
+# 1. put an 8-channel EMG matrix (time × channels) into the data model
+pe <- PhysioExperiment(
+  assays = S4Vectors::SimpleList(raw = emg_matrix),   # e.g. read.table("sub1.txt")
+  samplingRate = 200)
+
+# 2. track the spectrum's median frequency through the sustained hold
+ft <- emgFatigue(pe, window_sec = 1.0, overlap = 0.5) # median_freq per channel per window
+
+# 3. collapse to a fatigue index (final / initial MDF; < 1 = fatigue)
+fi <- emgFatigueIndex(pe)                             # one row per channel
+mean(fi$fatigue_index)                                # cohort/subject: < 1 means the muscle fatigued
+```
+
+**Auditing the numbers.** For readers who want to verify rather than trust: the
+per-subject fatigue indices, the cohort summary, and the representative time
+course live in [`artifacts/`](artifacts/), and `audit.py` re-derives every number
+on this page — including the 14-of-15 count and the cohort means — from those
+files.

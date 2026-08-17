@@ -1,0 +1,35 @@
+{
+  "id": "ecg-hrv-aging-fantasia",
+  "title": "Heart-rate variability falls with age: the Fantasia young-vs-elderly contrast in the frequency domain",
+  "modality": ["ecg", "hrv", "autonomic"],
+  "packages": ["PhysioECG", "PhysioIO", "PhysioCore"],
+  "dataset": {
+    "name": "Fantasia Database",
+    "version": "1.0.0 (PhysioNet)",
+    "record": "10 young (f1y01-10, 21-34 y) + 10 elderly (f1o01-10, 68-81 y), resting ECG @ 250 Hz; fixed 10-min window t=300-900 s",
+    "url": "https://physionet.org/content/fantasia/1.0.0/",
+    "public": true,
+    "citation": "Iyengar N, Peng CK, Morin R, Goldberger AL, Lipsitz LA. Age-related alterations in the fractal scaling of cardiac interbeat interval dynamics. Am J Physiol. 1996;271(4):R1078-84. Goldberger AL, et al. PhysioNet. Circulation. 2000;101(23):e215-20."
+  },
+  "proposition": "Frequency-domain HRV on real resting ECG recovers the textbook signature of cardiovascular aging: overall HRV power is markedly lower in the elderly than the young (median total power 1021 vs 3596 ms^2, Wilcoxon p = 0.0004) and high-frequency vagal power is lower too (p = 0.004) - while the normalised sympathovagal balance (LF/HF, HFnu) and the resting mean heart rate do NOT separate the groups.",
+  "opdag": ["readWFDB", "ecgDetectRpeaks", "ecgRRintervals", "ecgHRVfreq"],
+  "claims": [
+    { "id": "totpow_young",   "statement": "young median total HRV power (ms^2)", "value": 3596.415, "artifact": "artifacts/hrv_group_summary.csv", "status": "PASS" },
+    { "id": "totpow_elderly", "statement": "elderly median total HRV power (ms^2)", "value": 1020.87, "artifact": "artifacts/hrv_group_summary.csv", "status": "PASS" },
+    { "id": "totpow_p",       "statement": "total-power young-vs-elderly Wilcoxon p (young > elderly)", "value": 0.000411, "artifact": "artifacts/hrv_group_summary.csv", "status": "PASS" },
+    { "id": "hf_p",           "statement": "HF (vagal) power young-vs-elderly Wilcoxon p (young > elderly)", "value": 0.00414, "artifact": "artifacts/hrv_group_summary.csv", "status": "PASS" },
+    { "id": "lfhf_p",         "statement": "LF/HF balance ratio young-vs-elderly Wilcoxon p (no separation)", "value": 0.661, "artifact": "artifacts/hrv_group_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The established physiology of cardiovascular aging - a loss of heart-rate variability, especially overall power and the high-frequency (vagal) band (Task Force of ESC/NASPE, 1996) - and the Fantasia database's own young-vs-elderly design (Iyengar et al. 1996)",
+    "data": "REAL - Fantasia (PhysioNet), 10 young + 10 elderly resting ECG, fixed 10-min window",
+    "artifacts": ["artifacts/hrv_group_summary.csv", "artifacts/hrv_per_subject.csv"],
+    "all_pass": true,
+    "note": "Aggregate acceptance: the two HRV-magnitude indices are significantly lower in the elderly in the expected direction - total power (young median 3596 vs 1021 ms^2, p = 0.0004) and HF vagal power (p = 0.004). Reported honestly as NOT separating the groups: the normalised balance indices LF/HF and HFnu (p = 0.66) and the resting mean heart rate (p = 0.34) - aging shows in HRV magnitude, not in the balance ratios or the mean rate. One elderly record (f1o09) was flagged for frequent ectopy by ecgHRVfreq's rhythm_check and excluded from the frequency-domain metrics (frequency HRV is undefined under ectopy), leaving 10 young vs 9 elderly for those metrics."
+  },
+  "open_questions": [
+    { "q": "The normalised sympathovagal indices (LF/HF, HFnu) do not distinguish the age groups here even though absolute power does - consistent with the view that normalisation removes the very magnitude collapse that carries the aging signal. Whether a longer or multi-window analysis would reveal a balance shift is a real question, but the magnitude result is the robust one and is what we claim. Documented, not escalated.", "artifact": "artifacts/hrv_group_summary.csv", "escalate": null }
+  ],
+  "reference_tools": [],
+  "status": "validated"
+}

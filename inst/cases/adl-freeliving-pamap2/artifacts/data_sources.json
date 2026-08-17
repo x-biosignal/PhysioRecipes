@@ -1,0 +1,11 @@
+{
+  "dataset": "PAMAP2 Physical Activity Monitoring",
+  "authors": "Reiss A, Stricker D",
+  "repository": "UCI ML Repository #231",
+  "doi": "10.24432/C5NW2H",
+  "url": "https://archive.ics.uci.edu/dataset/231",
+  "license": "CC-BY 4.0",
+  "record_used": "subject101 (Protocol), hand IMU +/-16g acceleration @ 100 Hz",
+  "acquisition": "62.5 min of continuous real accelerometer data; a scripted activity protocol (lie/sit/stand/walk/run/cycle/iron/vacuum/...), NOT a free-living day",
+  "note": "Used as a REAL continuous accelerometer recording to compute free-living physical-behaviour metrics and to validate ENMO against GGIR. The absolute intensity values reflect the protocol, not a free-living day."
+}

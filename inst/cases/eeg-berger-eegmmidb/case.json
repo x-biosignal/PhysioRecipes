@@ -1,0 +1,98 @@
+{
+  "id": "eeg-berger-eegmmidb",
+  "title": "Berger's effect: occipital alpha blocks when the eyes open, reproduced",
+  "modality": ["eeg", "spectral"],
+  "packages": ["PhysioIO", "PhysioPreprocess", "PhysioAnalysis"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)",
+    "record": "S001R01 (eyes-open) & S001R02 (eyes-closed) baselines, 64 ch, 160 Hz",
+    "url": "https://physionet.org/content/eegmmidb/",
+    "public": true,
+    "sha256_edf": {
+      "S001R02_eyes_closed": "31a95e0a880e6c3d89960d9d62c144f24cc4e9f5d7e93c7f864ef61cd49e847e",
+      "S001R01_eyes_open": "4743b736131a7e147c150e8b37711029b6cda5e356c4b3e8261a03cdcaaf8b0c"
+    },
+    "citation": "Schalk G, et al. BCI2000. IEEE Trans Biomed Eng. 2004;51(6):1034-43. Goldberger AL, et al. PhysioNet. Circulation. 2000;101(23):e215-20."
+  },
+  "proposition": "On the same subject and montage, occipital relative alpha power is dominant with the eyes closed (O1 0.628, Oz 0.596) and drops sharply when the eyes open (O1 0.123, Oz 0.112) -- Berger's alpha-blocking effect -- reproduced by the ecosystem from four frozen substrate runs, with all five eyes-closed O1 band-power claims GROUNDED and a byte-identical replay.",
+  "opdag": ["readEDF", "butterworthFilter", "bandPower"],
+  "claims": [
+    {
+      "id": "delta",
+      "statement": "relative delta power, O1 (eyes-closed)",
+      "value": 0.2027,
+      "artifact": "bundle/terminal_table.csv",
+      "status": "GROUNDED"
+    },
+    {
+      "id": "theta",
+      "statement": "relative theta power, O1 (eyes-closed)",
+      "value": 0.05,
+      "artifact": "bundle/terminal_table.csv",
+      "status": "GROUNDED"
+    },
+    {
+      "id": "alpha",
+      "statement": "relative alpha power, O1 (eyes-closed)",
+      "value": 0.6284,
+      "artifact": "bundle/terminal_table.csv",
+      "status": "GROUNDED"
+    },
+    {
+      "id": "beta",
+      "statement": "relative beta power, O1 (eyes-closed)",
+      "value": 0.1129,
+      "artifact": "bundle/terminal_table.csv",
+      "status": "GROUNDED"
+    },
+    {
+      "id": "gamma",
+      "statement": "relative gamma power, O1 (eyes-closed)",
+      "value": 0.006,
+      "artifact": "bundle/terminal_table.csv",
+      "status": "GROUNDED"
+    }
+  ],
+  "contrast": {
+    "effect": "Berger alpha blocking (eyes-closed occipital alpha > eyes-open)",
+    "berger_met": true,
+    "electrodes": {
+      "O1": {
+        "eyes_closed": 0.6284,
+        "eyes_open": 0.123,
+        "alpha_drop": 0.5054,
+        "dominant_closed": true,
+        "dominant_open": false,
+        "artifact_open": "artifacts/eyesopen_O1_terminal.csv"
+      },
+      "Oz": {
+        "eyes_closed": 0.5957,
+        "eyes_open": 0.1118,
+        "alpha_drop": 0.4839,
+        "dominant_closed": true,
+        "dominant_open": false,
+        "artifact_closed": "artifacts/eyesclosed_Oz_terminal.csv",
+        "artifact_open": "artifacts/eyesopen_Oz_terminal.csv"
+      }
+    },
+    "contrast_table": "artifacts/berger_contrast.csv",
+    "secondary_runs": "artifacts/secondary_runs.json"
+  },
+  "verification": {
+    "n_claims": 5,
+    "n_grounded": 5,
+    "n_ungrounded": 0,
+    "prereg_hash": "0d121716cffb66320061d7a40e9c6f2ebf8511f85ee3a7596648ff757fe18116",
+    "replay_byte_identical": true
+  },
+  "open_questions": [
+    {
+      "q": "None: Berger's alpha blocking (Berger 1929) is an established finding, used here to demonstrate a reproducible, substrate-frozen spectral contrast on public EEG. Escalation is reserved for genuinely unresolved questions.",
+      "artifact": null,
+      "escalate": null
+    }
+  ],
+  "reference_tools": [],
+  "bundle": "bundle/",
+  "status": "verified"
+}

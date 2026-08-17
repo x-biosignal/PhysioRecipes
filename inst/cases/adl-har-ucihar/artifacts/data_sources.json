@@ -1,0 +1,10 @@
+{
+  "dataset": "Human Activity Recognition Using Smartphones (UCI HAR)",
+  "authors": "Anguita D, Ghio A, Oneto L, Parra X, Reyes-Ortiz JL",
+  "repository": "UCI ML Repository #240",
+  "doi": "10.24432/C54S4K",
+  "url": "https://archive.ics.uci.edu/dataset/240",
+  "license": "CC-BY 4.0",
+  "acquisition": "30 subjects, waist-mounted smartphone, 50 Hz tri-axial accelerometer, 128-sample (2.56 s) windows, 6 activities; provided train/test subject split",
+  "activities": ["walking", "walking_upstairs", "walking_downstairs", "sitting", "standing", "laying"]
+}

@@ -1,0 +1,206 @@
+---
+title: "The spectral fingerprints of sleep stages, recovered against expert hypnograms"
+subtitle: "A worked per-stage EEG spectral case study on public polysomnography"
+categories: [eeg, sleep, spectral, physionet, validated]
+author: "Yusuke Matsui"
+date: "2026-08-12"
+---
+
+> **What this case shows** — grouped by an expert's overnight sleep scoring, the
+> ecosystem recovers the textbook **per-stage EEG spectra**: deep sleep (**N3**)
+> is the slowest, most **delta**-dominated spectrum (relative delta **0.92**),
+> the spectrum slows step by step as sleep deepens (**N1 < N2 < N3**), and stage
+> **N2** carries the **sleep-spindle** peak in the sigma band — and all of this
+> **reproduces across two independent nights**. **What reproduces, and what
+> doesn't** — the *spectral fingerprints* reproduce; the tool's built-in
+> one-threshold *auto-stager* does **not** match the expert hypnogram (agreement
+> **9 % / 5 %**), because on these frontal, delta-heavy home recordings a single
+> cutoff collapses to "N3". So the ecosystem is trustworthy here as a **spectral
+> measurement**, not as a finished automatic scorer. **How to read it** — left,
+> relative delta power per stage (higher = slower/deeper), both nights; right,
+> the spindle-band power that singles out N2.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — answer *"what does each sleep stage look like spectrally?"* in
+three moves: **load** the EEG derivations → **epoch + spectrally summarise** each
+30 s window → **group** the per-epoch spectra by the expert stage labels and
+compare.
+**Way of thinking** — separate the two jobs a staging tool does: *measuring* the
+per-epoch spectrum (reliable) and *classifying* it into a stage (hard — needs
+artifact handling, more channels/features). Validate the measurement against the
+ground-truth labels, and don't mistake a convenience classifier for a scorer.
+**Ecosystem usage** — chain one function per role, I/O → analysis
+(`readEDF` → `eegSleepStage`), letting the shared data model carry the signal.
+The final section turns this into a step-by-step you can adapt to your own PSG.
+:::
+
+## Proposition
+
+Grouped by the expert hypnogram, deep sleep (**N3**) is the most delta-dominated
+spectrum (relative delta **0.92** night 1, **0.91** night 2 — the highest of all
+five stages), the spectrum **slows monotonically as sleep deepens**
+(relative delta **N1 < N2 < N3**), and **N2** carries the **sigma-band spindle
+peak** — reproduced across both nights.
+
+## Question & goal
+
+**The question comes from the dataset's own design.** Sleep-EDF Expanded was
+built for one task: **sleep staging** (Kemp et al., 2000). Each overnight
+recording is divided into 30-second epochs and an expert scores every epoch into
+**W / N1 / N2 / N3 / REM** — the *hypnogram* shipped with the data. Staging is
+possible because each stage has a **spectral fingerprint**: deep slow-wave sleep
+is dominated by low-frequency **delta**; stage N2 is marked by **sleep spindles**
+(a burst in the ~12–16 Hz sigma band); lighter N1 and REM run faster, with more
+theta and alpha. So we ask the dataset's own question from the measurement side:
+does the ecosystem recover those per-stage spectra when we group its output by
+the expert labels — and does it hold across nights?
+
+## Challenge & approach
+
+Two jobs hide inside "staging", and they earn trust separately: *measuring* each
+epoch's spectrum, and *classifying* it into a stage. We validate the measurement.
+The recipe reads the two EEG derivations, cuts the night into 30-second epochs,
+and summarises each epoch's spectrum as band powers — then we group those spectra
+by the expert stage and average:
+
+```
+readEDF(channels = c("EEG Fpz-Cz", "EEG Pz-Oz"))  →  eegSleepStage(epoch_sec = 30)
+```
+
+`eegSleepStage()` returns, per 30-second epoch, the relative power in each band
+(delta, theta, alpha, sigma, beta) *and* a first-pass stage label. We take the
+**band powers** as the per-epoch spectral features, group them by the epoch's
+**expert** stage, and read off the fingerprints. The first-pass label is kept
+only to show, honestly, how far a single-threshold classifier is from expert
+scoring. Everything is deterministic, so it replays exactly.
+
+## Data
+
+**Sleep-EDF Database Expanded** (sleep-cassette), nights **SC4001** and
+**SC4011** — public on PhysioNet
+(<https://physionet.org/content/sleep-edfx/1.0.0/>), ODbL. Two frontal/occipital
+EEG derivations (**EEG Fpz-Cz**, **EEG Pz-Oz**) at 100 Hz, with an expert
+hypnogram per night. The exact recordings (with checksums) are listed in
+[`artifacts/data_sources.json`](artifacts/data_sources.json); the hypnograms are
+parsed for their stage labels only. *Kemp B, et al. IEEE Trans Biomed Eng.
+2000;47(9):1185–94; Goldberger AL, et al. Circulation. 2000;101(23):e215–20.*
+
+## Results
+
+![Left: relative delta power by expert-scored stage for both nights — N3 (deep sleep) is the delta peak, and delta rises N1 < N2 < N3 as sleep deepens; wake (W) sits off the ladder. Right: relative sigma (spindle-band) power by stage — the sleep spindle singles out N2. Both signatures reproduce across the two nights.](artifacts/figure.png)
+
+*How to read this:* each bar is a band's share of that epoch's total power,
+averaged over all epochs the expert gave to that stage — so higher relative delta
+means a slower spectrum, and the sigma bar is the spindle band.
+
+**Per-stage spectra**
+([`artifacts/stage_signature_SC4001.csv`](artifacts/stage_signature_SC4001.csv),
+[`SC4011`](artifacts/stage_signature_SC4011.csv)):
+
+| Stage | Rel. delta (N1) | Rel. delta (N2) | Rel. delta (N3) | Rel. sigma at N2 (spindle) |
+|---|---|---|---|---|
+| Night 1 (SC4001) | 0.629 | 0.818 | **0.922** | **0.020** |
+| Night 2 (SC4011) | 0.725 | 0.795 | **0.911** | **0.028** |
+
+In both nights N3 is the delta peak, delta climbs N1 → N2 → N3 (the spectrum
+slows as sleep deepens), and the spindle band peaks in N2 — the fingerprints
+staging relies on, recovered from the raw EEG.
+
+**What does not reproduce**
+([`artifacts/staging_agreement.csv`](artifacts/staging_agreement.csv)): the
+built-in single-threshold classifier matches the expert hypnogram on only
+**8.9 %** (night 1) and **4.8 %** (night 2) of epochs — on these frontal,
+delta-dominated home recordings it labels almost everything N3. And **wake** does
+not fit the depth ladder (relative delta ~0.81 / 0.85), because the frontal
+Fpz-Cz derivation picks up eye movement and muscle activity while the subject is
+awake. The measurement is trustworthy; turning it into a scorer is a separate,
+harder problem.
+
+## Conclusion
+
+Grouped against expert hypnograms, the ecosystem recovers the canonical spectral
+fingerprints of sleep — N3's slow-wave delta dominance, the N1 → N2 → N3 slowing,
+and the N2 spindle — reproducibly across two nights. The transferable lesson is
+to **separate measuring from classifying**: validate that your tool measures the
+per-epoch spectrum correctly against ground-truth labels before trusting anything
+built on top of it, and report the classifier's real agreement rather than
+implying the labels are as good as an expert's.
+
+## Open questions
+
+The convenience classifier in `eegSleepStage()` — a single relative-power
+threshold — does not reproduce expert scoring on this ambulatory frontal montage
+(agreement < 10 %). Whether artifact rejection plus richer features and more
+channels would recover clinical-grade automatic staging is a genuine question,
+but building an automatic scorer is beyond this case. Documented, not escalated.
+
+## Using this in your own analysis
+
+This case is a worked example of a **grouped spectral profile** — the pattern for
+any "what does the spectrum look like in each labelled state?" question, and a
+template for **validating a measurement against ground-truth labels**.
+
+**The general recipe** (three steps):
+
+1. **Load** the channels where the signal lives — here the two Sleep-EDF EEG
+   derivations.
+2. **Epoch and spectrally summarise** with `eegSleepStage()`, which returns
+   per-30-second band powers (and a first-pass label).
+3. **Group by the true labels** — your expert hypnogram — and average each band
+   within a stage to read off the fingerprint; check it against known physiology.
+
+**Which functions, and how they compose.** Each step is one ecosystem function,
+picked by *role* — I/O → analysis:
+
+| Step | Function | Package |
+|---|---|---|
+| load the PSG EEG derivations | `readEDF()` | PhysioIO |
+| per-30 s band powers + first-pass stage | `eegSleepStage()` | PhysioEEG |
+| (related) detect the spindles themselves | `eegSpindleDetect()` | PhysioEEG |
+
+They chain because `eegSleepStage()` consumes the `PhysioExperiment` that
+`readEDF()` returns — the shared data model connects I/O to analysis, so you
+compose by naming the steps.
+
+**Choosing the parameters.**
+
+- **Channels** — staging uses central/occipital EEG; here Fpz-Cz + Pz-Oz. A more
+  central montage and adding EOG/EMG derivations improves stage *separation*
+  (and is what expert scoring uses).
+- **`epoch_sec = 30`** — the AASM scoring epoch; keep it at 30 s to align with
+  standard hypnograms.
+- **Read the *relative* bands, not absolute power** — relative band power compares
+  spectral *shape* across stages and is robust to the montage/impedance drift
+  that shifts absolute scale.
+
+**Applying it to your own hypothesis.** Swap in your own scored PSG (or any
+signal with per-epoch labels), keep the load → epoch-spectra → group-by-label
+recipe, and compare the fingerprints across conditions or groups. The same
+"group a spectral feature by state" logic is exactly the eyes-open/closed
+contrast on wake EEG ([`eeg-berger-eegmmidb`](../eeg-berger-eegmmidb/)); the
+validate-against-ground-truth logic mirrors the beat-detector benchmark on ECG
+([`ecg-qrs-benchmark-mitbih`](../ecg-qrs-benchmark-mitbih/)).
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioIO); library(PhysioEEG)
+
+# 1. load the two EEG derivations from the polysomnogram
+pe <- readEDF("SC4001E0-PSG.edf", channels = c("EEG Fpz-Cz", "EEG Pz-Oz"))
+
+# 2. per-30 s relative band powers (delta, theta, alpha, sigma, beta) + a label
+ss <- eegSleepStage(pe, method = "spectral", epoch_sec = 30)
+
+# 3. group the band powers by your expert hypnogram stage and average
+#    -> N3 is the relative-delta peak; the sigma band peaks in N2 (spindles)
+stages   <- read_hypnogram_labels("SC4001EC-Hypnogram.edf")  # your parser
+ss$stage <- stages[ss$epoch]
+aggregate(cbind(delta_power, sigma_power) ~ stage, data = ss, FUN = mean)
+```
+
+**Auditing the numbers.** For readers who want to verify rather than trust: the
+per-epoch aligned spectra, the per-stage fingerprints, and the classifier
+agreement live in [`artifacts/`](artifacts/), and `audit.py` re-derives every
+number on this page — the per-stage means, the four canonical orderings in both
+nights, and the agreement figures — from those files.

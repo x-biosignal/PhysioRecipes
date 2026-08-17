@@ -1,0 +1,29 @@
+Package: PhysioRecipes
+Title: Reproducible Analysis Case Studies for the PhysioExperiment Ecosystem
+Version: 0.6.0
+Authors@R:
+    person(given = "Yusuke",
+           family = "Matsui",
+           role = c("aut", "cre"),
+           email = "mail.to.matsui@gmail.com",
+           comment = c(ORCID = "0000-0003-3977-4313"))
+Description: A version-controlled database of self-contained, reproducible
+    analysis case studies on public physiological data, built on the
+    PhysioExperiment ecosystem. Each case states a proposition, answers a
+    question on a public dataset and completes through to figures and a
+    conclusion, with every reported number traced to an artifact and the whole
+    op-DAG replayable byte-identically. The package ships the verified run
+    bundles and a small API to browse the case metadata, open a case's bundle,
+    and check the invariants that every case must satisfy.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Imports:
+    jsonlite,
+    tools,
+    utils
+Suggests:
+    testthat (>= 3.2.0),
+    PhysioLake
+RoxygenNote: 7.3.3
+Roxygen: list(markdown = TRUE)
+Config/testthat/edition: 3

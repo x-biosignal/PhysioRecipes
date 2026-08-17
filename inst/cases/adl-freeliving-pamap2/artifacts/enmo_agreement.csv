@@ -1,0 +1,5 @@
+"metric","value"
+"enmo_max_abs_diff_g",1.35e-14
+"enmo_mean_abs_diff_g",1.85e-15
+"enmo_correlation",1
+"n_epochs",749

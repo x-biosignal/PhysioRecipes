@@ -1,0 +1,78 @@
+{
+  "dataset": "EEG Motor Movement/Imagery Database (eegmmidb), subjects S001-S005, motor runs R03/R07/R11 (real hand movement), 64ch, 160 Hz",
+  "source": "PhysioNet eegmmidb 1.0.0 (ODC-BY 1.0); archived offline in agent/eval/data/eegmmidb-motor/",
+  "segmentation": "per the dataset's EDF+ annotations: T0=rest; T1/T2=left/right fist -> movement. Rest and movement segments concatenated across R03/R07/R11.",
+  "runs": {
+    "S001": [
+      {
+        "file": "S001R03.edf",
+        "sha256": "3427c8d01bff1380bc9ab9f27a35ece2af5dfadf3e291bbc05eb66e4dadbfe2e"
+      },
+      {
+        "file": "S001R07.edf",
+        "sha256": "6320a941815eb7a0bc632e32c07c88b6e2281a0e2f177e8f49e2d0a16231145c"
+      },
+      {
+        "file": "S001R11.edf",
+        "sha256": "d5296b9232b0ad88b7022155cbcde618df44d4b0db046ce3bec54f8f8644207a"
+      }
+    ],
+    "S002": [
+      {
+        "file": "S002R03.edf",
+        "sha256": "cbabe29620b19978454bc429f59976f6ee8f32f6392e4fcdf7e463981248072c"
+      },
+      {
+        "file": "S002R07.edf",
+        "sha256": "cdba64ad60574903248aed651d393c148df3c611eebdc9694717a04e2e2deef3"
+      },
+      {
+        "file": "S002R11.edf",
+        "sha256": "694bd9fbee1305dbc212ea4eecb8930750f5e08f8cc8ea45e2b94c92ac5f5a7d"
+      }
+    ],
+    "S003": [
+      {
+        "file": "S003R03.edf",
+        "sha256": "ebf184ea51d9aa3178190583f428db02f184e22412ff300a5f224776d1e8dbb4"
+      },
+      {
+        "file": "S003R07.edf",
+        "sha256": "d8a610bf60a19c1d653a11633f7df40bd7b3eca976bebf2b525eb65017fdf044"
+      },
+      {
+        "file": "S003R11.edf",
+        "sha256": "0563c2a26f759d849d6b99b3efb6047d1e1d288f80c0c16f5f07403bd0029271"
+      }
+    ],
+    "S004": [
+      {
+        "file": "S004R03.edf",
+        "sha256": "b24e3ae9d302935be06c0905d1e925ad68a94b4a5b20dc659cbc63bb8481d503"
+      },
+      {
+        "file": "S004R07.edf",
+        "sha256": "eb00bf6a816a6ded6f93e0b96d2a1c2ae8f6d13a59e39d475bf94d57fb842643"
+      },
+      {
+        "file": "S004R11.edf",
+        "sha256": "a8b96b32782329f12accdc222331545707be4cd497f97f158de4c06e87235f8c"
+      }
+    ],
+    "S005": [
+      {
+        "file": "S005R03.edf",
+        "sha256": "3bf2695b66661a274bb099dd093c8f2eb4ede8a7068ec4bfd0a1fe9f4bfc0e18"
+      },
+      {
+        "file": "S005R07.edf",
+        "sha256": "630fbaf27a7a962a4a8bd61396b6a1c4f56b44e85fa5e9400016ca19085ad1f9"
+      },
+      {
+        "file": "S005R11.edf",
+        "sha256": "a4d4111c206de3c094d23c9fbaf2b3fece74eff7a68a11073f29dad9800653d4"
+      }
+    ]
+  },
+  "citation": "Schalk G, et al. BCI2000: a general-purpose brain-computer interface system. IEEE Trans Biomed Eng. 2004;51(6):1034-43. Goldberger AL, et al. PhysioNet. Circulation. 2000;101(23):e215-20."
+}

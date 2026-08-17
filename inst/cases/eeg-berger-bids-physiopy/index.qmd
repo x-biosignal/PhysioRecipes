@@ -1,0 +1,106 @@
+---
+title: "Berger's effect in Python: occipital alpha blocks when the eyes open"
+subtitle: "The Python side of the ecosystem (physiopy) reproduces a classic result from BIDS"
+categories: [eeg, spectral, physionet, replication, python, validated]
+author: "Yusuke Matsui"
+date: "2026-08-13"
+---
+
+> **What this case shows** — **physiopy** (the Python side of the ecosystem)
+> reproduces Berger's classic finding from a **BIDS** recording: occipital
+> **alpha** is far stronger with the eyes **closed** than **open**. **What
+> reproduces, and what doesn't** — the ~14× eyes-closed/eyes-open ratio and its
+> direction reproduce from the public recording; the *absolute* band-power
+> magnitudes are preprocessing-dependent, and this is one subject. **How to read
+> it** — compare the alpha value between eyes-closed and eyes-open; the large
+> drop on eye-opening is the effect.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — answer *"does a brain rhythm change between two conditions?"* in
+Python: **read BIDS** each condition → **quantify** with `band_power()` →
+**compare**.
+**Way of thinking** — process both conditions with the *identical* recipe;
+place the readout over the rhythm's generator (occipital for alpha); prefer the
+*ratio* over absolute magnitude.
+**Ecosystem usage** — `physio.io.read_bids` → `physio.signal.eeg.band_power`;
+results are Parquet, so they interoperate with the R side (`arrow`) and
+PhysioLake. This is the Python counterpart of the R `eeg-berger-eegmmidb` case.
+:::
+
+## Proposition
+
+From a public **BIDS** recording, occipital alpha is about **14× higher** with
+the eyes **closed** than **open** — Berger's alpha-blocking effect — reproduced
+end-to-end by **physiopy**.
+
+| condition | occipital (O1/Oz/O2) alpha, integrated band power |
+|---|---|
+| eyes **closed** | **3.35 × 10⁻⁹** |
+| eyes **open** | **2.32 × 10⁻¹⁰** |
+
+Eyes-closed / eyes-open ratio: **14.4×** — a strong, directionally clear Berger
+effect. Every number traces to `artifacts/berger_summary.csv`.
+
+## Question & goal
+
+Berger (1929) reported that occipital alpha, prominent with the eyes closed,
+*blocks* (collapses) when the eyes open. The goal here is narrow and honest: show
+that the **Python** ecosystem, reading a **native BIDS** recording, recovers the
+same contrast the R side does — cross-language reproducibility of a textbook
+result.
+
+## Data
+
+PhysioNet **eegmmidb** subject S001, baseline runs **R01 (eyes open)** and
+**R02 (eyes closed)**, 64-channel EEG at 160 Hz. The runs are written to a BIDS
+layout and read with `physio.io.read_bids`.
+
+## How this was computed
+
+The `physiopy` pipeline is two moves per condition:
+
+```python
+from physio.io import read_bids
+from physio.signal.eeg import band_power
+
+rec   = read_bids(bids_path, modality="eeg")          # native BIDS -> data model
+power = band_power(rec, bands={"alpha": (8, 13)})     # Welch PSD, integrated
+occ   = power[power.channel.isin(["O1", "Oz", "O2"])]["alpha"].mean()
+```
+
+The builder downloads the recording, writes BIDS, and recomputes the table in
+`artifacts/berger_summary.csv`.
+
+## How to read this
+
+Alpha is a **relative** statement between conditions. The eyes-closed value is
+3.35 × 10⁻⁹ and eyes-open 2.32 × 10⁻¹⁰ (integrated band power); their **ratio
+(14.4×)** is the finding. The absolute magnitudes are not universal constants —
+they move with filtering, referencing and montage — so they reproduce *under
+this fixed recipe*, not across arbitrary pipelines.
+
+## Conclusion
+
+physiopy reproduces Berger's alpha-blocking effect from public BIDS data, with a
+~14× eyes-closed/eyes-open occipital-alpha ratio — the same conclusion the R
+`eeg-berger-eegmmidb` case reaches, now on the Python side.
+
+## Open questions
+
+Does the ratio hold across the **full eegmmidb cohort** with matched montages?
+That is a separate, group-level case (single-subject here).
+
+## Using this in your own analysis
+
+| step | function | package |
+|---|---|---|
+| read a BIDS recording | `read_bids` | physiopy (`physio.io`) |
+| band power | `band_power` | physiopy (`physio.signal.eeg`) |
+| share to R / lake | Parquet (`to_parquet`) | physiopy / arrow / PhysioLake |
+
+Point `read_bids` at any BIDS-EEG dataset (e.g. OpenNeuro), pick the electrodes
+over your rhythm's generator, and compare the band value between your two
+conditions with the identical recipe.
+
+*Audit: every figure traces to `artifacts/berger_summary.csv`; `audit.py` checks
+the values and the eyes-closed > eyes-open direction.*

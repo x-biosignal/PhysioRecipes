@@ -1,0 +1,125 @@
+{
+  "id": "ecg-hr-spectrum-mitbih",
+  "title": "Resting heart rate across four MIT-BIH subjects: bradycardia to fast, reproduced",
+  "modality": ["ecg", "hrv"],
+  "packages": ["PhysioIO", "PhysioECG"],
+  "dataset": {
+    "name": "MIT-BIH Arrhythmia Database (mitdb)",
+    "record": "records 117, 115, 103, 234 (MLII lead, 360 Hz, full 30-min)",
+    "url": "https://physionet.org/content/mitdb/",
+    "public": true,
+    "sha256_records": {
+      "r117": {
+        "record": "117",
+        "hea": "82d1597bece858f85f6f3b91558e409ffec247c26fccf0c805893b51d2e12fe8",
+        "dat": "2ce7de6f20baf4cfef0369f9a13fa53784d18e2da78c11afa1e4c55e8ad1900e"
+      },
+      "r115": {
+        "record": "115",
+        "hea": "4f41f62fd60b092afc3f1dd312dee3ed991aff64e4ffcc6a69414d38db2b7d2e",
+        "dat": "34185efe9889608c76ebfbf5a467d3457970c6d11b77a2bf81b94bcf46e07c41"
+      },
+      "r103": {
+        "record": "103",
+        "hea": "c327a1ba393165f2503a34eaf2d136b502c50baca945f8f4d70c317e19ec0a27",
+        "dat": "f7994f0bd196730779998b4bddf26cb47f396599fb370a08b5cb29a3ac4d555d"
+      },
+      "r234": {
+        "record": "234",
+        "hea": "3d2b9eaa12dcff4c7c627f083ed234a89fe97953160bc14f806f787b15cbd2e3",
+        "dat": "89f826307bfc91a554021da87c17b88b843ed3d26aa9ea237fc6f7c8af00da6d"
+      }
+    },
+    "citation": "Moody GB, Mark RG. The impact of the MIT-BIH Arrhythmia Database. IEEE Eng Med Biol. 2001;20(3):45-50. Goldberger AL, et al. PhysioNet. Circulation. 2000;101(23):e215-20."
+  },
+  "proposition": "Across four MIT-BIH subjects the ecosystem recovers resting mean heart rates spanning bradycardia (record 117, 51.0 bpm) to the fast upper-normal range (record 234, 91.4 bpm), with mean RR the exact reciprocal of mean HR (HR = 60000/RR to 2 dp) for every record and time-domain HRV differing several-fold between subjects -- reproduced from four frozen substrate runs on full 30-min recordings, mean HR and mean RR GROUNDED and byte-identically replayed for the primary (record 117).",
+  "opdag": ["ecgDetectRpeaks", "ecgRRintervals", "ecgHRVtime"],
+  "claims": [
+    {
+      "id": "mean_hr",
+      "statement": "mean heart rate (MLII), bpm -- record 117",
+      "value": 51.02,
+      "artifact": "bundle/terminal_table.csv",
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_rr",
+      "statement": "mean RR interval (MLII), ms -- record 117",
+      "value": 1176.02,
+      "artifact": "bundle/terminal_table.csv",
+      "status": "GROUNDED"
+    }
+  ],
+  "contrast": {
+    "effect": "resting heart-rate spectrum across subjects (bradycardia -> fast)",
+    "hr_span_bpm": 40.4,
+    "monotonic_over_panel_order": true,
+    "reciprocal_hr_rr_holds_all": true,
+    "sdnn_fold_spread": 2.5,
+    "records": [
+      {
+        "record": "117",
+        "zone": "bradycardia",
+        "mean_hr": 51.02,
+        "mean_rr": 1176,
+        "hr_from_rr": 51.02,
+        "sdnn": 50.5,
+        "rmssd": 43.6,
+        "pnn50": 11.9,
+        "terminal": "bundle/terminal_table.csv"
+      },
+      {
+        "record": "115",
+        "zone": "normal-low",
+        "mean_hr": 64.91,
+        "mean_rr": 924.3,
+        "hr_from_rr": 64.91,
+        "sdnn": 88.8,
+        "rmssd": 76.4,
+        "pnn50": 46.1,
+        "terminal": "artifacts/rec115_terminal.csv"
+      },
+      {
+        "record": "103",
+        "zone": "normal",
+        "mean_hr": 69.07,
+        "mean_rr": 868.6,
+        "hr_from_rr": 69.07,
+        "sdnn": 98.2,
+        "rmssd": 132.4,
+        "pnn50": 10.4,
+        "terminal": "artifacts/rec103_terminal.csv"
+      },
+      {
+        "record": "234",
+        "zone": "upper-normal (fast)",
+        "mean_hr": 91.37,
+        "mean_rr": 656.7,
+        "hr_from_rr": 91.37,
+        "sdnn": 38.7,
+        "rmssd": 42.4,
+        "pnn50": 0.9,
+        "terminal": "artifacts/rec234_terminal.csv"
+      }
+    ],
+    "spectrum_table": "artifacts/ecg_hr_spectrum.csv",
+    "secondary_runs": "artifacts/secondary_runs.json"
+  },
+  "verification": {
+    "n_claims": 2,
+    "n_grounded": 2,
+    "n_ungrounded": 0,
+    "prereg_hash": "f027dea40d4809b04a1d72b60221ea0158173b65023ee0424604b8371bdaf698",
+    "replay_byte_identical": true
+  },
+  "open_questions": [
+    {
+      "q": "None: recovering resting heart rate + time-domain HRV from public ECG is a reproducibility demonstration, not an unresolved question. Escalation is reserved for genuinely open questions.",
+      "artifact": null,
+      "escalate": null
+    }
+  ],
+  "reference_tools": [],
+  "bundle": "bundle/",
+  "status": "verified"
+}

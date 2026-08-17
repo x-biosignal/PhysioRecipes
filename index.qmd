@@ -1,0 +1,22 @@
+---
+title: "PhysioRecipes"
+subtitle: "Reproducible analysis case studies on public data"
+listing:
+  contents: inst/cases
+  type: grid
+  sort: "date desc"
+  fields: [title, subtitle, categories, date]
+  categories: true
+---
+
+A growing, version-controlled database of **reproducible analysis case studies**
+built on the [PhysioExperiment](https://github.com/x-biosignal) ecosystem and
+public data. Each case states a proposition, answers a question on a public
+dataset, and completes through to figures and a conclusion — with every number
+traced to an artifact and the whole recipe replayable byte-identically. Cases
+that raise an important unresolved question are escalated to a paper.
+
+::: {.callout-note}
+Each card links to a self-contained case: narrative, verified run bundle, and
+the supporting artifacts. See the case-unit contract in `SCHEMA.md`.
+:::

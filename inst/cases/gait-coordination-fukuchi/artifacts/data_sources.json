@@ -1,0 +1,13 @@
+{
+  "dataset": "A public dataset of overground and treadmill walking kinematics and kinetics (WBDS)",
+  "authors": "Fukuchi CA, Fukuchi RK, Duarte M",
+  "repository": "figshare",
+  "doi": "10.6084/m9.figshare.5722711",
+  "paper_doi": "10.7717/peerj.4640",
+  "license": "CC-BY 4.0",
+  "url": "https://figshare.com/articles/dataset/5722711",
+  "acquisition": "42 healthy adults, 3D motion capture, sagittal hip and knee joint angles time-normalised to the gait cycle (101 points); overground and treadmill walking at a range of speeds",
+  "joints": ["RHipAngleZ", "RKneeAngleZ"],
+  "n_treadmill_cycles": 328,
+  "n_overground_cycles": 123
+}

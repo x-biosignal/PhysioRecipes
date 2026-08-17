@@ -1,0 +1,110 @@
+{
+  "dataset": "Fantasia Database",
+  "url": "https://physionet.org/content/fantasia/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Iyengar N, Peng CK, Morin R, Goldberger AL, Lipsitz LA. Age-related alterations in the fractal scaling of cardiac interbeat interval dynamics. Am J Physiol. 1996;271(4):R1078-84. Goldberger AL, et al. PhysioNet. Circulation. 2000;101(23):e215-20.",
+  "cohort": "10 young (f1y01-10) + 10 elderly (f1o01-10), resting ECG @ 250 Hz",
+  "analysis_window": "t = 300-900 s (fixed 10-min resting segment)",
+  "records": {
+    "f1y01": {
+      "dat_sha256": "c992e4e69b1869e2da1f94e00a8cca070bc099cfc58911dd5a65aa436003b9bd",
+      "hea_sha256": "5ac71b4f0d1b288cfa849866c5a3f76a1086a86daad527bac846192204767d8c",
+      "age": 23
+    },
+    "f1y02": {
+      "dat_sha256": "cff20e937391f884d24615f5a7e46599d15d58fede2bc3788fb431dca0a4d099",
+      "hea_sha256": "191397912b3113187d836f6c6cab874e7f9998ae848e0059e9291fe03c80c56a",
+      "age": 28
+    },
+    "f1y03": {
+      "dat_sha256": "54dd0d001fd78dcf720d65f2d55726aa21e77f558a554270e386de47bad27dac",
+      "hea_sha256": "3c1c0600e582daa6f01753c624c2b068dd6c6a964573a07b43248317d31b050d",
+      "age": 34
+    },
+    "f1y04": {
+      "dat_sha256": "af043b4ca8a61733e71be44fdca846503d045f2fccbd65387ad41cdeda2bf406",
+      "hea_sha256": "67128ff8bc47b6aff6ffc08c729c8842b253552bbdd6f8e46187b4e59ecfae39",
+      "age": 31
+    },
+    "f1y05": {
+      "dat_sha256": "711b185a2d76031594ccd5cdeaf13855eae00088fe2ec1e756b2f17179e1eadf",
+      "hea_sha256": "ebf90ea4d8f8397979f0dee1e03ff08c465a1aa78defbf6787c6363feda6fd26",
+      "age": 23
+    },
+    "f1y06": {
+      "dat_sha256": "f08bfd8dbc5332d04487e5297ce5925f2b27f125008e4a353ac459d0efa6ee5b",
+      "hea_sha256": "dd40c4d79eeaf926c60d1004eb3a05568f3e03410f2f38f55e341ee6aaab80f3",
+      "age": 30
+    },
+    "f1y07": {
+      "dat_sha256": "19bb88615002a2406839e2ef013847769cde0e4a660e84c3c0402b355355d404",
+      "hea_sha256": "b8dfbcac3fc1bbe4bff27882be1480055f1d560d85dc12382641f834f82bf74f",
+      "age": 21
+    },
+    "f1y08": {
+      "dat_sha256": "b5cd0b38d5a5740ab3e1eab6ef4d76f0b550a2b0d6357b277eec01ee956b9567",
+      "hea_sha256": "46070fc51ed4a43a91b98363515a41834ba8af55966174980507b0b7323f48ab",
+      "age": 30
+    },
+    "f1y09": {
+      "dat_sha256": "8a9d6ddb03a014273e0e995bfb5c8eb8853dabb1e4d92454a4c56e064ed7a767",
+      "hea_sha256": "b6253e2a85388960899ef6f6ec560a91ac3a16c4649474dc50cefaeb836d8735",
+      "age": 32
+    },
+    "f1y10": {
+      "dat_sha256": "6fb1a4b24f7ed6f986981a3ee6a0e240c6414f652fa4aebc991ddc159387ac26",
+      "hea_sha256": "78d3d5f28410ef989bb059baf9df3f55e8e4d821072ac0a13460b21699614f20",
+      "age": 21
+    },
+    "f1o01": {
+      "dat_sha256": "5758cb184d4f529383fdafd4dca68478d654e511f15621ff00d04a17c01f80aa",
+      "hea_sha256": "d7d15bd5b67b7c2ddba5350a57ca56bce01d53d085f160ec9e5d77659bf851fa",
+      "age": 77
+    },
+    "f1o02": {
+      "dat_sha256": "efa7758913f81f67937ec67597f5585bbb880ded8b3aa7c70bf17f6b55749977",
+      "hea_sha256": "c8eaf3354e26aca374fb13a6ab4331766d55c8e13c4a44e18eecc45723200d9d",
+      "age": 73
+    },
+    "f1o03": {
+      "dat_sha256": "c18179e33ea9358cca24d77e1ff74454e017f47c35680619c04bdbc484a5b3cd",
+      "hea_sha256": "0860e9a3db4d6219d60a2ea7c9fdc42362012b47207d62bdd5d7a4cf5eede096",
+      "age": 73
+    },
+    "f1o04": {
+      "dat_sha256": "6f112ce8b6b392a69b681232d6c56eb9f4a5f1a930a4d16f73f381752f7297ef",
+      "hea_sha256": "c364a5374b6b57b8a6de140def5372a54a521fc89cb536aa322f773c9e15166b",
+      "age": 81
+    },
+    "f1o05": {
+      "dat_sha256": "867863052f3acd9336803594ab91c76a54a5f11fc064724ae19cbe7caad6a8e5",
+      "hea_sha256": "e6621e4cfc169c8b9153ef042eaa50b7a40d444786212819ae49a5d2cfddbf8e",
+      "age": 76
+    },
+    "f1o06": {
+      "dat_sha256": "c90f05374b6034a26630e3bf41d68e2a814ddf407cfe6c7d0cca33d80bf92db5",
+      "hea_sha256": "028b1e85d9137e839a923b8b6b585bf56e5d765b93d365f7e8ae3b368001d085",
+      "age": 74
+    },
+    "f1o07": {
+      "dat_sha256": "6f36f8a71568d1948971c77b38ebdc5e134cffe5365e77e76532a30fc90a601d",
+      "hea_sha256": "4602a317640faafba0c54e5ced0cb11da6bbb0428f40c22ba0943fed73b466a7",
+      "age": 68
+    },
+    "f1o08": {
+      "dat_sha256": "7e04aa2bf6fb719d4217664f0647a2d281d23e41c8277b644a8b798452bb233f",
+      "hea_sha256": "ec29e54daf767f61377995995d6cc985a98361c3925adb455d0cf6d2a8c16dbc",
+      "age": 73
+    },
+    "f1o09": {
+      "dat_sha256": "916442e9856e10bb5c59a3b1cd2021136d67786df9dca68740b464735e272363",
+      "hea_sha256": "895d895158da298e868b38d213b76fcb1916de50f5bc16e621d64cd1fd545542",
+      "age": 71
+    },
+    "f1o10": {
+      "dat_sha256": "2ecc3c2f936369d3cec4346bc7c76f9763cce16c9ae6b41a9b24143c55c94959",
+      "hea_sha256": "f09af037cfbf11ead0441f58d9b26760eae27e792f5edf3edb1bc18aa49507e5",
+      "age": 71
+    }
+  }
+}

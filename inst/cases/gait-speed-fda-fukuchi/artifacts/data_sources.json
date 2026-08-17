@@ -1,0 +1,10 @@
+{
+  "dataset": "A public dataset of overground and treadmill walking kinematics (WBDS)",
+  "authors": "Fukuchi CA, Fukuchi RK, Duarte M",
+  "repository": "figshare",
+  "doi": "10.6084/m9.figshare.5722711",
+  "paper_doi": "10.7717/peerj.4640",
+  "license": "CC-BY 4.0",
+  "record_used": "42 subjects x 8 treadmill speeds; RKneeAngleZ over the gait cycle (328 curves)",
+  "note": "Treadmill speed is the ordinal trial index T01(slowest)..T08(fastest); the WBDS per-subject speeds are a dimensionless sweep, so speed is modelled as an ordinal level, not m/s."
+}

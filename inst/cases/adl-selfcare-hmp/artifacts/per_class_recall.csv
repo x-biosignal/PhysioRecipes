@@ -1,0 +1,6 @@
+"activity","recall","n_test_windows"
+"drinking",0.809,894
+"eating",0,913
+"grooming",0.767,1233
+"walking",0.817,2102
+"walking_upstairs",0.261,832

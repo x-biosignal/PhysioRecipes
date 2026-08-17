@@ -1,0 +1,35 @@
+{
+  "id": "ppg-hr-bidmc",
+  "title": "Does the optical pulse recover the heartbeat? PPG pulse rate vs ECG on BIDMC",
+  "modality": ["ppg", "ecg", "wearable", "cardiac"],
+  "packages": ["PhysioECG", "PhysioIO"],
+  "dataset": {
+    "name": "BIDMC PPG and Respiration Dataset",
+    "version": "1.0.0 (PhysioNet)",
+    "record": "53 ICU recordings, simultaneous PLETH (PPG) + II (ECG) @ 125 Hz, 8 min each",
+    "url": "https://physionet.org/content/bidmc/1.0.0/",
+    "public": true,
+    "citation": "Pimentel MAF, Johnson AEW, Charlton PH, Birrenkott D, Watkinson PJ, Tarassenko L, Clifton DA. Toward a robust estimation of respiratory rate from pulse oximeters. IEEE Trans Biomed Eng. 2017;64(8):1914-23. Goldberger AL, et al. PhysioNet. Circulation. 2000;101(23):e215-20."
+  },
+  "proposition": "The PPG-derived pulse rate tracks the simultaneous ECG heart rate closely across 52 ICU recordings: Pearson r 0.96, Bland-Altman mean bias -2.1 bpm with 95% limits of agreement [-9.4, +5.1] bpm, mean absolute error 2.2 bpm, and 90% of records within +/-5 bpm of the ECG reference.",
+  "opdag": ["readWFDB", "ppgDetectPulses", "pulseRateVariability", "ecgDetectRpeaks", "ecgRRintervals"],
+  "claims": [
+    { "id": "pearson_r",  "statement": "Pearson correlation of PPG pulse rate vs ECG heart rate across records", "value": 0.9598, "artifact": "artifacts/ppg_ecg_agreement.csv", "status": "PASS" },
+    { "id": "mean_bias",  "statement": "Bland-Altman mean bias (PPG - ECG), bpm", "value": -2.14, "artifact": "artifacts/ppg_ecg_agreement.csv", "status": "PASS" },
+    { "id": "loa_lower",  "statement": "Bland-Altman lower 95% limit of agreement, bpm", "value": -9.36, "artifact": "artifacts/ppg_ecg_agreement.csv", "status": "PASS" },
+    { "id": "loa_upper",  "statement": "Bland-Altman upper 95% limit of agreement, bpm", "value": 5.09, "artifact": "artifacts/ppg_ecg_agreement.csv", "status": "PASS" },
+    { "id": "within5",    "statement": "percent of records agreeing within +/-5 bpm", "value": 90.4, "artifact": "artifacts/ppg_ecg_agreement.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The simultaneous ECG heart rate (lead II R-peaks) as the gold-standard cardiac rate against which the PPG pulse rate is compared, per Bland-Altman method comparison",
+    "data": "REAL - BIDMC (PhysioNet), 53 ICU recordings with paired PLETH (PPG) + II (ECG)",
+    "artifacts": ["artifacts/ppg_ecg_agreement.csv", "artifacts/ppg_ecg_per_record.csv"],
+    "all_pass": true,
+    "note": "Aggregate acceptance: mean absolute error <= 5 bpm and >= 85% of records within +/-5 bpm (actual: MAE 2.2 bpm, 90.4% within 5 bpm, 96.2% within 10 bpm) - clearing the ANSI/AAMI EC13 heart-rate accuracy bar (+/-5 bpm / 10%). Honest scope: 1 of the 53 records (bidmc03) is excluded as an ECG-REFERENCE detection failure (the R-peak detector found only 225 beats -> an implausible 30 bpm, flagged objectively by ecg_hr < 40, not a PPG error); it is shown, not hidden. The largest surviving discrepancies (bidmc26, bidmc40) are records with poorer signal quality (ICU motion / arrhythmia), where agreement widens - reported in full."
+  },
+  "open_questions": [
+    { "q": "Agreement is a per-record mean pulse rate vs mean heart rate; beat-to-beat pulse-rate variability tracking (and its degradation under motion / arrhythmia / poor perfusion) is a finer question the paired signals support but this case does not pursue. Documented, not escalated.", "artifact": "artifacts/ppg_ecg_per_record.csv", "escalate": null }
+  ],
+  "reference_tools": [],
+  "status": "validated"
+}

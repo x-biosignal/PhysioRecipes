@@ -1,0 +1,39 @@
+{
+  "paper": "PhysioAgent PoC (AGENT-04)",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "claims": [
+    {
+      "id": "mean_hr",
+      "statement": "mean heart rate (MLII), bpm",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "channel",
+        "key": "1",
+        "val_col": "mean_hr"
+      },
+      "expect": 72.03,
+      "tol": 0.01,
+      "render": [
+        "72.03"
+      ]
+    },
+    {
+      "id": "mean_rr",
+      "statement": "mean RR interval (MLII), ms",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "channel",
+        "key": "1",
+        "val_col": "mean_rr"
+      },
+      "expect": 832.99,
+      "tol": 0.01,
+      "render": [
+        "832.99"
+      ]
+    }
+  ]
+}

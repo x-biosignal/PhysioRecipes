@@ -1,0 +1,35 @@
+{
+  "id": "emg-fatigue-ebied",
+  "title": "Muscle fatigue as a falling median frequency: the myoelectric signature on real sustained-contraction EMG",
+  "modality": ["emg", "fatigue", "spectral"],
+  "packages": ["PhysioEMG", "PhysioCore"],
+  "dataset": {
+    "name": "Multi-channel Surface EMG Dataset for Fatigue analysis",
+    "version": "Zenodo 5189275 (v1)",
+    "record": "15 healthy subjects, 8-channel surface EMG @ 200 Hz, 6 kg load, elbow 90 deg, 120 s sustained isometric contraction",
+    "url": "https://doi.org/10.5281/zenodo.5189275",
+    "public": true,
+    "citation": "Ebied A, Awadallah AM, Abbass MA, El-Sharkawy Y. Upper Limb Muscle Fatigue Analysis Using Multi-channel Surface EMG. 2020 NILES, pp. 423-427. doi:10.1109/NILES50944.2020.9257909. Dataset: doi:10.5281/zenodo.5189275 (CC-BY-4.0)."
+  },
+  "proposition": "On real 120 s sustained-contraction surface EMG, the ecosystem recovers the classic myoelectric fatigue signature: the power-spectrum median frequency (MDF) falls over the hold (cohort mean final/initial MDF ratio 0.918, a 8.2% drop, from 63.3 Hz to 58.2 Hz), with the decline present in 14 of 15 subjects.",
+  "opdag": ["emgFatigue", "emgFatigueIndex"],
+  "claims": [
+    { "id": "n_fatigued",       "statement": "subjects whose median frequency declines (fatigue index < 1), of 15", "value": 14, "artifact": "artifacts/fatigue_cohort.csv", "status": "PASS" },
+    { "id": "mean_fatigue_index", "statement": "cohort mean fatigue index (final / initial MDF)", "value": 0.9183, "artifact": "artifacts/fatigue_cohort.csv", "status": "PASS" },
+    { "id": "mean_pct_change",  "statement": "cohort mean MDF percent change over the hold", "value": -8.17, "artifact": "artifacts/fatigue_cohort.csv", "status": "PASS" },
+    { "id": "mean_initial_mdf", "statement": "cohort mean initial MDF (Hz)", "value": 63.35, "artifact": "artifacts/fatigue_cohort.csv", "status": "PASS" },
+    { "id": "mean_final_mdf",   "statement": "cohort mean final MDF (Hz)", "value": 58.19, "artifact": "artifacts/fatigue_cohort.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The established myoelectric-fatigue law — a monotonic decline of the EMG spectrum's median frequency under sustained contraction (De Luca 1984) — and the dataset's own fatiguing protocol (6 kg, 120 s hold)",
+    "data": "REAL — Ebied et al. 2021 (Zenodo 5189275), 15 healthy subjects, 8-channel sEMG @ 200 Hz",
+    "artifacts": ["artifacts/fatigue_cohort.csv", "artifacts/fatigue_per_subject.csv", "artifacts/fatigue_representative.csv", "artifacts/fatigue_timeseries.csv"],
+    "all_pass": true,
+    "note": "Aggregate acceptance: the cohort mean fatigue index is < 1 (0.918) and the fatigue direction holds in >= 90% of subjects (14/15). The one exception (sub4, index 1.001) is reported, not dropped. The absolute MDF values (~55-70 Hz) are shaped by the acquisition — 200 Hz sampling (100 Hz Nyquist) with a 50 Hz notch sitting inside the EMG band — so they are not universal constants; the reproducible finding is the within-recording decline, which a fixed notch cannot manufacture."
+  },
+  "open_questions": [
+    { "q": "One subject (sub4) shows essentially no MDF decline (fatigue index 1.001) under this 6 kg / 120 s load; whether that reflects lower relative effort, better fatigue resistance, or electrode placement is not identifiable from this recording alone. Documented, not escalated.", "artifact": "artifacts/fatigue_per_subject.csv", "escalate": null }
+  ],
+  "reference_tools": [],
+  "status": "validated"
+}

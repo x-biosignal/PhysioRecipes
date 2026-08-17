@@ -1,0 +1,35 @@
+{
+  "id": "emg-network-grabmyo",
+  "title": "Muscle-coordination networks on GRABMyo reproduce across data halves",
+  "modality": ["emg", "network", "connectivity"],
+  "packages": ["PhysioAnalysis", "PhysioEMG", "PhysioIO"],
+  "dataset": {
+    "name": "GRABMyo",
+    "version": "v1.1.0 (PhysioNet)",
+    "record": "forearm EMG, 10-muscle coordination network",
+    "url": "https://physionet.org/content/grabmyo/1.1.0/",
+    "public": true,
+    "citation": "Pradhan A, He J, Jiang N. Multi-day dataset of forearm and wrist electromyogram for hand gesture recognition and biometrics. Sci Data. 2022;9:733."
+  },
+  "proposition": "On real GRABMyo forearm EMG, the ecosystem's inter-muscle coordination network is reproducible across independent data halves: coherence connectivity replicates near-perfectly (edge r = 0.994, node-strength r = 0.997), with weighted phase-lag index (edge r = 0.835) and directed Granger causality (edge r = 0.939) also reproducible.",
+  "opdag": ["readEMG", "emgEnvelope", "coordinationNetwork", "splitHalfStability"],
+  "claims": [
+    { "id": "coherence_edge_r", "statement": "split-half edge-weight correlation, coherence network", "value": 0.9942, "artifact": "artifacts/validation_split_half.csv", "status": "PASS" },
+    { "id": "partial_edge_r",   "statement": "split-half edge-weight correlation, partial coherence", "value": 0.9747, "artifact": "artifacts/validation_split_half.csv", "status": "PASS" },
+    { "id": "wpli_edge_r",      "statement": "split-half edge-weight correlation, wPLI", "value": 0.8352, "artifact": "artifacts/validation_split_half.csv", "status": "PASS" },
+    { "id": "gc_edge_r",        "statement": "split-half edge-weight correlation, directed Granger causality", "value": 0.9389, "artifact": "artifacts/validation_split_half.csv", "status": "PASS" },
+    { "id": "coherence_node_r", "statement": "split-half node-strength correlation, coherence network", "value": 0.9969, "artifact": "artifacts/validation_topology_split_half.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "split-half reproducibility (edge-weight and node-strength correlation) on the real signal",
+    "data": "REAL — GRABMyo v1.1.0 forearm EMG (10-node coordination network)",
+    "artifacts": ["artifacts/validation_split_half.csv", "artifacts/validation_topology_split_half.csv", "artifacts/coordination_structure_summary.csv"],
+    "all_pass": true,
+    "note": "Coherence, wPLI and directed-GC networks reproduce across halves (edge r 0.835-0.994). Node-strength topology is highly reproducible for coherence (0.997) and wPLI (0.929); partial-coherence node strength is lower (0.572), consistent with the sparser partial-coherence graph being more sensitive to the split."
+  },
+  "open_questions": [
+    { "q": "Partial-coherence node-strength reproducibility (0.572) is lower than its edge-weight reproducibility (0.975) because the partial-coherence graph is sparse; documented as a known method-sensitivity, not escalated.", "artifact": "artifacts/validation_topology_split_half.csv", "escalate": null }
+  ],
+  "reference_tools": [],
+  "status": "validated"
+}
