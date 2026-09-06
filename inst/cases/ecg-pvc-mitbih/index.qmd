@@ -1,0 +1,189 @@
+---
+title: "Spotting premature ventricular contractions on MIT-BIH: precise, but blind to runs"
+subtitle: "A worked arrhythmia-classification case study on public ECG"
+categories: [ecg, arrhythmia, physionet, validated]
+author: "Yusuke Matsui"
+date: "2026-08-12"
+---
+
+> **What this case shows** — using the cardiologists' own beat marks, the
+> ecosystem flags **premature ventricular contractions (PVCs)** — extra beats from
+> the ventricle — and its flags are **precise**: pooled **PPV 0.95** (≥ 0.99 on 7
+> of 9 records), so when it calls a beat a PVC it is almost always right. **What
+> reproduces, and what doesn't** — precision reproduces; **recall does not
+> transfer across rhythms**. Pooled sensitivity is **0.71**, ranging from a
+> *perfect 1.00* on records with isolated PVCs down to **0.27** where the PVCs come
+> in **sustained runs** (bigeminy, couplets), which hide the very prematurity the
+> detector keys on. **How to read it** — each record's recall (blue) and precision
+> (orange); precision stays high while recall collapses on the run-heavy records.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — classify beats in three moves: take the beat **locations** →
+compute the **rhythm context** (RR intervals) → **flag** the abnormal beats by
+prematurity + morphology, and score against the reference labels.
+**Way of thinking** — score a classifier with **both** precision *and* recall,
+never one alone; and read *where* it fails as a clue to *how* it works — here a
+per-beat prematurity rule is precise but structurally blind to ectopy that comes
+in runs. Keep the hard records in the table.
+**Ecosystem usage** — chain one function per role, I/O → analysis
+(`readWFDB` → `ecgRRintervals` → `ecgDetectPVC`), on the shared data model.
+The final section turns this into a step-by-step you can adapt.
+:::
+
+## Proposition
+
+Using the reference beat locations, the ecosystem's prematurity-plus-morphology
+PVC detector is highly **precise** (pooled **PPV 0.954**, ≥ 0.99 on 7 of 9
+records) but its **recall is rhythm-dependent** (pooled sensitivity **0.715**):
+from a perfect **1.00** on isolated-PVC records down to **0.27** where the
+ventricular ectopy comes in sustained runs that mask prematurity.
+
+## Question & goal
+
+**The question comes from the dataset's own reason to exist.** MIT-BIH was built
+to develop and evaluate **arrhythmia analysers**: every beat carries a
+cardiologist's label (Moody & Mark, 2001). A companion case scores *finding* the
+beats ([`ecg-qrs-benchmark-mitbih`](../ecg-qrs-benchmark-mitbih/)); the clinically
+central next step is *classifying* them — which beats are **premature ventricular
+contractions**, the most common ventricular ectopy? Following the standard AAMI
+protocol we take the reference beat **locations** and ask whether the ecosystem
+recovers which of them the cardiologists marked as PVCs (symbol **V**).
+
+## Challenge & approach
+
+A PVC is an early, oddly-shaped beat: it arrives **prematurely** and its QRS
+**morphology** differs from the normal template. The detector uses exactly those
+two cues. But an arrhythmia benchmark must be scored on **both** precision (are the
+flags right?) and recall (are the PVCs caught?) — and on real recordings PVCs often
+arrive in **runs**, where "premature" loses meaning because the surrounding rhythm
+is itself ectopic. The recipe, per record:
+
+```
+readWFDB → [reference beats as the peaks] → ecgRRintervals → ecgDetectPVC → score vs the 'V' labels
+```
+
+We feed the reference beat locations (isolating *classification* from *detection*),
+compute RR context, flag PVCs, and match to the cardiologist V-labels beat-for-beat
+across **9 PVC-rich records** (22 923 beats, 5 182 PVCs).
+
+## Data
+
+**MIT-BIH Arrhythmia Database** (PhysioNet) — public
+(<https://physionet.org/content/mitdb/1.0.0/>), ODbL. Nine PVC-rich records
+(106/119/200/203/208/214/221/223/233), lead **MLII** at 360 Hz, with the
+cardiologist `.atr` beat labels as ground truth (parsed with WFDB). The exact
+records (with checksums and PVC counts) are in
+[`artifacts/data_sources.json`](artifacts/data_sources.json). *Moody GB, Mark RG.
+IEEE Eng Med Biol Mag. 2001;20(3):45–50; Goldberger AL, et al. Circulation.
+2000;101(23):e215–20.*
+
+## Results
+
+![Per-record PVC sensitivity (recall, blue) and PPV (precision, orange), sorted by recall. Precision stays near 1.0 across records (except the noisiest, 203); recall spans from 0.27 to a perfect 1.0, collapsing on the records whose PVCs come in sustained runs. Dotted lines mark the pooled values.](artifacts/figure.png)
+
+*How to read this:* sensitivity is the fraction of true PVCs caught; PPV is the
+fraction of flagged beats that are truly PVCs. High orange everywhere = precise;
+low blue on the left = missed PVCs on those records.
+
+**Pooled** ([`artifacts/pvc_pooled.csv`](artifacts/pvc_pooled.csv)): precision
+**PPV 0.954**, recall **sensitivity 0.715**, **F1 0.817** over all 22 923 beats.
+
+**Per record**
+([`artifacts/pvc_per_record.csv`](artifacts/pvc_per_record.csv)) — every record
+shown, the hard ones included:
+
+| Record | PVCs | Sensitivity | PPV | F1 | Note |
+|---|---|---|---|---|---|
+| 119 | 444 | **1.000** | 1.000 | **1.000** | isolated PVCs — perfect |
+| 221 | 396 | 0.987 | 1.000 | 0.994 | |
+| 106 | 520 | 0.969 | 0.998 | 0.983 | |
+| 233 | 831 | 0.868 | 1.000 | 0.929 | |
+| 203 | 444 | 0.962 | **0.714** | 0.820 | noisiest record → false flags |
+| 214 | 256 | 0.680 | 1.000 | 0.809 | runs |
+| 200 | 826 | 0.610 | 0.998 | 0.757 | runs |
+| 208 | 992 | 0.412 | 0.990 | 0.582 | frequent runs |
+| 223 | 473 | **0.273** | 0.992 | 0.428 | couplets / runs |
+
+Precision holds near 1.0 everywhere except record **203** (the noisiest MIT-BIH
+record, where distorted QRS morphology produces false flags). Recall is high on
+isolated-PVC records and collapses on records with sustained ventricular runs —
+the detector's characteristic blind spot.
+
+## Conclusion
+
+On public arrhythmia data the ecosystem's PVC detector is trustworthy in what it
+flags (high precision) but has a **structural blind spot**: it misses PVCs that
+arrive in runs, where per-beat prematurity no longer stands out. The transferable
+lesson is to score arrhythmia classifiers on **precision and recall together**, to
+read the failure pattern as a window into the method, and to keep the hard records
+in every table rather than reporting a single flattering number.
+
+## Open questions
+
+The prematurity-based detector misses PVCs in **runs** (bigeminy, couplets,
+ventricular tachycardia), where the local RR baseline is itself ectopic so no
+single beat looks premature. Catching run-type ectopy needs a rhythm-level model
+(template libraries, sequence context) rather than a per-beat prematurity rule — a
+genuinely harder problem, documented not escalated.
+
+## Using this in your own analysis
+
+This case is a worked example of an **arrhythmia-classification benchmark** — the
+pattern for "does this beat-classifier recover the cardiologist labels?" scored
+honestly.
+
+**The general recipe** (three steps):
+
+1. **Take the beat locations** — the reference marks (to isolate classification),
+   or your own detected R-peaks for an end-to-end test.
+2. **Compute the rhythm context** — RR intervals — so each beat can be judged
+   premature or not.
+3. **Flag + score** — classify with `ecgDetectPVC()` and report **sensitivity
+   and PPV** against the reference class, per record and pooled.
+
+**Which functions, and how they compose.** Each step is one ecosystem function,
+picked by *role* — I/O → analysis:
+
+| Step | Function | Package |
+|---|---|---|
+| load the ECG record | `readWFDB()` | PhysioIO |
+| RR intervals from the beats | `ecgRRintervals()` | PhysioECG |
+| flag premature ventricular beats | `ecgDetectPVC()` | PhysioECG |
+| (end-to-end) detect the beats first | `ecgDetectRpeaks()` | PhysioECG |
+
+They chain because each consumes the `PhysioExperiment` (and the peak/RR tables)
+the previous step produced — so you compose the classifier by naming the steps.
+
+**Choosing the parameters.**
+
+- **Beats in** — feed the *reference* beats to benchmark the classifier alone
+  (AAMI protocol), or `ecgDetectRpeaks()` output for a real-world end-to-end score.
+- **`corr_threshold` / `prematurity_max`** in `ecgDetectPVC()` — how different in
+  shape and how early a beat must be to count as a PVC; loosening recall costs
+  precision, and *no* per-beat setting recovers PVCs hidden inside runs.
+- **`require_compensatory`** — demand a compensatory pause for extra specificity on
+  clean recordings; leave it off when ectopy is frequent.
+
+**Applying it to your own hypothesis.** Swap in your own annotated ECG, keep the
+beats → RR → `ecgDetectPVC` recipe, and always report sensitivity *and* PPV per
+record. The same reference-label benchmarking underlies the beat-*detection* score
+on this database ([`ecg-qrs-benchmark-mitbih`](../ecg-qrs-benchmark-mitbih/)).
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioIO); library(PhysioECG)
+
+pe    <- readWFDB("208")                                   # MLII @ 360 Hz
+pe    <- pe[, which(grepl("MLII", toupper(SummarizedExperiment::colData(pe)$label)))]
+peaks <- ecgDetectRpeaks(pe, method = "pan_tompkins")      # or the reference beats
+rr    <- ecgRRintervals(pe, peaks)
+pvc   <- ecgDetectPVC(pe, peaks, rr)                       # per beat: is_pvc
+mean(pvc$is_pvc)                                           # PVC burden of the record
+```
+
+**Auditing the numbers.** For readers who want to verify rather than trust: the
+per-record and pooled sensitivity / PPV / F1, and the ground-truth PVC counts, live
+in [`artifacts/`](artifacts/), and `audit.py` re-derives every metric from the
+confusion counts, re-checks the micro-averaged pooled figures, and confirms each
+record's PVC count against the `.atr` ground truth.

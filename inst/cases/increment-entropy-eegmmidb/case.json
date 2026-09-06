@@ -1,0 +1,34 @@
+{
+  "id": "increment-entropy-eegmmidb",
+  "title": "Complexity of change: increment entropy (a newly-authored op), symbolizing the signal's increments, bit-for-bit vs NeuroKit2",
+  "modality": ["eeg", "complexity", "increment-entropy", "symbolic-dynamics", "nonlinear-dynamics"],
+  "packages": ["PhysioEEG"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "Every entropy folded so far reads the signal's amplitudes (Renyi/Tsallis histograms, dispersion patterns) or amplitude-vector matches (sample/fuzzy). Increment entropy (Liu et al. 2016) reads the signal's CHANGES: it symbolizes each successive increment by its sign and a magnitude class (quantized against the local sd), then takes the Shannon entropy of those increment-words normalized by (m-1). The ecosystem had no increment-domain complexity; this case introduces a NEWLY-AUTHORED op, incrementEntropy. On a real eyes-closed posterior EEG channel it reproduces NeuroKit2 entropy_increment BIT-FOR-BIT (max |diff| ~9e-16) across (dimension, q); it is non-increasing in the embedding dimension (4.27 -> 3.51 -> 3.01 at q=4), and the signal realizes only 33 of the 81 = (2q+1)^m possible increment-words.",
+  "opdag": ["incrementEntropy"],
+  "claims": [
+    { "id": "incren_m2", "statement": "increment entropy at m=2, q=4 of the POz signal (bits)", "value": 4.2691529709, "artifact": "artifacts/increment_summary.csv", "status": "PASS" },
+    { "id": "incren_m3", "statement": "increment entropy at m=3 -- lower than m=2 (non-increasing in dimension)", "value": 3.5073515082, "artifact": "artifacts/increment_summary.csv", "status": "PASS" },
+    { "id": "incren_m4", "statement": "increment entropy at m=4 -- lower still (monotone family)", "value": 3.0084084994, "artifact": "artifacts/increment_summary.csv", "status": "PASS" },
+    { "id": "max_diff_nk", "statement": "max |incrementEntropy - NeuroKit2 entropy_increment| over the (dimension, q) family (bit-exact)", "value": 8.881784e-16, "artifact": "artifacts/increment_summary.csv", "status": "PASS" },
+    { "id": "n_words_m2", "statement": "distinct increment-words realized at m=2, q=4 (out of (2q+1)^m = 81 possible)", "value": 33, "artifact": "artifacts/increment_summary.csv", "status": "PASS" },
+    { "id": "monotonic", "statement": "IncrEn is non-increasing in the embedding dimension (1 = holds)", "value": 1, "artifact": "artifacts/increment_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored incrementEntropy op is validated against NeuroKit2 entropy_increment across (dimension, q). NeuroKit2 re-computes the increment entropy from the identical embed-differences + sign x magnitude-class quantization + normalized-Shannon pipeline; the agreement is BIT-FOR-BIT (max |diff| ~9e-16). On real eyes-closed POz EEG it is non-increasing in the embedding dimension (4.27 -> 3.51 -> 3.01 at q=4) and the signal realizes only 33 of the 81 (=(2q+1)^m) possible increment-words.",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), channel POz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/increment_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the newly-authored incrementEntropy reproduces NeuroKit2 entropy_increment bit-for-bit (max |diff| ~9e-16) across (dimension, q); (2) it is non-increasing in the embedding dimension and the signal realizes only 33 of 81 possible increment-words (structured). HONEST scope: (1) this op is NEWLY AUTHORED to fill a gap -- the ecosystem had amplitude-histogram entropies (Renyi, Tsallis), NCDF-pattern dispersion entropy, and template-matching sample/fuzzy entropy, but no increment-domain complexity; (2) this is a genuine MACHINE-PRECISION match -- the op and NeuroKit2 compute the IDENTICAL embed-differences + sign x magnitude-class + normalized-Shannon pipeline, so the ~9e-16 residual is the floating-point floor, not a convention agreement; (3) the mechanism is genuinely distinct: IncrEn encodes the DIRECTION and graded SIZE of changes, so it is sensitive to dynamics amplitude-based entropies miss -- which is the reason to add it; (4) the value depends on (dimension, q); here the NeuroKit2 defaults (m=2, q=4), so the reproducible content is the bit-exact family and the word-count structure, not an absolute physiological constant; (5) run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "Increment entropy is defined on first differences; iterating it on higher-order differences (second increments, i.e. curvature) or across coarse-grained scales (multiscale increment entropy) would probe the complexity of acceleration/curvature dynamics, complementing the first-increment view. Building that on this op and comparing across EEG states would extend the measure without changing its validated core. Documented, not escalated.", "artifact": "artifacts/increment_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["NeuroKit2 entropy_increment (Python)"],
+  "status": "validated"
+}

@@ -1,0 +1,34 @@
+{
+  "id": "fuzzy-entropy-eegmmidb",
+  "title": "The sample-entropy family, completed: fuzzy entropy (a newly-authored op), soft matching vs the crisp step",
+  "modality": ["eeg", "complexity", "fuzzy-entropy", "sample-entropy", "nonlinear-dynamics"],
+  "packages": ["PhysioEEG"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "Sample entropy counts template matches with a crisp threshold -- two vectors either match within tolerance r or they do not (a Heaviside step). Fuzzy entropy (Chen et al. 2007) replaces that hard step with a smooth exponential membership exp(-(d^n)/r), so near-matches contribute partially, making it far more robust on short or noisy segments. The ecosystem had sample and approximate entropy but not the fuzzy generalization; this case introduces a NEWLY-AUTHORED op, fuzzyEntropy. On a real eyes-closed posterior EEG channel it reproduces NeuroKit2 entropy_fuzzy BIT-FOR-BIT (max |diff| ~4e-15) across (dimension, r); at m=2, r=0.2 FuzzyEn (0.948) is LOWER than the crisp sample entropy (1.327) -- the soft membership counts near-matches the step rejects -- and it is non-increasing in the embedding dimension.",
+  "opdag": ["fuzzyEntropy"],
+  "claims": [
+    { "id": "fuzzyen_m2", "statement": "fuzzy entropy at m=2, r=0.2 of the POz signal", "value": 0.9475520180, "artifact": "artifacts/fuzzy_summary.csv", "status": "PASS" },
+    { "id": "fuzzyen_m3", "statement": "fuzzy entropy at m=3 -- lower than m=2 (non-increasing in dimension)", "value": 0.7039108125, "artifact": "artifacts/fuzzy_summary.csv", "status": "PASS" },
+    { "id": "max_diff_nk", "statement": "max |fuzzyEntropy - NeuroKit2 entropy_fuzzy| over the (dimension, r) family (bit-exact)", "value": 3.552714e-15, "artifact": "artifacts/fuzzy_summary.csv", "status": "PASS" },
+    { "id": "sampen_m2", "statement": "crisp sample entropy at the same m=2, r=0.2 (the reference FuzzyEn generalizes)", "value": 1.3272319919, "artifact": "artifacts/fuzzy_summary.csv", "status": "PASS" },
+    { "id": "fuzzy_vs_sampen_gap", "statement": "|FuzzyEn - SampEn| at m=2 -- the soft membership counts partial matches the crisp step rejects", "value": 0.379680, "artifact": "artifacts/fuzzy_summary.csv", "status": "PASS" },
+    { "id": "monotonic", "statement": "FuzzyEn is non-increasing in the embedding dimension (1 = holds)", "value": 1, "artifact": "artifacts/fuzzy_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored fuzzyEntropy op is validated against NeuroKit2 entropy_fuzzy across (dimension, r). NeuroKit2 re-computes the fuzzy entropy from the identical baseline-removal + Chebyshev + exponential-membership + self-excluded phi pipeline; the agreement is BIT-FOR-BIT (max |diff| ~4e-15). At m=2, r=0.2 the fuzzy entropy (0.948) is lower than the crisp sample entropy (NeuroKit2 entropy_sample, 1.327) on the same signal, and FuzzyEn is non-increasing in the embedding dimension (0.948 -> 0.704 -> 0.616).",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), channel POz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/fuzzy_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the newly-authored fuzzyEntropy reproduces NeuroKit2 entropy_fuzzy bit-for-bit (max |diff| ~4e-15) across (dimension, r); (2) at m=2, r=0.2 it is lower than the crisp sample entropy (0.948 vs 1.327) and it is non-increasing in the embedding dimension. HONEST scope: (1) this op is NEWLY AUTHORED to complete the sample-entropy family -- the ecosystem had sample and approximate entropy (crisp) but not the fuzzy generalization; (2) this is a genuine MACHINE-PRECISION match -- the op and NeuroKit2 compute the IDENTICAL baseline-removal + Chebyshev + exponential-membership + self-excluded phi pipeline, so the ~4e-15 residual is the floating-point floor, not a convention agreement; (3) the finding is the fuzzy-vs-crisp difference: the soft exponential membership counts near-matches the Heaviside step rejects, so more (partial) matches means lower entropy -- FuzzyEn is the robust, continuous generalization of SampEn, which is the reason to add it; (4) the value depends on (dimension, r, fuzzy power n); here the NeuroKit2 defaults (m=2, r=0.2*sd, n=1), so the reproducible content is the bit-exact family and the fuzzy-vs-sample contrast, not an absolute physiological constant; (5) run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "Fuzzy entropy's robustness makes it well-suited to multiscale analysis (multiscale fuzzy entropy, MFE): apply fuzzyEntropy to coarse-grained versions of the signal across temporal scales, where the crisp sample entropy would grow unstable at coarse scales / short lengths. Building MFE on this op and comparing the complexity-vs-scale curves across EEG states would extend the measure without changing its validated core. Documented, not escalated.", "artifact": "artifacts/fuzzy_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["NeuroKit2 entropy_fuzzy (Python)", "NeuroKit2 entropy_sample (Python)"],
+  "status": "validated"
+}

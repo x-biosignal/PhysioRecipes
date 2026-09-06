@@ -1,0 +1,11 @@
+{
+  "dataset": "Dataset for ADL Recognition with Wrist-worn Accelerometer (HMP)",
+  "authors": "Bruno B, Mastrogiovanni F, Sgorbissa A",
+  "repository": "UCI Machine Learning Repository",
+  "doi": "10.24432/C5CS3C",
+  "url": "https://archive.ics.uci.edu/dataset/283",
+  "license": "CC-BY 4.0",
+  "acquisition": "single tri-axial wrist accelerometer @ 32 Hz (0-63 coded, -1.5..+1.5 g); 14 ADL; multiple subjects/trials",
+  "activities_used": ["Brush_teeth", "Comb_hair", "Drink_glass", "Eat_meat", "Eat_soup", "Walk", "Climb_stairs"],
+  "note": "Self-care activities (brushing teeth, combing hair, eating meat/soup, drinking from a glass) with walking/stairs as contrast."
+}

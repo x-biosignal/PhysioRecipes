@@ -1,0 +1,35 @@
+{
+  "id": "rsa-mantel-gait-wbds",
+  "title": "Same geometry, different modality: representational similarity of gait kinematics and kinetics, validated against vegan",
+  "modality": ["biomechanics", "gait", "cross-modal", "kinematics", "kinetics", "representational-similarity"],
+  "packages": ["PhysioCrossModal"],
+  "dataset": {
+    "name": "WBDS -- a public data set of overground and treadmill walking (Fukuchi et al. 2018)",
+    "version": "figshare 5722711",
+    "record": "five subjects (WBDS01-05), treadmill walking; sagittal knee + ankle flexion angles (kinematics) and antero-posterior + vertical ground reaction force (kinetics), time-aligned and down-sampled to 150 samples",
+    "url": "https://doi.org/10.6084/m9.figshare.5722711",
+    "public": true,
+    "citation": "Fukuchi CA, Fukuchi RK, Duarte M. A public dataset of overground and treadmill walking kinematics and kinetics in healthy individuals. PeerJ 2018;6:e4640. Data: figshare doi:10.6084/m9.figshare.5722711 (CC-BY 4.0)."
+  },
+  "proposition": "Two modalities can carry the same STRUCTURE without sharing units or dimensions. Representational similarity analysis (RSA; Kriegeskorte et al. 2008) -- the Mantel test (Mantel 1967) -- asks this directly: build a dissimilarity matrix (RDM) for each modality over the shared observations, then correlate the RDMs. Do pairs of gait moments that are far apart in joint-angle space also tend to be far apart in ground-reaction-force space? On real WBDS treadmill walking, the answer is yes but only moderately: the Mantel correlation between the kinematics RDM and the kinetics RDM is r = 0.34 (permutation p = 0.010) for subject WBDS01, and 0.34-0.49 (mean 0.38) across all five subjects, each significant. The ecosystem's representationalSimilarity reproduces the canonical vegan::mantel EXACTLY (|difference| = 0). Notably, this rank-based geometric correspondence (0.38) is weaker than the distance correlation on the same data (0.72) -- RSA and distance correlation measure genuinely different things, and reporting both keeps the picture honest.",
+  "opdag": ["representationalSimilarity"],
+  "claims": [
+    { "id": "rsa_similarity", "statement": "RSA / Mantel similarity between the gait kinematics and kinetics RDMs, WBDS01", "value": 0.3440491701, "artifact": "artifacts/rsa_mantel_summary.csv", "status": "PASS" },
+    { "id": "p_value",        "statement": "permutation p-value of the Mantel test (99 permutations, seed 1)", "value": 0.010, "artifact": "artifacts/rsa_mantel_summary.csv", "status": "PASS" },
+    { "id": "mantel_vegan",   "statement": "the same statistic recomputed by the canonical vegan::mantel (op == vegan to machine precision)", "value": 0.3440491701, "artifact": "artifacts/rsa_mantel_summary.csv", "status": "PASS" },
+    { "id": "rsa_mean5",      "statement": "mean Mantel similarity across all five WBDS subjects", "value": 0.3818447368, "artifact": "artifacts/rsa_mantel_summary.csv", "status": "PASS" },
+    { "id": "rsa_min5",       "statement": "minimum Mantel similarity across the five subjects (robustness floor)", "value": 0.3440491701, "artifact": "artifacts/rsa_mantel_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The Mantel test (Mantel 1967) -- the statistical core of RSA (Kriegeskorte et al. 2008) -- is a well-defined statistic whose canonical R implementation is vegan::mantel. A correct implementation must (1) reproduce vegan::mantel exactly on the same data, and (2) recover the true structure -- a moderate, significant correspondence between the gait kinematics and kinetics representational geometries. The ecosystem does both: representationalSimilarity == vegan::mantel to machine precision (|diff| = 0), Mantel r = 0.3440 (p = 0.010) for WBDS01, and 0.34-0.49 (mean 0.38, all significant) across the five subjects.",
+    "data": "REAL -- WBDS (Fukuchi et al. 2018, PeerJ; figshare 5722711, CC-BY 4.0), five subjects of treadmill walking; sagittal knee+ankle flexion angles + AP+vertical GRF",
+    "artifacts": ["artifacts/rsa_mantel_summary.csv", "artifacts/rsa_mantel_by_subject.csv"],
+    "all_pass": true,
+    "note": "The reproducible finding is the representational-geometry correspondence: Mantel r = 0.3440 (WBDS01, p = 0.010), reproduced by vegan::mantel to machine precision, and 0.34-0.49 across five subjects. HONEST scope: (1) that gait kinematics and kinetics share representational structure is expected biomechanically -- the contribution is a VALIDATED, general RSA/Mantel op demonstrated on real data, NOT a novel physiological claim; (2) the RSA/Mantel r (0.38) is a rank correlation of distance matrices -- a distinct, more CONSERVATIVE measure than the distance correlation (0.72) on the same data; the two answer different questions (shared geometry vs full dependence) and both are reported; (3) this is an EXTERNAL cross-tool validation (vegan::mantel), not a self-comparison; (4) offline marker-derived angles + raw GRF, one trial per subject, treadmill (no forward drift); (5) run_simulation = FALSE -- the only randomness is the permutation null, fixed by seed = 1, so the p-value replays byte-identically."
+  },
+  "open_questions": [
+    { "q": "RSA's power is in comparing MANY representational geometries: a partial Mantel test would ask whether the kinematics-kinetics correspondence survives removing gait speed, and an RSA across genuinely different modalities (EEG RDM vs EMG RDM, or a model RDM vs a data RDM) would turn this validated Mantel op into a representational-geometry discovery tool. The contrast with the distance correlation (0.38 vs 0.72) also invites a systematic comparison of when rank-geometry and full-dependence measures agree. Documented, not escalated.", "artifact": "artifacts/rsa_mantel_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["vegan::mantel (R, CRAN)"],
+  "status": "validated"
+}

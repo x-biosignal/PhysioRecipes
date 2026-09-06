@@ -1,0 +1,130 @@
+---
+title: "Sympathetic and vagal in one plot: the cardiac autonomic indices, a newly-authored op, bit-for-bit against NeuroKit2"
+subtitle: "A worked cardiac-autonomic case study on real RR intervals, introducing and certifying ecgHRVautonomic"
+categories: [ecg, hrv, cardiac-autonomic, poincare, aging, validated]
+author: "Yusuke Matsui"
+date: "2026-09-05"
+---
+
+> **What this case shows** — the [Poincare case](../poincare-hrv-fantasia/index.qmd) gave the raw
+> SD1/SD2. Toichi (1997) read two *clinical* indices off the same plot's **4-SD bounding box**
+> (long axis **L = 4·SD2**, short axis **T = 4·SD1**): the **Cardiac Sympathetic Index**
+> (CSI = L/T) and the **Cardiac Vagal Index** (CVI = log₁₀(L·T)). The ecosystem had SD1/SD2 but not
+> these indices, so this case introduces a **newly-authored op**, `ecgHRVautonomic`. On real RR it
+> reproduces NeuroKit2's `hrv_nonlinear` indices **bit-for-bit** (max |diff| **0**), and the finding:
+> the **Cardiac Vagal Index is higher in the young (4.90) than the old (4.55)**, robust across the
+> cohort (**5/5** young above the old mean) — the parasympathetic decline of autonomic aging.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for the cardiac autonomic balance: `ecgHRVautonomic(rr)` → `csi` (sympathetic),
+`cvi` (vagal), `csi_modified` (a sensitive sympathetic marker).
+**Way of thinking** — the Poincare cloud's *shape* is autonomic: its short axis (SD1, T) is vagal,
+its long axis (SD2, L) is overall variability. CSI = L/T is the sympatho-vagal *balance*; CVI =
+log(L·T) is the vagal *magnitude*. One plot, two branches of the autonomic nervous system.
+**Ecosystem usage** — `PhysioECG::ecgHRVautonomic()`; the clinical-index complement of
+`ecgHRVpoincare()` (SD1/SD2) and `ecgHRVasymmetry()` (HRA).
+:::
+
+## Proposition
+
+On a real 5-minute RR window (Fantasia f1y01), the newly-authored `ecgHRVautonomic` reproduces
+NeuroKit2's Toichi indices bit-for-bit (max |diff| 0); and the Cardiac Vagal Index is higher in young
+(4.90) than old (4.55), 5/5 young above the old mean.
+
+## Question & goal
+
+**The question is a gap and its fidelity: the ecosystem had SD1/SD2 but not the clinical CSI/CVI —
+can we author them to reproduce the reference exactly, and does the vagal index track autonomic
+aging?** The goal is to introduce `ecgHRVautonomic`, certify it bit-for-bit against NeuroKit2, and
+read the age effect.
+
+## Challenge & approach
+
+The Toichi indices are read off the Poincare 4-SD box (L = 4·SD2, T = 4·SD1): CSI = L/T, CVI =
+log₁₀(L·T), CSI_Modified = L²/T. We implement those exact formulas — with SD1 = SDSD/√2 (universal)
+and SD2 = the geometric paired-projection (the convention in which the indices are defined) — as
+`ecgHRVautonomic`, and check each index against NeuroKit2's `hrv_nonlinear`.
+
+```
+RR (Fantasia f1y01, 5-min) → ecgHRVautonomic → CSI 1.50, CVI 4.85, CSI_mod 487
+                    vs NeuroKit2 hrv_nonlinear → bit-exact (max |diff| 0)
+                    CVI young 4.90 > old 4.55 (5/5) → vagal decline with age
+```
+
+## Data
+
+**Fantasia Database (PhysioNet)**: subject **f1y01** (young healthy adult), the first **5-minute** RR
+window (391 intervals) — the same git-tracked root the sibling
+[Poincare](../poincare-hrv-fantasia/index.qmd) and [HRA](../hra-fantasia/index.qmd) cases use; the
+aging comparison uses all **10** subjects. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the Poincare 4-SD bounding box for f1y01 — the long axis L = 4·SD2 (red) and short axis T = 4·SD1 (blue) give CSI = L/T = 1.50. Right: the Cardiac Vagal Index across the 5 young and 5 old subjects — CVI is higher in the young (mean 4.90) than the old (4.55), all 5 young above the old mean, the parasympathetic decline of autonomic aging.](artifacts/figure.png)
+
+*How to read this:* the left panel is the construction (CSI = long/short axis of the Poincare box);
+the right panel is the finding (the vagal index falls with age).
+
+| Quantity | Value |
+|---|--:|
+| **Cardiac Sympathetic Index (CSI = L/T)** | **1.50** |
+| **Cardiac Vagal Index (CVI = log₁₀(L·T))** | **4.85** |
+| Modified CSI (L²/T) | **487** |
+| op vs NeuroKit2 `hrv_nonlinear` (max \|diff\|) | **0** (bit-exact) |
+| **young mean CVI → old mean CVI** | **4.90 → 4.55** |
+| young subjects with CVI > old mean (of 5) | **5** |
+
+The newly-authored op equals NeuroKit2 exactly, and the vagal index declines with age. Values trace
+to [`artifacts/csi_summary.csv`](artifacts/csi_summary.csv).
+
+## Conclusion
+
+`ecgHRVautonomic` fills a clinical gap — the ecosystem had the raw SD1/SD2 but not the Toichi CSI/CVI
+indices — and it is exact: bit-for-bit against NeuroKit2. On real RR the Cardiac Vagal Index declines
+with age, completing the autonomic-aging picture the DFA (α1 rises) and Poincare (SD1 falls) cases
+began on the same cohort. The transferable takeaway: **the Poincare box gives you both autonomic
+branches — CSI (L/T) for sympatho-vagal balance, CVI (log L·T) for vagal magnitude — and the vagal
+index is the one that tracks the parasympathetic decline of aging.**
+
+## Open questions
+
+- CSI_Modified is the marker Jeppesen (2014) used for **seizure detection** from single-lead ECG;
+  computing it in a sliding window over an ictal recording — and pairing it with the DFA α1 and HRA
+  on the same beats — would test the multi-index autonomic signature of seizures. *Documented, not
+  escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| cardiac autonomic indices (CSI/CVI/CSI_Modified) | `ecgHRVautonomic()` | PhysioECG |
+| raw Poincare SD1/SD2 | `ecgHRVpoincare()` | PhysioECG |
+| heart-rate asymmetry | `ecgHRVasymmetry()` | PhysioECG |
+
+**Choosing the parameters.**
+
+- **the window** — CSI/CVI are usually read on the 5-minute short-term HRV window; they need a stable
+  Poincare cloud.
+- **which index** — CSI (L/T) is the sympatho-vagal *ratio*; CVI (log L·T) is the vagal *magnitude*;
+  CSI_Modified (L²/T) is the more sensitive sympathetic marker used clinically (seizure detection).
+- **the SD2 convention** — the indices are defined on the *geometric* Poincare box, so `ecgHRVautonomic`
+  uses the paired-projection SD2 (matching NeuroKit2); this differs by a small O(1/n) amount from the
+  analytical closed-form SD2 that `ecgHRVpoincare` reports.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioECG)
+
+a <- ecgHRVautonomic(rr)   # rr: data.frame(channel, rr_ms, time_sec)
+a$csi   # 1.50 -- cardiac sympathetic index (L/T)
+a$cvi   # 4.85 -- cardiac vagal index (log10(L*T)), falls with age
+
+# reproduces NeuroKit2's hrv_nonlinear CSI/CVI/CSI_Modified bit-for-bit (max |diff| 0).
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/csi_summary.csv`](artifacts/csi_summary.csv), and [`audit.py`](audit.py) re-checks each
+index, the bit-exact NeuroKit2 match, the vagal-decline finding and its cohort robustness (5/5), and
+the honestly-noted scope (newly-authored op; geometric-SD2 convention; aging descriptive on n=5+5).

@@ -1,0 +1,137 @@
+---
+title: "The workhorse spectral estimator: Welch band power, bit-for-bit against scipy"
+subtitle: "A worked spectral-estimation case study on real 64-channel EEG, certifying bandPower's Welch against scipy.signal.welch"
+categories: [eeg, spectral, welch, band-power, alpha, topography, validated]
+author: "Yusuke Matsui"
+date: "2026-09-05"
+---
+
+> **What this case shows** — **Welch's method** (1967) is the workhorse of EEG spectral analysis:
+> average the periodograms of overlapping, windowed segments to estimate the power spectral
+> density, then integrate over frequency bands. `bandPower(method = "welch")` is used across the
+> EEG cases (the [Berger effect](../eeg-berger-eegmmidb/index.qmd), alpha reactivity) for
+> *findings* — but had never been checked against the reference implementation. Here it is
+> certified: on real eyes-closed 64-channel EEG its Welch band powers reproduce
+> `scipy.signal.welch` **bit-for-bit** (max |diff| ~**7e-13** over 64 channels × 5 bands) once the
+> conventions are matched. And the finding: relative alpha power is highest over the
+> **parieto-occipital** region (peak **POz 0.73**; posterior mean **0.69** vs frontal **0.28**) —
+> the classic eyes-closed posterior alpha rhythm.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for band-limited EEG power: `bandPower(pe, method = "welch")` → a channel × band
+table (delta/theta/alpha/beta/gamma).
+**Way of thinking** — a spectral estimator is only reproducible if its *conventions* are pinned:
+the window (symmetric vs periodic Hann), the detrend, the scaling (density vs spectrum), the
+overlap. Match those and two implementations agree to the floating-point floor; leave them implicit
+and you get silent few-percent differences.
+**Ecosystem usage** — `PhysioAnalysis::bandPower()`; `relative = TRUE` for relative band power.
+:::
+
+## Proposition
+
+On real eyes-closed 64-channel EEG (eegmmidb S002R02), `bandPower(method = "welch")` reproduces
+`scipy.signal.welch` bit-for-bit (max |diff| ~7e-13 over 64 channels × 5 bands), and relative alpha
+power is highest posteriorly (peak POz 0.73; posterior 0.69 vs frontal 0.28).
+
+## Question & goal
+
+**The question is fidelity: does the ecosystem's Welch band power equal the gold-standard
+`scipy.signal.welch` — and exactly which conventions must match for it to?** bandPower is trusted
+across the EEG cases; this pins down its spectral estimator against the reference. The goal is a
+machine-precision certification and a read of the eyes-closed alpha topography.
+
+## Challenge & approach
+
+Two Welch implementations agree only if their conventions coincide. The op uses a *symmetric* Hann
+window, *no* per-segment detrend, density scaling, one-sided doubling, `nperseg = 256`, 50% overlap.
+scipy's defaults differ (periodic Hann, `detrend = "constant"`), so we point scipy at the op's
+conventions — `get_window("hann", 256, fftbins = False)`, `detrend = False` — and integrate over the
+identical band indices.
+
+```
+EEG 64ch (eegmmidb, 160 Hz) → bandPower(method="welch") → 64 × 5 band-power table
+                    vs scipy.signal.welch (symmetric Hann, detrend=False, density) → bit-exact (~7e-13)
+                                    relative alpha topography → posterior-dominant (POz 0.73)
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, baseline run
+**R02 (eyes-closed)**, all **64** EEG channels, first 10 s at 160 Hz — the same git-tracked root the
+sibling [Hjorth case](../eeg-hjorth-eegmmidb/index.qmd) uses. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the Welch PSD of the posterior alpha-dominant channel POz (red) versus a frontal channel (blue); the alpha band (8-13 Hz, shaded) carries a clear posterior peak, and scipy.signal.welch (black points) lies exactly on the op's curve. Right: relative alpha power for all 64 channels, sorted — posterior channels (red, mean 0.69) sit far above frontal channels (blue, mean 0.28), the eyes-closed posterior alpha rhythm.](artifacts/figure.png)
+
+*How to read this:* the left panel is the validation (op = scipy on the PSD) and the finding (the
+posterior alpha peak); the right panel is the topography (relative alpha is a posterior gradient).
+
+| Quantity | Value |
+|---|--:|
+| mean delta power (montage) | **264.4** |
+| mean alpha power (montage) | **617.4** |
+| **peak relative alpha (POz, posterior)** | **0.73** |
+| posterior mean relative alpha | **0.69** |
+| frontal mean relative alpha | **0.28** |
+| op vs `scipy.signal.welch` (max \|diff\|) | **7e-13** (bit-exact) |
+| channels × bands validated | **64 × 5** |
+
+The op equals scipy to the FFT floating-point floor across every channel and band, and the
+eyes-closed alpha is a posterior gradient. Values trace to
+[`artifacts/bandpower_summary.csv`](artifacts/bandpower_summary.csv).
+
+## Conclusion
+
+The ecosystem's Welch band power *is* `scipy.signal.welch` — bit-for-bit, once the symmetric-Hann +
+no-detrend + density conventions are pinned — so the estimator behind the EEG cases is certified
+against the reference; and on real eyes-closed EEG it recovers the posterior alpha rhythm,
+cross-consistent with the Hjorth case's low posterior mobility on the same data (alpha = slow
+oscillation = low mobility = high alpha power). The transferable takeaway: **a Welch spectrum is
+defined by its conventions — window shape, detrend, scaling, overlap — so pin them explicitly; with
+them matched, `bandPower(method = "welch")` and `scipy.signal.welch` are the same number.**
+
+## Open questions
+
+- The op matches scipy once the **symmetric-Hann + no-detrend** conventions are pinned; scipy's own
+  defaults (periodic Hann, `detrend = "constant"`) differ. Exposing window and detrend as arguments
+  would let users select the convention their pipeline expects — a periodic-Hann + detrend variant
+  would then match scipy out-of-the-box. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Welch band power (channel × band) | `bandPower(method = "welch")` | PhysioAnalysis |
+| relative band power | `bandPower(relative = TRUE)` | PhysioAnalysis |
+| time-domain complexity (the sibling view) | `eegComplexity()` (Hjorth) | PhysioEEG |
+
+**Choosing the parameters.**
+
+- **method** — `"welch"` (this case; low-variance averaged periodogram) or `"wavelet"`
+  (time-resolved).
+- **bands** — defaults to the five EEG bands (delta/theta/alpha/beta/gamma); pass a named list to
+  customize.
+- **relative** — `TRUE` divides each band by the channel's total power (used here for the alpha
+  topography, robust to per-channel amplitude scaling).
+- **the conventions** — the Welch estimate depends on the window (symmetric vs periodic Hann), the
+  detrend, the scaling (density vs spectrum), and the overlap; pin them before comparing across
+  tools.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis)
+
+bp <- bandPower(pe, method = "welch")            # channel x {delta,theta,alpha,beta,gamma}
+rel_alpha <- bp$alpha / rowSums(bp[, -1])        # relative alpha -> posterior-dominant, eyes-closed
+
+# equals scipy.signal.welch bit-for-bit (max |diff| ~7e-13) with matched conventions:
+# get_window("hann", 256, fftbins = FALSE), detrend = FALSE, scaling = "density".
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/bandpower_summary.csv`](artifacts/bandpower_summary.csv), and [`audit.py`](audit.py)
+re-checks each number, the bit-exact scipy match over all 64 × 5 cells, the posterior-vs-frontal
+alpha gradient, the required conventions, and the honestly-noted scope.

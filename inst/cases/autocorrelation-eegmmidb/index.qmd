@@ -1,0 +1,117 @@
+---
+title: "Self-similarity vs lag: the autocorrelation function, a newly-authored op, bit-for-bit against statsmodels"
+subtitle: "A worked time-series case study on real EEG, introducing and certifying autocorrelation"
+categories: [eeg, time-series, autocorrelation, cross-tool-validation, validated]
+author: "Yusuke Matsui"
+date: "2026-09-07"
+---
+
+> **What this case shows** — the **autocorrelation function (ACF)** is the workhorse of time-series
+> analysis: how similar is a signal to a lag-shifted copy of itself? Its shape reveals periodicity, its
+> decay gives the **decorrelation time**. The ecosystem had *cross*-correlation (between two series) but
+> no single-series ACF. This case introduces a **newly-authored op**, `autocorrelation`. On a real
+> eyes-closed EEG channel it reproduces the field-standard **`statsmodels.tsa.acf`** **bit-for-bit**
+> (max |diff| ~**2e-16**), and the ACF decays below 1/e by **lag 3** — a short decorrelation time.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `autocorrelation(x, lag_max)` → the ACF at lags 0…lag_max.
+**Way of thinking** — the ACF turns "how fast does this signal forget its past?" into a curve. Its
+lag-0 value is always 1; how quickly it falls tells you the effective spacing between independent
+samples — which matters the moment you compute a confidence interval on correlated data.
+**Ecosystem usage** — `PhysioAnalysis::autocorrelation()` (single series); `crossCorrelation()` for the
+between-two-series version.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, `autocorrelation` reproduces `statsmodels.tsa.acf` (adjusted = FALSE)
+bit-for-bit (max |diff| ~2e-16) across lags 0..30; the lag-0 value is exactly 1, and the ACF decays
+below 1/e by lag 3.
+
+## Question & goal
+
+**The question is a gap and its fidelity: the ecosystem had cross-correlation but no single-series ACF —
+can we author it and reproduce the field-standard statsmodels exactly, and read off the decorrelation
+structure?** The goal is to introduce `autocorrelation`, certify it bit-for-bit, and characterize the
+signal's memory.
+
+## Challenge & approach
+
+The biased, demeaned sample ACF at lag k is Σ_t (x_t − x̄)(x_{t+k} − x̄) / Σ_t (x_t − x̄)² (dividing the
+autocovariance by N, the same definition as `stats::acf` and `statsmodels.tsa.acf(adjusted=FALSE)`). We
+compute it at lags 0..30 and check it against statsmodels on the identical signal.
+
+```
+EEG POz (eegmmidb) → autocorrelation(lag_max = 30) → ACF at lags 0..30 (lag-0 ≡ 1)
+                    vs statsmodels.tsa.acf(adjusted=False) → bit-exact (~2e-16) at every lag
+                    ACF decays below 1/e by lag 3 → decorrelation time ~19 ms at 160 Hz
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz**, 10 s at 160 Hz — the same git-tracked vector the EEG complexity
+cases use. Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the ACF of the POz signal — starting at 1 (lag 0) and decaying, crossing the 1/e line (red) at lag 3 (green), the decorrelation time. Right: the newly-authored op (blue line) overlaid with statsmodels.tsa.acf (red rings) — they coincide at every lag to machine precision (max |diff| ~2e-16).](artifacts/figure.png)
+
+*How to read this:* the left panel is the signal's memory — how its self-similarity falls with lag;
+the right panel is the certification — the op sits exactly on the field-standard statsmodels.
+
+| Quantity | Value |
+|---|--:|
+| **ACF at lag 0** (identity) | **1** |
+| **ACF at lag 1** | **0.856** |
+| **ACF at lag 2** | **0.567** |
+| op vs `statsmodels.tsa.acf` (max \|diff\|) | **2e-16** (bit-exact) |
+| **decorrelation time** (first lag < 1/e) | **3 samples** |
+| ACF values returned (lags 0..30) | **31** |
+
+The newly-authored op equals statsmodels at every lag, and the decay characterizes the signal's memory.
+Values trace to [`artifacts/acf_summary.csv`](artifacts/acf_summary.csv).
+
+## Conclusion
+
+`autocorrelation` fills a foundational gap — the single-series ACF — and it is exact: bit-for-bit
+against the field-standard statsmodels. The transferable takeaway: **the ACF is where correlated-data
+analysis begins. Its decay is not a curiosity — it sets the effective sample size, so read the
+decorrelation time before you trust any statistic that assumes independent samples.**
+
+## Open questions
+
+- The ACF underlies several primitives worth exposing next: the effective sample size (for honest CIs on
+  correlated signals), the first zero-crossing (a period estimate), and the partial ACF (PACF, for model
+  order). *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Autocorrelation (single series) | `autocorrelation()` | PhysioAnalysis |
+| Cross-correlation (two series) | `crossCorrelation()` | PhysioCrossModal |
+
+**Choosing the parameters.**
+
+- **lag_max** — how far to probe the signal's memory (default 30); use enough lags to see the ACF decay
+  to zero (and, for periodic signals, to reach the first recurrence peak).
+- **demean** — `TRUE` (default) removes the mean before the autocovariance, the standard definition;
+  `FALSE` gives the raw (un-centered) autocorrelation.
+- **estimator** — biased (÷ N), matching `stats::acf` / `statsmodels.tsa.acf(adjusted = FALSE)`.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis)
+
+acf_vec <- autocorrelation(x, lag_max = 30)   # ACF at lags 0..30
+which(acf_vec < 1 / exp(1))[1] - 1            # decorrelation time (first lag below 1/e)
+# reproduces statsmodels.tsa.acf(adjusted = FALSE) bit-for-bit.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/acf_summary.csv`](artifacts/acf_summary.csv), and [`audit.py`](audit.py) re-checks the ACF
+at lags 0, 1, 2, the bit-exact statsmodels match over lags 0..30, the decorrelation time, and the
+honestly-noted scope (newly-authored op; machine-precision; a foundational primitive certified against
+statsmodels).

@@ -1,0 +1,10 @@
+{
+  "dataset": "A public dataset of overground and treadmill walking kinematics and kinetics (WBDS)",
+  "authors": "Fukuchi CA, Fukuchi RK, Duarte M",
+  "repository": "figshare",
+  "doi": "10.6084/m9.figshare.5722711",
+  "paper_doi": "10.7717/peerj.4640",
+  "license": "CC-BY 4.0",
+  "record_used": "WBDS01-05, self-selected-speed treadmill walking (walkT05). INPUTS: markers (mkr) -> right-limb sagittal joint centres ankle=R.Ankle, knee=R.Knee, hip=R.GTR, toe=(R.MT1+R.MT5)/2, in the sagittal (X=anterior-posterior, Y=vertical) plane, mm->m; ground reaction force (grf) belt 2 = right foot (Fx2/Fy2 + COPx2), resampled 300->150 Hz to the marker rate. REFERENCE (ground truth): the dataset's own inverse-dynamics joint moments (knt: RAnkleMomentZ / RKneeMomentZ / RHipMomentZ, the sagittal Z axis), time-normalised to 101 points of the gait cycle. Body mass + height (WBDSinfo.xlsx) drive the de Leva segment inertia.",
+  "note": "The right belt = right foot was confirmed empirically (belt-2 GRF yields the physically consistent ankle moment, r=0.97 vs the reference); WBDS treadmill trials carry no force-plate-foot label. Moments are compared as body-mass-normalised (N*m/kg), sign-aligned per joint (the sign is an extensor/flexor convention). 2-D sagittal only."
+}

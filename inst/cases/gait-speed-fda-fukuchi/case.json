@@ -1,0 +1,35 @@
+{
+  "id": "gait-speed-fda-fukuchi",
+  "title": "How walking speed reshapes the knee-angle waveform: function-on-scalar regression on real gait kinematics",
+  "modality": ["gait", "biomechanics", "kinematics", "functional-data"],
+  "packages": ["PhysioAnalysis"],
+  "dataset": {
+    "name": "A public dataset of overground and treadmill walking kinematics and kinetics (WBDS)",
+    "version": "figshare 5722711 (Fukuchi et al. 2018)",
+    "record": "42 healthy adults x 8 treadmill speeds (T01 slowest .. T08 fastest); sagittal knee angle (RKneeAngleZ) time-normalised to the gait cycle (101 points); 328 subject-speed curves",
+    "url": "https://peerj.com/articles/4640/",
+    "public": true,
+    "citation": "Fukuchi CA, Fukuchi RK, Duarte M. A public dataset of overground and treadmill walking kinematics and kinetics in healthy individuals. PeerJ 2018;6:e4640; data figshare doi:10.6084/m9.figshare.5722711 (CC-BY 4.0)."
+  },
+  "proposition": "SPM tests group differences between curves; function-on-scalar regression MODELS a curve as a function of a covariate. On real gait kinematics the ecosystem recovers the established speed-dependence of the knee waveform: the fitted speed-coefficient curve is significant (curve-wide permutation p = 0.0005), positive, and localised to the swing-flexion peak at 65% of the gait cycle (+3.34 deg per speed level -- faster walking = more peak knee flexion), with a second positive lobe at the loading-response flexion (~15%). Pooled peak knee flexion rises with speed (r = 0.63) -- exactly what gait biomechanics predicts.",
+  "opdag": ["functionalRegression"],
+  "claims": [
+    { "id": "beta_peak_pct",   "statement": "gait-cycle location of the largest speed coefficient (swing-flexion peak)", "value": 65,     "artifact": "artifacts/fda_summary.csv", "status": "PASS" },
+    { "id": "beta_peak_value", "statement": "speed coefficient at the peak (deg per speed level; > 0 = faster -> more flexion)", "value": 3.341, "artifact": "artifacts/fda_summary.csv", "status": "PASS" },
+    { "id": "global_p",        "statement": "curve-wide (family-wise) permutation p-value for the speed effect",           "value": 0.0005, "artifact": "artifacts/fda_summary.csv", "status": "PASS" },
+    { "id": "cor_speed_peak",  "statement": "correlation of walking speed with peak knee flexion (pooled)",                 "value": 0.627, "artifact": "artifacts/fda_summary.csv", "status": "PASS" },
+    { "id": "n_curves",        "statement": "subject-speed knee-angle curves analysed",                                     "value": 328,   "artifact": "artifacts/fda_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "Established speed-dependence of the knee sagittal waveform (Lelas et al. 2003; Schwartz et al. 2008; Fukuchi et al. 2019): peak swing-phase knee flexion and loading-response flexion increase monotonically with walking speed. A correct function-on-scalar analysis must return a significant, positive speed coefficient curve peaking in swing (~60-70% cycle), with a positive peak-flexion/speed relationship.",
+    "data": "REAL -- Fukuchi et al. 2018 (figshare 5722711), 42 subjects x 8 treadmill speeds, 3D motion-capture knee kinematics",
+    "artifacts": ["artifacts/fda_summary.csv", "artifacts/coefficient_curve.csv"],
+    "all_pass": true,
+    "note": "The reproducible result is the SPEED-COEFFICIENT CURVE: significant (curve-wide permutation p = 0.0005), positive, and peaking at 65% of the cycle (swing-flexion), with a second positive lobe at ~15% (loading-response flexion) and a near-zero/slightly-negative segment through mid-stance -- exactly the speed-modulation gait biomechanics describes. The pooled peak-knee-flexion-vs-speed correlation r = 0.63 confirms the direction. Honest scope: (1) treadmill speed is modelled as the ORDINAL trial index T01..T08, not m/s (WBDS uses a per-subject dimensionless speed sweep), so the coefficient is 'per speed level'; (2) the coefficient curve is fitted after removing each subject's across-speed mean (the within-subject speed effect), so between-subject offsets do not contaminate it -- the pooled r = 0.63 is reported separately and is necessarily lower because it retains between-subject spread. SAGITTAL knee = RKneeAngleZ (the Z axis; the X axis is a small-amplitude non-sagittal component)."
+  },
+  "open_questions": [
+    { "q": "Modelling speed in physical units (m/s) rather than an ordinal level would let the coefficient curve be read as deg per m/s and compared across datasets; that needs the WBDS per-subject speed table. Documented, not escalated.", "artifact": "artifacts/coefficient_curve.csv", "escalate": null }
+  ],
+  "reference_tools": [],
+  "status": "validated"
+}

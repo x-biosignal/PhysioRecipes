@@ -1,0 +1,36 @@
+{
+  "id": "eeg-multitaper-alpha-eegmmidb",
+  "title": "The robust spectrum: multitaper PSD of occipital alpha, checked against scipy DPSS and MNE",
+  "modality": ["eeg", "spectral", "multitaper", "alpha", "psd"],
+  "packages": ["PhysioEEG"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)",
+    "version": "PhysioNet 1.0.0",
+    "record": "subject S001, baseline run R02 (eyes-closed rest), occipital channel O1, first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+    "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "A single periodogram of a short EEG segment is noisy -- its variance does not shrink as you record longer. The multitaper method (Thomson 1982) fixes this: it passes the signal through a family of orthogonal DPSS (Slepian) tapers, takes a periodogram through each, and averages them -- trading a little frequency resolution for a large drop in variance and controlled spectral leakage. On real eyes-closed occipital EEG the ecosystem's eegMultitaper computes this robust spectrum and it is alpha-dominated (peak at 10.5 Hz, 46% of the 0-45 Hz power in the 8-13 Hz band). And it is built correctly: its DPSS tapers reproduce scipy.signal.windows.dpss to machine precision (~6e-14, the hard eigenvalue computation), its full PSD reproduces an independent scipy+numpy reconstruction of the same algorithm to ~1e-10 (relative ~1e-13), and it agrees with the field-standard MNE psd_array_multitaper in structure (correlation 0.99, up to MNE's one-sided factor-of-2).",
+  "opdag": ["eegMultitaper"],
+  "claims": [
+    { "id": "peak_freq_hz", "statement": "dominant frequency of the multitaper spectrum -- the alpha rhythm (Hz)", "value": 10.5, "artifact": "artifacts/multitaper_summary.csv", "status": "PASS" },
+    { "id": "alpha_power_fraction", "statement": "fraction of 0-45 Hz multitaper power in the alpha band (8-13 Hz)", "value": 0.46137829, "artifact": "artifacts/multitaper_summary.csv", "status": "PASS" },
+    { "id": "dpss_max_diff_vs_scipy", "statement": "max |eegMultitaper DPSS tapers - scipy.signal.windows.dpss| (machine precision)", "value": 5.707e-14, "artifact": "artifacts/multitaper_summary.csv", "status": "PASS" },
+    { "id": "psd_max_diff_vs_scipy", "statement": "max |eegMultitaper PSD - independent scipy+numpy multitaper reconstruction| (machine precision)", "value": 1.074e-10, "artifact": "artifacts/multitaper_summary.csv", "status": "PASS" },
+    { "id": "psd_corr_vs_mne", "statement": "correlation of the multitaper PSD with MNE psd_array_multitaper (structure, up to the one-sided factor-of-2)", "value": 0.99045743, "artifact": "artifacts/multitaper_summary.csv", "status": "PASS" },
+    { "id": "n_tapers", "statement": "number of DPSS tapers averaged (2*NW-1 for NW=4)", "value": 7, "artifact": "artifacts/multitaper_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "Two canonical building blocks. (1) scipy.signal.windows.dpss (Virtanen et al. 2020) is the reference DPSS/Slepian taper set; eegMultitaper's tapers reproduce it to max |diff| ~ 6e-14 (the non-trivial tridiagonal eigenvalue computation), and the full non-adaptive PSD reproduces an independent scipy+numpy reconstruction of the identical algorithm to ~1e-10 (relative ~1e-13) -- both machine precision. (2) mne.time_frequency.psd_array_multitaper (Gramfort et al. 2013) is the field-standard multitaper PSD; eegMultitaper agrees with it in structure (correlation 0.99) up to a one-sided factor-of-2 (MNE doubles the positive-frequency power) and a small bandwidth-to-NW convention difference. The finding: an alpha-dominated occipital spectrum (peak 10.5 Hz).",
+    "data": "REAL -- eegmmidb (PhysioNet), S001 eyes-closed baseline R02, occipital O1, 10 s at 160 Hz",
+    "artifacts": ["artifacts/multitaper_summary.csv", "artifacts/multitaper_psd.csv"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) eegMultitaper reproduces scipy.signal.windows.dpss (~6e-14) and an independent scipy+numpy multitaper reconstruction (~1e-10) to machine precision, and MNE psd_array_multitaper in structure (correlation 0.99); (2) the eyes-closed occipital spectrum is alpha-dominated (peak 10.5 Hz, 46% of 0-45 Hz power in the alpha band). HONEST scope: (1) TWO machine-precision legs anchor the op -- the DPSS tapers vs scipy (~6e-14) and the full PSD vs an independent from-scratch scipy+numpy reconstruction of the same non-adaptive algorithm (~1e-10, relative ~1e-13); (2) the agreement with MNE psd_array_multitaper is STRUCTURE (correlation 0.99), NOT machine precision -- MNE returns a ONE-SIDED PSD (a factor-of-2: positive frequencies multiplied by 2, so MNE ~ 2x the op) and maps its Hz bandwidth to a slightly different integer NW, so the two differ by a normalization convention + a small taper difference; this is an AGREEMENT leg (like the wavelet-vs-MNE case), reported with the scale factor (~2.00); (3) the alpha-dominated spectrum is the established eyes-closed occipital alpha rhythm -- a validated-estimator demonstration, not a discovery; (4) non-adaptive multitaper, bandwidth NW=4 (7 tapers); (5) single subject/channel, 10 s; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "eegMultitaper is the NON-ADAPTIVE multitaper (equal-weight taper average). The adaptive form (Thomson's iterative eigenvalue weighting, MNE's adaptive=TRUE) down-weights tapers with more broadband leakage and would tighten the estimate near sharp peaks; and a multitaper CROSS-spectrum gives a low-variance coherence (multitaperCoherence, also implemented). Extending this to the adaptive PSD -- pinning the one-sided normalization to MNE's exactly -- and to multitaper coherence would turn a validated estimator into a connectivity tool. Documented, not escalated.", "artifact": "artifacts/multitaper_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.signal.windows.dpss (Python, SciPy)", "mne.time_frequency.psd_array_multitaper (Python, MNE)"],
+  "status": "validated"
+}

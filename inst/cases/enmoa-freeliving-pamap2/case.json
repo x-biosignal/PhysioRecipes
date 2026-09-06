@@ -1,0 +1,34 @@
+{
+  "id": "enmoa-freeliving-pamap2",
+  "title": "The accel triad, completed: ENMO-abs (a newly-authored op) bit-for-bit against GGIR",
+  "modality": ["accelerometer", "wearable", "physical-activity", "free-living", "cross-tool-validation"],
+  "packages": ["PhysioWearable"],
+  "dataset": {
+    "name": "PAMAP2 Physical Activity Monitoring Dataset", "version": "UCI/PhysioNet",
+    "record": "subject 101 hand accelerometer (x, y, z in g at 100 Hz), ~62 min free-living (749 epochs of 5 s)",
+    "url": "https://archive.ics.uci.edu/dataset/231/pamap2+physical+activity+monitoring", "public": true,
+    "citation": "Reiss A, Stricker D. Introducing a new benchmarked dataset for activity monitoring. 2012 16th International Symposium on Wearable Computers, IEEE, 2012:108-109."
+  },
+  "proposition": "ENMO truncates the vector-magnitude-minus-1g to zero, discarding any dip below 1 g (deceleration, partial free-fall, or a persistent calibration offset). ENMOa keeps that movement by taking the absolute value instead. The ecosystem had ENMO and MAD (both GGIR-certified) but not ENMOa; this case introduces a NEWLY-AUTHORED op, computeENMOa, completing the accel movement triad. On a real free-living hand-accelerometer recording it reproduces GGIR::g.applymetrics ENMOa to MACHINE PRECISION (max |diff| ~2e-14 g, correlation 1.0) across all 749 epochs; ENMOa >= ENMO at every epoch and exceeds it by ~63 mg on average (mean 224 vs 162 mg) -- the movement below 1 g that ENMO discards.",
+  "opdag": ["computeENMOa"],
+  "claims": [
+    { "id": "enmoa_max_abs_diff_g", "statement": "max |computeENMOa - GGIR g.applymetrics ENMOa| over all epochs (g) -- bit-exact", "value": 2.414735e-14, "artifact": "artifacts/enmoa_summary.csv", "status": "PASS" },
+    { "id": "enmoa_correlation", "statement": "correlation between computeENMOa and GGIR ENMOa across epochs", "value": 1.0, "artifact": "artifacts/enmoa_summary.csv", "status": "PASS" },
+    { "id": "n_epochs", "statement": "number of 5 s epochs certified against GGIR", "value": 749, "artifact": "artifacts/enmoa_summary.csv", "status": "PASS" },
+    { "id": "mean_enmoa_mg", "statement": "mean ENMOa across the recording (mg) -- a physical movement-intensity descriptor", "value": 224.325129, "artifact": "artifacts/enmoa_summary.csv", "status": "PASS" },
+    { "id": "enmoa_ge_enmo", "statement": "ENMOa >= ENMO at every epoch (the abs retains sub-1 g dips ENMO truncates)", "value": 1, "artifact": "artifacts/enmoa_summary.csv", "status": "PASS" },
+    { "id": "enmoa_minus_enmo_mg", "statement": "mean ENMOa - mean ENMO (mg) -- the sub-1 g movement ENMO discards", "value": 62.642543, "artifact": "artifacts/enmoa_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored computeENMOa op is validated against the field-standard GGIR::g.applymetrics ENMOa on the identical PAMAP2 hand-acc signal (both in g). Both compute the per-epoch mean of |r - 1| with r = sqrt(x^2+y^2+z^2); the agreement is MACHINE PRECISION (max |diff| ~2e-14 g, correlation 1.0) across all 749 epochs. ENMOa >= ENMO at every epoch and exceeds it by ~63 mg on average (mean 224 vs 162 mg).",
+    "data": "REAL -- PAMAP2 (UCI/PhysioNet), subject 101 hand accelerometer, ~62 min free-living, 749 epochs of 5 s at 100 Hz",
+    "artifacts": ["artifacts/enmoa_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the newly-authored computeENMOa reproduces GGIR::g.applymetrics ENMOa to machine precision (max |diff| ~2e-14 g, correlation 1.0) across all 749 epochs; (2) ENMOa >= ENMO at every epoch, exceeding it by ~63 mg on average. HONEST scope: (1) this op is NEWLY AUTHORED to complete the accel movement triad -- the ecosystem had ENMO (computeENMO) and MAD (computeMAD), both GGIR-certified, but not ENMOa; (2) this is a genuine MACHINE-PRECISION match -- the op and GGIR compute the IDENTICAL per-epoch mean of |r - 1|, so the ~2e-14 residual is the floating-point floor, not a convention agreement; (3) the finding is the ENMO/ENMOa relationship: ENMOa >= ENMO at every epoch (the abs keeps the sub-1 g dips ENMO's truncation discards), and the ~63 mg gap is the movement below 1 g, which matters most when the sensor calibration is imperfect; (4) ENMOa is a physical quantity (g / mg), so the mean is a meaningful movement descriptor, not a reproducibility placeholder; (5) run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "With ENMO, ENMOa and MAD all GGIR-certified, the natural next step is auto-calibration (the GGIR non-wear / sphere-fit calibration that ENMOa is designed to expose): checking whether an ENMOa-vs-ENMO gap flags a calibration offset on uncalibrated data would turn the pair into a data-quality signal. Documented, not escalated.", "artifact": "artifacts/enmoa_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["GGIR g.applymetrics ENMOa (R)"],
+  "status": "validated"
+}

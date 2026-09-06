@@ -1,0 +1,131 @@
+---
+title: "How long does the pulse take to reach the finger? The ECG-PPG cross-correlation"
+subtitle: "A worked time-domain-coupling case study on real cardiovascular signals, checked against numpy and scipy"
+categories: [ecg, ppg, cross-correlation, coupling, cardiovascular, validated]
+author: "Yusuke Matsui"
+date: "2026-09-04"
+---
+
+> **What this case shows** — the [coherence case](../coherence-cardiac-bidmc/index.qmd) showed
+> that the ECG and PPG share the heart rate in the *frequency* domain. In the *time* domain, the
+> **cross-correlation** adds the delay: it is the Pearson correlation between two signals as a
+> function of the lag, and its peak lag is a time offset. On real simultaneous ECG + PPG the
+> cross-correlation peaks at **0.39 s** — the **pulse arrival time**, the delay for the pressure
+> pulse to travel from the heart (its ECG) to the fingertip (its PPG). And the measure is exact:
+> `crossCorrelation` reproduces an independent from-scratch numpy normalized cross-correlation
+> **bit-for-bit** (max |diff| ~ 3e-14 across all lags), and its peak lag matches
+> `scipy.signal.correlate`.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for the time delay between two signals: `crossCorrelation(x, y, sr, max_lag)`
+→ read `peak_lag_seconds` (the delay) and `peak_correlation` (the strength).
+**Way of thinking** — the cross-correlation is the time-domain complement of coherence: coherence
+tells you *which frequencies* couple; the cross-correlation tells you *by how much time*. Set
+`max_lag` to the physiologic range you expect (here under one heartbeat).
+**Ecosystem usage** — `PhysioCrossModal::crossCorrelation()`; `slidingCrossCorrelation()` to
+track the delay over time.
+:::
+
+## Proposition
+
+On real simultaneous ECG + PPG (BIDMC-01), the cross-correlation peaks at 0.39 s (the pulse
+arrival time), `crossCorrelation` reproduces an independent numpy normalized cross-correlation
+bit-for-bit (~3e-14), and its peak lag matches `scipy.signal.correlate`.
+
+## Question & goal
+
+**The question is a delay: how long after the heartbeat does the pulse reach the finger — and
+does the ecosystem compute the cross-correlation exactly?** Coherence can't answer the timing;
+the cross-correlation can. The goal is a machine-precision validation and a read of the delay.
+
+## Challenge & approach
+
+The normalized cross-correlation is the Pearson correlation of the two signals at each lag
+(`stats::ccf`). We compute it with `crossCorrelation`, re-compute it from scratch with numpy
+(matched to R's lag convention), and match the peak lag against `scipy.signal.correlate`.
+
+```
+ECG, PPG (BIDMC, 125 Hz) → crossCorrelation(max_lag = 0.72 s) → correlation-vs-lag, peak at 0.39 s
+                    vs independent numpy normalized cross-correlation   → bit-exact (~3e-14)
+                    vs scipy.signal.correlate                            → peak lag matches
+```
+
+## Data
+
+**BIDMC PPG and Respiration Dataset (PhysioNet)**: subject **bidmc01**, simultaneous **lead-II
+ECG** and **fingertip PPG**, 4 min at 125 Hz — the same git-tracked pair the coherence case uses.
+Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the normalized ECG-PPG cross-correlation as a function of lag — crossCorrelation (blue line) and the independent numpy implementation (orange points) coincide, and the magnitude peaks at the red dashed line, a lag of 0.39 s (the pulse arrival time). Right: the op-minus-numpy residual at every lag, all at the ~1e-14 floating-point floor — a bit-exact match.](artifacts/figure.png)
+
+*How to read this:* the left panel is the cross-correlation (its peak lag is the delay); the
+right panel is the validation (op = numpy to the floating-point floor at every lag).
+
+| Quantity | Value |
+|---|--:|
+| peak lag (samples) | **49** |
+| **peak lag (seconds) — pulse arrival time** | **0.39** |
+| peak correlation | **−0.33** |
+| op vs independent numpy (max \|diff\|) | **3e-14** (bit-exact) |
+| scipy peak-lag magnitude | **49** (matches op) |
+
+The op matches numpy to the floating-point floor and scipy at the peak, and the delay is a
+physiologic pulse arrival time. Values trace to
+[`artifacts/crosscorr_summary.csv`](artifacts/crosscorr_summary.csv) and the full profile in
+[`artifacts/crosscorr_profile.csv`](artifacts/crosscorr_profile.csv).
+
+## Conclusion
+
+The ecosystem's cross-correlation is the exact normalized cross-correlation — bit-for-bit against
+numpy, matching scipy at the peak — and on real cardiovascular signals it measures the pulse
+arrival time from heart to finger. The transferable takeaway: **use the cross-correlation for the
+*timing* of coupling (coherence gives the frequencies, this gives the delay); set `max_lag` to
+your expected physiologic range; and read the peak *magnitude* and *lag*, not the sign, when the
+two signals have different morphologies.**
+
+## Open questions
+
+- The cross-correlation gives one delay for the whole segment; a **sliding** cross-correlation
+  (`slidingCrossCorrelation`, also implemented) would track how the pulse arrival time varies
+  beat-to-beat (with blood pressure / vascular tone), and pairing it with the exact
+  R-peak-to-PPG-foot pulse transit time would calibrate the cross-correlation proxy against the
+  clinical measure. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| cross-correlation + peak lag (delay) | `crossCorrelation()` | PhysioCrossModal |
+| sliding (time-varying) cross-correlation | `slidingCrossCorrelation()` | PhysioCrossModal |
+| magnitude-squared coherence (the frequencies) | `coherence()` | PhysioCrossModal |
+
+**Choosing the parameters.**
+
+- **max_lag** — the largest lag to consider (here 90 samples ≈ 0.72 s, under one heartbeat, to
+  isolate the first peak); a quasi-periodic pair like ECG/PPG repeats at the cardiac cycle, so a
+  wide `max_lag` finds recurring peaks.
+- **normalize** — `TRUE` (the default) gives Pearson-like values in [−1, 1]; `FALSE` gives the raw
+  cross-covariance.
+- **reading the sign** — for signals with different morphologies (ECG spike vs PPG wave) the peak
+  can be negative; use the magnitude and the lag.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioCrossModal)
+
+cc <- crossCorrelation(ecg, ppg, sr = 125, max_lag = 90)
+cc$peak_lag_seconds   # 0.39 s -- the pulse arrival time (heart -> finger)
+
+# reproduces an independent numpy normalized cross-correlation bit-for-bit (~3e-14);
+# peak lag matches scipy.signal.correlate.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/`](artifacts/) — the summary in
+[`crosscorr_summary.csv`](artifacts/crosscorr_summary.csv) and the full profile (op alongside
+numpy) in [`crosscorr_profile.csv`](artifacts/crosscorr_profile.csv) — and [`audit.py`](audit.py)
+re-checks each number, the numpy bit-exact match, the scipy peak agreement, the physiologic lag,
+and the honestly-noted sign and quasi-periodicity caveats.

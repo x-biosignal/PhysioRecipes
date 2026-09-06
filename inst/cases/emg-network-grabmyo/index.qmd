@@ -1,0 +1,200 @@
+---
+title: "Which forearm muscles co-activate — a coordination network that survives a split-half test"
+subtitle: "A worked inter-muscle connectivity case study on public EMG"
+categories: [emg, network, connectivity, physionet, validated]
+author: "Yusuke Matsui"
+date: "2026-08-11"
+---
+
+> **What this case shows** — the ecosystem builds an **inter-muscle coordination
+> network** from real GRABMyo forearm EMG whose edges and topology **reproduce**
+> when the recording is split in half. **What reproduces, and what doesn't** —
+> the coherence network reproduces near-perfectly in both its edges and its
+> topology (**edge r = 0.994**, **node-strength r = 0.997**), and the wPLI and
+> directed-Granger edges reproduce too; what does **not** reproduce well is the
+> **partial-coherence node strength** (**0.572**) — because the partial-coherence
+> graph is sparse, so each node's strength rests on a handful of edges and small
+> differences between halves swing the totals. **How to read it** — in the
+> figure, the paired bars are the split-half correlation of edge weights and of
+> node strengths for each estimator; a bar near 1 means that half of the data
+> rebuilds the same network.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — answer *"is this inter-muscle coordination structure real, or
+split-specific noise?"* in three moves: **envelope** the multi-muscle EMG →
+**build** the connectivity network with each estimator → **correlate** edges and
+node strengths between two independent halves.
+**Way of thinking** — a connectivity network is trustworthy only if *both* its
+edges and its topology are stable; different estimators (coherence, partial
+coherence, wPLI, directed GC) trade sensitivity for specificity differently, so
+build several and trust what reproduces — and remember a **sparse** graph's node
+strengths are more fragile than its edges.
+**Ecosystem usage** — chain one function per role, I/O → preprocessing →
+analysis (`readWFDB` → `emgEnvelope` → `emg*Network` → `emgCoordinationStructure`),
+letting the shared `PhysioExperiment` data model connect them. The final section
+turns this into a step-by-step you can adapt to your own recordings.
+:::
+
+## Proposition
+
+On real GRABMyo forearm EMG, the ecosystem's inter-muscle coordination network is
+reproducible across independent data halves: coherence connectivity replicates
+near-perfectly (**edge r = 0.994**, **node-strength r = 0.997**), with weighted
+phase-lag index (edge r = 0.835) and directed Granger causality (edge r = 0.939)
+also reproducible.
+
+## Question & goal
+
+**The question comes from the dataset's own design.** GRABMyo records many
+forearm and wrist muscles together while the hand forms gestures, built for
+hand-gesture recognition and biometrics (Pradhan, He, Jiang, 2022). Recording
+many muscles at once poses its own question: **which muscles co-activate — what
+is the coordination *structure* behind the gestures?** A functional-connectivity
+network answers that by wiring muscles that move together into a graph. But such
+networks are easy to compute and easy to over-interpret, so we ask the honest
+version of the question: does the ecosystem's coordination network describe
+**stable** structure — does it reproduce when the recording is split in half?
+
+## Challenge & approach
+
+A connectivity network is only trustworthy if both its edges and its topology are
+stable, and different estimators (coherence, partial coherence, wPLI, directed
+Granger causality) trade sensitivity for specificity differently. The recipe
+builds the 10-muscle network with each estimator, then correlates edge weights
+and node strengths between two independent halves of the recording:
+
+```
+readWFDB  →  emgEnvelope  →  {coherence, partial, wPLI, directed-GC} network  →  correlate edges + nodes across halves
+```
+
+Each estimator asks a different question of the same signal — marginal
+co-activation (coherence), co-activation with shared drive removed (partial
+coherence), non-zero-lag phase coupling (wPLI), directional influence (GC) — so
+reporting several is the point, not hedging.
+
+## Data
+
+**GRABMyo v1.1.0** (PhysioNet) — public
+(<https://physionet.org/content/grabmyo/1.1.0/>); forearm EMG, 10-muscle
+coordination network. *Pradhan A, He J, Jiang N. Multi-day dataset of forearm and
+wrist electromyogram for hand gesture recognition and biometrics. Sci Data.
+2022;9:733.*
+
+## Results
+
+![Split-half reproducibility of the muscle-coordination network for each estimator: paired bars give the correlation of edge weights and of node strengths between two independent halves of the GRABMyo recording. Directed GC has no node-strength bar; the orange label flags the weak partial-coherence node strength.](artifacts/figure.png)
+
+*How to read this:* each bar is a correlation between the two halves of the
+recording — near 1 means that half rebuilds the same network. Edge-weight r asks
+whether the *connections* reproduce; node-strength r asks whether the *topology*
+(who is a hub) reproduces.
+
+Split-half reproducibility of edge weights
+([`artifacts/validation_split_half.csv`](artifacts/validation_split_half.csv)) and
+node strengths
+([`artifacts/validation_topology_split_half.csv`](artifacts/validation_topology_split_half.csv)):
+
+| Estimator | Edge-weight r | Node-strength r |
+|---|---|---|
+| coherence | **0.994** | **0.997** |
+| partial coherence | 0.975 | 0.572 |
+| wPLI | 0.835 | 0.929 |
+| directed Granger causality | 0.939 | — |
+
+The coherence network reproduces almost perfectly in both edges and topology;
+wPLI and directed-GC edges are reproducible too.
+
+## Conclusion
+
+On real GRABMyo EMG the ecosystem recovers a stable inter-muscle coordination
+network — reproducible across independent data halves — establishing that the
+connectivity structure is signal, not split-specific noise. The transferable
+lesson: split the data and correlate both edges and topology before you believe a
+connectivity network.
+
+## Open questions
+
+Partial-coherence node-strength reproducibility (0.572) trails its edge-weight
+reproducibility (0.975) because the partial-coherence graph is sparse and its
+node strengths are more split-sensitive. A documented method-sensitivity, not
+escalated.
+
+## Using this in your own analysis
+
+This case is a worked example of a **connectivity-reproducibility test** — the
+pattern for any "is this network real, or an artefact of one data split?"
+question.
+
+**The general recipe** (three steps, the same for any connectivity network):
+
+1. **Envelope** each channel so the network sees co-activation over time.
+2. **Build** the network with one or more estimators — coherence for marginal
+   co-activation, partial coherence to remove shared drive, wPLI to discount
+   zero-lag coupling, directed GC for directionality.
+3. **Test stability** by rebuilding the network on two independent halves and
+   correlating both the edge weights and the node strengths; trust the estimators
+   whose *edges and topology* both reproduce.
+
+**Which functions, and how they compose.** Each step is one ecosystem function,
+picked by *role* — I/O → preprocessing → analysis:
+
+| Step | Function | Package |
+|---|---|---|
+| load the forearm EMG recording | `readWFDB()` | PhysioIO |
+| rectify + smooth to activation envelopes | `emgEnvelope()` | PhysioEMG |
+| coherence connectivity network | `emgCoherenceNetwork()` | PhysioEMG |
+| partial-coherence network | `emgPartialCoherenceNetwork()` | PhysioEMG |
+| weighted phase-lag-index network | `emgWPLINetwork()` | PhysioEMG |
+| directed Granger-causality network | `emgDirectedGCNetwork()` | PhysioEMG |
+| topology summary (density, modules, node strength) | `emgCoordinationStructure()` | PhysioEMG |
+
+They chain because each returns (or consumes) a `PhysioExperiment` — the shared
+data model is what lets the tools snap together, so you compose an analysis by
+naming the steps, not by reshaping matrices between them.
+
+**Choosing the parameters.**
+
+- **`freq_band`** — `c(20, 250)` is the informative surface-EMG band; content
+  below ~20 Hz is movement artifact and much above is noise at this sampling rate.
+- **`nperseg`, `noverlap`** — the spectral window sets the frequency resolution
+  and the number of independent segments the estimate averages over; 512 samples
+  at 2048 Hz is ~250 ms per window, `noverlap = 256` steps them by half.
+- **Estimator choice** — coherence is sensitive but confounded by common drive;
+  **partial** coherence removes shared influence (sparser graph, but its node
+  strengths become split-sensitive, exactly the 0.572 above); **wPLI** discounts
+  zero-lag / volume-conduction coupling; **directed GC** adds direction. Report
+  several rather than betting on one.
+- **Split location** — halve the recording over time and process both halves with
+  the *identical* recipe, so a method difference can't masquerade as instability.
+
+**Applying it to your own hypothesis.** Swap the GRABMyo record for your own
+multi-muscle (or multi-channel) recording, keep the envelope → network →
+split-half recipe, and report only the estimators whose edges *and* topology
+reproduce. The same coordination question appears as a low-dimensional synergy
+decomposition on this data ([`emg-synergy-grabmyo`](../emg-synergy-grabmyo/)) and
+at the individual motor-unit level ([`hdemg-mu-openhdemg`](../hdemg-mu-openhdemg/)).
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioIO); library(PhysioEMG)
+
+pe  <- readWFDB("session1_participant1_...")            # GRABMyo forearm EMG (10-muscle set)
+env <- emgEnvelope(pe, method = "rms", window_ms = 50)   # rectify + smooth
+
+# build the inter-muscle network with each estimator (coherence shown)
+net   <- emgCoherenceNetwork(env, freq_band = c(20, 250), nperseg = 512L, noverlap = 256L)
+coord <- emgCoordinationStructure(net$network)           # density, modules, node strengths
+
+# split-half reproducibility: same network on each half, correlate edges + node strengths
+sig  <- SummarizedExperiment::assay(env, "envelope"); half <- nrow(sig) %/% 2
+n1 <- emgCoherenceNetwork(env[seq_len(half), ],        freq_band = c(20, 250))$network
+n2 <- emgCoherenceNetwork(env[(half + 1):nrow(sig), ], freq_band = c(20, 250))$network
+cor(n1[upper.tri(n1)], n2[upper.tri(n2)])                # edge-weight r (coherence): 0.994
+cor(rowSums(n1), rowSums(n2))                            # node-strength r: 0.997
+```
+
+**Auditing the numbers.** For readers who want to verify rather than trust: every
+edge-weight and node-strength split-half correlation lives in
+[`artifacts/`](artifacts/), and `audit.py` re-checks each number on this page
+against those files.

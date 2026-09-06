@@ -1,0 +1,134 @@
+---
+title: "The asymmetric heartbeat: heart-rate asymmetry, a newly-authored op, bit-for-bit against NeuroKit2"
+subtitle: "A worked nonlinear-HRV case study on real RR intervals, introducing and certifying ecgHRVasymmetry"
+categories: [ecg, hrv, asymmetry, poincare, nonlinear, validated]
+author: "Yusuke Matsui"
+date: "2026-09-05"
+---
+
+> **What this case shows** — the [Poincare case](../poincare-hrv-fantasia/index.qmd) measured the
+> *symmetric* SD1/SD2. But the Poincare plot is **not** symmetric: heart-rate **decelerations** (RR
+> prolongations, points above the line of identity) and **accelerations** (shortenings, below)
+> contribute unequally to variability — **heart-rate asymmetry (HRA)**, a signature of the temporal
+> irreversibility of cardiac dynamics that SD1/SD2 cannot see. The ecosystem had only SD1/SD2, so
+> this case introduces a **newly-authored op**, `ecgHRVasymmetry`. On real RR it reproduces
+> NeuroKit2's `hrv_nonlinear` HRA indices **bit-for-bit** (max |diff| ~**1e-14**), and it recovers
+> the HRA signature: decelerations contribute **more** than accelerations to short-term variability
+> (**C1d 0.63 > C1a 0.37**), robust across the cohort (**8/10** subjects).
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for the asymmetry of heart-rate variability: `ecgHRVasymmetry(rr)` → the GI/SI/AI/PI
+indices and the deceleration/acceleration contributions (C1d/C1a short-term, C2d/C2a long-term).
+**Way of thinking** — HRV is *irreversible*: the heart slows and speeds differently. Decelerations
+carry most of the *short-term* variability (a vagal fingerprint); accelerations carry most of the
+*long-term*. A symmetric SD1/SD2 averages this away — HRA keeps it.
+**Ecosystem usage** — `PhysioECG::ecgHRVasymmetry()`; the asymmetric complement of
+`ecgHRVpoincare()` (SD1/SD2).
+:::
+
+## Proposition
+
+On a real 5-minute RR window (Fantasia f1y01), the newly-authored `ecgHRVasymmetry` reproduces
+NeuroKit2's HRA indices bit-for-bit (max |diff| ~1e-14); and decelerations dominate short-term
+variability (C1d 0.63 > C1a 0.37), robust in 8/10 subjects.
+
+## Question & goal
+
+**The question is a gap and its fidelity: the ecosystem could measure the symmetric SD1/SD2 but not
+the asymmetry — can we author an HRA op that reproduces the reference exactly, and which way does the
+asymmetry go?** The goal is to introduce `ecgHRVasymmetry`, certify it bit-for-bit against NeuroKit2,
+and read the direction of the asymmetry.
+
+## Challenge & approach
+
+HRA has several standard indices with precise definitions (Guzik 2006; Piskorski & Guzik 2011): the
+distance-, angle-, and area-based indices (GI/SI/AI), Porta's point-count index (PI), and the
+deceleration/acceleration contributions to short-, long-, and total variability (C1d/C1a, C2d/C2a,
+Cd/Ca). We implement those exact formulas as `ecgHRVasymmetry` and check every index against
+NeuroKit2's `hrv_nonlinear`.
+
+```
+RR (Fantasia f1y01, 5-min) → ecgHRVasymmetry → GI/SI/PI + C1d/C1a/C2d/C2a
+                    vs NeuroKit2 hrv_nonlinear → bit-exact (~1e-14)
+                                    C1d 0.63 > C1a 0.37 → decelerations dominate short-term HRV
+```
+
+## Data
+
+**Fantasia Database (PhysioNet)**: subject **f1y01** (young healthy adult), the first **5-minute**
+RR window (391 intervals) — the same git-tracked root the sibling
+[Poincare case](../poincare-hrv-fantasia/index.qmd) uses; the cohort-consistency count uses all
+**10** subjects. Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the asymmetric Poincare plot for f1y01 — deceleration points (above the line of identity, red) and acceleration points (below, blue); the decelerations carry the larger short-term contribution (C1d = 0.63). Right: the deceleration vs acceleration contributions to short-term (C1) and long-term (C2) HRV — decelerations dominate short-term, accelerations dominate long-term, the complementary asymmetry the symmetric SD1/SD2 averages away.](artifacts/figure.png)
+
+*How to read this:* the left panel is the geometry (the plot is asymmetric about the dashed line);
+the right panel is the finding (short-term is deceleration-heavy, long-term is acceleration-heavy).
+
+| Quantity | Value |
+|---|--:|
+| Guzik's Index (GI) | **50.4%** |
+| Slope Index (SI) | **50.3%** |
+| Porta's Index (PI) | **54.1%** |
+| **C1d (decel, short-term)** vs **C1a (accel)** | **0.63** vs **0.37** |
+| C2d (decel, long-term) vs C2a (accel) | 0.36 vs **0.64** |
+| op vs NeuroKit2 `hrv_nonlinear` (max \|diff\|) | **1e-14** (bit-exact) |
+| subjects with C1d > C1a (of 10) | **8** |
+
+The newly-authored op equals NeuroKit2 to the floating-point floor, and decelerations dominate
+short-term variability. Values trace to [`artifacts/hra_summary.csv`](artifacts/hra_summary.csv).
+
+## Conclusion
+
+`ecgHRVasymmetry` fills a real gap — the ecosystem could measure the *symmetric* SD1/SD2 but not the
+*asymmetry* — and it is exact: bit-for-bit against NeuroKit2's HRA. On real RR it recovers the
+established signature of an irreversible heartbeat: decelerations carry most of the short-term
+variability (a vagal fingerprint) and accelerations most of the long-term. The transferable
+takeaway: **the Poincare plot is asymmetric, and that asymmetry is information — use HRA (C1d vs C1a)
+alongside SD1/SD2 to capture the direction of heart-rate dynamics that the symmetric descriptors
+average away.**
+
+## Open questions
+
+- HRA is prognostic: reduced deceleration-driven short-term asymmetry has been associated with
+  increased mortality after myocardial infarction (the deceleration-capacity literature). Computing
+  the effective HRA over a clinical cohort with outcomes — and pairing it with the DFA α1 and
+  Poincare SD1/SD2 on the same beats — would test whether the asymmetry adds prognostic information
+  beyond the symmetric descriptors. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| heart-rate asymmetry (GI/SI/PI + contributions) | `ecgHRVasymmetry()` | PhysioECG |
+| symmetric Poincare (SD1/SD2) | `ecgHRVpoincare()` | PhysioECG |
+| fractal scaling α1/α2 | `ecgDFA()` | PhysioECG |
+
+**Choosing the parameters.**
+
+- **the window** — HRA is usually read on the 5-minute short-term HRV window; it needs enough
+  deceleration and acceleration points to be stable.
+- **which index** — GI/SI/AI are three views of the same asymmetry (distance, angle, area); PI is the
+  point-count asymmetry; the C1d/C1a and C2d/C2a contributions localize it to short- vs long-term.
+- **reading it** — `C1d > C1a` (decelerations dominate short-term) is the expected healthy signature;
+  its attenuation is the clinically-studied direction.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioECG)
+
+a <- ecgHRVasymmetry(rr)   # rr: data.frame(channel, rr_ms, time_sec)
+a$c1d; a$c1a   # 0.63 vs 0.37 -- decelerations dominate short-term variability
+a$gi           # Guzik's Index (%)
+
+# reproduces NeuroKit2's hrv_nonlinear HRA indices bit-for-bit (max |diff| ~1e-14).
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/hra_summary.csv`](artifacts/hra_summary.csv), and [`audit.py`](audit.py) re-checks each
+index, the bit-exact NeuroKit2 match, the C1d+C1a=1 / C2d+C2a=1 partitions, the deceleration-dominance
+finding and its cohort robustness (8/10), and the honestly-noted scope (newly-authored op; short-term
+signature robust, long-term mixed; no age direction claimed).

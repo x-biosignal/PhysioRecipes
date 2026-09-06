@@ -1,0 +1,157 @@
+---
+title: "From an ordinal ADL scale to an interval measure: Rasch analysis of a rating scale"
+subtitle: "A worked psychometric case study on public polytomous item-response data"
+categories: [adl, psychometrics, rasch, outcome-measure, validated]
+author: "Yusuke Matsui"
+date: "2026-08-17"
+---
+
+> **What this case shows** — an ADL/IADL questionnaire is scored by *summing*
+> ordinal items, but a raw sum is **not** an interval measure: moving a Barthel
+> total from 40 to 50 is not the same real gain as 90 to 100. A **polytomous
+> Rasch (Partial Credit) model** fixes this — it converts the ordered-category
+> responses to an **interval (logit) scale** and ranks the items by the ability
+> each demands. On real polytomous data the ecosystem's dependency-free engine
+> reproduces the reference implementation (**eRm**, conditional maximum
+> likelihood) **exactly** — item and person agreement **r = 1.00** — with a
+> person separation reliability of **0.86**. **What reproduces, and what
+> doesn't** — the item hierarchy and the person measures reproduce across two
+> independent estimators; what does **not** transfer is a universal cut score,
+> because the logit scale is anchored to *this* item set (measures compare within
+> an instrument, not across, unless co-calibrated). **How to read it** — left,
+> the 24 items ranked by difficulty on the logit scale (bars = standard error);
+> right, our item locations against eRm's, on the line of identity.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — turn an ordinal scale into a defensible measure in three moves:
+**recode** each item's responses to consecutive categories → **fit** the
+polytomous Rasch model → **read** the item difficulty hierarchy and the interval
+person measures (with per-person standard errors).
+**Way of thinking** — do not average ordinal codes as if they were centimetres.
+Check that the item hierarchy is *substantively sensible* (a hard item should be
+hard to endorse) and that category thresholds are ordered before trusting the
+scale; report the person measure's standard error rather than assuming equal
+precision at every score.
+**Ecosystem usage** — chain one function per role: `raschAnalyze()`
+(PhysioClinical) recodes a registered ADL instrument's responses and calls the
+engine `pcm_measure()` (PhysioAppKit), which returns the item calibration, the
+interval person measures and the fit. The final section shows the same call on a
+Barthel/Lawton response matrix.
+:::
+
+## Proposition
+
+A raw ADL-scale total is not an interval measure. Fitting a polytomous Rasch
+model converts the ordered-category responses to an interval (logit) scale and
+ranks the items by the ability each demands. On real polytomous data the
+ecosystem's JMLE engine reproduces the reference **eRm** (conditional ML)
+calibration essentially exactly — item-location **Spearman and Pearson = 1.00**,
+person-measure **Pearson = 1.00** — with a person separation reliability of
+**0.86**.
+
+## Question & goal
+
+**The question comes from measurement theory, on data built to test it.** The
+`VerbAgg` data (distributed with `lme4`) is the *canonical Partial Credit Model
+benchmark*: 316 people rated 24 verbal-aggression situations on a three-category
+scale (no / perhaps / yes). It has the **same ordered-category structure as an
+ADL/IADL scale** — a set of items, each scored in ordered levels, that together
+locate a person on a latent trait — which is exactly why it is the public
+stand-in here for a labelled Barthel or Lawton response set. The question the
+data was made to answer: can a Rasch model place items and persons on one
+interval scale, and does an independent estimator agree?
+
+## Challenge & approach
+
+The difficulty is that ordinal categories are not numbers: the "distance" from
+*no* to *perhaps* need not equal *perhaps* to *yes*, and it can differ between
+items. The Rasch recipe solves this by estimating, for each item, the latent
+locations of its category thresholds, and for each person a single ability, all
+on one logit scale. The ecosystem does it with a compact, dependency-free joint
+maximum-likelihood estimator (`pcm_measure`); we check it against **eRm**, which
+uses a *different* estimator (conditional ML) and codebase, so agreement is
+evidence about the method, not a shared bug.
+
+## Data
+
+The **VerbAgg** polytomous item-response data, distributed with the `lme4`
+package (De Boeck & Wilson 2004; Bates et al. 2015) — 316 persons × 24
+three-category items. The exact matrix used is recorded in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Item difficulty hierarchy on the interval logit scale (left) and cross-tool
+agreement of item locations, ours vs eRm (right).](artifacts/figure.png)
+
+*How to read this:* on the left, each item sits at its calibrated difficulty in
+logits — higher = harder to endorse; the horizontal bars are ±1 standard error.
+On the right, every point is one item's location under our JMLE engine (y) versus
+eRm's CML (x); they fall on the identity line.
+
+| quantity | value |
+|---|---|
+| item-location agreement (Spearman / Pearson) vs eRm | **1.00 / 1.00** |
+| person-measure agreement (Pearson) vs eRm | **1.00** |
+| person separation reliability | **0.86** |
+| items calibrated | 24 |
+| non-extreme persons calibrated (of 316) | 310 |
+
+The substantive output is the **item hierarchy**
+([`artifacts/item_hierarchy.csv`](artifacts/item_hierarchy.csv)): *want-to-curse*
+items are easiest to endorse and *do-shout* items hardest — the established
+VerbAgg ordering. For an ADL scale this is the clinically meaningful result:
+which activities demand the most function (stairs, bathing) versus the least
+(feeding).
+
+## Conclusion
+
+Scoring an ordinal ADL scale on its raw sum discards the fact that its steps are
+unequal. A polytomous Rasch model recovers an interval measure and an
+interpretable item hierarchy, and the ecosystem's dependency-free engine matches
+the reference implementation exactly on real data. The transferable takeaway:
+**before you compute change or an MCID on an ADL total, put it on an interval
+scale — then equal gains mean equal gains.**
+
+## Open questions
+
+- Person separation reliability is 0.86 for 24 items; a shorter ADL scale
+  (Barthel's 10 items, Katz's 6) separates persons less precisely, so the
+  interval measure's per-person standard error — largest near the floor and
+  ceiling — should be reported, not assumed uniform. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+The recipe is general: any set of ordinally-scored items measuring one construct.
+
+| step | function | package |
+|---|---|---|
+| recode instrument responses to Rasch categories | `raschRecode()` | PhysioClinical |
+| fit the polytomous Rasch model, get the hierarchy | `raschAnalyze()` → `pcm_measure()` | PhysioClinical → PhysioAppKit |
+| differential item functioning across groups | `pcm_dif()` | PhysioAppKit |
+| concurrent calibration for pre/post change | `pcm_stack()` | PhysioAppKit |
+
+They chain through a plain persons × items matrix. **Choosing the parameters:**
+use the Partial Credit Model when items have different category structures (the
+Barthel Index's mixed 0/5/10/15 weights) and the Rating Scale Model when every
+item shares a format (all FIM items 1–7). Check the item hierarchy is
+substantively sensible and that thresholds are ordered before trusting the
+scale.
+
+```r
+library(PhysioClinical)
+# a persons x items matrix of Barthel responses (weighted levels)
+fit <- raschAnalyze("barthel", responses)     # -> interval measures + item hierarchy
+fit$item_hierarchy                            # which ADLs demand the most function
+# turn interval change into a responder verdict with the model's own SE:
+raschResponder(pre_fit, post_fit, mcid = 0.5)
+```
+
+To apply it to your own hypothesis, register your instrument's items and call
+`raschAnalyze()`; for cross-modal follow-up see the sibling ADL cases
+(`adl-selfcare-hmp`) that add the *performance* side from wearable sensors.
+
+One line for the technical reader: every number above traces to
+[`artifacts/agreement.csv`](artifacts/agreement.csv) /
+[`artifacts/item_hierarchy.csv`](artifacts/item_hierarchy.csv), re-checked by
+[`audit.py`](audit.py) and the shared invariants in `tools/validate_case.py`.

@@ -1,0 +1,35 @@
+{
+  "id": "eeg-wavelet-alpha-eegmmidb",
+  "title": "The alpha rhythm in time and frequency: the Morlet wavelet scalogram, checked against MNE",
+  "modality": ["eeg", "time-frequency", "wavelet", "alpha", "oscillation"],
+  "packages": ["PhysioAnalysis"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)",
+    "version": "PhysioNet 1.0.0",
+    "record": "subject S001, baseline run R02 (eyes-closed rest), occipital channel O1, first 10 s at 160 Hz",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+    "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "A power spectrum tells you WHICH rhythms are present but not WHEN -- and brain rhythms come and go. The Morlet-wavelet transform keeps both axes: it convolves the signal with a family of wavelets, one per frequency, to build a time-frequency scalogram. On a real eyes-closed occipital recording the scalogram shows the story unambiguously -- a band of power sitting at 10 Hz across the whole segment: the alpha rhythm Berger discovered, now resolved in time and frequency, with 66% of the scalogram's power in the 8-13 Hz alpha band. And the transform is trustworthy: the ecosystem's waveletTransform reproduces MNE-Python's tfr_array_morlet -- the field-standard tool -- in time-frequency STRUCTURE to a correlation of 0.9998 (full scalogram) and 0.9999 (time-averaged spectrum), the two differing only by a constant normalization factor. The alpha rhythm the ecosystem paints in time-frequency is the same one MNE would.",
+  "opdag": ["waveletTransform"],
+  "claims": [
+    { "id": "dominant_freq",       "statement": "dominant frequency of the eyes-closed occipital scalogram (the alpha rhythm, Hz)", "value": 10, "artifact": "artifacts/wavelet_summary.csv", "status": "PASS" },
+    { "id": "alpha_power_fraction","statement": "fraction of scalogram power in the alpha band (8-13 Hz) -- alpha dominance", "value": 0.66434176, "artifact": "artifacts/wavelet_summary.csv", "status": "PASS" },
+    { "id": "tfr_corr_vs_mne",     "statement": "correlation of the full Morlet TFR between waveletTransform and MNE tfr_array_morlet", "value": 0.99976175, "artifact": "artifacts/wavelet_summary.csv", "status": "PASS" },
+    { "id": "marginal_corr_vs_mne","statement": "correlation of the time-averaged marginal spectrum vs MNE", "value": 0.99990225, "artifact": "artifacts/wavelet_summary.csv", "status": "PASS" },
+    { "id": "n_freqs",             "statement": "frequencies in the scalogram (4-30 Hz, step 2)", "value": 14, "artifact": "artifacts/wavelet_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "MNE-Python (Gramfort et al. 2013) is the field-standard EEG toolbox, and mne.time_frequency.tfr_array_morlet is its Morlet time-frequency transform. A correct implementation must reproduce its time-frequency structure. With matched frequencies and n_cycles, waveletTransform matches tfr_array_morlet to correlation 0.9998 (full TFR) / 0.9999 (marginal spectrum) on the real occipital EEG, up to a normalization convention (0.49x). The finding -- the scalogram peaks at 10 Hz with 66% of power in the alpha band -- recovers the eyes-closed occipital alpha rhythm.",
+    "data": "REAL -- eegmmidb (PhysioNet), S001 eyes-closed baseline run R02, occipital O1, 10 s at 160 Hz",
+    "artifacts": ["artifacts/wavelet_summary.csv", "artifacts/wavelet_marginal_spectrum.csv"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the eyes-closed occipital scalogram is dominated by ~10 Hz alpha (66% of power in the 8-13 Hz band), and (2) waveletTransform reproduces MNE tfr_array_morlet in time-frequency structure (correlation 0.9998 / 0.9999). HONEST scope: (1) waveletTransform and MNE tfr_array_morlet are INDEPENDENT Morlet implementations with different normalization conventions and edge handling, so the reproduced quantity is the time-frequency STRUCTURE (a very high correlation), NOT a machine-precision match -- the absolute power differs by a constant normalization factor (~0.49x), reported and shown scaled in the figure; this is an AGREEMENT fold (like the aperiodic-vs-fooof case), a legitimate but not exact validation; (2) the TFR correlation trims 120 samples at each edge, where the two implementations handle wavelet-length boundaries differently; (3) single subject, single 10-s occipital segment -- a demonstration of the established alpha rhythm; (4) run_simulation = FALSE (deterministic on both sides)."
+  },
+  "open_questions": [
+    { "q": "The scalogram's strength is TIMING: an event-related design (eyes-open/closed transitions, a task) would show alpha appearing and disappearing, and a cross-wavelet or wavelet-coherence analysis (crossWaveletTransform / waveletCoherence, also implemented) would track transient coupling between channels. Extending this static demonstration to event-related time-frequency, and pinning the normalization to MNE's exactly, would turn a validated transform into a dynamics study. Documented, not escalated.", "artifact": "artifacts/wavelet_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["mne.time_frequency.tfr_array_morlet (Python, MNE)"],
+  "status": "validated"
+}

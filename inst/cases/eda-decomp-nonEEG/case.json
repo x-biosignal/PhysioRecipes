@@ -1,0 +1,30 @@
+{
+  "id": "eda-decomp-nonEEG",
+  "title": "Phasic/tonic EDA decomposition reproduces NeuroKit2 on real data",
+  "modality": ["eda"],
+  "packages": ["PhysioEDA", "PhysioIO"],
+  "dataset": {
+    "name": "PhysioNet Non-EEG Dataset for Assessment of Neurological Status",
+    "url": "https://physionet.org/content/noneeg/",
+    "public": true,
+    "citation": "Birjandtalab J, et al. A Non-EEG Dataset for Assessment of Neurological Status. 2016. Goldberger AL, et al. PhysioNet. Circulation. 2000;101(23):e215-20."
+  },
+  "proposition": "When the decomposition algorithm is truly matched, PhysioEDA reproduces the gold-standard NeuroKit2 phasic/tonic split on real electrodermal activity: highpass phasic r = 0.957 and tonic r = 0.999.",
+  "opdag": ["readEDA", "edaDecompose(method=highpass)"],
+  "claims": [
+    { "id": "phasic_r", "statement": "phasic component correlation vs NeuroKit2 (highpass)", "value": 0.9568, "artifact": "artifacts/eda_realdata_methodmatched.csv", "status": "PASS" },
+    { "id": "tonic_r",  "statement": "tonic component correlation vs NeuroKit2 (highpass)",  "value": 0.9993, "artifact": "artifacts/eda_realdata_methodmatched.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "NeuroKit2 eda_phasic (cvxopt-backed), via reticulate",
+    "data": "REAL — PhysioNet Non-EEG dataset EDA channel",
+    "artifacts": ["artifacts/eda_realdata_methodmatched.csv", "artifacts/eda_realdata_provenance.csv"],
+    "all_pass": true,
+    "note": "Method-matched comparison (same real signal, same highpass method on both sides)."
+  },
+  "open_questions": [
+    { "q": "Under cvxEDA both tools return a smooth phasic component and agree less (phasic r = 0.65) — a definitional match on the smooth signal, not a defect; an earlier report that misread this as a divergence was corrected. Documented and resolved; the case reports the truly-matched highpass comparison.", "artifact": "artifacts/eda_realdata_methodmatched.csv", "escalate": null }
+  ],
+  "reference_tools": ["NeuroKit2"],
+  "status": "validated"
+}

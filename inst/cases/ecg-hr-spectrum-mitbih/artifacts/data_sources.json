@@ -1,0 +1,39 @@
+{
+  "dataset": "MIT-BIH Arrhythmia Database (mitdb 1.0.0), MLII lead, 360 Hz, 30-min records",
+  "source": "PhysioNet mitdb 1.0.0; archived offline in agent/eval/data/mitdb/",
+  "records": {
+    "r117": {
+      "record": "117",
+      "zone": "bradycardia",
+      "sha256": {
+        "hea": "82d1597bece858f85f6f3b91558e409ffec247c26fccf0c805893b51d2e12fe8",
+        "dat": "2ce7de6f20baf4cfef0369f9a13fa53784d18e2da78c11afa1e4c55e8ad1900e"
+      }
+    },
+    "r115": {
+      "record": "115",
+      "zone": "normal-low",
+      "sha256": {
+        "hea": "4f41f62fd60b092afc3f1dd312dee3ed991aff64e4ffcc6a69414d38db2b7d2e",
+        "dat": "34185efe9889608c76ebfbf5a467d3457970c6d11b77a2bf81b94bcf46e07c41"
+      }
+    },
+    "r103": {
+      "record": "103",
+      "zone": "normal",
+      "sha256": {
+        "hea": "c327a1ba393165f2503a34eaf2d136b502c50baca945f8f4d70c317e19ec0a27",
+        "dat": "f7994f0bd196730779998b4bddf26cb47f396599fb370a08b5cb29a3ac4d555d"
+      }
+    },
+    "r234": {
+      "record": "234",
+      "zone": "upper-normal (fast)",
+      "sha256": {
+        "hea": "3d2b9eaa12dcff4c7c627f083ed234a89fe97953160bc14f806f787b15cbd2e3",
+        "dat": "89f826307bfc91a554021da87c17b88b843ed3d26aa9ea237fc6f7c8af00da6d"
+      }
+    }
+  },
+  "citation": "Moody GB, Mark RG. The impact of the MIT-BIH Arrhythmia Database. IEEE Eng Med Biol. 2001;20(3):45-50. Goldberger AL, et al. PhysioNet. Circulation. 2000;101(23):e215-20."
+}

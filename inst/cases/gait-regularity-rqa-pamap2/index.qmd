@@ -1,0 +1,118 @@
+---
+title: "Is the gait rhythm deterministic? Recurrence quantification and entropy"
+subtitle: "A worked nonlinear-dynamics case study on real ankle accelerometry"
+categories: [gait, accelerometry, nonlinear-dynamics, imu, validated]
+author: "Yusuke Matsui"
+date: "2026-08-17"
+---
+
+> **What this case shows** — walking *feels* rhythmic; nonlinear dynamics lets you
+> **measure** it. On real ankle accelerometry, **recurrence quantification** and
+> **approximate/sample entropy** separate rhythmic locomotion from aperiodic
+> activity: **walking** is highly deterministic and regular (RQA determinism
+> **0.921**, approximate entropy **0.455**), **running** even more so (determinism
+> **0.983**), while aperiodic **ironing** is neither (determinism **0.382**,
+> approximate entropy **1.280**) — a **0.54** determinism gap and a **0.83**
+> entropy gap between walking and ironing. **How to read it** — left, walking's
+> repeating stride spikes; centre, ironing's structureless trace; right,
+> determinism high / entropy low exactly for the rhythmic activities.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — reconstruct the attractor by **delay embedding**, then read
+**recurrence determinism / laminarity** (how much the trajectory repeats) and
+**approximate / sample entropy** (how predictable the next sample is) — the
+regularity of the movement.
+**Way of thinking** — rhythm is *recurrence*: a periodic movement revisits nearby
+states, so its recurrence plot fills with diagonal lines (high determinism) and
+its entropy is low. Hold the embedding and threshold **fixed** across conditions so
+the comparison is fair.
+**Ecosystem usage** — `recurrenceQuantification()`, `approximateEntropy()`,
+`sampleEntropy()` (PhysioMoCap) on any signal; `maxLyapunovExponent()` and
+`floquetMultipliers()` complete the nonlinear-stability toolkit.
+:::
+
+## Proposition
+
+Recurrence quantification and entropy separate rhythmic locomotion from aperiodic
+activity on real accelerometry: walking is deterministic and regular (DET 0.921,
+ApEn 0.455), running more so (DET 0.983), ironing neither (DET 0.382, ApEn 1.280).
+
+## Question & goal
+
+**The question is about the *character* of the dynamics, not its amount.** Two
+signals can have the same variance yet be worlds apart — one a clean rhythm, the
+other noise. Gait is a quasi-periodic limit cycle; its regularity is a motor-control
+marker (it drops in ageing and neurological disease). We ask whether recurrence and
+entropy measures, on a plain ankle accelerometer, capture that rhythmic determinism
+and tell it apart from an aperiodic activity.
+
+## Challenge & approach
+
+We take the ankle-acceleration magnitude for one subject across four activities,
+delay-embed each (m = 4, τ = 8, fixed), and compute the **recurrence determinism
+and laminarity**, the **approximate entropy** and the **sample entropy**. The
+embedding and recurrence threshold are held fixed so the numbers are comparable.
+
+## Data
+
+**PAMAP2** (Reiss & Stricker, UCI #231) — subject 101, ankle accelerometer at
+100 Hz, walking / running / vacuuming / ironing. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Walking's ankle-acceleration magnitude repeats stride by stride (left); ironing
+is structureless (centre); recurrence determinism is high and entropy low exactly
+for the rhythmic activities (right).](artifacts/figure.png)
+
+*How to read this:* the stride spikes on the left recur at a steady period — that
+recurrence is what drives the high determinism. Ironing (centre) has no such
+rhythm, so its determinism collapses and its entropy jumps.
+
+| activity | RQA determinism | approx entropy | sample entropy |
+|---|---|---|---|
+| running | **0.983** | 0.577 | 0.034 |
+| walking | **0.921** | **0.455** | 0.035 |
+| vacuuming | 0.734 | 0.450 | 0.074 |
+| ironing | **0.382** | **1.280** | 2.434 |
+
+## Conclusion
+
+On real accelerometry the nonlinear measures do exactly what they should: rank
+rhythmic locomotion as deterministic and regular, and aperiodic activity as neither.
+The transferable takeaway: **rhythm is recurrence — quantify it with determinism
+and entropy (holding the embedding fixed), and you have an objective handle on
+gait regularity, a marker that degrades with age and disease.**
+
+## Open questions
+
+- **Orbital stability** of the gait limit cycle (`floquetMultipliers()`) and
+  **long-range stride-interval correlations** (DFA) are complementary markers that
+  need segmented multi-stride kinematics or a stride-time series, not a raw
+  accelerometer window. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| step | function | package |
+|---|---|---|
+| recurrence determinism / laminarity | `recurrenceQuantification()` | PhysioMoCap |
+| approximate entropy (regularity) | `approximateEntropy()` | PhysioMoCap |
+| sample entropy (regularity, less biased) | `sampleEntropy()` | PhysioMoCap |
+| local dynamic stability | `maxLyapunovExponent()` | PhysioMoCap |
+| orbital stability (multi-stride) | `floquetMultipliers()` | PhysioMoCap |
+
+**Choosing the parameters:** pick the embedding (`m`, `tau`) once — from an
+average-mutual-information / false-nearest-neighbours check — and reuse it across
+all conditions; fix the recurrence threshold via a target recurrence rate so
+determinism is comparable. Higher determinism / lower entropy = more regular rhythm.
+
+```r
+library(PhysioMoCap)
+rq <- recurrenceQuantification(ankle_acc, m = 4, tau = 8, target_rr = 0.1)
+rq$DET; approximateEntropy(ankle_acc); sampleEntropy(ankle_acc)
+```
+
+One line for the technical reader: every number traces to
+[`artifacts/regularity_summary.csv`](artifacts/regularity_summary.csv) and
+[`artifacts/regularity_table.csv`](artifacts/regularity_table.csv), re-checked by
+[`audit.py`](audit.py) and `tools/validate_case.py`.

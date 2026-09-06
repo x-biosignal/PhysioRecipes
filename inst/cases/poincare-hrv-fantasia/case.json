@@ -1,0 +1,37 @@
+{
+  "id": "poincare-hrv-fantasia",
+  "title": "The shape of the heartbeat scatter: Poincare SD1/SD2 HRV, checked against NeuroKit2 and an independent implementation",
+  "modality": ["ecg", "hrv", "poincare", "nonlinear", "cardiac-autonomic", "aging"],
+  "packages": ["PhysioECG"],
+  "dataset": {
+    "name": "Fantasia Database", "version": "PhysioNet 1.0.0",
+    "record": "subject f1y01 (young), first 5-min RR window (391 intervals); young-vs-old panel uses all 10 subjects (5 young + 5 old)",
+    "url": "https://physionet.org/content/fantasia/1.0.0/", "public": true,
+    "citation": "Iyengar N, Peng CK, Morin R, Goldberger AL, Lipsitz LA. Age-related alterations in the fractal scaling of cardiac interbeat interval dynamics. Am J Physiol 1996;271(4):R1078-R1084. Fantasia Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "The sibling HRV-DFA case measured the FRACTAL scaling of the heartbeat (alpha1) and its rise with age. The Poincare plot measures the same heart-rate variability GEOMETRICALLY: plot each RR interval against the next, and the scatter's two axes are SD1 (short-term, beat-to-beat variability, a parasympathetic proxy) and SD2 (long-term variability). On a real 5-minute RR window, ecgHRVpoincare's SD1/SD2 reproduce an independent from-scratch numpy analytical closed-form BIT-FOR-BIT (max |diff| 0), and NeuroKit2 hrv_nonlinear: SD1 bit-for-bit (SD1 = SDSD/sqrt(2) is universal); SD2 up to a documented ~0.2 ms convention (the op uses the analytical closed-form, NeuroKit2 the geometric paired-projection, which an independent numpy paired projection reproduces bit-for-bit). And the finding: short-term HRV (SD1) is far higher in the young (53.1 ms) than the old (35.3 ms) -- an age-related decline in cardiac-vagal variability, the geometric complement of the DFA aging result.",
+  "opdag": ["ecgHRVpoincare"],
+  "claims": [
+    { "id": "sd1", "statement": "Poincare SD1 (f1y01, 5-min) -- short-term/beat-to-beat RR variability, a parasympathetic proxy (ms)", "value": 54.33950892, "artifact": "artifacts/poincare_summary.csv", "status": "PASS" },
+    { "id": "sd2", "statement": "Poincare SD2 -- long-term RR variability, analytical closed-form (ms)", "value": 81.50067844, "artifact": "artifacts/poincare_summary.csv", "status": "PASS" },
+    { "id": "sd1_sd2_ratio", "statement": "SD1/SD2 ratio -- the Poincare cloud's short-to-long axis ratio", "value": 0.66673689, "artifact": "artifacts/poincare_summary.csv", "status": "PASS" },
+    { "id": "max_diff_numpy", "statement": "max |ecgHRVpoincare - independent numpy analytical closed-form| over SD1/SD2/ratio (bit-exact)", "value": 0.0, "artifact": "artifacts/poincare_summary.csv", "status": "PASS" },
+    { "id": "sd1_diff_nk", "statement": "|ecgHRVpoincare SD1 - NeuroKit2 SD1| -- bit-exact (SD1 = universal SDSD/sqrt(2))", "value": 0.0, "artifact": "artifacts/poincare_summary.csv", "status": "PASS" },
+    { "id": "sd2_paired_vs_nk", "statement": "|independent numpy paired-projection SD2 - NeuroKit2 SD2| -- bit-exact (identifies NeuroKit2's SD2 convention)", "value": 0.0, "artifact": "artifacts/poincare_summary.csv", "status": "PASS" },
+    { "id": "sd2_conv_diff", "statement": "|op SD2 (analytical closed-form) - NeuroKit2 SD2 (paired projection)| -- a documented ~0.2 ms convention gap", "value": 0.19596081, "artifact": "artifacts/poincare_summary.csv", "status": "PASS" },
+    { "id": "young_mean_sd1", "statement": "mean Poincare SD1 across the 5 young subjects (short-term HRV)", "value": 53.1154, "artifact": "artifacts/poincare_summary.csv", "status": "PASS" },
+    { "id": "old_mean_sd1", "statement": "mean Poincare SD1 across the 5 old subjects -- markedly lower (age-related vagal decline)", "value": 35.3069, "artifact": "artifacts/poincare_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "ecgHRVpoincare (Brennan et al. 2001 closed-form, R unbiased n-1 variance) is validated three ways, all exact. (1) An independent from-scratch numpy implementation of the op's OWN analytical closed-form (SD1 = sqrt(0.5*var(diff RR)), SD2 = sqrt(2*SDNN^2 - 0.5*SDSD^2)) reproduces SD1/SD2/ratio BIT-FOR-BIT (max |diff| = 0). (2) NeuroKit2 hrv_nonlinear's SD1 equals the op's SD1 BIT-FOR-BIT (|diff| = 0) -- SD1 = SDSD/sqrt(2) is the universal definition. (3) NeuroKit2's SD2 is the GEOMETRIC paired-projection std((RR_n+RR_n+1)/sqrt(2)); an independent numpy paired projection reproduces NeuroKit2's SD2 BIT-FOR-BIT (|diff| = 0), so the only op-vs-NeuroKit2 SD2 gap (~0.196 ms, ~0.24%) is a documented convention choice (analytical closed-form vs paired projection), not an error. Peaks are reconstructed from the integer-ms RR at 250 Hz so NeuroKit2 sees the IDENTICAL RR. The finding: SD1 declines with age (young 53.1 -> old 35.3 ms).",
+    "data": "REAL -- Fantasia (PhysioNet), subject f1y01 (young) 5-min RR for the certified op; all 10 subjects (5 young + 5 old) for the aging panel",
+    "artifacts": ["artifacts/poincare_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) ecgHRVpoincare reproduces an independent numpy analytical closed-form bit-for-bit (max |diff| 0), its SD1 equals NeuroKit2's SD1 bit-for-bit, and NeuroKit2's SD2 equals an independent numpy paired projection bit-for-bit; (2) short-term HRV (SD1) is far higher in the young (53.1 ms) than the old (35.3 ms). HONEST scope: (1) this is a genuine MACHINE-PRECISION cross-tool match -- the op and the independent numpy compute the IDENTICAL analytical closed-form, so the max |diff| = 0 is exact, not a convention agreement; (2) SD1 matches NeuroKit2 bit-for-bit because SD1 = SDSD/sqrt(2) is universal; the op-vs-NeuroKit2 SD2 gap (~0.196 ms) is purely a CONVENTION difference -- the op uses the Brennan analytical closed-form (full-series SDNN identity), NeuroKit2 the geometric paired-projection (drops the last point), which an independent numpy paired projection reproduces bit-for-bit; both are standard and equivalent in the large-n limit, so neither is wrong; (3) the aging finding -- SD1 higher in young -- is a descriptive cardiac-autonomic pattern on n=5 young + 5 old, one database, the geometric complement of the DFA aging result (alpha1 rises with age) on the same cohort, NOT a clinical claim; (4) a 5-min window (Task Force short-term HRV) of one subject for the certified op; run_simulation = FALSE (deterministic closed form)."
+  },
+  "open_questions": [
+    { "q": "The op reports SD1/SD2 (the standard descriptors); the full Poincare literature adds the higher-order and complex descriptors (SD1/SD2 area, the complex correlation measure, and the temporal asymmetry / Guzik & Porta indices that separate heart-rate decelerations from accelerations). Computing the asymmetry indices across the young/old cohort -- and pairing them with the DFA alpha1 on the same beats -- would test whether the geometric and fractal aging signatures track the same autonomic change. Documented, not escalated.", "artifact": "artifacts/poincare_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["NeuroKit2 hrv_nonlinear (Python)", "independent numpy Poincare closed-form + paired projection (Python)"],
+  "status": "validated"
+}

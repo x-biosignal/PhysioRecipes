@@ -1,0 +1,143 @@
+---
+title: "Recognising self-care ADLs from a wrist accelerometer — and where it breaks"
+subtitle: "A worked human-activity-recognition case study on public wrist-worn ADL data"
+categories: [adl, wearable, har, self-care, icf, validated]
+author: "Yusuke Matsui"
+date: "2026-08-17"
+---
+
+> **What this case shows** — a clinical ADL scale records *that* a person can
+> groom or eat (capacity); a wrist accelerometer can record whether they actually
+> **do** it (the ICF **performance** qualifier). Under a strict
+> leave-one-subject-out test on real single-wrist data, the ecosystem's
+> activity-recognition pipeline separates self-care from getting around well
+> (**0.94** of self-care windows land on *some* self-care activity) and
+> recognises **grooming** (brushing/combing, ICF d520, recall **0.77**) and
+> **drinking** (d560, **0.81**) cross-subject. **What reproduces, and what
+> doesn't** — grooming and drinking reproduce; **eating (d550) does not** (recall
+> **0.00**): eating-from-a-plate collapses into the other hand-to-face gestures,
+> so a wrist alone cannot name it. This is the honest boundary of wrist-only
+> self-care recognition, reported rather than averaged away. **How to read it** —
+> left, cross-subject recall per activity (red = self-care, dashed = 0.20
+> chance); right, the ICF performance profile of the recognised self-care time.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — turn raw wrist acceleration into an ICF performance profile in
+four moves: **window** the signal → **extract** activity-recognition features →
+**classify** each window → **map** the activities to ICF codes.
+**Way of thinking** — validate the honest question, *can these be told apart on a
+real wrist, across people?*, and answer it at the level the sensor supports:
+self-care vs locomotion first, then which tasks within. Test on held-out subjects
+(same-subject accuracy flatters), and when a class fails, name it — a 0.00 recall
+is a finding, not a failure to hide.
+**Ecosystem usage** — chain one function per role: `adlFeatures()` →
+`trainADL()` / `recognizeADL()` → `adlToICF()` (PhysioWearable); the classifier is
+swappable for a stronger PhysioML model without changing the recipe.
+:::
+
+## Proposition
+
+Under leave-one-subject-out on real wrist accelerometer data, the HAR pipeline
+separates self-care from locomotion (self-care-as-self-care **0.94**) and
+recognises **grooming (d520, 0.77)** and **drinking (d560, 0.81)** cross-subject,
+but **eating (d550) is not distinguished (recall 0.00)** — it collapses into the
+other hand-to-face gestures. Five-class accuracy is **0.60**.
+
+## Question & goal
+
+**The question comes from the dataset's own design.** The HMP dataset (Bruno et
+al. 2014) was built to test *activity-of-daily-living recognition from a single
+wrist accelerometer* — the placement of a smartwatch. It recorded real self-care
+tasks (brushing teeth, combing hair, eating meat and soup, drinking from a glass)
+alongside walking and stair-climbing, so recognition methods could be scored
+against ground-truth labels. We ask the dataset's question and add the clinical
+one: do the recognised activities map to the ICF codes that make them a
+*performance* measure?
+
+## Challenge & approach
+
+Self-care ADLs are hard on the wrist because several are the *same broad motion* —
+a hand travelling to and from the face. The approach does not pretend otherwise.
+We window the acceleration, extract a compact 36-feature descriptor per window
+(per-axis and vector-magnitude statistics, signal-magnitude area, dominant
+frequency, spectral entropy, jerk), train a dependency-free k-nearest-neighbours
+classifier, and test **leave-one-subject-out** — every subject held out once.
+`adlToICF()` then maps each recognised activity to its ICF performance code.
+
+## Data
+
+The **HMP** wrist-worn accelerometer ADL dataset (Bruno et al. 2014, UCI #283) —
+a single tri-axial wrist accelerometer at 32 Hz, 13 subjects. The exact activity
+folders used are recorded in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Cross-subject recall per activity (left; red = self-care, dashed = 0.20
+chance) and the ICF performance profile of the recognised self-care time
+(right).](artifacts/figure.png)
+
+*How to read this:* on the left, each bar is one activity's recall under
+leave-one-subject-out — grooming and drinking clear the chance line, **eating sits
+at zero**, and the stair contrast is weak. On the right, the recognised self-care
+time as ICF d-codes — the *performance* side of the capacity–performance picture,
+dominated by the two tasks the wrist can actually resolve.
+
+| quantity | value |
+|---|---|
+| self-care detected as self-care (leave-one-subject-out) | **0.94** |
+| grooming (d520) recall / drinking (d560) recall | 0.77 / 0.81 |
+| **eating (d550) recall** | **0.00** (not distinguished) |
+| 5-class cross-subject accuracy | 0.60 |
+| subjects | 13 |
+
+## Conclusion
+
+A wrist accelerometer reliably tells **self-care from getting around**, and can
+name **grooming and drinking** — but it **cannot name eating** from the wrist
+alone; the hand-to-mouth motion is indistinguishable from the other hand-to-face
+gestures. The transferable takeaway: **recognise at the level your sensor
+supports, map what resolves to ICF performance, and state the class that fails
+(eating here) as a finding — the honest boundary is part of the result.**
+
+## Open questions
+
+- Eating collapses into the other hand-to-face gestures under a wrist-only sensor
+  (recall 0.00); whether a richer feature set, a stronger model, or an added
+  finger/utensil sensor separates it — and whether dressing/toileting are
+  recognisable from the wrist at all — is open. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+The recipe is general to any wearable ADL-recognition task.
+
+| step | function | package |
+|---|---|---|
+| window + extract HAR features | `adlFeatures()` | PhysioWearable |
+| train / apply an activity recogniser | `trainADL()` / `recognizeADL()` | PhysioWearable |
+| time budget per activity | `adlBudget()` | PhysioWearable |
+| map activities to ICF performance codes | `adlToICF()` | PhysioWearable |
+
+They chain through per-window feature rows. **Choosing the parameters:** match
+the window to the activity timescale (2.56 s here); recognise at the granularity
+your sensor supports (self-care *category*, then the tasks that resolve); always
+split by subject and report the classes that fail. Swap the k-NN for a stronger
+model (PhysioML `rocket()`) when you have labels — the ICF mapping is unchanged.
+
+```r
+library(PhysioWearable)
+feats <- adlFeatures(accel, sampling_rate = 32)     # windowed HAR features
+model <- trainADL(train_feats, train_labels)
+recog <- recognizeADL(model, accel, sampling_rate = 32)
+adlToICF(recog)                                     # -> ICF performance profile
+```
+
+Apply it to your own hypothesis by recording the activities you care about and
+retraining; pair it with the capacity side (`adl-rasch-verbagg`) to quantify the
+capacity–performance gap.
+
+One line for the technical reader: every number above traces to
+[`artifacts/summary.csv`](artifacts/summary.csv),
+[`artifacts/per_class_recall.csv`](artifacts/per_class_recall.csv) and
+[`artifacts/icf_profile.csv`](artifacts/icf_profile.csv), re-checked by
+[`audit.py`](audit.py) and `tools/validate_case.py`.

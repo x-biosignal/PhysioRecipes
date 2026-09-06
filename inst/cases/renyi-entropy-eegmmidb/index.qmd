@@ -1,0 +1,122 @@
+---
+title: "The entropy family: Renyi entropy, a newly-authored op, bit-for-bit against NeuroKit2 across alpha"
+subtitle: "A worked information-theory case study on real EEG, introducing and certifying renyiEntropy"
+categories: [eeg, complexity, renyi-entropy, information-theory, validated]
+author: "Yusuke Matsui"
+date: "2026-09-05"
+---
+
+> **What this case shows** — the ecosystem's entropies (permutation, sample, spectral) are all
+> *Shannon*. The **Renyi entropy** is a one-parameter *family* that contains Shannon as a special
+> case: at order **α = 1** it *is* Shannon, at **α = 2** the collision entropy, at **α → ∞** the
+> min-entropy, and it is non-increasing in α. This case introduces a **newly-authored op**,
+> `renyiEntropy`. On a real eyes-closed EEG channel it reproduces `NeuroKit2.entropy_renyi`
+> **bit-for-bit** (max |diff| ~**4e-16**) across **α = {0.5, 1, 2, 3}** — the α = 1 value exactly
+> recovers the **Shannon entropy** (2.325 nats), and the family is monotonically decreasing in α.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for the generalized entropy: `renyiEntropy(x, alpha, bins)` → the order-α entropy of the
+signal's amplitude distribution (nats).
+**Way of thinking** — one number (Shannon) is a slice of a curve. Sweeping α gives the *Renyi
+spectrum*: α < 1 weights rare amplitudes, α > 1 weights frequent ones — a richer fingerprint of the
+distribution than any single entropy.
+**Ecosystem usage** — `PhysioEEG::renyiEntropy()`; `alpha = 1` for Shannon, `alpha = 2` for collision.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, `renyiEntropy` reproduces `NeuroKit2.entropy_renyi` bit-for-bit (max
+|diff| ~4e-16) across α = {0.5, 1, 2, 3}; α = 1 recovers Shannon (2.325 nats), and H_α is
+non-increasing in α.
+
+## Question & goal
+
+**The question is a gap and its fidelity: the ecosystem had only Shannon entropies — can we author
+the generalized Renyi family and reproduce the reference across α, with the right mathematical
+structure (Shannon at α = 1, monotonic)?** The goal is to introduce `renyiEntropy`, certify it
+bit-for-bit across the family, and verify its defining properties.
+
+## Challenge & approach
+
+Renyi entropy is H_α = 1/(1−α)·ln(Σ p_i^α), where p is the signal's amplitude histogram. We implement
+that closed form (with the Shannon limit at α = 1) and check it against `NeuroKit2.entropy_renyi` on
+the identical histogram, across a range of α.
+
+```
+EEG POz (eegmmidb) → renyiEntropy(alpha, bins = 16) → H_α
+                    vs NeuroKit2.entropy_renyi (same histogram) → bit-exact (~4e-16) for every α
+                    α=1 → Shannon (2.325); α=2 → collision (2.167); non-increasing in α
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz**, 10 s at 160 Hz — the same git-tracked vector the
+[SVD-entropy](../svd-entropy-eegmmidb/index.qmd) and [Petrosian](../petrosian-fd-eegmmidb/index.qmd)
+cases use. Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the Renyi entropy H_α as a function of the order α — a monotonically decreasing curve; the op (red points) equals NeuroKit2 at every α, the blue point marks α = 1 where H_α is exactly the Shannon entropy, and α = 2 is the collision entropy. Right: the POz amplitude histogram (16 bins) — the distribution whose generalized entropy is computed.](artifacts/figure.png)
+
+*How to read this:* the left panel is the family (one curve, Shannon is a single point on it) and the
+validation (op = NeuroKit2 everywhere); the right panel is the distribution the entropy summarizes.
+
+| Quantity | Value |
+|---|--:|
+| **Renyi entropy, α = 1 (Shannon)** | **2.325 nats** |
+| **Renyi entropy, α = 2 (collision)** | **2.167 nats** |
+| op vs `NeuroKit2.entropy_renyi` (max \|diff\| over the family) | **4e-16** (bit-exact) |
+| bins | **16** |
+| non-increasing in α | **yes** |
+
+The newly-authored op equals NeuroKit2 at every α, recovers Shannon at α = 1, and is monotonic —
+the family's defining structure. Values trace to
+[`artifacts/renyi_summary.csv`](artifacts/renyi_summary.csv).
+
+## Conclusion
+
+`renyiEntropy` fills a real gap — the ecosystem had only Shannon entropies, not the generalized family
+— and it is exact: bit-for-bit against NeuroKit2 across α, with Shannon recovered at α = 1 and the
+correct monotonic structure. The transferable takeaway: **Shannon entropy is one point on the Renyi
+curve; sweep α to get the whole spectrum, and use α = 2 (collision) when you want a
+concentration-sensitive alternative to Shannon.**
+
+## Open questions
+
+- The Renyi spectrum's α-dependence characterizes a distribution's tail structure; computing it across
+  EEG states (eyes-open vs eyes-closed) or channels — and its curvature — would turn the single-α
+  value into a multifractal-like descriptor. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Renyi entropy (generalized, order α) | `renyiEntropy()` | PhysioEEG |
+| SVD entropy / Petrosian FD | `svdEntropy()`, `petrosianFD()` | PhysioEEG |
+| multi-measure complexity (Shannon-based) | `eegComplexity()` | PhysioEEG |
+
+**Choosing the parameters.**
+
+- **alpha** — `1` is Shannon, `2` the collision entropy (concentration-sensitive), larger α weights
+  the most frequent amplitudes (→ min-entropy); sweep α for the Renyi spectrum.
+- **bins** — the amplitude-histogram resolution (here 16); more bins resolve finer structure but need
+  more data, and the absolute value is bin-dependent.
+- **units** — nats (natural log), as in `NeuroKit2.entropy_renyi`.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioEEG)
+
+renyiEntropy(x, alpha = 2)   # collision entropy (nats)
+renyiEntropy(x, alpha = 1)   # = Shannon entropy
+
+# reproduces NeuroKit2.entropy_renyi bit-for-bit across alpha (max |diff| ~4e-16).
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/renyi_summary.csv`](artifacts/renyi_summary.csv), and [`audit.py`](audit.py) re-checks the
+collision and Shannon entropies, the bit-exact NeuroKit2 match over the α family, the monotonicity and
+the α = 1 = Shannon relationship, and the honestly-noted scope (newly-authored op; histogram-dependent;
+structure not absolute value).

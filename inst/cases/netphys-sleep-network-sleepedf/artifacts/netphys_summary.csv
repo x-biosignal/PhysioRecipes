@@ -1,0 +1,9 @@
+"metric","value"
+"n_states",4
+"rem_n_links",11
+"wake_n_links",9
+"rem_density",0.7333
+"hub_total_degree",18
+"hub_node_is_delta",1
+"wake_rem_links_changed",6
+"n_nodes",6

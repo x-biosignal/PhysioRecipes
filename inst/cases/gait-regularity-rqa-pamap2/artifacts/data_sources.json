@@ -1,0 +1,9 @@
+{
+  "dataset": "PAMAP2 Physical Activity Monitoring Data Set",
+  "authors": "Reiss A, Stricker D",
+  "repository": "UCI ML Repository #231",
+  "doi": "10.24432/C5NW2H",
+  "url": "https://archive.ics.uci.edu/dataset/231",
+  "license": "CC-BY 4.0",
+  "record_used": "subject101, ankle IMU acc (+-16g) vector magnitude @ 100 Hz; walking / running / vacuuming / ironing (<=2500 samples each)"
+}

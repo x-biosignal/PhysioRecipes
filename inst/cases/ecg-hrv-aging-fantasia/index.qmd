@@ -1,0 +1,204 @@
+---
+title: "Heart-rate variability falls with age: the Fantasia young-vs-elderly contrast"
+subtitle: "A worked frequency-domain HRV case study on public resting ECG"
+categories: [ecg, hrv, autonomic, physionet, validated]
+author: "Yusuke Matsui"
+date: "2026-08-12"
+---
+
+> **What this case shows** — from resting ECG alone, the ecosystem recovers the
+> textbook signature of cardiovascular **aging**: overall heart-rate variability
+> is much lower in the elderly than in the young (median total power **1021 vs
+> 3596 ms²**, Wilcoxon *p* = **0.0004**), and the high-frequency **vagal** power
+> is lower too (*p* = **0.004**). **What reproduces, and what doesn't** — the
+> **magnitude** of HRV separates the age groups; the **balance ratios**
+> (LF/HF, HFnu) and the **resting heart rate** do **not** (*p* = 0.66 / 0.34) —
+> aging shows up as *less variability*, not a shifted ratio or a faster pulse.
+> One elderly record was set aside because the pipeline flagged frequent ectopy
+> (frequency-domain HRV is undefined there). **How to read it** — left, total HRV
+> power per subject by age group (log scale); right, the normalised vagal ratio,
+> which overlaps.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — answer *"how does autonomic control differ between groups?"* in
+four moves: **load** each ECG → **detect** the beats → **form** the RR-interval
+series → **spectrally summarise** it into LF / HF / total power, then compare
+groups.
+**Way of thinking** — frequency-domain HRV needs a *stationary* segment, so fix
+one analysis window for everyone; separate HRV **magnitude** from **balance**
+(they can behave differently); use a rank test for the wide, skewed spread of HRV
+across people; and let the rhythm check refuse records where the metric is
+undefined rather than reporting a number anyway.
+**Ecosystem usage** — chain one function per role, I/O → analysis
+(`readWFDB` → `ecgDetectRpeaks` → `ecgRRintervals` → `ecgHRVfreq`). The final
+section turns this into a step-by-step you can adapt to your own ECG.
+:::
+
+## Proposition
+
+On real resting ECG, frequency-domain HRV separates young from elderly by
+**magnitude**: median total power **3596 ms² (young)** vs **1021 ms² (elderly)**
+(*p* = 0.0004) and lower HF vagal power in the elderly (*p* = 0.004) — while the
+normalised balance (LF/HF, HFnu) and the resting mean heart rate do **not**
+differ between the groups.
+
+## Question & goal
+
+**The question comes from the dataset's own design.** Fantasia was assembled to
+study **how autonomic control of the heart changes with age**: 20 rigorously
+screened healthy subjects — **10 young** (21–34 y) and **10 elderly** (68–81 y) —
+each recorded at rest for two hours, hand-checked for clean sinus rhythm (Iyengar
+et al., 1996). The expected physiology is well established: with age the heart
+loses **variability**, especially in the **high-frequency** band that reflects
+**parasympathetic (vagal)** control (Task Force, 1996). So we ask the dataset's
+own question: does frequency-domain HRV, computed by the ecosystem, recover the
+young-vs-elderly difference — and where exactly does the difference live?
+
+## Challenge & approach
+
+Frequency-domain HRV is only meaningful on a **stationary** segment, and it is
+easily corrupted by missed or extra beats. So we fix one analysis window for
+every subject — a **10-minute** resting segment (t = 300–900 s, skipping the
+recording onset) — detect the beats, form the RR series, and take its power
+spectrum:
+
+```
+readWFDB → [ECG channel, 10-min window] → ecgDetectRpeaks(pan_tompkins) → ecgRRintervals → ecgHRVfreq(welch)
+```
+
+`ecgHRVfreq()` splits the RR spectrum into VLF / LF / **HF** bands and reports
+**total power**, the **LF/HF** ratio, and normalised units. We compare the two
+age groups with a **Wilcoxon rank-sum** test — robust to the wide, skewed spread
+of HRV across people. Its built-in **rhythm check** refuses records with frequent
+ectopy (where the metric is undefined) rather than returning a misleading number.
+
+## Data
+
+**Fantasia Database** (PhysioNet) — public
+(<https://physionet.org/content/fantasia/1.0.0/>), ODbL. Records **f1y01–f1y10**
+(young) and **f1o01–f1o10** (elderly), resting ECG at 250 Hz. The exact records
+(with checksums and ages) are in
+[`artifacts/data_sources.json`](artifacts/data_sources.json). *Iyengar N, et al.
+Am J Physiol. 1996;271(4):R1078–84; Goldberger AL, et al. Circulation.
+2000;101(23):e215–20.*
+
+## Results
+
+![Left: total HRV power per subject by age group (log scale) — the young cohort sits far above the elderly (Wilcoxon p = 0.0004). Right: the normalised HF power (HFnu, the vagal balance index) overlaps between groups (p = 0.66). Aging lowers the amount of variability, not the balance ratio.](artifacts/figure.png)
+
+*How to read this:* each point is one subject; the box spans the interquartile
+range. On the left the two groups barely overlap (a real age effect); on the
+right they sit on top of each other (no effect).
+
+**Group comparison**
+([`artifacts/hrv_group_summary.csv`](artifacts/hrv_group_summary.csv)):
+
+| HRV metric | Young median | Elderly median | Wilcoxon *p* | Separates? |
+|---|---|---|---|---|
+| **Total power** (ms²) | **3596** | **1021** | **0.0004** | **yes** |
+| **HF (vagal) power** (ms²) | 802 | 233 | **0.004** | **yes** |
+| LF/HF ratio | 1.92 | 1.67 | 0.66 | no |
+| HFnu (normalised HF) | 34.2 | 37.5 | 0.66 | no |
+| Resting mean HR (bpm) | 62.0 | 59.5 | 0.34 | no |
+
+The **magnitude** of HRV — total power and HF vagal power — is markedly lower in
+the elderly; the **balance ratios** and the **resting heart rate** do not
+distinguish the groups. One elderly record (**f1o09**) was flagged for frequent
+ectopy by the rhythm check and excluded from the frequency metrics, leaving
+**10 young vs 9 elderly** for those rows
+([`artifacts/hrv_per_subject.csv`](artifacts/hrv_per_subject.csv)).
+
+## Conclusion
+
+On public resting ECG the ecosystem recovers the classic autonomic-aging finding
+— less heart-rate variability, and specifically less high-frequency vagal power,
+in the elderly — while honestly showing where the effect is **not**: the
+normalised balance ratios and the mean heart rate. The transferable lesson is to
+separate HRV **magnitude** from **balance**, fix a stationary window, use a rank
+test for skewed physiological spread, and trust a pipeline that refuses to score
+a record it cannot score correctly.
+
+## Open questions
+
+The normalised sympathovagal indices (LF/HF, HFnu) do not distinguish the age
+groups here even though absolute power does — consistent with normalisation
+removing the very magnitude collapse that carries the aging signal. Whether a
+longer or multi-window analysis would reveal a balance shift is a genuine
+question; the magnitude result is the robust one and is what we claim.
+Documented, not escalated.
+
+## Using this in your own analysis
+
+This case is a worked example of a **frequency-domain HRV group comparison** —
+the pattern for any "does autonomic control differ between these conditions or
+groups?" question.
+
+**The general recipe** (four steps):
+
+1. **Load** each ECG record and pick the ECG channel.
+2. **Detect** the R-peaks and **form** the RR-interval series on a *fixed,
+   stationary* window (same for every record).
+3. **Spectrally summarise** the RR series into LF / HF / total power with
+   `ecgHRVfreq()`.
+4. **Compare** groups with a rank-based test, and split *magnitude* from
+   *balance* — they can move independently.
+
+**Which functions, and how they compose.** Each step is one ecosystem function,
+picked by *role* — I/O → analysis:
+
+| Step | Function | Package |
+|---|---|---|
+| load a WFDB ECG record | `readWFDB()` | PhysioIO |
+| detect the R-peaks | `ecgDetectRpeaks()` | PhysioECG |
+| beat-to-beat RR-interval series | `ecgRRintervals()` | PhysioECG |
+| frequency-domain HRV (LF/HF/total) | `ecgHRVfreq()` | PhysioECG |
+
+They chain because each consumes what the previous returns — the shared
+`PhysioExperiment` and the RR data frame carry the signal from I/O to the HRV
+spectrum, so you compose by naming the steps.
+
+**Choosing the parameters.**
+
+- **Analysis window** — frequency-domain HRV assumes stationarity; use a fixed
+  short-term window (≥ 5 min; here 10 min) rather than a whole ambulatory record,
+  and the *same* window for every subject.
+- **Detector (`method`)** — `pan_tompkins` is a robust default for clean ECG;
+  match the detector to lead quality.
+- **`method = "welch"`** in `ecgHRVfreq()` — a stable periodogram estimate of the
+  RR spectrum; `"lomb"` handles unevenly sampled RR without interpolation.
+- **`rhythm_check = TRUE`** — leave it on: it returns `NA` on records with
+  frequent ectopy, where frequency-domain HRV is undefined, instead of a
+  misleading number.
+
+**Applying it to your own hypothesis.** Swap in your own two groups or conditions
+(rest vs stress, patients vs controls, pre vs post), keep the detect → RR →
+`ecgHRVfreq` recipe on a fixed window, and compare **total power / HF** for the
+magnitude question separately from **LF/HF** for the balance question. The same
+detect-and-summarise-the-heartbeat pipeline underlies the resting heart-rate and
+time-domain HRV cases on MIT-BIH
+([`ecg-hr-spectrum-mitbih`](../ecg-hr-spectrum-mitbih/),
+[`ecg-hrv-mitbih`](../ecg-hrv-mitbih/)).
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioIO); library(PhysioECG)
+
+hrv_window <- function(rec, t0 = 300, dur = 600) {
+  pe  <- readWFDB(rec)                                       # Fantasia: RESP + ECG @ 250 Hz
+  sr  <- samplingRate(pe)
+  ecg <- pe[, which(toupper(SummarizedExperiment::colData(pe)$label) == "ECG")]
+  seg <- ecg[(t0 * sr + 1):((t0 + dur) * sr), ]             # fixed 10-min window
+  pk  <- ecgDetectRpeaks(seg, method = "pan_tompkins")      # R-peaks
+  rr  <- ecgRRintervals(seg, pk)                            # RR series
+  ecgHRVfreq(rr, method = "welch")                          # LF / HF / total power
+}
+
+young   <- hrv_window("f1y01")$total_power                 # high
+elderly <- hrv_window("f1o01")$total_power                 # low
+```
+
+**Auditing the numbers.** For readers who want to verify rather than trust: every
+subject's HRV metrics and the group medians and *p*-values live in
+[`artifacts/`](artifacts/), and `audit.py` re-derives the medians from the
+per-subject table and re-checks each *p*-value and the young > elderly direction.

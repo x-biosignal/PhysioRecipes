@@ -1,0 +1,34 @@
+{
+  "id": "slope-entropy-eegmmidb",
+  "title": "Complexity of shape: slope entropy (a newly-authored op) completes the discrete-symbolic trio, bit-for-bit vs NeuroKit2",
+  "modality": ["eeg", "complexity", "slope-entropy", "symbolic-dynamics", "nonlinear-dynamics"],
+  "packages": ["PhysioEEG"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "The discrete-symbolic complexity folds so far symbolize amplitude patterns (dispersion) or increment magnitudes (increment entropy). Slope entropy (Cuesta-Frau 2019) symbolizes the SLOPE ANGLE between successive samples into five classes (steep/gentle/flat, up/down) and takes the entropy of the slope patterns -- capturing the shape of local trends. The ecosystem lacked it; this case introduces a NEWLY-AUTHORED op, slopeEntropy, completing the discrete-symbolic trio (NCDF-dispersion / increment-magnitude / slope-angle). On a real eyes-closed posterior EEG channel it reproduces NeuroKit2 entropy_slope BIT-FOR-BIT (max |diff| ~9e-16) across the embedding dimension; unlike the normalized entropies it INCREASES with dimension (1.26 -> 2.43 -> 3.57, unnormalized Shannon over longer patterns), and the signal realizes 18 of the 25 = 5^(m-1) possible slope patterns at m=3.",
+  "opdag": ["slopeEntropy"],
+  "claims": [
+    { "id": "slopen_m2", "statement": "slope entropy at m=2 (thresholds 0.1/45 deg) of the POz signal (bits)", "value": 1.2592266918, "artifact": "artifacts/slope_summary.csv", "status": "PASS" },
+    { "id": "slopen_m3", "statement": "slope entropy at m=3 -- higher than m=2 (increasing in dimension)", "value": 2.4256613701, "artifact": "artifacts/slope_summary.csv", "status": "PASS" },
+    { "id": "slopen_m4", "statement": "slope entropy at m=4 -- higher still (unnormalized, grows with pattern length)", "value": 3.5714347517, "artifact": "artifacts/slope_summary.csv", "status": "PASS" },
+    { "id": "max_diff_nk", "statement": "max |slopeEntropy - NeuroKit2 entropy_slope| over the embedding dimension (bit-exact)", "value": 8.881784e-16, "artifact": "artifacts/slope_summary.csv", "status": "PASS" },
+    { "id": "n_patterns_m3", "statement": "distinct slope patterns realized at m=3 (out of 5^(m-1) = 25 possible)", "value": 18, "artifact": "artifacts/slope_summary.csv", "status": "PASS" },
+    { "id": "monotonic_increasing", "statement": "SlopEn INCREASES with the embedding dimension (1 = holds; contrast with normalized entropies)", "value": 1, "artifact": "artifacts/slope_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored slopeEntropy op is validated against NeuroKit2 entropy_slope across the embedding dimension. NeuroKit2 re-computes the slope entropy from the identical slope-angle thresholding + pattern-count + Shannon pipeline; the agreement is BIT-FOR-BIT (max |diff| ~9e-16). On real eyes-closed POz EEG SlopEn increases with dimension (1.26 -> 2.43 -> 3.57) and the signal realizes 18 of the 25 (=5^(m-1)) possible slope patterns at m=3.",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), channel POz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/slope_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the newly-authored slopeEntropy reproduces NeuroKit2 entropy_slope bit-for-bit (max |diff| ~9e-16) across the embedding dimension; (2) it increases with dimension (unnormalized) and the signal realizes 18 of 25 possible slope patterns at m=3. HONEST scope: (1) this op is NEWLY AUTHORED to fill a gap -- the ecosystem had amplitude, NCDF-pattern, template-matching and increment-magnitude entropies but not the slope-angle symbolic entropy; (2) this is a genuine MACHINE-PRECISION match -- the op and NeuroKit2 compute the IDENTICAL slope-angle thresholding + pattern-count + Shannon pipeline, so the ~9e-16 residual is the floating-point floor, not a convention agreement; (3) the mechanism is genuinely distinct: SlopEn combines a coarse (steep/gentle) and fine (flat) angular resolution to capture the SHAPE of local trends, completing the discrete-symbolic complexity trio (NCDF-dispersion / increment-magnitude / slope-angle); (4) unlike the normalized entropies (increment/fuzzy, which decrease with m), SlopEn is an UNNORMALIZED Shannon over length-(m-1) patterns, so it INCREASES with the embedding dimension -- an informative structural contrast; (5) the value depends on (dimension, thresholds); here the NeuroKit2 defaults (m=3, thresholds 0.1/45 deg), so the reproducible content is the bit-exact family and the pattern structure, not an absolute physiological constant; (6) run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "Slope entropy's angular thresholds are its knobs: the flat threshold (0.1 deg) separates true plateaus from micro-drift, and the steep threshold (45 deg) the fast transitions. Sweeping the thresholds (a 'slope-entropy profile') and comparing across EEG states or channels would turn the single value into a shape-sensitive fingerprint; Cuesta-Frau (2019) shows the thresholds can be tuned for class separability. Documented, not escalated.", "artifact": "artifacts/slope_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["NeuroKit2 entropy_slope (Python)"],
+  "status": "validated"
+}

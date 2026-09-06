@@ -1,0 +1,9 @@
+{
+  "dataset": "WBDS -- Fukuchi, Fukuchi & Duarte (2018), a public data set of overground and treadmill walking",
+  "source": "figshare",
+  "url": "https://doi.org/10.6084/m9.figshare.5722711",
+  "license": "CC-BY 4.0",
+  "record_used": "five subjects (WBDS01-05), treadmill walking. For each, two time-aligned blocks were formed: KINEMATICS = sagittal knee + ankle flexion angles (marker-derived, translation-invariant), and KINETICS = the antero-posterior + vertical ground reaction force. Both blocks were down-sampled to 150 time-aligned samples.",
+  "pipeline": "markers -> sagittal knee + ankle flexion angles (offline) alongside the AP+vertical GRF -> PhysioCrossModal::representationalSimilarity(list(kin, kinet), method='euclidean', compare='spearman', permutations=99, seed=1), which builds a Euclidean dissimilarity matrix (RDM) per block and correlates them (the Mantel test) with a permutation p-value. The reference recomputes the SAME statistic with the canonical vegan::mantel. Deterministic (the only randomness is the permutation null, fixed by seed=1).",
+  "note": "Representational similarity analysis (RSA; Kriegeskorte et al. 2008) / the Mantel test (Mantel 1967) correlates the two modalities' DISSIMILARITY structure rather than the raw signals -- do pairs of gait moments far apart in joint-angle space also tend to be far apart in force space? The tracked inputs are eval/data/rsa-mantel/ (rsa_wbds01.rds for the terminal proof; blocks_5subj.rds for the 5-subject robustness). The RSA/Mantel r (~0.38) is a distinct, more conservative measure than the distance correlation (~0.72) on the same data: RSA is a rank correlation of distance matrices. The contribution is a VALIDATED, general RSA/Mantel op (representationalSimilarity == vegan::mantel to machine precision) demonstrated on real data."
+}

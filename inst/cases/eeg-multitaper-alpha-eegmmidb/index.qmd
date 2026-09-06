@@ -1,0 +1,142 @@
+---
+title: "The robust spectrum: the multitaper PSD of occipital alpha"
+subtitle: "A worked spectral-estimation case study on real EEG, checked against scipy DPSS and MNE"
+categories: [eeg, spectral, multitaper, alpha, validated]
+author: "Yusuke Matsui"
+date: "2026-09-04"
+---
+
+> **What this case shows** — a single periodogram of a short EEG segment is *noisy*, and
+> its variance does not shrink as you record longer. The **multitaper method** fixes this:
+> it passes the signal through a family of orthogonal **DPSS (Slepian) tapers**, takes a
+> periodogram through each, and averages them — trading a little frequency resolution for a
+> large drop in variance and controlled spectral leakage. On real eyes-closed occipital EEG
+> the ecosystem's `eegMultitaper` computes this robust spectrum, and it is **alpha-dominated**
+> (peak at **10.5 Hz**, 46 % of the 0–45 Hz power in the 8–13 Hz band). And it is built
+> correctly: its DPSS tapers reproduce `scipy.signal.windows.dpss` to **~6e-14**, its full
+> PSD reproduces an independent scipy+numpy reconstruction to **~1e-10**, and it agrees with
+> the field-standard **MNE** `psd_array_multitaper` in structure (correlation **0.99**).
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for a low-variance power spectrum: `eegMultitaper(pe, bandwidth)` → read the
+PSD from `metadata(pe)$multitaper_psd` over `metadata(pe)$multitaper$frequencies`.
+**Way of thinking** — the tapers *are* the method. `bandwidth` (the time-bandwidth product
+NW) sets the variance/resolution trade-off; the number of usable tapers is `2·NW − 1`. More
+tapers = less variance, broader smoothing.
+**Ecosystem usage** — `PhysioEEG::eegMultitaper()`; `multitaperCoherence()` for the
+low-variance cross-spectrum.
+:::
+
+## Proposition
+
+On real eyes-closed occipital EEG (eegmmidb S001R02, O1), `eegMultitaper` reproduces
+`scipy.signal.windows.dpss` (~6e-14) and an independent scipy+numpy multitaper reconstruction
+(~1e-10) to machine precision, agrees with MNE `psd_array_multitaper` in structure (corr
+0.99), and the spectrum peaks at the 10.5 Hz alpha rhythm.
+
+## Question & goal
+
+**The question is whether the ecosystem builds the multitaper spectrum from the right pieces
+— the DPSS tapers and their average — the way the field-standard tools do.** A multitaper
+PSD is only as good as its tapers (the DPSS eigenvectors) and its normalization. The goal is
+to validate both against `scipy` and `MNE`, and to read the occipital spectrum.
+
+## Challenge & approach
+
+The non-adaptive multitaper PSD is **P(f) = (1/K)·Σₖ |FFT(x·hₖ)|² / sr**, where `hₖ` are the
+first K DPSS tapers for a chosen time-bandwidth NW. We compute it with `eegMultitaper`, check
+the tapers against `scipy.signal.windows.dpss`, rebuild the PSD from scratch with scipy+numpy,
+and compare the shape to `MNE`.
+
+```
+O1 EEG → eegMultitaper(NW=4, 7 tapers) → PSD
+                    DPSS tapers  vs scipy.signal.windows.dpss        (machine precision)
+                    full PSD     vs scipy+numpy reconstruction        (machine precision)
+                    full PSD     vs MNE psd_array_multitaper          (structure, corr 0.99)
+```
+
+## Data
+
+**eegmmidb — EEG Motor Movement/Imagery Database (PhysioNet)**: subject S001, baseline run
+**R02 (eyes-closed)**, occipital channel **O1**, first 10 s at 160 Hz — the same git-tracked
+PhysioExperiment the sibling [`eeg-wavelet-alpha`](../eeg-wavelet-alpha-eegmmidb/index.qmd)
+case reads. Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the multitaper power spectrum (log scale) of eyes-closed O1 EEG — eegMultitaper (blue line) and the independent scipy+numpy reconstruction (orange points) coincide to ~1e-10, MNE (purple dashed, divided by its one-sided factor of 2) tracks the same shape (corr 0.99), and the spectrum peaks in the shaded 8–13 Hz alpha band at 10.5 Hz. Right: the seven DPSS (Slepian) tapers that build the estimate — the orthogonal windows whose tapered periodograms are averaged.](artifacts/figure.png)
+
+*How to read this:* the left panel is the **validation** (three computations of the same
+spectrum agree) and the **finding** (the alpha peak); the right panel shows the method's
+machinery — the DPSS tapers, which match `scipy` to machine precision.
+
+| Quantity | This reproduction | Reference |
+|---|---|---|
+| Dominant frequency | **10.5 Hz** (alpha) | — |
+| Alpha-band power fraction (0–45 Hz) | **0.46** | — |
+| DPSS tapers vs `scipy.signal.windows.dpss` | **6e-14** | 0 (machine precision) |
+| PSD vs independent scipy+numpy reconstruction | **1e-10** | 0 (machine precision) |
+| PSD correlation vs MNE `psd_array_multitaper` | **0.99** | 1 (structure) |
+| MNE / op scale (one-sided factor) | **2.00** | convention |
+
+The tapers and the PSD are exact against `scipy`; the shape matches MNE up to its one-sided
+factor-of-2. Values trace to
+[`artifacts/multitaper_summary.csv`](artifacts/multitaper_summary.csv) and the full spectrum
+(op, scipy, MNE) in [`artifacts/multitaper_psd.csv`](artifacts/multitaper_psd.csv).
+
+## Conclusion
+
+The ecosystem's multitaper spectrum is built from the correct DPSS tapers — exact against
+`scipy` — and the same average MNE computes, up to a one-sided normalization. The transferable
+takeaway: **use multitaper when you need a low-variance spectrum of a short or noisy segment;
+set `bandwidth` (NW) to trade variance against resolution; validate the tapers against the
+field-standard, and remember that PSD normalization (one-sided vs two-sided) is a convention —
+compare shapes and correlations, not absolute power, across tools.**
+
+## Open questions
+
+- `eegMultitaper` is the **non-adaptive** multitaper (equal-weight taper average). The
+  **adaptive** form (Thomson's iterative eigenvalue weighting, MNE's `adaptive=TRUE`)
+  down-weights the leakier tapers and tightens the estimate near sharp peaks; and a multitaper
+  **cross**-spectrum gives a low-variance coherence (`multitaperCoherence`, also implemented).
+  Extending this to the adaptive PSD — and pinning the one-sided normalization to MNE's
+  exactly — would turn a validated estimator into a connectivity tool. *Documented, not
+  escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| multitaper PSD (robust spectrum) | `eegMultitaper()` | PhysioEEG |
+| multitaper coherence (low-variance) | `multitaperCoherence()` | PhysioCrossModal |
+| Morlet time-frequency (when timing matters) | `waveletTransform()` | PhysioAnalysis |
+| the aperiodic 1/f background | `eegAperiodic()` | PhysioEEG |
+
+**Choosing the parameters.**
+
+- **bandwidth** — the time-bandwidth product **NW** (here 4); larger NW → more tapers, lower
+  variance, broader frequency smoothing. The number of usable tapers is `2·NW − 1` (7 here).
+- **n_tapers** — override the `2·NW − 1` default to use fewer tapers (less smoothing).
+- **normalization** — the op returns a two-sided-convention PSD (positive frequencies not
+  doubled); MNE's one-sided PSD is ~2× — compare shapes across tools, not absolute magnitudes.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioEEG)
+
+mt  <- eegMultitaper(pe, bandwidth = 4)          # NW = 4 -> 7 DPSS tapers
+psd <- S4Vectors::metadata(mt)$multitaper_psd    # power[frequency, channel]
+f   <- S4Vectors::metadata(mt)$multitaper$frequencies
+f[which.max(psd[, 1])]                            # 10.5 Hz -- the alpha peak
+
+# DPSS tapers reproduce scipy.signal.windows.dpss (~6e-14); PSD ~ MNE psd_array_multitaper
+# in structure (corr 0.99), up to a one-sided factor-of-2.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/`](artifacts/) — the summary in
+[`multitaper_summary.csv`](artifacts/multitaper_summary.csv) and the full spectrum (op, scipy,
+MNE) in [`multitaper_psd.csv`](artifacts/multitaper_psd.csv) — and [`audit.py`](audit.py)
+re-checks each reported number, the scipy DPSS + reconstruction agreement, the MNE structure
+correlation, the alpha peak, and the honestly-noted one-sided normalization convention.

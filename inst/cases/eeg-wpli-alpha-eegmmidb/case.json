@@ -1,0 +1,36 @@
+{
+  "id": "eeg-wpli-alpha-eegmmidb",
+  "title": "The modern standard: the debiased weighted phase-lag index, checked against scipy",
+  "modality": ["eeg", "connectivity", "phase-synchronization", "wpli", "volume-conduction", "alpha"],
+  "packages": ["PhysioCrossModal"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)",
+    "version": "PhysioNet 1.0.0",
+    "record": "subject S002, baseline run R02 (eyes-closed rest), occipital channels O1 and Oz, first 10 s at 160 Hz (1600 samples each)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+    "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "The phase-lag index (sibling case) is volume-conduction-robust, but it -- like coherence -- has a positive bias for finite data: even INDEPENDENT signals produce a small spurious connectivity. The weighted phase-lag index (Vinck 2011) fixes both problems and is the recommended modern EEG connectivity measure: built from the imaginary cross-spectrum (so it discounts zero-lag / volume conduction) and DEBIASED (so it removes the sample-size bias). This case validates both properties on real data. On the same occipital O1-Oz pair, the debiased wPLI is just 0.011 -- confirming (like the PLI 0.016) that the strong alpha PLV of 0.92 is mostly volume conduction. And the debiasing works: for constructed independent signals the biased wPLI is a spurious 0.038 but the debiased wPLI collapses to 0.0006, while genuine lagged coupling keeps a debiased wPLI of 1.0. weightedPLI reproduces an independent scipy imaginary-cross-spectrum wPLI to ~7e-3.",
+  "opdag": ["weightedPLI"],
+  "claims": [
+    { "id": "wpli", "statement": "alpha-band (8-13 Hz) weighted phase-lag index (biased) between occipital O1 and Oz", "value": 0.113171225, "artifact": "artifacts/wpli_summary.csv", "status": "PASS" },
+    { "id": "wpli_debiased", "statement": "the DEBIASED wPLI (Vinck 2011 Eq. 6) -- low, confirming the O1-Oz alpha coupling is mostly volume conduction", "value": 0.0114900107, "artifact": "artifacts/wpli_summary.csv", "status": "PASS" },
+    { "id": "max_diff_scipy", "statement": "max |weightedPLI - scipy imaginary-cross-spectrum wPLI| (agreement, filtfilt-limited)", "value": 0.007469, "artifact": "artifacts/wpli_summary.csv", "status": "PASS" },
+    { "id": "wpli_indep_biased", "statement": "biased wPLI of INDEPENDENT signals -- spuriously positive (the finite-sample bias)", "value": 0.037685, "artifact": "artifacts/wpli_summary.csv", "status": "PASS" },
+    { "id": "wpli_indep_debiased", "statement": "DEBIASED wPLI of the SAME independent signals -- corrected to ~0 (the bias removed)", "value": 0.000579, "artifact": "artifacts/wpli_summary.csv", "status": "PASS" },
+    { "id": "wpli_lagged", "statement": "debiased wPLI of constructed LAGGED signals -- genuine coupling survives debiasing (~1)", "value": 1, "artifact": "artifacts/wpli_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "wPLI (Vinck et al. 2011) is validated two ways. (1) Cross-tool: an independent scipy imaginary-cross-spectrum pipeline (butter+filtfilt+hilbert -> Im(analytic_x * conj(analytic_y)) -> Vinck Eq. 6) gives the same wPLI to ~7e-3. (2) Debiasing demonstration: for constructed INDEPENDENT signals the biased wPLI is spuriously 0.038 but the debiased wPLI is 0.0006 (the bias removed); genuine lagged coupling keeps a debiased wPLI of 1.0; zero-lag stays ~0. The finding: the real O1-Oz debiased wPLI (0.011) is low, confirming with the state-of-the-art measure that the strong alpha PLV (0.92) is dominated by volume conduction.",
+    "data": "REAL -- eegmmidb (PhysioNet), S002 eyes-closed baseline R02, occipital O1 + Oz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/wpli_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) weightedPLI reproduces an independent scipy imaginary-cross-spectrum wPLI (~7e-3) and its debiasing works (independent biased 0.038 -> debiased 0.0006; lagged debiased 1.0; zero-lag ~0); (2) the real O1-Oz debiased wPLI (0.011) is low. HONEST scope: (1) the scipy agreement is an AGREEMENT (~7e-3), NOT machine precision -- the shared R-vs-scipy filtfilt-padding convention (as in the PLV/PLI cases); the closed-form Vinck estimator is exact given the imaginary cross-spectrum; (2) the debiasing is the key validated property -- the debiased wPLI removes the spurious positive connectivity that finite samples create in the biased wPLI/PLI/coherence, which is why it is the modern standard; the debiased estimator can go slightly NEGATIVE for uncoupled / zero-lag signals, which is expected of an unbiased estimator, NOT an error; (3) the finding -- the low debiased O1-Oz wPLI -- completes the PLV -> PLI -> wPLI story: the strong occipital alpha coupling is mostly volume conduction; but wPLI, like PLI, is conservative (discounts near-zero-lag coupling), so a low value is a lower bound on genuine lagged interaction, not proof of none; (4) single subject, 10 s, one pair, one band; run_simulation = FALSE (real-data wPLI deterministic; the demo is seeded)."
+  },
+  "open_questions": [
+    { "q": "This completes the canonical phase-connectivity trio on one pair (PLV volume-conduction-sensitive; PLI and debiased wPLI volume-conduction-robust). The natural next step is a full channel x channel debiased-wPLI matrix -- the genuinely-lagged posterior alpha network -- and a contrast of that network eyes-closed vs eyes-open (does the lagged component track the rhythm, or only the volume-conduction-inflated PLV network?). Documented, not escalated.", "artifact": "artifacts/wpli_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.signal butter+filtfilt+hilbert (Python, SciPy)"],
+  "status": "validated"
+}

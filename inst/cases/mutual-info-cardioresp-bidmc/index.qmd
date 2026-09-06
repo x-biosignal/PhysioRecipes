@@ -1,0 +1,132 @@
+---
+title: "The information two signals share: mutual information, a newly-authored op, bit-for-bit against sklearn"
+subtitle: "A worked information-theory case study on real cardiorespiratory signals, introducing and certifying mutualInformation"
+categories: [cross-modal, mutual-information, information-theory, coupling, validated]
+author: "Yusuke Matsui"
+date: "2026-09-05"
+---
+
+> **What this case shows** — the [transfer-entropy case](../te-cardioresp-bidmc/index.qmd) measured
+> the *directed* coupling of respiration and pulse. **Mutual information** measures the *undirected*,
+> symmetric dependence: how much information the two signals share, capturing any (nonlinear)
+> relationship. The ecosystem had directed TE, coherence, cross-correlation, and distance
+> correlation — but no general mutual-information op. This case introduces a **newly-authored op**,
+> `mutualInformation`. On real cardiorespiratory signals it reproduces `sklearn.metrics.mutual_info_score`
+> **bit-for-bit** (max |diff| ~**5e-16**), and it detects the coupling: the real RESP–PLETH mutual
+> information (**0.077 nats**) is ~**3.2×** the histogram estimator's shuffled finite-sample floor
+> (**0.024**) — the respiratory modulation the two signals share.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for the undirected shared information: `mutualInformation(x, y, bins)` → the MI in nats.
+**Way of thinking** — mutual information is zero iff two signals are independent, and grows with *any*
+(linear or nonlinear) dependence — it's the undirected sibling of transfer entropy (directed).
+**Ecosystem usage** — `PhysioCrossModal::mutualInformation()`; pair it with `transferEntropy()`
+(direction) and always compare against a shuffled control (the histogram estimator is positively
+biased).
+:::
+
+## Proposition
+
+On real cardiorespiratory signals (BIDMC-01), `mutualInformation` reproduces
+`sklearn.metrics.mutual_info_score` bit-for-bit (max |diff| ~5e-16); and the real RESP–PLETH MI
+(0.077 nats) is ~3.2× a shuffled floor (0.024).
+
+## Question & goal
+
+**The question is a gap and its fidelity: the ecosystem measured directed and frequency-domain
+coupling but not the undirected shared information — can we author mutual information to reproduce the
+reference, and does it detect the cardiorespiratory dependence above the estimator's bias?** The goal
+is to introduce `mutualInformation`, certify it bit-for-bit against sklearn, and read the coupling.
+
+## Challenge & approach
+
+Histogram mutual information discretizes each signal into equal-width bins and computes
+I = Σ p(x,y) log[p(x,y)/(p(x)p(y))] in nats — exactly `sklearn.metrics.mutual_info_score` on the
+resulting bin labels. We implement that as `mutualInformation`, check it against sklearn on the
+identical binning, and add a shuffled-surrogate control to expose the estimator's finite-sample bias.
+
+```
+RESP, PLETH (BIDMC, 25 Hz) → mutualInformation(bins = 16) → 0.077 nats
+                    vs sklearn.metrics.mutual_info_score      → bit-exact (~5e-16)
+                    vs shuffled surrogate                     → 0.024 (bias floor) → real is 3.2x
+```
+
+## Data
+
+**BIDMC PPG and Respiration Dataset (PhysioNet)**: subject **bidmc01**, **respiration** + **PPG**
+decimated 125 → 25 Hz, 200 s — the same git-tracked pair the
+[transfer-entropy](../te-cardioresp-bidmc/index.qmd) and Granger cases use. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the joint distribution of the binned RESP and PLETH signals (16×16, log-count) — the off-uniform structure is the shared information the mutual information quantifies (0.077 nats). Right: the real mutual information versus a shuffled-surrogate control — the real value is 3.2× the shuffled finite-sample floor, so the dependence is genuine, not estimator bias.](artifacts/figure.png)
+
+*How to read this:* the left panel is the dependence (a structured joint distribution → positive MI);
+the right panel is the honesty check (the real MI exceeds the shuffled bias floor).
+
+| Quantity | Value |
+|---|--:|
+| **mutual information (RESP, PLETH)** | **0.077 nats** |
+| op vs `sklearn.metrics.mutual_info_score` (max \|diff\|) | **5e-16** (bit-exact) |
+| shuffled-surrogate MI (bias floor) | **0.024 nats** |
+| **real / shuffled ratio** | **3.2×** |
+| samples per signal | **5001** |
+
+The newly-authored op equals sklearn exactly, and the real coupling sits well above the estimator's
+bias floor. Values trace to [`artifacts/mi_summary.csv`](artifacts/mi_summary.csv).
+
+## Conclusion
+
+`mutualInformation` fills a real gap — the ecosystem measured directed and frequency-domain coupling
+but not the undirected shared information — and it is exact: bit-for-bit against
+`sklearn.metrics.mutual_info_score`. On real cardiorespiratory signals it detects the undirected
+dependence (the shared respiratory modulation) at 3.2× the estimator's shuffled floor, the
+model-free *undirected* complement of the transfer-entropy fold on the same pair. The transferable
+takeaway: **mutual information captures any (nonlinear) dependence between two signals; use it
+alongside transfer entropy (for direction), and always compare the histogram estimate against a
+shuffled control — it is positively biased, so the *ratio to the shuffled floor*, not the absolute
+value, is the signal.**
+
+## Open questions
+
+- The histogram estimator is bin-count-dependent and positively biased; the **KSG/kNN** estimator
+  (Kraskov 2004) is less biased and bin-free. Implementing a KSG `mutualInformation` — and a
+  bias-corrected *effective* MI (real minus shuffled) across a cohort — would give an absolute,
+  comparable dependence measure to pair with the directed transfer entropy. *Documented, not
+  escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| mutual information (undirected dependence) | `mutualInformation()` | PhysioCrossModal |
+| transfer entropy (directed coupling) | `transferEntropy()` | PhysioCrossModal |
+| magnitude-squared coherence (frequency) | `coherence()` | PhysioCrossModal |
+
+**Choosing the parameters.**
+
+- **bins** — the number of equal-width bins per signal (here 16); more bins resolve finer structure
+  but worsen the finite-sample bias, so pick with your sample size in mind.
+- **the shuffled control** — always compute MI against a shuffled surrogate; the histogram estimator
+  is positively biased, so the *excess* over the shuffled floor is the real dependence.
+- **units** — the result is in nats (natural log), as in `sklearn.metrics.mutual_info_score`; divide
+  by log(2) for bits.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioCrossModal)
+
+mi <- mutualInformation(resp, pleth, bins = 16)   # 0.077 nats
+mi_shuf <- mutualInformation(resp, sample(pleth), bins = 16)  # ~0.024 (bias floor)
+mi / mi_shuf   # 3.2x -- genuine undirected dependence above the estimator bias
+
+# equals sklearn.metrics.mutual_info_score bit-for-bit (max |diff| ~5e-16) on the same binning.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/mi_summary.csv`](artifacts/mi_summary.csv), and [`audit.py`](audit.py) re-checks the MI,
+the bit-exact sklearn match, the shuffled-floor and ratio (and their internal consistency), and the
+honestly-noted scope (newly-authored op; histogram bias; ratio-not-absolute; undirected complement of
+transfer entropy).

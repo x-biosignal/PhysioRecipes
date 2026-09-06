@@ -1,0 +1,35 @@
+{
+  "id": "gait-regularity-rqa-pamap2",
+  "title": "Is the gait rhythm deterministic? Recurrence quantification and entropy of real ankle accelerometry",
+  "modality": ["gait", "accelerometry", "nonlinear-dynamics", "imu"],
+  "packages": ["PhysioMoCap"],
+  "dataset": {
+    "name": "PAMAP2 Physical Activity Monitoring Data Set",
+    "version": "UCI ML Repository #231 (Reiss & Stricker)",
+    "record": "subject 101, ankle IMU acceleration (+/-16g) vector magnitude @ 100 Hz; walking / running / vacuuming / ironing (<= 2500 samples each)",
+    "url": "https://archive.ics.uci.edu/dataset/231",
+    "public": true,
+    "citation": "Reiss A, Stricker D. Introducing a New Benchmarked Dataset for Activity Monitoring. 16th IEEE ISWC, 2012. UCI ML Repository doi:10.24432/C5NW2H (CC-BY 4.0)."
+  },
+  "proposition": "Lyapunov and sample entropy describe a signal's dynamics; recurrence quantification and approximate entropy say how DETERMINISTIC and REGULAR it is. On real ankle accelerometry the ecosystem separates rhythmic locomotion from aperiodic activity: walking is highly deterministic and regular (RQA determinism 0.921, approximate entropy 0.455), running even more so (determinism 0.983), while aperiodic ironing is neither (determinism 0.382, approximate entropy 1.280) -- a determinism gap of 0.54 and an entropy gap of 0.83 between walking and ironing.",
+  "opdag": ["recurrenceQuantification", "approximateEntropy", "sampleEntropy"],
+  "claims": [
+    { "id": "walk_det",  "statement": "RQA determinism of walking ankle acceleration (quasi-periodic)",   "value": 0.921, "artifact": "artifacts/regularity_summary.csv", "status": "PASS" },
+    { "id": "walk_apen", "statement": "approximate entropy of walking (low = regular)",                    "value": 0.455, "artifact": "artifacts/regularity_summary.csv", "status": "PASS" },
+    { "id": "iron_det",  "statement": "RQA determinism of ironing (aperiodic)",                            "value": 0.382, "artifact": "artifacts/regularity_summary.csv", "status": "PASS" },
+    { "id": "iron_apen", "statement": "approximate entropy of ironing (high = irregular)",                 "value": 1.280, "artifact": "artifacts/regularity_summary.csv", "status": "PASS" },
+    { "id": "run_det",   "statement": "RQA determinism of running (most rhythmic)",                        "value": 0.983, "artifact": "artifacts/regularity_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "Rhythmic human locomotion (walking, running) produces quasi-periodic, deterministic accelerometry -- high recurrence determinism and laminarity and low approximate/sample entropy -- because each stride recurs; aperiodic upper-limb activity (ironing) does not. Recurrence quantification and entropy measures must SEPARATE the two, ordering locomotion as more deterministic and more regular than aperiodic activity.",
+    "data": "REAL -- PAMAP2 (UCI #231), subject 101, ankle accelerometer @ 100 Hz across four activities",
+    "artifacts": ["artifacts/regularity_summary.csv", "artifacts/regularity_table.csv"],
+    "all_pass": true,
+    "note": "The measures cleanly separate rhythmic from aperiodic movement on real data: running (DET 0.983) and walking (DET 0.921) are far more deterministic than ironing (DET 0.382), and walking's approximate entropy (0.455) is far below ironing's (1.280); sample entropy tells the same story (walking 0.035 vs ironing 2.43, in regularity_table.csv). The determinism gap (walk-iron) is 0.54 and the entropy gap (iron-walk) is 0.83. Honest scope: (1) these quantify GAIT-RHYTHM regularity of a continuous accelerometer signal, not orbital stability -- Floquet multipliers need multi-stride joint-angle state vectors, a separate method; (2) values depend on the embedding (m=4, tau=8) and recurrence threshold (target RR=0.1), held fixed across activities so the COMPARISON is fair; (3) one subject, illustrating the method's discrimination, not a population norm."
+  },
+  "open_questions": [
+    { "q": "Orbital stability of the gait limit cycle (Floquet multipliers) and long-range stride-interval correlations (DFA) are complementary nonlinear-gait markers that need segmented multi-stride kinematics / stride-time series rather than a raw accelerometer window. Documented, not escalated.", "artifact": "artifacts/regularity_table.csv", "escalate": null }
+  ],
+  "reference_tools": [],
+  "status": "validated"
+}

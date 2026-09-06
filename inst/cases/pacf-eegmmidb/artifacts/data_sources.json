@@ -1,0 +1,10 @@
+{
+  "dataset": "EEG Motor Movement/Imagery Database (eegmmidb)",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples) -- the SAME git-tracked vector the autocorrelation and EEG complexity cases use.",
+  "pipeline": "readRDS(eeg_poz_s002r02) -> PhysioAnalysis::partialAutocorrelation(lag_max=20): Durbin-Levinson recursion on the biased demeaned ACF (from autocorrelation()) to get the partial autocorrelation at lags 0..20. The reference re-computes it with statsmodels.tsa.pacf(method=ldb) on the identical signal, via reticulate. Deterministic.",
+  "note": "The root is the POz channel numeric vector (shared with the autocorrelation and EEG complexity cases). The partial autocorrelation function (PACF) gives the correlation between x_t and x_{t+k} with the intervening lags removed; where the ACF decays, the PACF cuts off after the AR order, making it the standard AR model-order tool. partialAutocorrelation is a NEW op (Durbin-Levinson on the biased ACF, building on the just-added autocorrelation) completing the ACF/PACF pair. It reproduces statsmodels.tsa.pacf(method=ldb) BIT-FOR-BIT (max |diff| ~6e-15) across lags (the ldb/ywm biased conventions; the unbiased yw/ld and ols methods differ by construction and are not the target). Findings: the lag-1 PACF exactly equals the lag-1 ACF (0.856, the definitional identity), and the lag-2 PACF is strongly NEGATIVE (-0.627) -- the signature of an oscillatory AR(2)-like process, exactly what eyes-closed posterior alpha (a resonant ~10 Hz rhythm) looks like. HONEST: a signal property; the reproducible content is the bit-exact PACF + the AR structure, not an absolute constant."
+}

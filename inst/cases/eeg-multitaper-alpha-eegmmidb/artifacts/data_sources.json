@@ -1,0 +1,10 @@
+{
+  "dataset": "EEG Motor Movement/Imagery Database (eegmmidb)",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "subject S001, baseline run R02 (eyes-closed rest), occipital channel O1, first 10 s (1600 samples) at 160 Hz -- the same git-tracked PhysioExperiment (eval/data/wavelet-tfr/o1_eeg_pe.rds) the sibling eeg-wavelet-alpha case reads.",
+  "pipeline": "readRDS(o1_eeg_pe) -> PhysioEEG::eegMultitaper(bandwidth=4), the non-adaptive multitaper PSD = sum_k |FFT(x*h_k)|^2 / (K*sr) over K=7 DPSS(Slepian) tapers. The reference validates the DPSS tapers against scipy.signal.windows.dpss, re-computes the same PSD with an independent scipy+numpy multitaper reconstruction, and computes MNE's mne.time_frequency.psd_array_multitaper (adaptive=False) for the field-standard structure comparison (all via reticulate). Deterministic.",
+  "note": "The tracked input is eval/data/wavelet-tfr/o1_eeg_pe.rds (O1 eyes-closed EEG). Multitaper spectral estimation (Thomson 1982) averages DPSS-tapered periodograms for a low-variance PSD. eegMultitaper reproduces the canonical building blocks: its DPSS tapers match scipy.signal.windows.dpss to ~6e-14 (the eigenvalue computation), and its full PSD matches an independent scipy+numpy reconstruction of the identical non-adaptive algorithm to ~1e-10 (relative ~1e-13) -- both machine precision. It agrees with MNE psd_array_multitaper in STRUCTURE (correlation 0.99) up to a one-sided factor-of-2 (MNE doubles positive frequencies) and a small bandwidth-to-NW convention difference. The finding: the eyes-closed occipital spectrum is alpha-dominated (peak at 10.5 Hz, 46% of the 0-45 Hz power in the 8-13 Hz alpha band)."
+}

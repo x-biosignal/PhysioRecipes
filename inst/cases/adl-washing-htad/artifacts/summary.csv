@@ -1,0 +1,7 @@
+"metric","value"
+"washing_recall",0.534
+"overall_accuracy",0.625
+"n_subjects",3
+"n_activities",7
+"n_test_windows",2539
+"chance_level",0.143

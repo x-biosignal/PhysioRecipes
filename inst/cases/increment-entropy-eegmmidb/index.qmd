@@ -1,0 +1,128 @@
+---
+title: "Complexity of change: increment entropy, a newly-authored op, symbolizing the signal's increments"
+subtitle: "A worked symbolic-dynamics case study on real EEG, introducing and certifying incrementEntropy"
+categories: [eeg, complexity, increment-entropy, symbolic-dynamics, validated]
+author: "Yusuke Matsui"
+date: "2026-09-06"
+---
+
+> **What this case shows** — every entropy folded so far reads the signal's *amplitudes*
+> (Renyi/Tsallis histograms, dispersion patterns) or *amplitude-vector matches* (sample/fuzzy).
+> **Increment entropy** (Liu et al. 2016) reads its *changes*: each successive increment becomes a
+> letter combining its **sign** (−, 0, +) with a **magnitude class** (how big, relative to the local
+> spread), and the entropy is taken over the resulting increment-*words*. This case introduces a
+> **newly-authored op**, `incrementEntropy`, filling the increment-domain gap. On a real eyes-closed
+> EEG channel it reproduces `NeuroKit2.entropy_increment` **bit-for-bit** (max |diff| ~**9e-16**), and
+> shows the structure: the signal uses only **33 of the 81** possible increment-words.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `incrementEntropy(x, dimension, q)` → the increment entropy (bits).
+**Way of thinking** — complexity has a *domain*. Amplitude entropies ask "how varied are the values";
+increment entropy asks "how varied are the *moves* between values". For signals whose information is in
+their dynamics (slopes, reversals), the increment domain is the right lens.
+**Ecosystem usage** — `PhysioEEG::incrementEntropy()` alongside `dispersionEntropy()`,
+`fuzzyEntropy()`, `renyiEntropy()`/`tsallisEntropy()` — four complementary complexity mechanisms.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, `incrementEntropy` reproduces `NeuroKit2.entropy_increment` bit-for-bit
+(max |diff| ~9e-16) across (dimension, q); it is non-increasing in the embedding dimension
+(4.27 → 3.51 → 3.01 at q = 4), and the signal realizes only 33 of the 81 = (2q+1)^m possible
+increment-words.
+
+## Question & goal
+
+**The question is a gap and a domain: the ecosystem's entropies all read amplitudes or amplitude
+matches — can we author the increment-domain complexity, reproduce the reference, and read off the
+structure of the signal's changes?** The goal is to introduce `incrementEntropy`, certify it
+bit-for-bit, and characterize the increment-word distribution.
+
+## Challenge & approach
+
+Increment entropy takes successive differences, embeds them into length-*m* vectors, maps each
+increment to a letter = sign × magnitude-class (|increment| quantized in 0…q against the vector's own
+sd), counts the increment-words, and takes their Shannon entropy normalized by (m − 1). We implement
+that exactly and check it against `NeuroKit2.entropy_increment` across (m, q).
+
+```
+EEG POz (eegmmidb) → diff → embed → letter = sign × magnitude-class(0..q) → words → H/(m-1)
+                    vs NeuroKit2.entropy_increment (same pipeline) → bit-exact (~9e-16) for every (m, q)
+                    non-increasing in m (4.27 → 3.51 → 3.01);  33 / 81 increment-words realized
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz**, 10 s at 160 Hz — the same git-tracked vector the
+[SVD-entropy](../svd-entropy-eegmmidb/index.qmd), [Petrosian](../petrosian-fd-eegmmidb/index.qmd),
+[Renyi](../renyi-entropy-eegmmidb/index.qmd), [Tsallis](../tsallis-entropy-eegmmidb/index.qmd),
+[dispersion-entropy](../dispersion-entropy-eegmmidb/index.qmd) and
+[fuzzy-entropy](../fuzzy-entropy-eegmmidb/index.qmd) cases use. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the distribution of increment-words at m = 2, q = 4 — only 33 of the 81 possible sign×magnitude words are realized, and unevenly, which is what the entropy summarizes. Right: increment entropy across the embedding dimension — a monotone-decreasing family (the op equals NeuroKit2 at every setting).](artifacts/figure.png)
+
+*How to read this:* the left panel is the object increment entropy scores — the increment-word
+distribution, sparse (33/81) and uneven; the right panel is the family across dimension, non-increasing.
+
+| Quantity | Value |
+|---|--:|
+| **IncrEn, m = 2** (q = 4) | **4.27 bits** |
+| **IncrEn, m = 3** | **3.51 bits** |
+| **IncrEn, m = 4** | **3.01 bits** |
+| op vs `NeuroKit2.entropy_increment` (max \|diff\| over the family) | **9e-16** (bit-exact) |
+| increment-words realized (of (2q+1)^m = 81) | **33** |
+| non-increasing in dimension | **yes** |
+
+The newly-authored op equals NeuroKit2 at every setting, and exposes the increment structure: a third
+of the word vocabulary, unevenly used. Values trace to
+[`artifacts/increment_summary.csv`](artifacts/increment_summary.csv).
+
+## Conclusion
+
+`incrementEntropy` adds a mechanism the ecosystem's entropies did not have — complexity of the signal's
+*changes*, not its values — and it is exact: bit-for-bit against NeuroKit2 across (m, q). The
+transferable takeaway: **before you pick a complexity measure, pick a domain. Amplitude, pattern,
+template, and increment entropies answer different questions; for dynamics driven by the size and
+direction of moves, increment entropy is the one that sees them.**
+
+## Open questions
+
+- Increment entropy is defined on first differences; iterating on higher-order differences (curvature)
+  or across coarse-grained scales (multiscale increment entropy) would probe the complexity of
+  acceleration dynamics. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Increment entropy (changes) | `incrementEntropy()` | PhysioEEG |
+| Dispersion entropy (NCDF patterns) | `dispersionEntropy()` | PhysioEEG |
+| Fuzzy entropy (soft template matching) | `fuzzyEntropy()` | PhysioEEG |
+| Renyi / Tsallis entropy (amplitude histogram) | `renyiEntropy()`, `tsallisEntropy()` | PhysioEEG |
+
+**Choosing the parameters.**
+
+- **dimension** — number of increments per word (default 2); larger m probes longer change-patterns but
+  needs more data (there are (2q+1)^m possible words).
+- **q** — number of magnitude quantization levels (default 4); larger q resolves finer gradations of
+  increment size, at the cost of a larger word alphabet.
+- **units** — bits (base-2 Shannon), normalized by (m − 1), as in `NeuroKit2.entropy_increment`.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioEEG)
+
+incrementEntropy(x, dimension = 2, q = 4)   # complexity of the signal's increments (bits)
+# reproduces NeuroKit2.entropy_increment bit-for-bit across (dimension, q).
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/increment_summary.csv`](artifacts/increment_summary.csv), and [`audit.py`](audit.py)
+re-checks IncrEn at m = 2, 3, 4, the bit-exact NeuroKit2 match over the (m, q) family, the realized
+word count (33 / 81), the monotonicity, and the honestly-noted scope (newly-authored op;
+machine-precision; value depends on m/q).

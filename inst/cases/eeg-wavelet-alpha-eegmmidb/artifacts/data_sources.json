@@ -1,0 +1,9 @@
+{
+  "dataset": "EEG Motor Movement/Imagery Database (eegmmidb)",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "record_used": "subject S001, baseline run R02 (eyes-closed rest), occipital channel O1, first 10 s (1600 samples) at 160 Hz. From the git-tracked EDF the sibling eeg-alpha / eeg-aperiodic cases read.",
+  "pipeline": "readEDF(S001R02.edf) -> O1 channel, first 10 s -> PhysioAnalysis::waveletTransform(frequencies=seq(4,30,2), n_cycles=7, normalization='L2'), the Morlet-wavelet scalogram (power over time x frequency). The reference re-computes the same transform with MNE-Python's mne.time_frequency.tfr_array_morlet (matched freqs + n_cycles, via reticulate) and reports the time-frequency structure agreement. Deterministic (both Morlet transforms are deterministic).",
+  "note": "The Morlet-wavelet transform gives a time-frequency scalogram of non-stationary EEG rhythms. The tracked input is eval/data/wavelet-tfr/o1_eeg_pe.rds. waveletTransform reproduces MNE tfr_array_morlet in structure -- correlation 0.9998 (full TFR) and 0.9999 (time-averaged marginal spectrum) -- up to a normalization convention (~0.49x): they are independent Morlet implementations with different normalization + edge handling, so this is a structure AGREEMENT, not a machine-precision match. The finding: the eyes-closed occipital scalogram is dominated by the alpha rhythm (peak at 10 Hz, 66% of the power in the 8-13 Hz alpha band) -- the classic Berger alpha, now seen in time-frequency."
+}

@@ -1,0 +1,10 @@
+{
+  "dataset": "BIDMC PPG and Respiration Dataset",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/bidmc/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Pimentel MAF et al. Toward a robust estimation of respiratory rate from pulse oximeters. IEEE Trans Biomed Eng 2017;64(8):1914-1923. BIDMC PPG and Respiration Dataset, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "subject bidmc01: RESP (respiration) + PLETH (PPG), decimated 125->25 Hz, 200 s (5001 samples each) -- the SAME git-tracked pair the Granger and transfer-entropy cases use.",
+  "pipeline": "readRDS(resp) + readRDS(pleth) -> PhysioCrossModal::mutualInformation(bins=16): the histogram-estimator mutual information (equal-width bins, nats) between the two signals. The reference re-computes it with sklearn.metrics.mutual_info_score on the identical bin labels (bit-exact) and adds a seeded shuffled-surrogate control quantifying the histogram estimator's finite-sample bias, via reticulate. Deterministic.",
+  "note": "The tracked inputs are eval/data/granger-cardioresp/{resp,pleth}_bidmc01.rds. Mutual information (Shannon 1948) is the symmetric, UNDIRECTED, nonlinear measure of statistical dependence -- the information-theoretic complement of the transfer entropy (directed) folded on the same pair. mutualInformation is a NEW op (the ecosystem had directed TE, coherence, cross-correlation, distance correlation -- but no general MI). It reproduces sklearn.metrics.mutual_info_score BIT-FOR-BIT (max |diff| ~5e-16) because both compute the contingency-table MI in nats on the same equal-width binning. HONEST: the histogram estimator has a POSITIVE finite-sample bias -- a shuffled surrogate (destroying the RESP-PLETH pairing) has MI ~0.024 nats, not 0; the real pair's MI (0.077) is ~3.2x that floor, so the reproducible finding is a genuine undirected dependence ABOVE the bias (the respiratory modulation shared by the two signals), not the absolute MI value; the KSG/kNN estimator is a less-biased alternative."
+}

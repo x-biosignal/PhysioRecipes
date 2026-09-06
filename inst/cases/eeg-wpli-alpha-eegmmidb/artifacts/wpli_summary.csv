@@ -1,0 +1,16 @@
+"metric","value"
+"wpli",0.113171225
+"wpli_debiased",0.0114900107
+"wpli_scipy",0.1206398041
+"wpli_debiased_scipy",0.0132452549
+"max_diff_scipy",0.007469
+"wpli_indep_biased",0.037685
+"wpli_indep_debiased",0.000579
+"wpli_lagged",1
+"wpli_zerolag",-0.000234
+"plv_real",0.921505
+"pli_real",0.01625
+"n_samples",1600
+"sr_hz",160
+"band_lo_hz",8
+"band_hi_hz",13

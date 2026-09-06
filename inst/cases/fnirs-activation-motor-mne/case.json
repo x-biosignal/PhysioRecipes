@@ -1,0 +1,35 @@
+{
+  "id": "fnirs-activation-motor-mne",
+  "title": "fNIRS motor activation: recovering the haemodynamic response from finger tapping, with the Beer-Lambert step cross-validated against MNE",
+  "modality": ["fnirs", "nirs", "spectral", "activation", "hemodynamics", "motor"],
+  "packages": ["PhysioNIRS"],
+  "dataset": {
+    "name": "MNE-Python fNIRS motor dataset (finger tapping)",
+    "version": "mne.datasets.fnirs_motor (Participant-1, NIRx continuous-wave)",
+    "record": "single subject, 8 sources x 16 detectors, 2 wavelengths (760/850 nm) = 56 raw channels -> 28 source-detector pairs, 7.81 Hz, ~50 min; a block-design finger-tapping task with three conditions (Control, Tapping_Left, Tapping_Right), 30 blocks each",
+    "url": "https://mne.tools/stable/generated/mne.datasets.fnirs_motor.data_path.html",
+    "public": true,
+    "citation": "MNE-Python fNIRS motor dataset (mne.datasets.fnirs_motor), a publicly-distributed single-subject finger-tapping NIRx recording used in the MNE-NIRS tutorials. Gramfort A, et al. MEG and EEG data analysis with MNE-Python. Front Neurosci 2013;7:267."
+  },
+  "proposition": "Functional near-infrared spectroscopy (fNIRS) infers cortical activity from how brain tissue absorbs light; the pipeline that turns raw optical intensity into a haemodynamic response is where the science lives. Running the ecosystem's fNIRS pipeline end-to-end on a real finger-tapping recording -- intensity -> optical density -> modified Beer-Lambert (HbO/HbR) -> GLM activation -- recovers the canonical motor-activation signature: relative to the control condition, finger tapping drives a significant HbO INCREASE (grand-average response peaking at +0.21 uM ~5 s after onset, significant in 18 of 28 channels) and an HbR DECREASE (25 of 28 channels) -- oxygenated haemoglobin up, deoxygenated down, the textbook fingerprint of neurovascular coupling. Crucially, the pipeline's decisive step is cross-validated: the ecosystem's `mbll()` reproduces MNE-Python's `beer_lambert_law()` to machine precision (correlation 1.000 in every one of the 28 channels; the only difference is uM vs M units).",
+  "opdag": ["readSNIRF", "intensityToOD", "mbll", "nirsActivationGLM", "nirsActivationContrast"],
+  "claims": [
+    { "id": "mbll_r_mne",   "statement": "minimum per-channel correlation of the ecosystem's mbll() HbO with MNE-Python beer_lambert_law() (cross-validation of the Beer-Lambert step)", "value": 1.0,    "artifact": "artifacts/fnirs_summary.csv", "status": "PASS" },
+    { "id": "hbo_activation","statement": "channels with a SIGNIFICANT positive HbO activation (Tapping - Control, p<0.05)", "value": 18,     "artifact": "artifacts/fnirs_summary.csv", "status": "PASS" },
+    { "id": "hbr_decrease",  "statement": "channels with a negative HbR contrast (Tapping - Control) -- HbR falls on activation", "value": 25,     "artifact": "artifacts/fnirs_summary.csv", "status": "PASS" },
+    { "id": "hbo_peak",      "statement": "grand-average HbO response peak (uM) after tapping onset", "value": 0.2139, "artifact": "artifacts/fnirs_summary.csv", "status": "PASS" },
+    { "id": "n_channels",    "statement": "source-detector channels analysed", "value": 28, "artifact": "artifacts/fnirs_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "Two independent references. (1) CROSS-TOOL: the decisive Beer-Lambert step is cross-validated against MNE-Python's beer_lambert_law() on the identical data -- a correct implementation must reproduce it (here correlation = 1.000 in all 28 channels). (2) PHYSIOLOGY: the established fNIRS activation signature is a task-evoked HbO INCREASE with a concurrent HbR DECREASE, the haemodynamic response peaking ~5-6 s after onset -- which the GLM recovers (HbO up in 18/28 channels significantly, HbR down in 25/28, peak +0.21 uM at ~5.4 s).",
+    "data": "REAL -- MNE-Python fNIRS motor dataset (mne.datasets.fnirs_motor), a public single-subject finger-tapping NIRx recording",
+    "artifacts": ["artifacts/fnirs_summary.csv", "artifacts/fnirs_contrast.csv", "artifacts/fnirs_block_grandavg.csv"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the ecosystem's mbll() reproduces MNE beer_lambert_law() to machine precision (r=1.000, all channels; only uM-vs-M units differ) and (2) the GLM recovers the canonical motor-activation haemodynamic response (HbO increase + HbR decrease, peaking ~5 s post-onset). HONEST scope: (1) single subject, single session -- the grand-average is over channels, not a group; (2) the Tapping-vs-Control contrast pools left- and right-hand tapping -- contralateral (hemisphere-specific) localisation is real in the data but not claimed here (an open question); (3) the block average is baseline-corrected to the 2 s pre-onset window; (4) no motion-artefact rejection or short-separation regression was applied (PhysioNIRS provides tddr()/splineMotionCorrect()/shortSeparationRegress() -- the raw pipeline already recovers the signature); (5) the GLM uses a canonical HRF + polynomial drift + AR-prewhitening (PhysioNIRS defaults)."
+  },
+  "open_questions": [
+    { "q": "Contralateral localisation (Tapping_Left -> right-hemisphere channels, Tapping_Right -> left) and a proper group-level analysis across the full MNE-NIRS motor cohort, with short-separation regression and motion correction, would sharpen the spatial claim; that needs the multi-subject dataset. Documented, not escalated.", "artifact": "artifacts/fnirs_contrast.csv", "escalate": null }
+  ],
+  "reference_tools": [],
+  "status": "validated"
+}

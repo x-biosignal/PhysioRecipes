@@ -1,0 +1,9 @@
+"metric","value"
+"max_abs_diff_vs_scipy",5.551e-16
+"mean_abs_diff",2.954e-16
+"n_channels",32
+"mean_envelope",0.058412
+"mean_modulation",6.4672
+"most_active_channel",14
+"sr_hz",2048
+"n_time",10240

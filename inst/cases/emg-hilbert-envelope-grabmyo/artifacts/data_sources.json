@@ -1,0 +1,9 @@
+{
+  "dataset": "GRABMyo -- a public forearm and wrist surface-EMG database",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/grabmyo/1.0.2/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "record_used": "session1, participant1, gesture10, trial1; 32-channel forearm surface EMG, 10240 samples at 2048 Hz, one gesture trial. Git-tracked WFDB record.",
+  "pipeline": "readWFDB(session1_participant1_gesture10_trial1) -> PhysioEMG::emgEnvelope(method = 'hilbert'), which forms the analytic signal via the FFT and takes its magnitude (the Hilbert amplitude envelope) per channel. The reference re-computes |scipy.signal.hilbert(x)| per channel (via reticulate) and compares. Deterministic (the FFT-based Hilbert transform is exact on both sides).",
+  "note": "The EMG amplitude envelope traces muscle-activation amplitude over time -- the workhorse of EMG activation timing and onset detection. The Hilbert method (analytic-signal magnitude) is an EXACTLY-defined FFT operation, so emgEnvelope(method='hilbert') reproduces scipy.signal.hilbert to machine precision (max |diff| = 5.6e-16 over all 32 channels) -- a stronger validation than the RMS-envelope method (checked against a naive moving-window reference). No new tracked data: the GRABMyo WFDB record is read directly. The envelope shows clear burst activity (peak/mean modulation ~ 6.5) -- the gesture's muscle activation."
+}

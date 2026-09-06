@@ -1,0 +1,10 @@
+{
+  "dataset": "Fantasia Database",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/fantasia/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Iyengar N, Peng CK, Morin R, Goldberger AL, Lipsitz LA. Age-related alterations in the fractal scaling of cardiac interbeat interval dynamics. Am J Physiol 1996;271(4):R1078-R1084. Fantasia Database, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "record f1y01 (young healthy subject), a 5-minute RR-interval series (391 intervals, ms) -- the SAME git-tracked RR series the Poincare/HRA/CSI and HRV-time cases use.",
+  "pipeline": "readRDS(rr5min_f1y01) -> PhysioECG::ecgHRVgeometric(): NN histogram at the 1/128 s = 7.8125 ms standard bin; HTI = total NN count / modal (peak) count; TINN = least-squares triangular interpolation base width. The reference re-computes HRV_HTI and HRV_TINN with NeuroKit2 hrv_time on the identical RR series. Deterministic.",
+  "note": "The root is the 5-minute Fantasia RR data.frame (shared with the Poincare/HRA/CSI/HRV-time cases). This is a CROSS-TOOL certification of the shipped ecgHRVgeometric op (extended only to accept an RR data frame) against the field-standard NeuroKit2 hrv_time geometric indices. HTI (the HRV triangular index) reproduces NeuroKit2 HRV_HTI BIT-FOR-BIT (|diff| 0): it is an integer-ratio index (391 intervals / a modal histogram count of 35 = 11.17) at the shared 1/128 s standard bin, so once the bin matches the value is unambiguous. TINN, by contrast, DIFFERS (164 vs 297 ms) -- a documented triangular-interpolation CONVENTION difference (ecgHRVgeometric takes the least-squares triangle base width; NeuroKit2 uses a different triangular fit), not a bug in either tool, surfaced honestly. HTI is the more robust/portable of the two (dimensionless integer ratio), which is exactly why it cross-validates cleanly while TINN does not."
+}

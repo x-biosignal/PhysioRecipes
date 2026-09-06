@@ -1,0 +1,34 @@
+{
+  "id": "phase-entropy-eegmmidb",
+  "title": "Complexity of the phase plane: phase entropy (a newly-authored op) from the SODP, bit-for-bit vs NeuroKit2",
+  "modality": ["eeg", "complexity", "phase-entropy", "sodp", "nonlinear-dynamics"],
+  "packages": ["PhysioEEG"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "The complexity folds so far read amplitudes, template matches, or 1-D symbol sequences. Phase entropy (Rohila & Sharma 2019) reads the signal's PHASE-PLANE geometry: it plots each first difference against the following second difference (the Second-Order Difference Plot, SODP) and takes the entropy of the polar-angle distribution over k sectors. The ecosystem lacked it; this case introduces a NEWLY-AUTHORED op, phaseEntropy. On a real eyes-closed posterior EEG channel it reproduces NeuroKit2 entropy_phase BIT-FOR-BIT (max |diff| ~4e-16) across the sector count k; PhasEn increases with k (1.238 -> 1.287 -> 1.299) and sits below the 1/ln(2) = 1.443 normalization ceiling.",
+  "opdag": ["phaseEntropy"],
+  "claims": [
+    { "id": "phasen_k4", "statement": "phase entropy at k=4 sectors (delay 1) of the POz SODP", "value": 1.2377686180, "artifact": "artifacts/phase_summary.csv", "status": "PASS" },
+    { "id": "phasen_k6", "statement": "phase entropy at k=6 -- higher than k=4 (finer angular resolution)", "value": 1.2868351250, "artifact": "artifacts/phase_summary.csv", "status": "PASS" },
+    { "id": "phasen_k8", "statement": "phase entropy at k=8 -- higher still (more sectors)", "value": 1.2988676599, "artifact": "artifacts/phase_summary.csv", "status": "PASS" },
+    { "id": "max_diff_nk", "statement": "max |phaseEntropy - NeuroKit2 entropy_phase| over k (bit-exact)", "value": 4.440892e-16, "artifact": "artifacts/phase_summary.csv", "status": "PASS" },
+    { "id": "increasing_in_k", "statement": "PhasEn increases with the sector count k (1 = holds)", "value": 1, "artifact": "artifacts/phase_summary.csv", "status": "PASS" },
+    { "id": "below_ceiling", "statement": "PhasEn lies below the NeuroKit2 normalization ceiling 1/ln(2) = 1.443 (1 = holds)", "value": 1, "artifact": "artifacts/phase_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored phaseEntropy op is validated against NeuroKit2 entropy_phase across the sector count k. NeuroKit2 re-computes the phase entropy from the identical SODP angle + sector-weighting + normalized-Shannon pipeline; the agreement is BIT-FOR-BIT (max |diff| ~4e-16). On real eyes-closed POz EEG PhasEn increases with k (1.238 -> 1.287 -> 1.299) and sits below the 1/ln(2) = 1.443 ceiling.",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), channel POz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/phase_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the newly-authored phaseEntropy reproduces NeuroKit2 entropy_phase bit-for-bit (max |diff| ~4e-16) across the sector count k; (2) PhasEn increases with k and lies below the 1/ln(2) ceiling. HONEST scope: (1) this op is NEWLY AUTHORED to fill a gap -- the ecosystem had amplitude, template-matching and 1-D symbolic (dispersion/increment/slope) entropies but not the phase-plane SODP entropy; (2) this is a genuine MACHINE-PRECISION match -- the op and NeuroKit2 compute the IDENTICAL SODP angle + sector-weighting + normalized-Shannon pipeline, so the ~4e-16 residual is the floating-point floor, not a convention agreement; (3) the mechanism is genuinely distinct: it summarizes how the signal's local rate-of-change (first difference) and change-of-rate (second difference) co-vary -- a phase-plane geometry, unlike the amplitude/template/1-D-symbolic entropies; (4) the normalization follows NeuroKit2 exactly (a base-2 Shannon term divided by the natural-log ln(k)), so PhasEn ranges in [0, 1/ln2 = 1.443] rather than [0,1] -- this convention is reproduced, not corrected; (5) the value depends on (delay, k); here the NeuroKit2 defaults (delay=1, k=4), so the reproducible content is the bit-exact family and the k-structure, not an absolute physiological constant; (6) run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "Phase entropy was introduced for HRV; applying it to the RR-interval SODP (rather than EEG) and comparing across autonomic states, and sweeping the sector count k as a resolution knob, would connect this op to its original clinical use. The SODP itself (its dispersion/CTM) is a companion descriptor worth exposing alongside the entropy. Documented, not escalated.", "artifact": "artifacts/phase_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["NeuroKit2 entropy_phase (Python)"],
+  "status": "validated"
+}

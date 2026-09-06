@@ -1,0 +1,138 @@
+---
+title: "Dispersion entropy: a newly-authored op, a different mechanism, bit-for-bit against NeuroKit2"
+subtitle: "A worked symbolic-dynamics complexity case study on real EEG, introducing and certifying dispersionEntropy"
+categories: [eeg, complexity, dispersion-entropy, symbolic-dynamics, validated]
+author: "Yusuke Matsui"
+date: "2026-09-06"
+---
+
+> **What this case shows** — the entropy ops so far bin amplitudes (Renyi, Tsallis) or rank them
+> ordinally (permutation entropy). **Dispersion entropy** (Rostaghi & Azami 2016) is a genuinely
+> different mechanism: map the signal to *c* amplitude classes through the **normal CDF (NCDF)**, form
+> length-*m* **dispersion patterns**, and take the normalized Shannon entropy of the *pattern*
+> distribution. It is fast, outlier-robust, and free of the threshold-crossing boundary effects that
+> complicate sample entropy. This case introduces a **newly-authored op**, `dispersionEntropy`. On a
+> real eyes-closed EEG channel it reproduces `NeuroKit2.entropy_dispersion` **bit-for-bit** — for both
+> the entropy (**DispEn**) and its reverse (**RDEn**) — and reveals that the signal visits only
+> **108 of the 216** possible dispersion patterns.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `dispersionEntropy(x, c, dimension, delay)` → DispEn; `reverse = TRUE` → the reverse
+dispersion entropy (RDEn).
+**Way of thinking** — complexity is not one number nor one mechanism. Histogram entropies see the
+amplitude *marginal*; dispersion entropy sees the *sequence of amplitude-class patterns* — closer to
+"how does the signal move between levels" than "how spread is it".
+**Ecosystem usage** — `PhysioEEG::dispersionEntropy()` (NCDF symbolic dynamics), alongside
+`renyiEntropy()`/`tsallisEntropy()` (amplitude histogram) and `svdEntropy()`/`petrosianFD()`.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, `dispersionEntropy` reproduces `NeuroKit2.entropy_dispersion` bit-for-bit
+for both DispEn (max |diff| 0) and RDEn (max |diff| ~7e-18) across (c, dimension, delay) settings; the
+signal realizes only 108 of the 216 = c^m possible dispersion patterns, and DispEn (1.117) sits below
+the base-2/ln normalization ceiling 1/ln(2) = 1.443.
+
+## Question & goal
+
+**The question is a gap and a mechanism: the ecosystem had amplitude-histogram and ordinal entropies
+— can we author the NCDF-based dispersion entropy, reproduce the reference for both DispEn and its
+reverse, and show what the pattern distribution reveals?** The goal is to introduce
+`dispersionEntropy`, certify it bit-for-bit, and read off the dispersion-pattern structure.
+
+## Challenge & approach
+
+DispEn maps `x` to classes via `digitize(Φ((x−μ)/σ), [0, 1/c, …, (c−1)/c])` (NCDF), embeds into
+length-*m* dispersion patterns, and computes the Shannon entropy of the pattern distribution divided by
+`ln(c^m)`. We implement that exactly and check it against `NeuroKit2.entropy_dispersion` — including
+the reverse dispersion entropy (RDEn), a mean-square deviation of the pattern distribution from
+uniformity — across a range of (c, m, delay).
+
+```
+EEG POz (eegmmidb) → NCDF → c=6 classes → m=3 dispersion patterns → DispEn = Shannon(patterns)/ln(c^m)
+                    vs NeuroKit2.entropy_dispersion (same pipeline) → bit-exact: DispEn 0, RDEn ~7e-18
+                    108 / 216 patterns realized;  DispEn 1.117 < 1/ln2 = 1.443 (NeuroKit2 normalization)
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz**, 10 s at 160 Hz — the same git-tracked vector the
+[SVD-entropy](../svd-entropy-eegmmidb/index.qmd), [Petrosian](../petrosian-fd-eegmmidb/index.qmd),
+[Renyi](../renyi-entropy-eegmmidb/index.qmd) and [Tsallis](../tsallis-entropy-eegmmidb/index.qmd)
+cases use. Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the NCDF symbolization maps the signal to c = 6 amplitude classes that are near-equiprobable by construction (each ~1/c, red dashed line) — so the complexity is not in the marginal. Right: the distribution of length-3 dispersion patterns, ranked by frequency — only 108 of the 216 possible patterns are realized, and their uneven (Zipf-like) distribution is what DispEn and RDEn summarize.](artifacts/figure.png)
+
+*How to read this:* the left panel shows why dispersion entropy is a *pattern* measure — the amplitude
+classes themselves are flat; the right panel is the object it actually scores, the dispersion-pattern
+distribution, of which the signal visits exactly half the possibilities.
+
+| Quantity | Value |
+|---|--:|
+| **Dispersion entropy DispEn** (c = 6, m = 3) | **1.117** |
+| **Reverse dispersion entropy RDEn** | **0.0162** |
+| op vs `NeuroKit2.entropy_dispersion` — DispEn (max \|diff\|) | **0** (bit-exact) |
+| op vs `NeuroKit2.entropy_dispersion` — RDEn (max \|diff\|) | **7e-18** (bit-exact) |
+| dispersion patterns realized (of c^m = 216) | **108** |
+| DispEn below ceiling 1/ln(2) = 1.443 | **yes** |
+
+The newly-authored op equals NeuroKit2 for both DispEn and RDEn at every setting, and exposes the
+pattern structure: half the possible patterns, an uneven distribution. Values trace to
+[`artifacts/dispersion_summary.csv`](artifacts/dispersion_summary.csv).
+
+## Conclusion
+
+`dispersionEntropy` adds a mechanism the ecosystem's entropies did not have — NCDF symbolic dynamics
+over embedding patterns — and it is exact: bit-for-bit against NeuroKit2 for both DispEn and its
+reverse. The transferable takeaway: **when you reach for "complexity", ask which structure you mean.
+Histogram entropies read the amplitude marginal; dispersion entropy reads the sequence of
+amplitude-class patterns — and on this EEG the signal uses only half its pattern vocabulary, which is
+what makes it look ordered.**
+
+## Open questions
+
+- Multiscale dispersion entropy (MDE) applies DispEn to coarse-grained versions of the signal across
+  temporal scales; building MDE on this op (coarse-grain → `dispersionEntropy` per scale) and comparing
+  the curves across EEG states would extend the measure without changing its validated core.
+  *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Dispersion entropy (NCDF symbolic dynamics) | `dispersionEntropy()` | PhysioEEG |
+| Renyi / Tsallis entropy (amplitude histogram) | `renyiEntropy()`, `tsallisEntropy()` | PhysioEEG |
+| SVD entropy / Petrosian FD | `svdEntropy()`, `petrosianFD()` | PhysioEEG |
+| multi-measure complexity (Shannon-based) | `eegComplexity()` | PhysioEEG |
+
+**Choosing the parameters.**
+
+- **c** — number of amplitude classes (default 6; Rostaghi & Azami recommend 4–8). More classes resolve
+  finer amplitude structure but need more data to populate the c^m patterns.
+- **dimension** — embedding length *m* of the patterns (default 3); there are c^m possible patterns, so
+  keep c^m well below the signal length.
+- **delay** — lag in samples (default 1); larger delays probe slower dynamics.
+- **reverse** — `TRUE` returns the reverse dispersion entropy (RDEn), larger when the pattern
+  distribution is *more* uniform-deviating (more regular).
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioEEG)
+
+dispersionEntropy(x)                    # DispEn (c = 6, m = 3, delay = 1)
+dispersionEntropy(x, reverse = TRUE)    # reverse dispersion entropy (RDEn)
+
+# reproduces NeuroKit2.entropy_dispersion bit-for-bit for both DispEn and RDEn.
+# Note: DispEn uses NeuroKit2's normalization (base-2 Shannon / ln(c^m)), range [0, 1/ln2 = 1.443].
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/dispersion_summary.csv`](artifacts/dispersion_summary.csv), and [`audit.py`](audit.py)
+re-checks DispEn and RDEn, the bit-exact NeuroKit2 match for both over the (c, m, delay) family, the
+pattern count (108 / 216), the normalization ceiling, and the honestly-noted scope (newly-authored op;
+NCDF classes near-equiprobable so complexity is in the patterns; NeuroKit2 normalization convention
+reproduced not corrected).

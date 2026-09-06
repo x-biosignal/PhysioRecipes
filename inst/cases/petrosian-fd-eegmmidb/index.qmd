@@ -1,0 +1,128 @@
+---
+title: "The waveform's fractal dimension: Petrosian FD, a newly-authored op, bit-for-bit against antropy"
+subtitle: "A worked complexity case study on real EEG, introducing and certifying petrosianFD"
+categories: [eeg, complexity, fractal-dimension, petrosian, validated]
+author: "Yusuke Matsui"
+date: "2026-09-05"
+---
+
+> **What this case shows** — the [SVD-entropy case](../svd-entropy-eegmmidb/index.qmd) added a
+> *dimensionality* view to the complexity suite. The **Petrosian fractal dimension** (1995) adds a
+> *waveform* view: it counts the sign changes in the signal's derivative (the density of local
+> extrema) — a smooth oscillation scores near 1, a jagged/complex signal higher. This case introduces
+> a **newly-authored op**, `petrosianFD`. On real eyes-closed posterior EEG it reproduces
+> `antropy.petrosian_fd` **bit-for-bit** (max |diff| **0**), and the finding: Petrosian FD is **lower
+> over the posterior alpha region** (all **9/9** parieto-occipital channels below the frontal mean) —
+> the eyes-closed alpha rhythm is a **smoother, more regular oscillation**.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for a fast waveform-complexity index: `petrosianFD(x)` → the fractal dimension (~1 for
+smooth, higher for complex).
+**Way of thinking** — the derivative's sign changes count the signal's wiggles; a dominant oscillation
+has few per sample (low FD), noise has many (high FD). It's an O(N) complement to the entropy/embedding
+measures.
+**Ecosystem usage** — `PhysioEEG::petrosianFD()`; alongside `svdEntropy()` and `eegComplexity()`.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, `petrosianFD` reproduces `antropy.petrosian_fd` bit-for-bit (max |diff|
+0); and Petrosian FD is lower over the posterior alpha region (9/9 posterior channels below the
+frontal mean).
+
+## Question & goal
+
+**The question is a gap and its fidelity: the complexity suite lacked a waveform-fractal-dimension
+measure — can we author Petrosian FD to reproduce the reference exactly (unlike the convention-riven
+Higuchi/Katz FDs), and does it see the alpha rhythm's smoothness?** The goal is to introduce
+`petrosianFD`, certify it bit-for-bit against antropy, and read the spatial pattern.
+
+## Challenge & approach
+
+Petrosian FD is P = log₁₀(N) / (log₁₀(N) + log₁₀(N/(N + 0.4·N_δ))), where N_δ is the number of sign
+changes in the signal's first difference. We implement that closed form — with the derivative
+sign-change count using the same `signbit` convention (values < 0) as antropy — and check it against
+`antropy.petrosian_fd`.
+
+```
+EEG POz (eegmmidb, 160 Hz) → petrosianFD → 1.017
+                    vs antropy.petrosian_fd            → bit-exact (0)
+                    per-channel → posterior 1.020 < frontal 1.027 (9/9) → smoother alpha
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz** (posterior), 10 s at 160 Hz — the same git-tracked vector the
+[SVD-entropy case](../svd-entropy-eegmmidb/index.qmd) uses; the spatial map uses all 64 channels.
+Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: Petrosian FD for all 64 channels, sorted and colored by region — the posterior (red) channels sit below the frontal (blue) mean (all 9 posterior channels below it). Right: a 1-second segment of a posterior (POz) vs a frontal channel — the posterior alpha oscillation is smoother (fewer derivative sign changes → lower Petrosian FD).](artifacts/figure.png)
+
+*How to read this:* the left panel is the finding (posterior alpha is smoother); the right panel is
+the mechanism (fewer local extrema → lower Petrosian FD).
+
+| Quantity | Value |
+|---|--:|
+| **Petrosian FD (POz)** | **1.017** |
+| op vs `antropy.petrosian_fd` (max \|diff\|) | **0** (bit-exact) |
+| samples analyzed | **1600** |
+| **posterior mean Petrosian FD** | **1.020** |
+| frontal mean Petrosian FD | **1.027** |
+| posterior channels below frontal mean (of 9) | **9** |
+
+The newly-authored op equals antropy exactly, and the posterior alpha region is smoother. Values
+trace to [`artifacts/petrosian_summary.csv`](artifacts/petrosian_summary.csv).
+
+## Conclusion
+
+`petrosianFD` fills a real gap — the complexity suite measured regularity, dimensionality, and
+compressibility, but not the waveform fractal dimension — and it is exact: bit-for-bit against antropy
+(unlike the Higuchi/Katz fractal dimensions, whose conventions differ across tools). On real EEG it
+shows the eyes-closed alpha rhythm as a smoother posterior oscillation, the sixth complementary view
+of posterior alpha alongside Welch, spectrogram, Hjorth, coherence, and SVD entropy on the same data.
+The transferable takeaway: **Petrosian FD is a fast O(N) waveform-complexity index from the
+derivative's sign changes — a lightweight complement to the entropy/embedding measures, and one whose
+closed form (unlike Higuchi/Katz) matches across tools.**
+
+## Open questions
+
+- The Petrosian FD is coarse (near 1 for most physiological signals); pairing it with SVD entropy,
+  Hjorth, and DFA on the same epochs — and contrasting eyes-closed vs eyes-open — would show which
+  complexity facet best tracks the alpha rhythm's appearance. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Petrosian fractal dimension (waveform) | `petrosianFD()` | PhysioEEG |
+| SVD entropy (dimensionality) | `svdEntropy()` | PhysioEEG |
+| multi-measure complexity | `eegComplexity()` | PhysioEEG |
+
+**Choosing the parameters.**
+
+- **the signal** — Petrosian FD is parameter-free (just the signal); it needs enough samples for a
+  stable local-extrema density.
+- **interpretation** — near 1 for smooth/oscillatory, higher for complex/noisy; it is a *coarse*
+  index, best used comparatively (across channels, conditions, or time).
+- **vs Higuchi/Katz** — Petrosian FD has a single unambiguous closed form (it matches across tools);
+  the Higuchi and Katz FDs have implementation-dependent conventions.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioEEG)
+
+fd <- petrosianFD(x)   # x: a numeric vector
+fd   # ~1.017 -- lower = smoother/more oscillatory
+
+# reproduces antropy.petrosian_fd bit-for-bit (max |diff| 0).
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/petrosian_summary.csv`](artifacts/petrosian_summary.csv), and [`audit.py`](audit.py)
+re-checks the value, the bit-exact antropy match, the valid-FD bound, the posterior-vs-frontal finding
+and its robustness (9/9), and the honestly-noted scope (newly-authored op; exact unlike Higuchi/Katz;
+descriptive spatial pattern).

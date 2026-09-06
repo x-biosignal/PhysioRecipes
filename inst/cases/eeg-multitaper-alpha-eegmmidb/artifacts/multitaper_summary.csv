@@ -1,0 +1,12 @@
+"metric","value"
+"peak_freq_hz",10.5
+"alpha_power_fraction",0.46137829
+"dpss_max_diff_vs_scipy",5.707e-14
+"psd_max_diff_vs_scipy",1.074e-10
+"psd_corr_vs_mne",0.99045743
+"mne_scale",2.002802
+"n_tapers",7
+"n_freq",801
+"bandwidth_NW",4
+"sr_hz",160
+"n_time",1600

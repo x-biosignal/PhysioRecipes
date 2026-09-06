@@ -1,0 +1,35 @@
+{
+  "id": "coherence-cardiac-bidmc",
+  "title": "Two sensors, one heartbeat: PPG-ECG spectral coherence, validated against scipy",
+  "modality": ["ppg", "ecg", "cardiac", "cross-modal", "spectral-connectivity", "coherence"],
+  "packages": ["PhysioCrossModal"],
+  "dataset": {
+    "name": "BIDMC PPG and Respiration Dataset",
+    "version": "PhysioNet 1.0.0",
+    "record": "subject bidmc01; simultaneous PLETH (optical PPG) and lead-II (electrical ECG) at 125 Hz, first 4 min",
+    "url": "https://physionet.org/content/bidmc/1.0.0/",
+    "public": true,
+    "citation": "Pimentel MAF, Johnson AEW, Charlton PH, Birrenkott D, Watkinson PJ, Tarassenko L, Clifton DA. Toward a robust estimation of respiratory rate from pulse oximeters. IEEE Trans Biomed Eng 2017;64(8):1914-1923. BIDMC dataset, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "A heartbeat can be sensed two utterly different ways -- optically, as the pulse of blood volume in the finger (the photoplethysmogram, PPG), and electrically, as the heart's depolarization (the ECG). If both are measuring the same heart, they should share a rhythm; magnitude-squared coherence is the tool that proves it, quantifying the frequency-resolved linear coupling between two signals in [0, 1]. On a real simultaneous recording, the PPG-ECG coherence peaks at 0.898 at 1.465 Hz -- exactly 88 beats per minute, the subject's heart rate -- far above the 95% significance limit (0.026). The optical and electrical views of the heart are locked to the same beat. The ecosystem's coherence reproduces the canonical scipy.signal.coherence to machine precision (max |difference| = 2.9x10^-14 over the full spectrum, with the Welch settings matched exactly). The connectivity measure the ecosystem reports is, to the bit, the field-standard one.",
+  "opdag": ["coherence"],
+  "claims": [
+    { "id": "max_abs_diff",        "statement": "max |coherence - scipy.signal.coherence| over the full spectrum (machine precision)", "value": 2.875e-14, "artifact": "artifacts/coherence_summary.csv", "status": "PASS" },
+    { "id": "peak_coherence",      "statement": "peak PPG-ECG coherence in the cardiac band (0.5-5 Hz)", "value": 0.8982421806, "artifact": "artifacts/coherence_summary.csv", "status": "PASS" },
+    { "id": "peak_freq_hz",        "statement": "frequency of the coherence peak -- the shared heart rate (Hz)", "value": 1.464844, "artifact": "artifacts/coherence_summary.csv", "status": "PASS" },
+    { "id": "band_mean_coherence", "statement": "mean PPG-ECG coherence across the cardiac band (0.5-5 Hz)", "value": 0.4388860116, "artifact": "artifacts/coherence_summary.csv", "status": "PASS" },
+    { "id": "n_freq",              "statement": "frequency bins in the coherence spectrum", "value": 257, "artifact": "artifacts/coherence_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "scipy.signal.coherence (Python; Virtanen et al. 2020) is the canonical implementation of Welch magnitude-squared coherence. A correct implementation must reproduce it. With the Welch settings matched exactly (symmetric-Hann window, no per-segment detrend), the ecosystem's coherence matches scipy.signal.coherence to machine precision over the full spectrum (max |diff| = 2.9e-14). On the real PPG-ECG recording the coherence peaks at 0.898 at 1.465 Hz (88 bpm) -- the heart rate -- far above the 95% confidence limit (0.026).",
+    "data": "REAL -- BIDMC (PhysioNet), subject bidmc01, simultaneous PPG (PLETH) + ECG (lead II), 4 min at 125 Hz",
+    "artifacts": ["artifacts/coherence_summary.csv", "artifacts/coherence_spectrum.csv"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) coherence == scipy.signal.coherence to machine precision (max |diff| = 2.9e-14 over the full spectrum), and (2) a strong PPG-ECG coherence peak at the heart rate (0.898 at 1.465 Hz = 88 bpm). HONEST scope: (1) the op computes coherence WITHOUT per-segment detrending (matching scipy's detrend=False), so the full spectrum carries a large DC/baseline component -- the physiological finding is therefore read in the CARDIAC BAND (0.5-5 Hz), excluding DC, where the peak is the heart rate; this is stated, not hidden; (2) the machine-precision agreement REQUIRES matching the Welch settings (symmetric-Hann window, no detrend) -- with scipy's defaults (periodic Hann + detrend) the spectra differ, as expected; (3) that PPG and ECG cohere at the heart rate is expected (they sense the same heartbeat) -- the contribution is a VALIDATED coherence op demonstrated on real multimodal cardiac data, not a novel physiological claim; (4) single subject, 4-min segment; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "Coherence at the heart rate confirms a shared cardiac rhythm; the harmonics and the coherence in the RESPIRATORY band (RESP is also recorded) would map cardiorespiratory coupling, and the imaginary/lagged coherence (also implemented) would separate genuine coupling from zero-lag/volume-conduction artefacts. Extending from this cardiac demonstration to corticomuscular / intermuscular coherence, or to a per-segment-detrended spectrum for the low-frequency couplings, would turn the validated coherence op into a connectivity study. Documented, not escalated.", "artifact": "artifacts/coherence_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.signal.coherence (Python, SciPy)"],
+  "status": "validated"
+}

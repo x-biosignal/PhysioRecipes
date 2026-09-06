@@ -1,0 +1,35 @@
+{
+  "id": "csi-cvi-fantasia",
+  "title": "Sympathetic and vagal in one plot: the cardiac autonomic indices (a newly-authored op), bit-for-bit against NeuroKit2",
+  "modality": ["ecg", "hrv", "cardiac-autonomic", "csi-cvi", "poincare", "aging"],
+  "packages": ["PhysioECG"],
+  "dataset": {
+    "name": "Fantasia Database", "version": "PhysioNet 1.0.0",
+    "record": "subject f1y01 (young), first 5-min RR window (391 intervals); aging comparison uses all 10 subjects",
+    "url": "https://physionet.org/content/fantasia/1.0.0/", "public": true,
+    "citation": "Iyengar N, Peng CK, Morin R, Goldberger AL, Lipsitz LA. Age-related alterations in the fractal scaling of cardiac interbeat interval dynamics. Am J Physiol 1996;271(4):R1078-R1084. Fantasia Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "The Poincare plot's 4-SD bounding box (long axis L = 4*SD2, short axis T = 4*SD1) yields two clinically-used cardiac autonomic indices (Toichi 1997): the Cardiac Sympathetic Index (CSI = L/T) and the Cardiac Vagal Index (CVI = log10(L*T)). The ecosystem had the raw SD1/SD2 but not these indices; this case introduces a NEWLY-AUTHORED op, ecgHRVautonomic, that computes CSI/CVI/CSI_Modified. On a real 5-minute RR window it reproduces NeuroKit2's hrv_nonlinear indices BIT-FOR-BIT (max |diff| 0), and the finding: the Cardiac Vagal Index is higher in the young (4.90) than the old (4.55), robust across the cohort (5/5 young above the old mean) -- the parasympathetic decline of autonomic aging.",
+  "opdag": ["ecgHRVautonomic"],
+  "claims": [
+    { "id": "csi", "statement": "Cardiac Sympathetic Index (CSI = L/T = SD2/SD1) -- sympathetic predominance marker", "value": 1.496236, "artifact": "artifacts/csi_summary.csv", "status": "PASS" },
+    { "id": "cvi", "statement": "Cardiac Vagal Index (CVI = log10(L*T)) -- parasympathetic (vagal) activity marker", "value": 4.849351, "artifact": "artifacts/csi_summary.csv", "status": "PASS" },
+    { "id": "csi_modified", "statement": "Modified CSI (L^2/T) -- a more sensitive sympathetic marker (seizure detection)", "value": 486.604111, "artifact": "artifacts/csi_summary.csv", "status": "PASS" },
+    { "id": "max_diff_nk", "statement": "max |ecgHRVautonomic - NeuroKit2 hrv_nonlinear| over CSI/CVI/CSI_Modified (bit-exact)", "value": 0.0, "artifact": "artifacts/csi_summary.csv", "status": "PASS" },
+    { "id": "young_mean_cvi", "statement": "mean Cardiac Vagal Index across the 5 young subjects", "value": 4.8975, "artifact": "artifacts/csi_summary.csv", "status": "PASS" },
+    { "id": "old_mean_cvi", "statement": "mean Cardiac Vagal Index across the 5 old subjects -- lower (vagal decline with age)", "value": 4.5548, "artifact": "artifacts/csi_summary.csv", "status": "PASS" },
+    { "id": "n_young_cvi_gt_oldmean", "statement": "young subjects (of 5) with CVI above the old mean -- robustness of the vagal-decline finding", "value": 5, "artifact": "artifacts/csi_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored ecgHRVautonomic op is validated against NeuroKit2 hrv_nonlinear. NeuroKit2 re-computes the Toichi cardiac autonomic indices (CSI/CVI/CSI_Modified) from the same RR (peaks reconstructed from the integer-ms RR at 250 Hz so NeuroKit2 sees the identical series). The agreement is BIT-FOR-BIT (max |diff| 0) because the op uses SD1 = SDSD/sqrt(2) (universal) and SD2 = the geometric paired-projection (the Toichi/NeuroKit2 convention) and applies the identical L/T formulas. The finding: CVI (vagal index) is higher in the young (4.90) than the old (4.55), 5/5 young above the old mean.",
+    "data": "REAL -- Fantasia (PhysioNet), subject f1y01 5-min RR for the certified op; all 10 subjects for the aging comparison",
+    "artifacts": ["artifacts/csi_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the newly-authored ecgHRVautonomic reproduces NeuroKit2 hrv_nonlinear's CSI/CVI/CSI_Modified bit-for-bit (max |diff| 0); (2) CVI (vagal) is higher in young (4.90) than old (4.55), 5/5 young above the old mean. HONEST scope: (1) this op is NEWLY AUTHORED to fill a genuine gap -- the ecosystem had the raw SD1/SD2 (ecgHRVpoincare) but not the clinical Toichi CSI/CVI indices; (2) this is a genuine MACHINE-PRECISION match -- the op uses the identical Toichi L/T formulas with SD1 = SDSD/sqrt(2) and SD2 = the geometric paired-projection (the convention in which CSI/CVI are defined, matching NeuroKit2), so the residual is 0; NOTE the geometric SD2 differs by a small O(1/n) amount from ecgHRVpoincare's analytical closed-form SD2 (the CSI/CVI convention is the geometric one); (3) the finding -- CVI declines with age -- is the expected parasympathetic decline of autonomic aging, complementing the DFA (alpha1 rises) and Poincare (SD1 falls) aging results on the SAME cohort; the CSI (sympatho-vagal ratio) is comparatively stable; descriptive on n=5+5, not a clinical claim; (4) a 5-min window of one subject for the certified op; run_simulation = FALSE (deterministic closed form)."
+  },
+  "open_questions": [
+    { "q": "CSI_Modified is the marker Jeppesen (2014) used for seizure detection from single-lead ECG; computing it in a sliding window over an ictal recording -- and pairing it with the DFA alpha1 and HRA on the same beats -- would test the multi-index autonomic signature of seizures. Documented, not escalated.", "artifact": "artifacts/csi_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["NeuroKit2 hrv_nonlinear (Python)"],
+  "status": "validated"
+}

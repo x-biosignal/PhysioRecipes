@@ -1,0 +1,10 @@
+"metric","value"
+"n_subjects",42
+"n_obs",5875
+"beta_testtime",0.0187505733918033
+"beta_PPE",-0.791919896493377
+"max_abs_fixef_diff",0
+"ranef_sd_lme4",10.0650167552574
+"ranef_sd_physio",10.0650167552574
+"cohort_n_subjects",42
+"doseresp_PPE_slope",-0.964378456504376

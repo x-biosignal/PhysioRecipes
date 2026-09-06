@@ -1,0 +1,142 @@
+---
+title: "The right spectrum for an uneven heartbeat: the Lomb-Scargle HRV periodogram"
+subtitle: "A worked spectral-estimation case study on a real RR tachogram, checked against scipy"
+categories: [hrv, ecg, spectral, lomb-scargle, autonomic, validated]
+author: "Yusuke Matsui"
+date: "2026-09-04"
+---
+
+> **What this case shows** — you cannot FFT a heartbeat series. The RR tachogram is
+> sampled once per beat, so its samples are **unevenly spaced in time**, and an FFT would
+> force you to interpolate onto a regular grid first — inventing data between the beats.
+> The **Lomb-Scargle periodogram** is the honest alternative: a least-squares fit of
+> sinusoids to the irregular samples, no interpolation. On a real 2-hour tachogram the
+> ecosystem's `ecgHRVfreq(method="lomb")` computes it and reads the autonomic balance —
+> **HF-dominant at rest** (LF/HF ≈ **0.48**, HF 67 % of the LF+HF power; the HF peak at
+> ~0.30 Hz is the respiratory rhythm). And the estimate is exact: it reproduces the
+> canonical `scipy.signal.lombscargle` to **machine precision** — the raw periodogram to a
+> relative **~1e-10**, and the integrated VLF/LF/HF band powers to **~7e-11**.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for the frequency content of an irregular tachogram:
+`ecgHRVfreq(rr, method = "lomb")` → read `lf`, `hf`, `lf_hf_ratio`, and the normalized
+units directly.
+**Way of thinking** — match the estimator to the sampling. Evenly sampled → Welch/FFT;
+**unevenly sampled** (RR intervals, event series) → Lomb-Scargle, which fits the irregular
+timestamps directly and never interpolates.
+**Ecosystem usage** — `PhysioECG::ecgHRVfreq()` with `method = "lomb" | "welch" | "ar"`;
+the Task-Force VLF/LF/HF bands are built in.
+:::
+
+## Proposition
+
+On a real RR tachogram (Fantasia f1y01), `ecgHRVfreq(method="lomb")` reproduces
+`scipy.signal.lombscargle` to machine precision (periodogram rel ~1e-10, band powers
+~7e-11), and the resting autonomic balance is HF-dominant (LF/HF ≈ 0.48).
+
+## Question & goal
+
+**The question is whether the ecosystem computes the frequency content of an irregular
+heartbeat series the way the field-standard tool does — and what that spectrum says about
+autonomic balance.** An FFT is wrong for uneven samples; the Lomb-Scargle periodogram is
+right. The goal is a head-to-head against `scipy.signal.lombscargle`, and a clear read of
+the LF/HF balance on real data.
+
+## Challenge & approach
+
+The Lomb-Scargle power at frequency ω is a least-squares projection onto a cosine and a
+sine, offset by a time-shift τ that makes them orthogonal on the irregular grid:
+**P(ω) = ½[ (Σx·cosω(t−τ))² / Σcos² + (Σx·sinω(t−τ))² / Σsin² ]**. We compute it with
+`ecgHRVfreq(method="lomb")` and with `scipy.signal.lombscargle`, on the same frequencies,
+and integrate the VLF/LF/HF bands identically.
+
+```
+RR tachogram (uneven, 8708 beats) → ecgHRVfreq(method="lomb") → periodogram → VLF/LF/HF
+                                                                vs scipy.signal.lombscargle
+                                                                → machine-precision agreement + LF/HF
+```
+
+## Data
+
+**Fantasia Database (PhysioNet)**: young subject **f1y01**, the RR-interval tachogram
+(**8708 beats over ~2 h**) derived offline from the real continuous ECG
+(`readWFDB → ecgDetectRpeaks → ecgRRintervals`, physiologic filter 300–2000 ms) — the same
+git-tracked root the sibling [`hrv-dfa`](../hrv-dfa-aging-fantasia/index.qmd) case uses.
+Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the Lomb-Scargle periodogram of the real RR tachogram — ecgHRVfreq (blue line) and scipy.signal.lombscargle (orange points) lie exactly on top of each other (max |diff| = 3e-8, relative ~1e-10), over the shaded Task-Force VLF (grey), LF (blue), HF (green) bands. Right: the integrated band powers — HF (1886 ms²) exceeds LF (909 ms²), an HF-dominant autonomic balance (LF/HF = 0.48).](artifacts/figure.png)
+
+*How to read this:* the left panel is the **validation** — two independent Lomb-Scargle
+implementations produce the identical spectrum. The right panel is the **finding** — HF
+power exceeds LF, the vagally-dominated resting pattern.
+
+| Quantity | This reproduction | Reference |
+|---|---|---|
+| LF power (0.04–0.15 Hz) | **909 ms²** | scipy 909 |
+| HF power (0.15–0.4 Hz) | **1886 ms²** | scipy 1886 |
+| LF/HF ratio | **0.48** (HF-dominant) | — |
+| HF normalized units | **67 %** | — |
+| periodogram max \|op − scipy\| | **3.0e-8** (rel ~1e-10) | 0 (identical formula) |
+| band-power max \|op − scipy\| | **6.9e-11** | 0 |
+
+The two tools agree to the floating-point floor, and the tachogram is HF-dominant. Values
+trace to [`artifacts/lomb_summary.csv`](artifacts/lomb_summary.csv) and the full periodogram
+(op alongside scipy) in
+[`artifacts/lomb_periodogram.csv`](artifacts/lomb_periodogram.csv).
+
+## Conclusion
+
+The ecosystem's Lomb-Scargle HRV spectrum is the same one `scipy` computes — to the
+floating-point floor — and it is the *correct* spectrum for an unevenly sampled tachogram,
+no interpolation required. The transferable takeaway: **match the spectral estimator to the
+sampling — Lomb-Scargle for irregular series like RR intervals — validate it against the
+field-standard tool, and read LF/HF as a descriptive autonomic-balance index (HF-dominant
+here, the healthy-young resting pattern).**
+
+## Open questions
+
+- `ecgHRVfreq` also offers `method="welch"` (FFT on an interpolated grid) and `method="ar"`
+  (Burg autoregressive). Comparing the three estimators on the **same** uneven tachogram —
+  and quantifying the interpolation bias Welch introduces but Lomb-Scargle avoids — would
+  turn this single-method validation into a spectral-estimator study; and extending LF/HF
+  across the Fantasia young-vs-elderly cohort (as the sibling `hrv-dfa` case does for the
+  fractal exponent) would test the autonomic-aging hypothesis in the frequency domain.
+  *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Lomb-Scargle HRV spectrum (uneven RR) | `ecgHRVfreq(method = "lomb")` | PhysioECG |
+| Welch / AR HRV spectrum (regular grid) | `ecgHRVfreq(method = "welch" \| "ar")` | PhysioECG |
+| time-domain HRV (SDNN, RMSSD, pNN50) | `ecgHRVtime()` | PhysioECG |
+| the fractal exponent of the tachogram | `ecgDFA()` | PhysioECG |
+
+**Choosing the parameters.**
+
+- **method** — `"lomb"` for the raw uneven tachogram (no interpolation); `"welch"` needs a
+  resampled regular series; `"ar"` fits a parametric autoregressive spectrum.
+- **bands** — `vlf_band` / `lf_band` / `hf_band` default to the Task-Force definitions
+  (0.003–0.04 / 0.04–0.15 / 0.15–0.4 Hz); change them only with a documented reason.
+- **rhythm_check** — gates the output when the rhythm is too irregular for a meaningful
+  spectrum; here set `FALSE` for the clean sinus tachogram.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioECG)
+
+hrv <- ecgHRVfreq(rr, method = "lomb", rhythm_check = FALSE)
+hrv$lf; hrv$hf; hrv$lf_hf_ratio    # 909, 1886, 0.48  (HF-dominant)
+
+# reproduces scipy.signal.lombscargle to machine precision (periodogram rel ~1e-10).
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/`](artifacts/) — the summary in
+[`lomb_summary.csv`](artifacts/lomb_summary.csv) and the full periodogram (op alongside
+scipy) in [`lomb_periodogram.csv`](artifacts/lomb_periodogram.csv) — and
+[`audit.py`](audit.py) re-checks each reported number, the scipy agreement (periodogram +
+band powers), the HF-dominant balance, and the honestly-noted machine-precision floor.

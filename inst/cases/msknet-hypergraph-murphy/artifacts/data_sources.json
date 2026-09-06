@@ -1,0 +1,9 @@
+{
+  "dataset": "Human musculoskeletal hypergraph (Murphy et al. 2018)",
+  "source": "PhysioMSKNet bundled data (inst/extdata), digitised from Murphy et al. 2018, PLoS Biology",
+  "url": "https://doi.org/10.1371/journal.pbio.2002811",
+  "license": "CC-BY 4.0 (PLoS Biology)",
+  "record_used": "the whole-body muscle-bone incidence structure (173 bones as vertices, 270 muscles as hyperedges) built by loadMSKData() + MSKHypergraph(); the impact-vs-cortical-homunculus correspondence data (21 body regions); the muscle-recovery data. All from the published paper.",
+  "pipeline": "PhysioMSKNet::loadMSKData() -> MSKHypergraph() (the 173x270 muscle-bone hypergraph) -> mskHomuncCorrelation() (regress muscle structural impact against the cortical motor-homunculus map); mskReproducePaper() wraps the full Murphy 2018 reproduction. Deterministic (reference anatomy, no simulation).",
+  "note": "The bundled data are the paper's own (digitised figures + the reference MSK model), so this validates the ecosystem's hypergraph construction + network/regression machinery against the published result. The impact-homunculus finding (R^2 = 0.517) matches the paper's 0.52; the impact-recovery model reproduces the significant positive direction but a lower R^2 (0.41 vs the paper's 0.76) -- reported in the case note. run_simulation = FALSE (the deterministic structural reproduction; the stochastic control-simulation is out of scope)."
+}

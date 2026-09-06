@@ -1,0 +1,147 @@
+---
+title: "Angles need their own statistics: directional analysis of gait coordination"
+subtitle: "A worked circular-statistics case study on real WBDS walking, validated against the `circular` package"
+categories: [biomechanics, gait, coordination, circular-statistics, validated]
+author: "Yusuke Matsui"
+date: "2026-09-03"
+---
+
+> **What this case shows** — an angle is not an ordinary number: 0° and 360° are the
+> same point, so the ordinary mean and standard deviation give nonsense, and
+> directional data need their own statistics. In biomechanics this matters directly —
+> the **vector-coding coupling angle** describes how two joints co-vary through a
+> movement, and its circular statistics quantify **inter-joint coordination**: the
+> mean resultant length **R̄** (0–1) is the coordination *consistency*, and the **mean
+> direction** is the dominant coordination *pattern*. On real WBDS walking, the
+> knee–ankle coupling angles have mean direction **254°** and **R̄ = 0.195** (weak but
+> significantly non-uniform, Rayleigh p = 3×10⁻⁸), and consistency varies across
+> subjects (R̄ 0.06–0.29). The ecosystem's `circularSummary` reproduces the canonical
+> R **`circular`** package to machine precision: the resultant length matches
+> **exactly** (|difference| = 0) and the mean direction to **6×10⁻¹⁴**.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for a sample of angles: call `circularSummary(angles, units)` → read the
+**mean direction** and **R̄** (concentration) → test uniformity with `rayleighTest()`.
+**Way of thinking** — never average angles arithmetically. The mean *direction* comes
+from summing unit vectors; **R̄** (their resultant length) measures how tightly the
+angles cluster — R̄ near 1 is tight, near 0 is spread. These are the right descriptors
+for coupling angles, phase, and any directional data.
+**Ecosystem usage** — `PhysioCore::circularSummary()`, `rayleighTest()` (uniformity),
+`watsonWilliamsTest()` (compare mean directions), `circularLinearCorrelation()`.
+:::
+
+## Proposition
+
+On real WBDS walking, the knee–ankle coupling angles have mean direction 254° and
+R̄ = 0.195 (Rayleigh p = 3×10⁻⁸), and `circularSummary` reproduces the canonical
+`circular` package to machine precision (R̄ |diff| = 0, mean direction |diff| = 6×10⁻¹⁴).
+
+## Question & goal
+
+**The question is whether the ecosystem computes directional statistics correctly —
+and whether they match the field-standard tool.** Circular statistics are easy to get
+wrong (averaging angles arithmetically is a classic bug). The goal is a head-to-head
+against the canonical `circular` package on real coupling angles, on the two
+definitional quantities — mean direction and resultant length.
+
+## Challenge & approach
+
+Two joints' coupling is summarised by a *coupling angle* per instant; over a movement
+these form a sample of angles. We compute their circular statistics with
+`circularSummary` and with the `circular` package, and compare — expecting the
+definitional quantities (mean direction, R̄) to match exactly.
+
+```
+knee, ankle angles → vector-coding coupling angles ┐
+                                                   ├─ circularSummary (mean dir, R-bar)
+                                                   └─ vs circular::mean.circular / rho.circular
+```
+
+## Data
+
+**WBDS — Fukuchi, Fukuchi & Duarte (2018), PeerJ** (figshare 5722711, CC-BY 4.0): five
+subjects of treadmill walking. The knee–ankle **vector-coding coupling angles**
+(γᵢ = atan2(Δankle, Δknee) mod 360°; Needham et al. 2014) over a gait cycle — 449
+angles for WBDS01. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the knee–ankle coupling angles of WBDS01 on the unit circle — each point is one instant's coordination direction; the red arrow is the mean vector (its length is R̄ = 0.195, its angle the mean direction 254°). The cloud is broad (weak concentration) but significantly biased (Rayleigh p = 3×10⁻⁸). Right: the coordination consistency R̄ for all five subjects (0.06–0.29) — a real between-subject spread.](artifacts/figure.png)
+
+*How to read this:* a tight cluster with a long red arrow would mean highly consistent
+coordination; here the angles are spread (short arrow, R̄ = 0.20) but not uniform — the
+coordination has a preferred direction.
+
+| Quantity | This reproduction | Reference |
+|---|---|---|
+| Mean direction | **254.32°** | `circular` = 254.32° |
+| \|mean direction diff\| | **6×10⁻¹⁴** | 0 |
+| Resultant length R̄ | **0.19528** | `circular` = 0.19528 |
+| \|R̄ diff\| | **0** | 0 (exact) |
+| Rayleigh p | 3.16×10⁻⁸ | 3.66×10⁻⁸ (approx.) |
+
+The definitional statistics match exactly; the Rayleigh p agrees on strong significance
+via a slightly different approximation. Values trace to
+[`artifacts/circular_summary.csv`](artifacts/circular_summary.csv) and the per-subject
+table [`artifacts/circular_by_subject.csv`](artifacts/circular_by_subject.csv).
+
+## Conclusion
+
+The ecosystem's directional statistics are exactly the field-standard `circular`
+package's — so its coordination descriptors are numerically trustworthy. The
+transferable takeaway: **summarise angles with the mean direction and the resultant
+length R̄, never the arithmetic mean; R̄ is coordination consistency, and it is
+reproducible to the bit — while significance tests like Rayleigh's are asymptotic
+approximations that differ slightly between tools, so lean on the exact statistics.**
+
+## Open questions
+
+- R̄ and the mean coupling direction are the raw material of coordination analysis:
+  comparing them between limbs, between groups (the **Watson–Williams test**,
+  `watsonWilliamsTest`), or across the gait cycle (phase-binned coupling-angle
+  distributions — the standard coordination-variability analysis) would turn these
+  validated directional statistics into a coordination study. The between-subject R̄
+  spread (0.06–0.29) already hints at individual coordination signatures worth testing.
+  *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| circular summary (mean direction + R̄) | `circularSummary()` | PhysioCore |
+| test for a preferred direction | `rayleighTest()` | PhysioCore |
+| compare mean directions across groups | `watsonWilliamsTest()` | PhysioCore |
+| circular–linear correlation | `circularLinearCorrelation()` | PhysioCore |
+
+**Choosing the parameters.**
+
+- **units** — pass `"degrees"` or `"radians"` to match your data; the functions convert
+  internally and report back in the same units.
+- **R̄ interpretation** — R̄ ∈ [0, 1]: near 1 = tightly clustered angles (consistent
+  coordination); near 0 = dispersed. It is *not* a correlation — it is concentration.
+- **significance** — use `rayleighTest()` for a single sample; remember the p-value is
+  an asymptotic approximation, so read it as "clearly (non-)significant", not to the
+  last digit.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioCore)
+
+# angles = a numeric vector of coupling angles (degrees)
+cs <- circularSummary(angles, units = "degrees")
+cs$mean    # 254.3  -- mean coordination direction
+cs$rbar    # 0.195  -- coordination consistency (mean resultant length)
+rayleighTest(angles, units = "degrees")$p.value   # 3e-8  -- significantly non-uniform
+
+# exact by construction: matches the canonical `circular` package
+# (circular::mean.circular / circular::rho.circular) to machine precision.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/`](artifacts/) — the summary in
+[`circular_summary.csv`](artifacts/circular_summary.csv) and the per-subject R̄ in
+[`circular_by_subject.csv`](artifacts/circular_by_subject.csv) — and
+[`audit.py`](audit.py) re-checks each reported number, the machine-precision `circular`
+agreement, and the honestly-noted Rayleigh-p approximation.

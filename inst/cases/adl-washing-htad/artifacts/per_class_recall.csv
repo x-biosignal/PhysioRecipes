@@ -1,0 +1,8 @@
+"activity","recall","n_test_windows"
+"eating",0.609,527
+"grooming",0.462,325
+"mopping",0.569,332
+"sweeping",0.502,331
+"typing",0.763,334
+"washing",0.534,335
+"watch_tv",0.924,355

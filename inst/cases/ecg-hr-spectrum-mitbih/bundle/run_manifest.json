@@ -1,0 +1,49 @@
+{
+  "schema": "runtrace/1",
+  "seed": 117,
+  "env": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "platform": "x86_64-pc-linux-gnu",
+    "packages": {
+      "PhysioCore": "0.2.0",
+      "PhysioECG": "0.3.1"
+    },
+    "renv_lock": "renv.lock",
+    "renv_lock_hash": "c110eee44b476fb2"
+  },
+  "op_dag": [
+    {
+      "op": 1,
+      "activity": "ecgDetectRpeaks",
+      "package": "PhysioECG",
+      "version": "0.3.1",
+      "params": {
+        "method": "pan_tompkins"
+      }
+    },
+    {
+      "op": 2,
+      "activity": "ecgRRintervals",
+      "package": "PhysioECG",
+      "version": "0.3.1",
+      "params": []
+    },
+    {
+      "op": 3,
+      "activity": "ecgHRVtime",
+      "package": "PhysioECG",
+      "version": "0.3.1",
+      "params": {
+        "rhythm_check": false
+      }
+    }
+  ],
+  "prov_hash": null,
+  "outputs": {
+    "terminal_table.csv": "5b826fe22fb23715"
+  },
+  "algo": "xxhash64",
+  "op_dag_source": "executor",
+  "provenance_op_dag": [],
+  "provenance_consistent": true
+}

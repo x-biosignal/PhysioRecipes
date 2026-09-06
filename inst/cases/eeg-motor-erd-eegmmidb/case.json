@@ -1,0 +1,224 @@
+{
+  "id": "eeg-motor-erd-eegmmidb",
+  "title": "Sensorimotor mu/beta ERD during hand movement — the motor-BCI signal, reproduced",
+  "modality": ["eeg", "spectral", "motor"],
+  "packages": ["PhysioIO", "PhysioPreprocess", "PhysioAnalysis"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)",
+    "record": "subjects S001-S005, motor runs R03/R07/R11 (real hand movement), 64 ch, 160 Hz",
+    "url": "https://physionet.org/content/eegmmidb/",
+    "public": true,
+    "sha256_edf": [
+      {
+        "subject": "S001",
+        "runs": [
+          {
+            "file": "S001R03.edf",
+            "sha256": "3427c8d01bff1380bc9ab9f27a35ece2af5dfadf3e291bbc05eb66e4dadbfe2e"
+          },
+          {
+            "file": "S001R07.edf",
+            "sha256": "6320a941815eb7a0bc632e32c07c88b6e2281a0e2f177e8f49e2d0a16231145c"
+          },
+          {
+            "file": "S001R11.edf",
+            "sha256": "d5296b9232b0ad88b7022155cbcde618df44d4b0db046ce3bec54f8f8644207a"
+          }
+        ]
+      },
+      {
+        "subject": "S002",
+        "runs": [
+          {
+            "file": "S002R03.edf",
+            "sha256": "cbabe29620b19978454bc429f59976f6ee8f32f6392e4fcdf7e463981248072c"
+          },
+          {
+            "file": "S002R07.edf",
+            "sha256": "cdba64ad60574903248aed651d393c148df3c611eebdc9694717a04e2e2deef3"
+          },
+          {
+            "file": "S002R11.edf",
+            "sha256": "694bd9fbee1305dbc212ea4eecb8930750f5e08f8cc8ea45e2b94c92ac5f5a7d"
+          }
+        ]
+      },
+      {
+        "subject": "S003",
+        "runs": [
+          {
+            "file": "S003R03.edf",
+            "sha256": "ebf184ea51d9aa3178190583f428db02f184e22412ff300a5f224776d1e8dbb4"
+          },
+          {
+            "file": "S003R07.edf",
+            "sha256": "d8a610bf60a19c1d653a11633f7df40bd7b3eca976bebf2b525eb65017fdf044"
+          },
+          {
+            "file": "S003R11.edf",
+            "sha256": "0563c2a26f759d849d6b99b3efb6047d1e1d288f80c0c16f5f07403bd0029271"
+          }
+        ]
+      },
+      {
+        "subject": "S004",
+        "runs": [
+          {
+            "file": "S004R03.edf",
+            "sha256": "b24e3ae9d302935be06c0905d1e925ad68a94b4a5b20dc659cbc63bb8481d503"
+          },
+          {
+            "file": "S004R07.edf",
+            "sha256": "eb00bf6a816a6ded6f93e0b96d2a1c2ae8f6d13a59e39d475bf94d57fb842643"
+          },
+          {
+            "file": "S004R11.edf",
+            "sha256": "a8b96b32782329f12accdc222331545707be4cd497f97f158de4c06e87235f8c"
+          }
+        ]
+      },
+      {
+        "subject": "S005",
+        "runs": [
+          {
+            "file": "S005R03.edf",
+            "sha256": "3bf2695b66661a274bb099dd093c8f2eb4ede8a7068ec4bfd0a1fe9f4bfc0e18"
+          },
+          {
+            "file": "S005R07.edf",
+            "sha256": "630fbaf27a7a962a4a8bd61396b6a1c4f56b44e85fa5e9400016ca19085ad1f9"
+          },
+          {
+            "file": "S005R11.edf",
+            "sha256": "a4d4111c206de3c094d23c9fbaf2b3fece74eff7a68a11073f29dad9800653d4"
+          }
+        ]
+      }
+    ],
+    "citation": "Schalk G, et al. BCI2000: a general-purpose brain-computer interface system. IEEE Trans Biomed Eng. 2004;51(6):1034-43. Goldberger AL, et al. PhysioNet. Circulation. 2000;101(23):e215-20."
+  },
+  "proposition": "During real hand movement, absolute sensorimotor (C3/C4) mu (8-13 Hz) and beta (13-30 Hz) power drops relative to rest -- event-related desynchronization, the signal a motor BCI decodes -- in 5 of 5 eegmmidb subjects for mu (mean -15.2%) and 5/5 for beta, reproduced from 10 frozen substrate runs with every band-power claim of the primary (S001 rest) GROUNDED and a byte-identical replay. Contralateral lateralization is present but noisy per subject and is not claimed; the reported, robust quantity is the desynchronization itself.",
+  "opdag": ["butterworthFilter", "bandPower"],
+  "claims": [
+    {
+      "id": "delta",
+      "statement": "absolute delta power, C3 (S001 rest); alpha band = mu 8-13 Hz",
+      "value": 3160.55,
+      "artifact": "bundle/terminal_table.csv",
+      "status": "GROUNDED"
+    },
+    {
+      "id": "theta",
+      "statement": "absolute theta power, C3 (S001 rest); alpha band = mu 8-13 Hz",
+      "value": 412.82,
+      "artifact": "bundle/terminal_table.csv",
+      "status": "GROUNDED"
+    },
+    {
+      "id": "alpha",
+      "statement": "absolute alpha power, C3 (S001 rest); alpha band = mu 8-13 Hz",
+      "value": 323.88,
+      "artifact": "bundle/terminal_table.csv",
+      "status": "GROUNDED"
+    },
+    {
+      "id": "beta",
+      "statement": "absolute beta power, C3 (S001 rest); alpha band = mu 8-13 Hz",
+      "value": 347.2,
+      "artifact": "bundle/terminal_table.csv",
+      "status": "GROUNDED"
+    },
+    {
+      "id": "gamma",
+      "statement": "absolute gamma power, C3 (S001 rest); alpha band = mu 8-13 Hz",
+      "value": 125.67,
+      "artifact": "bundle/terminal_table.csv",
+      "status": "GROUNDED"
+    }
+  ],
+  "erd": {
+    "quantity": "absolute sensorimotor (C3/C4) mu & beta power, movement vs rest, per subject",
+    "band_definitions": "mu = alpha band (8-13 Hz); beta = 13-30 Hz; ERD% = (movement - rest)/rest x 100",
+    "n_subjects": 5,
+    "n_mu_desync": 5,
+    "n_beta_desync": 5,
+    "mean_mu_ERD_pct": -15.2,
+    "all_mu_desync": true,
+    "subjects": [
+      {
+        "subject": "S001",
+        "mu_ERD_pct": -12.9,
+        "beta_ERD_pct": -5.3,
+        "mu_ERD_C3": -10,
+        "mu_ERD_C4": -15.9,
+        "mu_desync": true,
+        "beta_desync": true,
+        "terminal_rest": "bundle/terminal_table.csv",
+        "terminal_move": "artifacts/move_S001_terminal.csv"
+      },
+      {
+        "subject": "S002",
+        "mu_ERD_pct": -18.5,
+        "beta_ERD_pct": -1.6,
+        "mu_ERD_C3": -25.1,
+        "mu_ERD_C4": -11.8,
+        "mu_desync": true,
+        "beta_desync": true,
+        "terminal_rest": "artifacts/rest_S002_terminal.csv",
+        "terminal_move": "artifacts/move_S002_terminal.csv"
+      },
+      {
+        "subject": "S003",
+        "mu_ERD_pct": -2.1,
+        "beta_ERD_pct": -1.8,
+        "mu_ERD_C3": -6.6,
+        "mu_ERD_C4": 2.3,
+        "mu_desync": true,
+        "beta_desync": true,
+        "terminal_rest": "artifacts/rest_S003_terminal.csv",
+        "terminal_move": "artifacts/move_S003_terminal.csv"
+      },
+      {
+        "subject": "S004",
+        "mu_ERD_pct": -32.7,
+        "beta_ERD_pct": -32.8,
+        "mu_ERD_C3": -32.4,
+        "mu_ERD_C4": -33,
+        "mu_desync": true,
+        "beta_desync": true,
+        "terminal_rest": "artifacts/rest_S004_terminal.csv",
+        "terminal_move": "artifacts/move_S004_terminal.csv"
+      },
+      {
+        "subject": "S005",
+        "mu_ERD_pct": -9.7,
+        "beta_ERD_pct": -39.2,
+        "mu_ERD_C3": -8.7,
+        "mu_ERD_C4": -10.7,
+        "mu_desync": true,
+        "beta_desync": true,
+        "terminal_rest": "artifacts/rest_S005_terminal.csv",
+        "terminal_move": "artifacts/move_S005_terminal.csv"
+      }
+    ],
+    "panel_table": "artifacts/erd_panel.csv",
+    "secondary_runs": "artifacts/secondary_runs.json"
+  },
+  "verification": {
+    "n_claims": 5,
+    "n_grounded": 5,
+    "n_ungrounded": 0,
+    "prereg_hash": "00aa46f49ab5af9a81d400de237db9666605200130134372ff9a4affe63295f4",
+    "replay_byte_identical": true
+  },
+  "open_questions": [
+    {
+      "q": "None: sensorimotor mu/beta ERD during movement (Pfurtscheller & Lopes da Silva, 1999) is the established basis of motor BCIs -- exactly what eegmmidb was built to study -- used here to demonstrate a reproducible, substrate-frozen contrast on public EEG. Escalation is reserved for genuinely unresolved questions.",
+      "artifact": null,
+      "escalate": null
+    }
+  ],
+  "reference_tools": [],
+  "bundle": "bundle/",
+  "status": "verified"
+}

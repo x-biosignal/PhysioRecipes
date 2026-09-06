@@ -1,0 +1,34 @@
+{
+  "id": "autocorrelation-eegmmidb",
+  "title": "Self-similarity vs lag: the autocorrelation function (a newly-authored op), bit-for-bit against statsmodels",
+  "modality": ["eeg", "time-series", "autocorrelation", "cross-tool-validation", "signal-analysis"],
+  "packages": ["PhysioAnalysis"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "The autocorrelation function (ACF) is the most basic tool for detecting periodicity, rhythmicity, and the decorrelation time of a signal. The ecosystem had cross-correlation between two series (crossCorrelation) but no single-series ACF. This case introduces a NEWLY-AUTHORED op, autocorrelation. On a real eyes-closed posterior EEG channel it reproduces the field-standard statsmodels.tsa.acf (adjusted=FALSE, biased/demeaned) BIT-FOR-BIT (max |diff| ~2e-16) across lags 0..30; the lag-0 value is exactly 1 (the ACF identity), and the ACF decays below 1/e by lag 3 -- a short decorrelation time (~19 ms at 160 Hz) for a broadband EEG segment.",
+  "opdag": ["autocorrelation"],
+  "claims": [
+    { "id": "acf_lag1", "statement": "autocorrelation at lag 1 of the POz signal", "value": 0.85646134, "artifact": "artifacts/acf_summary.csv", "status": "PASS" },
+    { "id": "acf_lag2", "statement": "autocorrelation at lag 2 -- lower than lag 1 (decaying)", "value": 0.56654886, "artifact": "artifacts/acf_summary.csv", "status": "PASS" },
+    { "id": "acf_lag0", "statement": "autocorrelation at lag 0 -- exactly 1 (the ACF identity)", "value": 1, "artifact": "artifacts/acf_summary.csv", "status": "PASS" },
+    { "id": "max_diff_statsmodels", "statement": "max |autocorrelation - statsmodels.tsa.acf| over lags 0..30 (bit-exact)", "value": 2.220446e-16, "artifact": "artifacts/acf_summary.csv", "status": "PASS" },
+    { "id": "decorrelation_time", "statement": "decorrelation time -- first lag where the ACF drops below 1/e", "value": 3, "artifact": "artifacts/acf_summary.csv", "status": "PASS" },
+    { "id": "n_lags", "statement": "number of ACF values returned (lags 0..lag_max)", "value": 31, "artifact": "artifacts/acf_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored autocorrelation op is validated against the field-standard statsmodels.tsa.acf (adjusted=FALSE, the biased/demeaned estimator) on the identical signal. Both compute acf_k = demeaned lag-k autocovariance / variance with the 1/N (biased) normalization; the agreement is BIT-FOR-BIT (max |diff| ~2e-16) across lags 0..30. The lag-0 value is exactly 1 and the ACF decays below 1/e by lag 3.",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), channel POz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/acf_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the newly-authored autocorrelation reproduces statsmodels.tsa.acf bit-for-bit (max |diff| ~2e-16) across lags; (2) the lag-0 value is exactly 1 and the ACF decays below 1/e by lag 3. HONEST scope: (1) this op is NEWLY AUTHORED to fill a gap -- the ecosystem had cross-correlation between two series (crossCorrelation, folded as xcorr) but not the single-series autocorrelation; (2) this is a genuine MACHINE-PRECISION match -- the op and statsmodels use the IDENTICAL biased/demeaned estimator, so the ~2e-16 residual is the floating-point floor, not a convention agreement; (3) the ACF is a foundational descriptor (its shape gives periodicity, its decay gives the decorrelation time / effective independent-sample spacing), so certifying it against the field-standard statsmodels makes a widely-used primitive first-class and provenance-tracked; (4) the value is a signal property (dimensionless); the reproducible content is the bit-exact ACF vector and the decorrelation structure, not an absolute physiological constant; (5) run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "The ACF underlies several downstream primitives worth exposing next: the effective sample size (N / (1 + 2*sum of positive ACF lags)) for honest confidence intervals on correlated signals, the first zero-crossing (a period estimate), and the partial ACF (PACF) for model order. Building these on this op would turn the ACF into an inference-aware layer. Documented, not escalated.", "artifact": "artifacts/acf_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["statsmodels.tsa.acf (Python)"],
+  "status": "validated"
+}

@@ -1,0 +1,157 @@
+---
+title: "Same geometry, different modality: representational similarity of gait kinematics and kinetics"
+subtitle: "A worked RSA / Mantel case study on real WBDS walking, validated against vegan::mantel"
+categories: [biomechanics, gait, cross-modal, representational-similarity, validated]
+author: "Yusuke Matsui"
+date: "2026-09-03"
+---
+
+> **What this case shows** — two modalities can carry the same *structure* without
+> sharing units or dimensions. **Representational similarity analysis** (RSA;
+> Kriegeskorte et al. 2008) — the **Mantel test** (Mantel 1967) — asks this
+> directly: build a dissimilarity matrix (**RDM**) for each modality over the shared
+> observations, then correlate the RDMs. Do pairs of gait moments far apart in
+> joint-angle space also tend to be far apart in ground-reaction-force space? On
+> real WBDS treadmill walking the answer is yes but *moderately*: the Mantel
+> correlation between the kinematics RDM and the kinetics RDM is **r = 0.34**
+> (permutation **p = 0.010**) for one subject, and **0.34–0.49** (mean **0.38**)
+> across all five. The ecosystem's `representationalSimilarity` reproduces the
+> canonical **`vegan::mantel` exactly** (|difference| = **0**). And this rank-based
+> geometry correspondence (0.38) is *weaker* than the distance correlation on the
+> same data (0.72) — the two measure genuinely different things, and reporting both
+> keeps the picture honest.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — to compare two modalities' *structure*: form aligned blocks → call
+`representationalSimilarity(list(A, B), method, compare, permutations)` → read the
+**cross-block Mantel r** and its permutation **p**.
+**Way of thinking** — RSA abstracts away from the raw signals to their
+*dissimilarity geometry*, so it compares modalities that have no common feature
+space. A moderate Mantel r means the geometries partly align; contrast it with a
+full-dependence measure (distance correlation) to see how much is rank-monotone
+geometry versus richer coupling.
+**Ecosystem usage** — `PhysioCrossModal::representationalSimilarity()` for the RSA /
+Mantel test; `distanceCorrelation()`, `multipleFactorAnalysis()`, `jive()` for the
+rest of the cross-modal toolkit.
+:::
+
+## Proposition
+
+On real WBDS treadmill walking, the representational geometries of gait kinematics
+and kinetics correspond moderately: Mantel r = 0.3440 (WBDS01, p = 0.010) and
+0.34–0.49 (mean 0.38) across five subjects, and `representationalSimilarity` equals
+the canonical `vegan::mantel` to machine precision.
+
+## Question & goal
+
+**The question is whether two modalities share representational structure — and how
+to measure it when they have no common feature space.** Kinematics (degrees) and
+kinetics (newtons) cannot be correlated channel-by-channel. RSA sidesteps this by
+comparing their *dissimilarity matrices*. The goal is to (1) quantify that
+geometric correspondence on real data and (2) show the ecosystem's operator is the
+*exact* Mantel statistic by matching the reference `vegan::mantel`.
+
+## Challenge & approach
+
+The two blocks live in different spaces, so we compare their geometry, not their
+values: build a Euclidean RDM for each (all pairwise distances among the 150 gait
+samples), then Spearman-correlate the two RDMs with a permutation test — the Mantel
+test. Every value is cross-checked against `vegan::mantel`.
+
+```
+knee+ankle flexion → RDM_kinematics ┐
+                                    ├─ Mantel test (Spearman) → r, p  (== vegan::mantel)
+AP+vertical GRF     → RDM_kinetics   ┘
+```
+
+## Data
+
+**WBDS — Fukuchi, Fukuchi & Duarte (2018), PeerJ** (figshare 5722711, CC-BY 4.0):
+five subjects of treadmill walking. For each, two time-aligned blocks — sagittal
+**knee + ankle flexion angles** and the **antero-posterior + vertical GRF** —
+down-sampled to 150 samples. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left and centre: the two representational dissimilarity matrices (RDMs) for WBDS01 — all pairwise distances among the 150 gait samples, in kinematic space and in kinetic space. Right: the Mantel correlation between each subject's two RDMs (0.34–0.49, mean 0.38) — the two geometries partly align, consistently across subjects.](artifacts/figure.png)
+
+*How to read this:* RSA asks whether the two RDMs have the same *pattern* — do the
+bright (far-apart) and dark (close) regions line up? The Mantel r on the right
+quantifies that alignment, and it is positive and significant for every subject.
+
+| Quantity | This reproduction | Reference |
+|---|---|---|
+| Mantel r (WBDS01) | **0.3440** | `vegan::mantel` = 0.3440 |
+| \|op − vegan::mantel\| | **0** | 0 (exact statistic) |
+| Permutation p (99 perm) | **0.010** | — |
+| Mean Mantel r, 5 subjects | **0.3818** | — |
+| Distance correlation (same data) | 0.72 | *(see the dCor case)* |
+
+The op reproduces `vegan::mantel` exactly, the correspondence is moderate and
+significant across every subject, and it is notably weaker than the distance
+correlation — RSA is the more conservative, rank-geometry measure. Values trace to
+[`artifacts/rsa_mantel_summary.csv`](artifacts/rsa_mantel_summary.csv) and
+[`artifacts/rsa_mantel_by_subject.csv`](artifacts/rsa_mantel_by_subject.csv).
+
+## Conclusion
+
+Gait kinematics and kinetics share a moderate representational geometry, and the
+Mantel test certifies it *without* a common feature space — on real data, across
+every subject, with an operator that is the exact Mantel statistic. The transferable
+takeaway: **to compare modalities that share no units, correlate their dissimilarity
+geometries — and read the Mantel r alongside a full-dependence measure, because
+rank-geometry (0.38) and distance-covariance (0.72) answer different questions.**
+
+## Open questions
+
+- RSA's power is in comparing *many* geometries. A **partial Mantel test** would ask
+  whether the correspondence survives removing gait speed; RSA across genuinely
+  different modalities (**EEG RDM vs EMG RDM**, or a **model RDM vs a data RDM**)
+  would turn this validated Mantel op into a representational-geometry discovery
+  tool; and the gap to the distance correlation (0.38 vs 0.72) invites a systematic
+  map of when rank-geometry and full-dependence measures agree. *Documented, not
+  escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| RSA / Mantel between blocks | `representationalSimilarity()` | PhysioCrossModal |
+| distance correlation (full dependence) | `distanceCorrelation()` | PhysioCrossModal |
+| multiple factor analysis (blocks) | `multipleFactorAnalysis()` | PhysioCrossModal |
+| shared vs modality-specific structure | `jive()` | PhysioCrossModal |
+
+**Choosing the parameters.**
+
+- **method** (the RDM metric) — `"euclidean"` for continuous features; use
+  `"correlation"` when only the pattern (not the scale) should count.
+- **compare** — `"spearman"` (rank) is the standard, robust RSA choice; `"pearson"`
+  assumes a linear RDM relationship.
+- **permutations** — 99 gives a smallest p of 0.01; raise it for a finer tail.
+- **Alignment** — the blocks must share rows (the same observations), since RSA
+  compares distances *among* those observations.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioCrossModal)
+
+# blocks: a named list of aligned matrices (same rows / observations)
+rsa <- representationalSimilarity(list(kin = X, kinet = Y),
+                                  method = "euclidean", compare = "spearman",
+                                  permutations = 99, seed = 1)
+rsa$similarity[1, 2]   # 0.3440 — the Mantel correlation between the two RDMs
+rsa$p_value            # 0.010
+
+# exact by construction: matches the canonical vegan::mantel
+stopifnot(abs(rsa$similarity[1, 2] -
+              vegan::mantel(dist(X), dist(Y), method = "spearman")$statistic) < 1e-9)
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/`](artifacts/) — the summary in
+[`rsa_mantel_summary.csv`](artifacts/rsa_mantel_summary.csv) and the per-subject
+values in [`rsa_mantel_by_subject.csv`](artifacts/rsa_mantel_by_subject.csv) — and
+[`audit.py`](audit.py) re-checks each reported number, the exact `vegan::mantel`
+agreement, the significance, and the five-subject robustness.

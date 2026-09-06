@@ -1,0 +1,35 @@
+{
+  "eyesopen_O1": {
+    "run": "open_O1",
+    "condition": "eyes_open",
+    "electrode": "O1..",
+    "prereg_hash": "ce97d3656ace04b6f52c3e4a9c9acaafbb076e65df6c7d25c4dc59baa7ce4613",
+    "terminal_hash": "79eda8e31ff695a6",
+    "replay_byte_identical": true,
+    "prereg_adheres": true,
+    "n_grounded": 5,
+    "n_claims": 5
+  },
+  "eyesclosed_Oz": {
+    "run": "closed_Oz",
+    "condition": "eyes_closed",
+    "electrode": "Oz..",
+    "prereg_hash": "17f7e5b58860e1c0f1ac25ecb3c5b4bc7e35f85a4b4f8a9dccf59d91805c1db4",
+    "terminal_hash": "da26620d6e35fe05",
+    "replay_byte_identical": true,
+    "prereg_adheres": true,
+    "n_grounded": 5,
+    "n_claims": 5
+  },
+  "eyesopen_Oz": {
+    "run": "open_Oz",
+    "condition": "eyes_open",
+    "electrode": "Oz..",
+    "prereg_hash": "6424201e95c2659cf8a56ebd63b70a09f812c0ddc0b933a15b4b7ecdad55df31",
+    "terminal_hash": "bf9d0cdfd10eeb61",
+    "replay_byte_identical": true,
+    "prereg_adheres": true,
+    "n_grounded": 5,
+    "n_claims": 5
+  }
+}

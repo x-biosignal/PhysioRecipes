@@ -1,0 +1,8 @@
+"metric","value"
+"petrosian_fd_poz",1.0170616506
+"max_diff_antropy",0
+"n_samples",1600
+"posterior_mean",1.01953644
+"frontal_mean",1.02661032
+"n_posterior_lt_frontmean",9
+"n_posterior",9

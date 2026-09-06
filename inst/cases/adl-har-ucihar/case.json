@@ -1,0 +1,35 @@
+{
+  "id": "adl-har-ucihar",
+  "title": "Locomotion and posture ADLs from a waist smartphone: a wearable ICF performance profile",
+  "modality": ["adl", "wearable", "har", "mobility", "icf"],
+  "packages": ["PhysioWearable"],
+  "dataset": {
+    "name": "Human Activity Recognition Using Smartphones (UCI HAR)",
+    "version": "UCI ML Repository #240 (Anguita et al. 2013)",
+    "record": "30 subjects, waist-mounted smartphone, 50 Hz tri-axial accelerometer pre-windowed into 128-sample (2.56 s) windows; six activities (walking, up/down stairs, sitting, standing, laying) with a provided subject-disjoint train/test split",
+    "url": "https://archive.ics.uci.edu/dataset/240",
+    "public": true,
+    "citation": "Anguita D, Ghio A, Oneto L, Parra X, Reyes-Ortiz JL. A Public Domain Dataset for Human Activity Recognition Using Smartphones. ESANN 2013; dataset doi:10.24432/C54S4K (CC-BY 4.0)."
+  },
+  "proposition": "The mobility and posture activities that make up much of the ICF d4 domain -- walking, stair-climbing, sitting, standing, lying -- are recognisable from a single waist accelerometer. On the UCI HAR benchmark's provided subject-disjoint train/test split, the ecosystem's dependency-free HAR pipeline (a compact 36-feature descriptor + k-NN) reaches 0.83 six-class accuracy and maps the recognised activities to their ICF Activities & Participation codes (posture d415, walking d450, moving-around d455), the real-world performance profile a clinic test cannot see.",
+  "opdag": ["adlFeatures", "trainADL", "recognizeADL", "adlToICF"],
+  "claims": [
+    { "id": "overall_accuracy", "statement": "6-class accuracy on the provided subject-disjoint test split", "value": 0.834, "artifact": "artifacts/summary.csv", "status": "PASS" },
+    { "id": "walking_recall",   "statement": "walking (d450) recall",                                          "value": 0.891, "artifact": "artifacts/per_class_recall.csv", "status": "PASS" },
+    { "id": "laying_recall",    "statement": "laying (d415) recall -- the most distinct posture",             "value": 1.0,   "artifact": "artifacts/per_class_recall.csv", "status": "PASS" },
+    { "id": "upstairs_recall",  "statement": "walking-upstairs recall -- the hardest class",                  "value": 0.601, "artifact": "artifacts/per_class_recall.csv", "status": "PASS" },
+    { "id": "n_test_windows",   "statement": "test windows (30-subject benchmark)",                           "value": 2947,  "artifact": "artifacts/summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The dataset's own ground-truth activity labels on its PROVIDED subject-disjoint train/test split (the standard UCI-HAR benchmark protocol)",
+    "data": "REAL -- UCI HAR smartphone accelerometer (Anguita et al. 2013), 30 subjects, 50 Hz",
+    "artifacts": ["artifacts/per_class_recall.csv", "artifacts/icf_profile.csv", "artifacts/summary.csv"],
+    "all_pass": true,
+    "note": "0.83 with a deliberately simple pipeline (36 hand-crafted features + k-NN) on the standard benchmark; the literature reaches ~0.96 with 561 features + SVM, so this is a floor, not a ceiling -- the pipeline is model-agnostic (swap in PhysioML ROCKET). The confusions are the physiologically expected ones: walking-upstairs vs downstairs (0.60), sitting vs standing (both static, told apart only by orientation). Laying is perfectly separable (1.00). Every activity maps to an ICF d4 code, giving a real-world mobility performance profile."
+  },
+  "open_questions": [
+    { "q": "Walking-upstairs is the weakest class (0.60), confused with downstairs; whether a richer feature set or barometer fusion resolves ascent vs descent is open. Documented, not escalated.", "artifact": "artifacts/per_class_recall.csv", "escalate": null }
+  ],
+  "reference_tools": [],
+  "status": "validated"
+}

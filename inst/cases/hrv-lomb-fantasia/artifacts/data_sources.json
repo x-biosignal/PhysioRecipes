@@ -1,0 +1,10 @@
+{
+  "dataset": "Fantasia Database",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/fantasia/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Iyengar N, Peng CK, Morin R, Goldberger AL, Lipsitz LA. Age-related alterations in the fractal scaling of cardiac interbeat interval dynamics. Am J Physiol 1996;271(4):R1078-R1084. Fantasia Database, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "young subject f1y01: the RR-interval tachogram (channel, rr_ms, time_sec; 8708 beats over ~2 h) derived offline from the real continuous ECG (readWFDB -> ecgDetectRpeaks -> ecgRRintervals, physiologic filter 300-2000 ms) and git-tracked at eval/data/hrv-dfa/rr_f1y01.rds -- the same root the sibling hrv-dfa case uses.",
+  "pipeline": "readRDS(rr_f1y01) -> PhysioECG::ecgHRVfreq(method='lomb', rhythm_check=FALSE), which computes the Lomb-Scargle periodogram of the UNEVEN tachogram (512 frequencies, 0.003-0.4 Hz) and integrates the Task-Force VLF/LF/HF bands. The reference re-computes the same periodogram with scipy.signal.lombscargle (matched frequencies, mean-detrended, un-normalized), integrates the bands identically, and reports the machine-precision agreement + the LF/HF autonomic balance. Deterministic.",
+  "note": "The tracked input is eval/data/hrv-dfa/rr_f1y01.rds (the RR tachogram). The RR series is unevenly sampled (one value per heartbeat), so the correct frequency-domain estimate is the Lomb-Scargle periodogram -- a least-squares sinusoid fit that needs no interpolation. ecgHRVfreq(method='lomb') reproduces scipy.signal.lombscargle to machine precision: the raw periodogram to max |diff| ~ 3e-8 on power values of order 1e2 (relative ~1e-10, the floating-point summation-order floor over 8708 beats -- an IDENTICAL-formula match, not a convention agreement), and the integrated band powers to ~7e-11. The finding: an HF-dominant resting autonomic balance (LF/HF ~ 0.48, HF 67% of LF+HF; HF peak ~0.30 Hz = respiratory ~18/min) -- the expected healthy-young vagal pattern."
+}

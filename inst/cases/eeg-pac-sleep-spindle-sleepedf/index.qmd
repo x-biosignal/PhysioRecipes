@@ -1,0 +1,148 @@
+---
+title: "The sleeping brain's rhythm-within-a-rhythm: slow-oscillation↔spindle coupling"
+subtitle: "A worked phase-amplitude coupling case study on real NREM sleep EEG, validated against tensorpac"
+categories: [eeg, sleep, cross-frequency-coupling, phase-amplitude-coupling, validated]
+author: "Yusuke Matsui"
+date: "2026-09-03"
+---
+
+> **What this case shows** — during deep sleep the brain nests one rhythm inside
+> another: the up-state of the **slow oscillation** (~1 Hz) gates the thalamocortical
+> **sleep spindles** (~13 Hz), so spindle amplitude rises and falls with the
+> slow-oscillation phase. This **slow-oscillation↔spindle coupling** is a hallmark of
+> NREM sleep, implicated in memory consolidation. On a real overnight polysomnogram
+> the Tort modulation index is **MI = 0.00035**, and it is unmistakably real: the
+> observed coupling sits **z = 9.6** above a circular-shift surrogate null and exceeds
+> **every one of 200 surrogates**. The ecosystem's `phaseAmplitudeCoupling` reproduces
+> the canonical Python **tensorpac to machine precision** (|difference| = **5×10⁻¹⁷**)
+> — fed the identical phase and amplitude, the two engines return the same modulation
+> index to the last digit.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — to measure cross-frequency coupling: take the EEG → call
+`phaseAmplitudeCoupling(x, sr, phase_band, amp_band, method="tort")` → read the
+**modulation index** → test it against a **surrogate null** to confirm it is real.
+**Way of thinking** — a phase-amplitude coupling is a *rhythm within a rhythm*; the
+modulation index is only meaningful against a null that destroys the timing but keeps
+the spectra (a circular shift), because band-limited signals produce a non-zero MI by
+chance.
+**Ecosystem usage** — `PhysioCrossModal::phaseAmplitudeCoupling()` (Tort MI, Canolty
+MVL, Ozkurt, PLV) and `eegComodulogram()` to scan a grid of phase × amplitude bands.
+:::
+
+## Proposition
+
+On real NREM sleep EEG (Sleep-EDF SC4001, Fpz-Cz), the slow-oscillation phase
+(0.5–1.25 Hz) and the spindle amplitude (12–15 Hz) are coupled: Tort MI = 0.00035,
+z = 9.6 above a circular-shift null (exceeds all 200 surrogates), and
+`phaseAmplitudeCoupling` equals the canonical `tensorpac` to machine precision.
+
+## Question & goal
+
+**The question is whether the ecosystem finds a genuine cross-frequency coupling, and
+finds it the same way the field-standard tool does.** Cross-frequency coupling is
+easy to over-claim — band-limited noise produces a non-zero modulation index. So the
+goal is two-fold: (1) show the SO–spindle coupling is *real* against a proper
+surrogate null, and (2) show the operator reproduces `tensorpac` exactly.
+
+## Challenge & approach
+
+A phase-amplitude coupling measure has two parts — extracting the phase and amplitude
+(filter + Hilbert), then quantifying their relationship (the Tort modulation index).
+We validate the *quantifier* by feeding the **identical** phase and amplitude to both
+`phaseAmplitudeCoupling` and `tensorpac`, and we validate the *finding* by comparing
+the observed MI to circular-shift surrogates.
+
+```
+NREM EEG → filter+Hilbert → SO phase, spindle amplitude ┐
+                                                        ├─ Tort MI (== tensorpac)
+                                                        └─ vs 200 circular-shift surrogates → z
+```
+
+## Data
+
+**Sleep-EDF Expanded (sleep-edfx, PhysioNet)**: subject SC4001, overnight PSG. EEG
+**Fpz-Cz** at 100 Hz; the first 30 min of concatenated **NREM (N2+N3)** epochs, grouped
+from the dataset's own expert hypnogram (the same PSG the `netphys-sleep-network` case
+reads). Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: normalized spindle amplitude across the slow-oscillation phase (two cycles shown) — spindle power is not flat but peaks at a preferred SO phase, the signature of coupling. Right: the observed Tort modulation index (red line) against the distribution of 200 circular-shift surrogates (grey) — the observation sits far into the tail (z = 9.6), above every surrogate.](artifacts/figure.png)
+
+*How to read this:* if there were no coupling, the left panel would be flat and the
+red line on the right would fall inside the grey histogram. Instead the amplitude is
+clearly modulated by phase, and the observed MI is nowhere near the null.
+
+| Quantity | This reproduction | Reference |
+|---|---|---|
+| SO-spindle Tort MI | **0.00035** | `tensorpac` = 0.00035 |
+| \|op − tensorpac\| | **5×10⁻¹⁷** | 0 (identical statistic) |
+| Surrogate-null z | **9.6** | — |
+| Surrogates exceeded | **200 / 200** | — |
+
+The coupling is real and strong against the null, and the operator reproduces
+`tensorpac` to machine precision. Values trace to
+[`artifacts/pac_summary.csv`](artifacts/pac_summary.csv) and the phase–amplitude
+distribution in
+[`artifacts/pac_phase_distribution.csv`](artifacts/pac_phase_distribution.csv).
+
+## Conclusion
+
+The sleeping brain couples its slow oscillation to its spindles, and the ecosystem
+measures that coupling with an operator that is exactly the field-standard `tensorpac`
+— on real overnight EEG, confirmed real against a surrogate null. The transferable
+takeaway: **report a coupling only when it beats a timing-destroying surrogate null,
+and use a quantifier you have checked against the canonical tool — a non-zero
+modulation index alone proves nothing.**
+
+## Open questions
+
+- The coupling was measured on one channel of one night. Its **preferred SO phase**
+  (where spindles peak) and its strength are themselves biomarkers: tracking them
+  across N2 vs N3, across the night, across subjects, and against a memory-task
+  outcome would turn this validated PAC operator into a sleep/memory study; a
+  **comodulogram** (`eegComodulogram`, a grid of phase × amplitude bands) would locate
+  the coupling in frequency space rather than assuming the SO/spindle bands.
+  *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| phase-amplitude coupling (Tort/Canolty/…) | `phaseAmplitudeCoupling()` | PhysioCrossModal |
+| comodulogram (band grid) | `eegComodulogram()` | PhysioEEG |
+| the aperiodic background (context) | `eegAperiodic()` | PhysioEEG |
+
+**Choosing the parameters.**
+
+- **phase_band / amp_band** — pick the bands from the physiology (here SO 0.5–1.25 Hz,
+  spindles 12–15 Hz); a comodulogram finds them when you do not know.
+- **method** — `"tort"` (a normalized KL modulation index, 0–1-ish) is the robust
+  default; Canolty MVL is amplitude-scale-dependent.
+- **surrogates** — always test the MI against a timing-destroying null (circular shift
+  of the amplitude); the raw MI is not interpretable on its own.
+- **Nyquist** — the amplitude band must sit below the Nyquist frequency (here 50 Hz).
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioCrossModal)
+
+# x = a numeric EEG signal (or a PhysioExperiment channel), sr in Hz
+pac <- phaseAmplitudeCoupling(x, sr = 100,
+                              phase_band = c(0.5, 1.25),   # slow oscillation
+                              amp_band   = c(12, 15),      # sleep spindle
+                              method = "tort")
+pac$pac    # 0.00035 — the Tort modulation index
+
+# exact by construction: matches the canonical tensorpac on the same phase+amp
+# (tensorpac.methods.modulation_index) to machine precision.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/`](artifacts/) — the summary in
+[`pac_summary.csv`](artifacts/pac_summary.csv) and the phase–amplitude distribution in
+[`pac_phase_distribution.csv`](artifacts/pac_phase_distribution.csv) — and
+[`audit.py`](audit.py) re-checks each reported number, the exact `tensorpac`
+agreement, the surrogate-null significance, and the modulated phase distribution.

@@ -1,0 +1,138 @@
+---
+title: "Watching the alpha rhythm breathe: the spectrogram, bit-for-bit against scipy"
+subtitle: "A worked time-frequency case study on real EEG, certifying the STFT spectrogram against scipy.signal.spectrogram"
+categories: [eeg, spectral, time-frequency, spectrogram, stft, alpha, validated]
+author: "Yusuke Matsui"
+date: "2026-09-05"
+---
+
+> **What this case shows** — the [Welch case](../eeg-bandpower-welch-eegmmidb/index.qmd) *averaged*
+> the periodograms of overlapping windows into one spectrum. The **spectrogram** (short-time Fourier
+> transform) *keeps* them — a **frequency × time** power matrix that resolves how the spectrum
+> evolves. On a real eyes-closed posterior EEG channel (POz) it reproduces `scipy.signal.spectrogram`
+> **bit-for-bit** (max |diff| ~**7e-13** over all 129 × 11 cells) once the conventions match. And the
+> time-frequency view reveals what the averaged spectrum hides: the alpha rhythm dominates **every**
+> one of the 11 windows (peak in 8–13 Hz, median **11.25 Hz**), yet its amplitude **waxes and wanes**
+> across the 10 s (**CV ~58%**) — the eyes-closed alpha rhythm breathing.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for the time-resolved spectrum: `spectrogram(pe, channel = c)` → a frequency × time
+power matrix (plus `$frequencies`, `$times`).
+**Way of thinking** — Welch answers *which* frequencies; the spectrogram answers *which frequencies,
+when*. Reach for it when the signal is (or might be) non-stationary — a rhythm that waxes and wanes,
+a transition, a transient the averaged spectrum would smear away.
+**Ecosystem usage** — `PhysioAnalysis::spectrogram()`; the time-resolved sibling of
+`bandPower(method = "welch")`.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, `spectrogram` reproduces `scipy.signal.spectrogram` bit-for-bit (max
+|diff| ~7e-13 over 129 × 11 cells); and the alpha rhythm dominates every window (11/11, median
+11.25 Hz) while its power waxes and wanes (CV ~58%).
+
+## Question & goal
+
+**The question is fidelity and dynamics: does the ecosystem's spectrogram equal
+`scipy.signal.spectrogram` — and what does the time-frequency view show that the averaged Welch
+spectrum cannot?** The goal is a machine-precision certification of the STFT over every cell, and a
+read of the alpha rhythm's amplitude dynamics.
+
+## Challenge & approach
+
+Two STFTs agree only if their conventions coincide. The op uses a *symmetric* Hann window, *no*
+detrend, density scaling, one-sided doubling, `nperseg = 256`, 50% overlap, `mode = "psd"`. scipy's
+spectrogram defaults differ (a Tukey window, `detrend = "constant"`), so we point scipy at the op's
+conventions — `get_window("hann", 256, fftbins = False)`, `detrend = False` — and compare the full
+matrix.
+
+```
+EEG POz (eegmmidb, 160 Hz) → spectrogram → 129 × 11 (freq × time) power matrix
+                    vs scipy.signal.spectrogram (symmetric Hann, detrend=False, density, psd) → bit-exact (~7e-13)
+                                    alpha peak in 11/11 windows, power CV ~58% → the rhythm breathes
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz** (posterior), first 10 s at 160 Hz — the same git-tracked root the
+[Welch](../eeg-bandpower-welch-eegmmidb/index.qmd) and [Hjorth](../eeg-hjorth-eegmmidb/index.qmd)
+cases use. Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the spectrogram of POz (log power; frequency × time), with the alpha band (8-13 Hz, dashed) carrying the sustained ridge — scipy.signal.spectrogram reproduces every cell to ~7e-13. Right: alpha-band power across the 11 time windows — it waxes and wanes around its mean (CV ~58%), the amplitude modulation of the eyes-closed alpha rhythm that a single averaged spectrum cannot show.](artifacts/figure.png)
+
+*How to read this:* the left panel is the time-frequency representation (the alpha ridge) and the
+validation (op = scipy over every cell); the right panel is the finding (alpha power is not constant
+— the rhythm breathes).
+
+| Quantity | Value |
+|---|--:|
+| spectrogram size (freq × time) | **129 × 11** |
+| op vs `scipy.signal.spectrogram` (max \|diff\|) | **7e-13** (bit-exact) |
+| **median peak frequency (alpha rhythm)** | **11.25 Hz** |
+| windows with peak in alpha (8–13 Hz) | **11 / 11** (sustained) |
+| **alpha-power CV across time** | **~58%** (waxing/waning) |
+| mean alpha power (POz) | **2465** |
+
+The op equals scipy to the FFT floating-point floor across every cell, and the time-frequency view
+shows a sustained-yet-modulated alpha rhythm. Values trace to
+[`artifacts/spectrogram_summary.csv`](artifacts/spectrogram_summary.csv).
+
+## Conclusion
+
+The ecosystem's spectrogram *is* `scipy.signal.spectrogram` — bit-for-bit over the full matrix, once
+the symmetric-Hann + no-detrend + density conventions are pinned — so the time-frequency estimator is
+certified against the reference; and on real eyes-closed EEG it shows the posterior alpha rhythm as
+sustained (dominant in every window) yet breathing (CV ~58%), cross-consistent with the Welch case's
+high posterior alpha power and the Hjorth case's low posterior mobility on the same data. The
+transferable takeaway: **use the spectrogram when time matters — it recovers dynamics (waxing,
+waning, transitions) that the averaged spectrum smears away — and pin the window, detrend, and
+scaling conventions before comparing STFTs across tools.**
+
+## Open questions
+
+- The spectrogram's real power is on **non-stationary** signals — an eyes-open → eyes-closed
+  transition (alpha appearing), a fatiguing EMG contraction (the median frequency compressing over
+  time), or motor-imagery event-related desynchronization. Running it across such a transition, with
+  the per-window frequencies pinned against scipy, would turn the bit-exact estimator into a dynamic
+  biomarker. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| spectrogram (frequency × time) | `spectrogram()` | PhysioAnalysis |
+| averaged spectrum (the sibling view) | `bandPower(method = "welch")` | PhysioAnalysis |
+| time-domain complexity | `eegComplexity()` (Hjorth) | PhysioEEG |
+
+**Choosing the parameters.**
+
+- **window_size** — the FFT length per window (here 256 = 1.6 s at 160 Hz); larger gives finer
+  frequency but coarser time resolution (the time-frequency trade-off).
+- **overlap** — the fraction of overlap between windows (here 0.5); more overlap gives smoother time
+  resolution at more compute.
+- **window_type** — `"hanning"` (this case, symmetric Hann) tapers each segment to control spectral
+  leakage.
+- **the conventions** — the STFT depends on the window, detrend, scaling, and overlap; pin them
+  before comparing across tools (scipy's spectrogram defaults — Tukey window, `detrend = "constant"`
+  — differ from this op's).
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis)
+
+sg <- spectrogram(pe, channel = 58, window_size = 256, overlap = 0.5)  # POz
+image(sg$times, sg$frequencies, t(sg$power))          # the time-frequency map
+alpha <- colSums(sg$power[sg$frequencies >= 8 & sg$frequencies <= 13, ])  # alpha over time
+
+# equals scipy.signal.spectrogram bit-for-bit (max |diff| ~7e-13) with matched conventions:
+# get_window("hann", 256, fftbins = FALSE), detrend = FALSE, scaling = "density", mode = "psd".
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/spectrogram_summary.csv`](artifacts/spectrogram_summary.csv), and [`audit.py`](audit.py)
+re-checks each number, the bit-exact scipy match over all 129 × 11 cells, the sustained-yet-modulated
+alpha finding, the required conventions, and the honestly-noted scope.

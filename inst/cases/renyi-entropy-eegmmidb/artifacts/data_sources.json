@@ -1,0 +1,10 @@
+{
+  "dataset": "EEG Motor Movement/Imagery Database (eegmmidb)",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples) -- the SAME git-tracked vector the SVD-entropy and Petrosian cases use.",
+  "pipeline": "readRDS(eeg_poz_s002r02) -> PhysioEEG::renyiEntropy(alpha, bins=16): discretize the signal into 16 equal-width bins to form a probability distribution p, then H_alpha = 1/(1-alpha) ln(sum p^alpha) in nats. The reference re-computes it with NeuroKit2 entropy_renyi (freq=p) across alpha = {0.5, 1, 2, 3}, via reticulate. Deterministic.",
+  "note": "The root is the POz channel numeric vector (shared with the SVD-entropy and Petrosian cases). The Renyi entropy (Renyi 1961) is a one-parameter generalization of the Shannon entropy: H_alpha = 1/(1-alpha) ln(sum p^alpha). At alpha=1 it recovers Shannon, at alpha=2 the collision entropy, at alpha->inf the min-entropy, and it is non-increasing in alpha. renyiEntropy is a NEW op (the ecosystem had Shannon-based entropies -- permutation, sample, spectral -- but not the generalized Renyi family). It reproduces NeuroKit2 entropy_renyi BIT-FOR-BIT (max |diff| ~4e-16) across alpha = {0.5, 1, 2, 3} on the identical amplitude histogram: both compute the identical formula in nats. The alpha=1 value (2.325 nats) exactly equals the Shannon entropy, and the family is monotonically decreasing in alpha (2.492 at 0.5 -> 2.325 at 1 -> 2.167 at 2 -> 2.095 at 3) -- the defining structure of the Renyi family."
+}

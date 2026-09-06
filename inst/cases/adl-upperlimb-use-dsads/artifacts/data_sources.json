@@ -1,0 +1,11 @@
+{
+  "dataset": "Daily and Sports Activities Data Set (DSADS)",
+  "authors": "Barshan B, Altun K",
+  "repository": "UCI ML Repository #256",
+  "doi": "10.24432/C5C59F",
+  "url": "https://archive.ics.uci.edu/dataset/256",
+  "license": "CC-BY 4.0",
+  "record_used": "subject p1, 19 activities; right-arm and left-arm accelerometer units @ 25 Hz",
+  "acquisition": "5 IMUs (torso, right arm, left arm, right leg, left leg), acc in m/s^2 -> g; 19 daily/sports activities x 60 five-second segments per subject",
+  "note": "Healthy subject: both arms are used, so the reference is SYMMETRIC use (ratio ~1). The clinical application -- the affected/unaffected use ratio and the capacity-performance gap in stroke -- needs bilateral-wrist clinical data (e.g. NICHD DASH), which is DUA-gated, not freely public."
+}

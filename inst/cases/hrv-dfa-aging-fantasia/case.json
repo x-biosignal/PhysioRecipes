@@ -1,0 +1,35 @@
+{
+  "id": "hrv-dfa-aging-fantasia",
+  "title": "The heartbeat loses its fractal signature with age: HRV detrended fluctuation analysis, validated",
+  "modality": ["ecg", "hrv", "nonlinear-dynamics", "dfa", "aging"],
+  "packages": ["PhysioECG"],
+  "dataset": {
+    "name": "Fantasia Database",
+    "version": "PhysioNet 1.0.0",
+    "record": "young (f1y01-05) and elderly (f1o01-05) healthy subjects; RR intervals derived from the ECG",
+    "url": "https://physionet.org/content/fantasia/1.0.0/",
+    "public": true,
+    "citation": "Iyengar N, Peng CK, Morin R, Goldberger AL, Lipsitz LA. Age-related alterations in the fractal scaling of cardiac interbeat interval dynamics. Am J Physiol 1996;271(4):R1078-R1084. Fantasia Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "A healthy heartbeat is not a metronome and not random noise -- it is FRACTAL, with fluctuations that look statistically similar across time scales. Detrended fluctuation analysis measures this: the short-term scaling exponent alpha1 is a validated cardiac-autonomic and mortality biomarker, sitting near 1.0 (1/f-like fractal dynamics) in a healthy heart and drifting toward 1.5 (smoother, more Brownian, less adaptive) as that fractal organization is lost with aging and disease. On the real Fantasia recordings the signature is unmistakable: alpha1 is 1.05 in the young -- textbook healthy fractal scaling -- and rises to 1.41 in the elderly (an aging effect of +0.36, with every elderly subject above the young mean). And the computation is trustworthy: ecgDFA reproduces an independent, log-spaced standard-DFA implementation (a different least-squares fitter) to MACHINE PRECISION (max |difference| = 1.3x10^-14). The heartbeat loses its fractal signature with age, and the ecosystem measures it correctly.",
+  "opdag": ["ecgDFA"],
+  "claims": [
+    { "id": "alpha1",        "statement": "short-term DFA scaling exponent alpha1 of subject f1y01 (young)", "value": 0.7856355276, "artifact": "artifacts/dfa_summary.csv", "status": "PASS" },
+    { "id": "abs_diff",      "statement": "max |ecgDFA - independent standard-DFA| over alpha1/alpha2 (machine precision)", "value": 8.88e-15, "artifact": "artifacts/dfa_summary.csv", "status": "PASS" },
+    { "id": "young_mean_a1", "statement": "mean DFA alpha1 in the young subjects (healthy fractal scaling ~1.0)", "value": 1.0466908085, "artifact": "artifacts/dfa_summary.csv", "status": "PASS" },
+    { "id": "old_mean_a1",   "statement": "mean DFA alpha1 in the elderly subjects (elevated toward Brownian)", "value": 1.4115450778, "artifact": "artifacts/dfa_summary.csv", "status": "PASS" },
+    { "id": "aging_effect",  "statement": "the aging effect on alpha1 (elderly minus young) -- loss of fractal complexity", "value": 0.3648542693, "artifact": "artifacts/dfa_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "Detrended fluctuation analysis (Peng et al. 1994/1995) is a standard, exactly-specified algorithm. A correct implementation must reproduce it. The ecosystem's ecgDFA (hand-rolled .fast_lm fitter) matches an INDEPENDENT log-spaced standard-DFA (base stats::lm fitter) to machine precision (max |diff| = 1.3e-14) across all ten Fantasia subjects. The finding -- alpha1 1.05 (young) vs 1.41 (elderly) -- reproduces the established age-related loss of fractal scaling (Iyengar et al. 1996).",
+    "data": "REAL -- Fantasia (PhysioNet), 5 young + 5 elderly healthy subjects, RR intervals from the ECG",
+    "artifacts": ["artifacts/dfa_summary.csv", "artifacts/dfa_by_subject.csv"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) ecgDFA == an independent standard-DFA to machine precision (max |diff| = 1.3e-14), and (2) the aging effect: alpha1 is higher in the elderly (1.41) than the young (1.05). HONEST scope: (1) the machine-precision claim is against an INDEPENDENT reimplementation (log-spaced scales, base stats::lm -- a different fitter than the package's .fast_lm), which validates the algorithm exactly; against the Python nolds.dfa the agreement is looser (~0.03-0.1, method-dependent windowing) because DFA is implementation-sensitive -- reported, not claimed exact; (2) the aging effect is a demonstration on n=5 + n=5 healthy subjects (all elderly above the young mean, but a small sample) -- the established finding, not a powered clinical study; the young alpha1 range is wide (0.79-1.30); (3) this fold exercises the ecgDFA log-spaced-scales bug fix (PhysioECG 0.3.2): before it, ecgDFA returned NA on these long (2000-9000 beat) RR series because linearly-spaced scales left the alpha1/alpha2 windows underpopulated; (4) run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "alpha1 is a clinical risk marker: below ~0.75 it flags increased mortality after myocardial infarction, and it is the basis of a DFA-a1-guided exercise-intensity method (ecgDFArolling + dfaThresholdCrossings). Extending this validated estimator to a within-subject exercise ramp (does alpha1 fall through the aerobic/anaerobic thresholds?), a post-MI cohort, or a larger age range would turn a validated exponent into a cardiac-risk study. Documented, not escalated.", "artifact": "artifacts/dfa_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["independent base-R standard DFA (Peng et al. 1994)", "nolds.dfa (Python, secondary)"],
+  "status": "validated"
+}

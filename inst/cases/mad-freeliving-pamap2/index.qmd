@@ -1,0 +1,118 @@
+---
+title: "The ENMO+MAD pair, completed: mean amplitude deviation, a newly-authored op, bit-for-bit against GGIR"
+subtitle: "A worked accelerometer case study on real free-living data, introducing and certifying computeMAD"
+categories: [accelerometer, wearable, physical-activity, free-living, validated]
+author: "Yusuke Matsui"
+date: "2026-09-06"
+---
+
+> **What this case shows** — physical-activity accelerometry rests on two metrics: **ENMO** (how far
+> the acceleration magnitude sits *above* 1 g) and **MAD** (how much it *varies* within an epoch). The
+> ecosystem's ENMO was already certified against **GGIR**, the field-standard package — but it had no
+> MAD. This case introduces a **newly-authored op**, `computeMAD`, completing the pair. On a real
+> ~62-minute free-living hand-accelerometer recording it reproduces `GGIR::g.applymetrics` MAD to
+> **machine precision** (max |diff| ~**5e-14 g**, r = **1.0**) across all **749** epochs — and the MAD
+> traces a real movement profile (5–1222 mg, mean 232 mg).
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `computeMAD(accel, sampling_rate, epoch_sec)` → per-epoch mean amplitude deviation.
+**Way of thinking** — ENMO and MAD answer different questions of the same signal: *elevation* vs
+*variation* of the magnitude. MAD is robust to a static orientation offset (it subtracts the epoch
+mean), so it behaves well on uncalibrated or gravity-contaminated data where ENMO can drift.
+**Ecosystem usage** — `PhysioWearable::computeMAD()` alongside `computeENMO()` — both GGIR-certified.
+:::
+
+## Proposition
+
+On real PAMAP2 hand-accelerometer data (749 epochs of 5 s at 100 Hz), `computeMAD` reproduces
+`GGIR::g.applymetrics` MAD to machine precision (max |diff| ~5e-14 g, r = 1.0); the recording's MAD
+ranges 5–1222 mg (mean 232 mg).
+
+## Question & goal
+
+**The question is a gap and its fidelity: the ecosystem had GGIR-certified ENMO but no MAD — can we
+author the complementary gravity-robust movement metric and reproduce the field-standard GGIR exactly
+on real free-living data?** The goal is to introduce `computeMAD`, certify it against GGIR epoch by
+epoch, and read off the movement profile.
+
+## Challenge & approach
+
+MAD per epoch is mean(|r − mean(r)|), where r = √(x²+y²+z²) is the sample vector magnitude. We compute
+it per non-overlapping 5 s epoch and check it against `GGIR::g.applymetrics(..., metrics2do$do.mad)` on
+the identical signal.
+
+```
+PAMAP2 hand accel (x,y,z @ 100 Hz) → r = √(x²+y²+z²) → per 5 s epoch: MAD = mean(|r − mean(r)|)
+                    vs GGIR::g.applymetrics MAD (same signal) → machine precision (5e-14 g, r = 1.0)
+                    749 epochs; MAD 5–1222 mg (mean 232 mg) — a real free-living movement profile
+```
+
+## Data
+
+**PAMAP2 Physical Activity Monitoring dataset (UCI/PhysioNet)**: subject **101**, hand-worn IMU
+accelerometer (x, y, z in g at 100 Hz), a ~62-minute free-living recording — the same git-tracked
+signal the [ENMO free-living case](../adl-freeliving-pamap2/index.qmd) uses. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the per-epoch MAD across the ~62-minute recording — a real free-living movement profile, quiet stretches near the floor and vigorous bouts above 1000 mg, mean 232 mg (dashed). Right: computeMAD versus GGIR g.applymetrics MAD, one point per epoch, all on the identity line — the two agree to machine precision (max |diff| ~5e-14 g, r = 1.0).](artifacts/figure.png)
+
+*How to read this:* the left panel is what the metric is *for* — a movement-intensity time course; the
+right panel is the certification — the newly-authored op lies exactly on the field-standard GGIR.
+
+| Quantity | Value |
+|---|--:|
+| op vs `GGIR::g.applymetrics` MAD (max \|diff\|) | **5e-14 g** (bit-exact) |
+| correlation across epochs | **1.000** |
+| epochs certified | **749** |
+| **mean MAD** | **232 mg** |
+| peak / quietest epoch MAD | **1222 / 5 mg** |
+
+The newly-authored op matches GGIR at every epoch, and the MAD traces a physical movement profile.
+Values trace to [`artifacts/mad_summary.csv`](artifacts/mad_summary.csv).
+
+## Conclusion
+
+`computeMAD` completes the ENMO+MAD pair — the ecosystem now has both field-standard accelerometer
+movement metrics, each GGIR-certified — and it is exact: bit-for-bit against GGIR across a full
+free-living recording. The transferable takeaway: **ENMO and MAD are complements, not substitutes.
+Report MAD when a static orientation offset or imperfect calibration would bias ENMO, and use both to
+characterize movement by its elevation and its variation.**
+
+## Open questions
+
+- MAD-based physical-activity intensity cut-points (Vähä-Ypyä et al. 2015 give sedentary/light/moderate/
+  vigorous MAD thresholds); classifying intensity by MAD and cross-checking against the ENMO cut-points
+  on the same recording would turn the two metrics into a cross-validated activity layer. *Documented,
+  not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Mean amplitude deviation (variation) | `computeMAD()` | PhysioWearable |
+| Euclidean norm minus one (elevation) | `computeENMO()` | PhysioWearable |
+| Intensity bouts / cut-points | `classifyBouts()` | PhysioWearable |
+
+**Choosing the parameters.**
+
+- **epoch_sec** — aggregation window (here 5 s, the GGIR default); shorter epochs resolve brief bouts,
+  longer epochs smooth the profile.
+- **sampling_rate** — required when `epoch_sec` is set (here 100 Hz).
+- **unit** — `"g"` (default) or `"mg"`; MAD is a physical quantity, so the unit matters for cut-points.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioWearable)
+
+mad <- computeMAD(accel, sampling_rate = 100, epoch_sec = 5)   # per-epoch MAD (g)
+# reproduces GGIR::g.applymetrics MAD to machine precision; pair with computeENMO().
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/mad_summary.csv`](artifacts/mad_summary.csv), and [`audit.py`](audit.py) re-checks the
+bit-exact GGIR agreement (max |diff|, correlation), the epoch count, the mean/max/min MAD, and the
+honestly-noted scope (newly-authored op; machine-precision; MAD a physical quantity complementary to
+ENMO).

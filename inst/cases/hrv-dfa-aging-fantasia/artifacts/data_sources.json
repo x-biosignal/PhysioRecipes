@@ -1,0 +1,9 @@
+{
+  "dataset": "Fantasia Database",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/fantasia/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "record_used": "young subjects f1y01-f1y05 and elderly subjects f1o01-f1o05 (healthy). For each, the RR-interval series (channel, rr_ms, time_sec) was derived from the ECG: readWFDB -> ecgDetectRpeaks -> ecgRRintervals, then physiologically filtered to 300-2000 ms. The root is f1y01's RR series; all ten RR series are tracked in rr_fantasia.rds.",
+  "pipeline": "ECG -> R-peaks -> RR intervals -> PhysioECG::ecgDFA(short_range=c(4,16), long_range=c(16,64)), the short- (alpha1) and long-term (alpha2) DFA scaling exponents. The reference recomputes alpha1/alpha2 with an INDEPENDENT log-spaced standard-DFA (cumsum profile + base stats::lm detrend + log-log stats::lm slope -- a different fitter than the package's .fast_lm) and computes the young-vs-elderly alpha1 means with the op. Deterministic.",
+  "note": "Detrended fluctuation analysis (Peng et al. 1994) quantifies the fractal scaling of heart-rate fluctuations; the short-term exponent alpha1 is a validated cardiac-autonomic and mortality biomarker. The tracked inputs are eval/data/hrv-dfa/ (rr_f1y01.rds root + rr_fantasia.rds). ecgDFA reproduces the independent standard-DFA to machine precision (max |diff| = 1.3e-14). The finding: alpha1 is 1.05 in the young (healthy 1/f fractal scaling ~1.0) and 1.41 in the elderly (elevated toward Brownian -- the loss of fractal complexity with aging; Iyengar et al. 1996). This fold also exercises the ecgDFA log-spaced-scales bug fix (PhysioECG 0.3.2) -- before it, ecgDFA returned NA on these long (thousands-of-beat) RR series."
+}

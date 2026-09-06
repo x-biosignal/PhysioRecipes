@@ -1,0 +1,127 @@
+---
+title: "The sample-entropy family, completed: fuzzy entropy, a newly-authored op, soft matching vs the crisp step"
+subtitle: "A worked complexity case study on real EEG, introducing and certifying fuzzyEntropy"
+categories: [eeg, complexity, fuzzy-entropy, sample-entropy, validated]
+author: "Yusuke Matsui"
+date: "2026-09-06"
+---
+
+> **What this case shows** — sample entropy asks a yes/no question of every pair of templates: do they
+> match within tolerance *r*? That **crisp Heaviside step** makes it brittle on short or noisy data —
+> a template just past the threshold counts for nothing. **Fuzzy entropy** (Chen et al. 2007) softens
+> the step into a smooth membership **exp(−d/r)**, so near-matches count *partially*. This case
+> introduces a **newly-authored op**, `fuzzyEntropy`, completing the ecosystem's sample-entropy family.
+> On a real eyes-closed EEG channel it reproduces `NeuroKit2.entropy_fuzzy` **bit-for-bit** (max |diff|
+> ~**4e-15**), and shows the consequence: at m = 2, FuzzyEn (**0.948**) sits below the crisp sample
+> entropy (**1.327**) — the soft membership simply counts more.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `fuzzyEntropy(x, dimension, r)` → the fuzzy entropy of the signal.
+**Way of thinking** — a hard threshold throws away information at its boundary. A soft membership keeps
+it. When a complexity measure is unstable on your data, ask whether a *fuzzy* version exists — it
+usually trades a sharp cutoff for a graded one and gains robustness.
+**Ecosystem usage** — `PhysioEEG::fuzzyEntropy()` (fuzzy) alongside the crisp sample/approximate
+entropies; `dimension = 2`, `r = 0.2` are the standard defaults.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, `fuzzyEntropy` reproduces `NeuroKit2.entropy_fuzzy` bit-for-bit (max
+|diff| ~4e-15) across (dimension, r); at m = 2, r = 0.2 FuzzyEn (0.948) is lower than the crisp sample
+entropy (1.327), and it is non-increasing in the embedding dimension.
+
+## Question & goal
+
+**The question is a gap and a mechanism: the ecosystem had the crisp sample/approximate entropies but
+not the fuzzy generalization — can we author it, reproduce the reference, and show what the soft
+membership changes?** The goal is to introduce `fuzzyEntropy`, certify it bit-for-bit, and make the
+fuzzy-vs-crisp relationship concrete.
+
+## Challenge & approach
+
+Fuzzy entropy embeds the signal, removes each vector's local baseline, takes Chebyshev distances, and
+weights matches by exp(−(d^n)/r) (with r = 0.2·sd) instead of the crisp I(d < r); then
+FuzzyEn = −ln(φ_{m+1}/φ_m). We implement that exactly and check it against `NeuroKit2.entropy_fuzzy`
+across (m, r), and — on the same signal — compare against the crisp sample entropy.
+
+```
+EEG POz (eegmmidb) → embed, baseline-remove → Chebyshev d → weight exp(−d/r) → FuzzyEn = −ln(φ_{m+1}/φ_m)
+                    vs NeuroKit2.entropy_fuzzy (same pipeline) → bit-exact (~4e-15) for every (m, r)
+                    m=2: FuzzyEn 0.948 < crisp SampEn 1.327 (soft counts near-matches); monotonic in m
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz**, 10 s at 160 Hz — the same git-tracked vector the
+[SVD-entropy](../svd-entropy-eegmmidb/index.qmd), [Petrosian](../petrosian-fd-eegmmidb/index.qmd),
+[Renyi](../renyi-entropy-eegmmidb/index.qmd), [Tsallis](../tsallis-entropy-eegmmidb/index.qmd) and
+[dispersion-entropy](../dispersion-entropy-eegmmidb/index.qmd) cases use. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the two matching rules — fuzzy entropy's smooth membership exp(−d/r) (red) versus sample entropy's crisp step I(d < r) (blue). The soft curve gives partial credit to near-matches just beyond the threshold, which the step discards. Right: FuzzyEn (red) and the crisp SampEn (blue) across the embedding dimension — both decrease with m, but FuzzyEn sits consistently lower because it counts more (partial) matches.](artifacts/figure.png)
+
+*How to read this:* the left panel is the mechanism (soft vs hard counting); the right panel is the
+consequence (FuzzyEn < SampEn at every dimension, both monotonic). The op equals NeuroKit2 at every
+setting.
+
+| Quantity | Value |
+|---|--:|
+| **FuzzyEn, m = 2** (r = 0.2) | **0.948** |
+| **FuzzyEn, m = 3** | **0.704** |
+| op vs `NeuroKit2.entropy_fuzzy` (max \|diff\| over the family) | **4e-15** (bit-exact) |
+| crisp **SampEn, m = 2** (same r) | **1.327** |
+| \|FuzzyEn − SampEn\| at m = 2 | **0.38** |
+| non-increasing in dimension | **yes** |
+
+The newly-authored op equals NeuroKit2 at every setting, and is consistently lower than the crisp
+sample entropy — the soft membership's signature. Values trace to
+[`artifacts/fuzzy_summary.csv`](artifacts/fuzzy_summary.csv).
+
+## Conclusion
+
+`fuzzyEntropy` completes the sample-entropy family — the ecosystem now has both the crisp (SampEn) and
+fuzzy (FuzzyEn) forms — and it is exact: bit-for-bit against NeuroKit2 across (m, r). The transferable
+takeaway: **a crisp threshold is a modeling choice, not a law. Fuzzy entropy keeps the same
+template-matching skeleton but grades the match, which is what makes it the go-to complexity measure
+for short, noisy physiological segments where SampEn becomes unstable.**
+
+## Open questions
+
+- Fuzzy entropy's robustness makes it the natural core for multiscale fuzzy entropy (MFE): apply
+  `fuzzyEntropy` to coarse-grained versions of the signal across scales, where crisp SampEn grows
+  unstable at coarse scales. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Fuzzy entropy (soft membership) | `fuzzyEntropy()` | PhysioEEG |
+| Dispersion entropy (NCDF symbolic dynamics) | `dispersionEntropy()` | PhysioEEG |
+| Renyi / Tsallis entropy (amplitude histogram) | `renyiEntropy()`, `tsallisEntropy()` | PhysioEEG |
+| multi-measure complexity (incl. crisp sample entropy) | `eegComplexity()` | PhysioEEG |
+
+**Choosing the parameters.**
+
+- **dimension** — embedding length *m* (default 2); larger m probes longer patterns but needs more data.
+- **r** — tolerance as a fraction of the signal's sd (default 0.2, matching NeuroKit2's
+  `tolerance = "sd"`); the distance tolerance is `r * sd(x)`.
+- **n** — the fuzzy power (default 1); higher n sharpens the membership back toward the crisp step.
+- **units** — dimensionless; nats-based log as in `NeuroKit2.entropy_fuzzy`.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioEEG)
+
+fuzzyEntropy(x, dimension = 2, r = 0.2)   # fuzzy generalization of sample entropy
+# reproduces NeuroKit2.entropy_fuzzy bit-for-bit; lower than crisp SampEn at the same (m, r).
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/fuzzy_summary.csv`](artifacts/fuzzy_summary.csv), and [`audit.py`](audit.py) re-checks
+FuzzyEn at m = 2 and m = 3, the bit-exact NeuroKit2 match over the (m, r) family, the crisp SampEn
+reference and the fuzzy-vs-sample gap, the monotonicity, and the honestly-noted scope (newly-authored
+op; machine-precision; value depends on m/r/n).

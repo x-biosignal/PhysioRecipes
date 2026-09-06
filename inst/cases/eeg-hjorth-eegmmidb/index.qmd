@@ -1,0 +1,138 @@
+---
+title: "Mobility maps the alpha: the Hjorth parameters across a 64-channel EEG"
+subtitle: "A worked time-domain-complexity case study on real EEG, checked against antropy"
+categories: [eeg, complexity, hjorth, topography, validated]
+author: "Yusuke Matsui"
+date: "2026-09-04"
+---
+
+> **What this case shows** — before spectra, there were the **Hjorth parameters** (1970):
+> describe a signal by the variance ratios of its derivatives — **mobility** = √(var(x′)/var(x)),
+> a proxy for the *mean frequency*, and **complexity** = mobility(x′)/mobility(x), a proxy for
+> the *bandwidth*. Cheap, O(N), and still used. Computed across a real **64-channel** eyes-closed
+> montage, mobility draws a map: it is **lowest over the parieto-occipital region** (POz, 0.53)
+> and highest over temporal cortex (T7, 1.45) — the eyes-closed alpha rhythm, a slow posterior
+> oscillation, shows up as a low mean frequency. And the computation is exact: `eegComplexity`
+> reproduces an independent numpy implementation **bit-for-bit** (~9e-16 across all 64 channels)
+> and the canonical `antropy.hjorth_params` to **~3e-7** — the residual being purely a
+> variance-estimator (ddof) convention.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for a cheap spectral proxy per channel:
+`eegComplexity(pe, measures = c("hjorth_mobility", "hjorth_complexity"))` → one row per channel.
+**Way of thinking** — mobility ≈ mean frequency, complexity ≈ bandwidth: a fast O(N) summary
+of *where* a channel's power sits, without an FFT. Read the map, not the single number.
+**Ecosystem usage** — `PhysioEEG::eegComplexity()` also computes permutation/sample entropy,
+Lempel-Ziv, DFA, Higuchi/Katz FD, spectral entropy — a whole complexity panel.
+:::
+
+## Proposition
+
+On real eyes-closed 64-channel EEG (eegmmidb S002R02), `eegComplexity`'s Hjorth mobility +
+complexity reproduce an independent numpy implementation bit-for-bit (~9e-16) and
+`antropy.hjorth_params` to ~3e-7 (a ddof convention) across all channels, and mobility is
+lowest over the posterior alpha region (POz).
+
+## Question & goal
+
+**The question is whether the ecosystem computes this classic descriptor the way the reference
+tools do — across a whole montage — and what its spatial pattern says.** The Hjorth formula is
+exact, so a correct implementation should match to the floating-point floor. The goal is a
+64-channel head-to-head against `antropy` and an independent numpy check, and a read of the
+mobility map.
+
+## Challenge & approach
+
+Mobility and complexity are variance ratios of the signal and its first two differences. We
+compute them per channel with `eegComplexity`, and re-compute them two ways: an independent
+numpy implementation matched to R's unbiased (n−1) variance (a bit-exact formula check), and
+`antropy.hjorth_params`, which uses the biased (n) variance.
+
+```
+64-ch EEG → eegComplexity(hjorth_mobility, hjorth_complexity) → per-channel map
+                    vs independent numpy (unbiased variance)   → bit-exact
+                    vs antropy.hjorth_params (biased variance)  → ddof convention (~3e-7)
+```
+
+## Data
+
+**eegmmidb (PhysioNet)**: subject **S002**, baseline run **R02 (eyes-closed)**, all **64 EEG
+channels**, first 10 s at 160 Hz — read from the git-tracked EDF via `readEDF`. A different
+subject from the sibling O1 alpha/wavelet/multitaper cases (S001). Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: Hjorth mobility for all 64 channels, sorted — the eight lowest (dark) are the parieto-occipital channels dominated by the slow eyes-closed alpha rhythm (POz is lowest at 0.53), while temporal T7 is highest at 1.45. Right: eegComplexity's mobility against antropy.hjorth_params for every channel — all 64 points sit on the identity line (max |op − numpy| = 9e-16 bit-exact; max |op − antropy| = 3e-7, the variance ddof convention).](artifacts/figure.png)
+
+*How to read this:* the left panel is the **finding** — a mobility map with the posterior alpha
+low; the right panel is the **validation** — 64 channels agreeing with the reference to the
+floating-point floor.
+
+| Quantity | This reproduction | Reference |
+|---|---|---|
+| Mean mobility (64 ch) | **0.71** | — |
+| Mean complexity | **1.95** | — |
+| Minimum mobility (POz, posterior alpha) | **0.53** | — |
+| Maximum mobility (T7) | **1.45** | — |
+| max \|op − independent numpy (unbiased var)\| | **9e-16** | 0 (bit-exact) |
+| max \|op − antropy.hjorth_params\| | **3e-7** | 0 (ddof convention) |
+
+The formula is exact against numpy, matches antropy up to its variance convention, and mobility
+maps the posterior alpha. Values trace to
+[`artifacts/hjorth_summary.csv`](artifacts/hjorth_summary.csv) and the per-channel table in
+[`artifacts/hjorth_per_channel.csv`](artifacts/hjorth_per_channel.csv).
+
+## Conclusion
+
+The ecosystem's Hjorth parameters are exactly the classic formula — bit-for-bit against numpy,
+and antropy's numbers up to a variance-estimator convention — and mobility, read across the
+montage, recovers the eyes-closed alpha topography. The transferable takeaway: **use the Hjorth
+parameters for a cheap per-channel spectral summary; read mobility as a mean-frequency map;
+validate the exact formula against a reference, and know that the tiny antropy residual is a
+biased-vs-unbiased variance choice, not an error.**
+
+## Open questions
+
+- Hjorth mobility is a *coarse* mean-frequency proxy; the finding (low mobility posteriorly) is
+  the eyes-closed alpha topography seen bluntly. Contrasting the mobility map **eyes-closed vs
+  eyes-open** (R01 vs R02) would show alpha blocking as a mobility *shift*, and relating mobility
+  per channel to the true spectral centroid (from the multitaper PSD, the
+  [sibling case](../eeg-multitaper-alpha-eegmmidb/index.qmd)) would calibrate the proxy.
+  *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Hjorth mobility + complexity | `eegComplexity(measures = c("hjorth_mobility","hjorth_complexity"))` | PhysioEEG |
+| the full complexity panel | `eegComplexity(measures = ...)` (entropy, LZ, DFA, FD) | PhysioEEG |
+| the true spectrum (calibrate the proxy) | `eegMultitaper()` | PhysioEEG |
+
+**Choosing the parameters.**
+
+- **measures** — a character vector; `"hjorth_mobility"` and `"hjorth_complexity"` need no other
+  arguments (they are parameter-free variance ratios).
+- **assay_name** — which assay to summarise (defaults to the primary signal).
+- **max_samples** — caps the length only for the O(N²) entropy measures; Hjorth is O(N) and
+  unaffected.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioEEG)
+
+hj <- eegComplexity(pe, measures = c("hjorth_mobility", "hjorth_complexity"))
+hj$hjorth_mobility     # per-channel mobility (mean-frequency proxy)
+which.min(hj$hjorth_mobility)   # the posterior alpha channel (slowest)
+
+# reproduces antropy.hjorth_params to ~3e-7 (biased-vs-unbiased variance) and an
+# independent numpy implementation bit-for-bit.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/`](artifacts/) — the summary in
+[`hjorth_summary.csv`](artifacts/hjorth_summary.csv) and the per-channel map in
+[`hjorth_per_channel.csv`](artifacts/hjorth_per_channel.csv) — and [`audit.py`](audit.py)
+re-checks each reported number, the numpy bit-exact match, the antropy agreement, the posterior
+alpha finding, and the honestly-noted ddof convention.

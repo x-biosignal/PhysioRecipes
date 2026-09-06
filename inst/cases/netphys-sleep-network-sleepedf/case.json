@@ -1,0 +1,35 @@
+{
+  "id": "netphys-sleep-network-sleepedf",
+  "title": "The physiological network reconfigures across sleep stages: time-delay-stability network physiology on real polysomnography",
+  "modality": ["network-physiology", "sleep", "connectivity", "eeg", "multimodal", "tds"],
+  "packages": ["PhysioNetPhysiology"],
+  "dataset": {
+    "name": "Sleep-EDF Database Expanded (sleep-cassette)",
+    "version": "PhysioNet sleep-edfx, subject SC4001 (one overnight PSG)",
+    "record": "one overnight polysomnogram: EEG Fpz-Cz (-> delta/alpha/sigma band-power nodes), EOG horizontal, EMG submental, oro-nasal respiration (6 physiological nodes) at 1 Hz over the ~6.7 h scored sleep period, with the expert hypnogram grouped into Wake / Light (N1+N2) / Deep (N3+N4) / REM",
+    "url": "https://physionet.org/content/sleep-edfx/",
+    "public": true,
+    "citation": "Kemp B, Zwinderman AH, Tuk B, Kamphuisen HAC, Oberye JJL. Analysis of a sleep-dependent neuronal feedback loop. IEEE Trans Biomed Eng 2000;47(9):1185-1194 (Sleep-EDF, PhysioNet). Network-physiology framework: Bashan A, Bartsch RP, Kantelhardt JW, Havlin S, Ivanov PC. Network physiology reveals relations between network topology and physiological function. Nat Commun 2012;3:702."
+  },
+  "proposition": "Network physiology treats the body as a network of interacting organ systems and asks how that network REORGANISES with physiological state. Building a 6-node time-delay-stability (TDS) network from one real overnight polysomnogram -- three cortical rhythms (EEG delta/alpha/sigma) plus eye movement, muscle tone and respiration -- and splitting it by sleep stage, the ecosystem reproduces the field's signature finding: the network reconfigures across sleep stages. It is most integrated in REM (11 surrogate-significant links, density 0.73) and least in wake and light sleep (9 links, 0.60); the slow-wave EEG delta rhythm is the persistent hub (highest total degree, 18); and the link set itself turns over -- 6 of 15 possible couplings differ between wake and REM (e.g. respiration engages the network in deep sleep and REM but decouples in light sleep). Only couplings exceeding a phase-randomised surrogate threshold are kept, so the links are the stable, significant ones.",
+  "opdag": ["physioNodeMatrix", "timeDelayStability", "tdsNetwork", "tdsNetworkByState", "tdsReconfiguration"],
+  "claims": [
+    { "id": "n_states",          "statement": "sleep-stage networks compared (Wake / Light / Deep / REM)", "value": 4,      "artifact": "artifacts/netphys_summary.csv", "status": "PASS" },
+    { "id": "rem_n_links",       "statement": "surrogate-significant TDS links in REM (the most-integrated state)", "value": 11,     "artifact": "artifacts/netphys_summary.csv", "status": "PASS" },
+    { "id": "rem_density",       "statement": "REM network density (fraction of the 15 possible links)", "value": 0.7333, "artifact": "artifacts/netphys_summary.csv", "status": "PASS" },
+    { "id": "wake_rem_reconfig", "statement": "couplings that CHANGE between wake and REM (network reconfiguration, of 15)", "value": 6,      "artifact": "artifacts/netphys_summary.csv", "status": "PASS" },
+    { "id": "hub_is_delta",      "statement": "the network hub (highest total degree across stages) is the EEG delta rhythm (1=yes)", "value": 1,      "artifact": "artifacts/netphys_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The network-physiology framework (Bashan et al., Nat Commun 2012; Ivanov & Bartsch) establishes that the network of physiological interactions REORGANISES with sleep stage -- coupling topology is state-dependent, not fixed. A correct implementation must (1) recover DIFFERENT networks per sleep stage (density and link set change), (2) keep only surrogate-significant couplings, and (3) show physiologically sensible structure. The ecosystem reproduces this: density varies by stage (REM 0.73 > Deep 0.67 > Light = Wake 0.60), 6/15 links turn over between wake and REM, and the slow-wave delta rhythm is the persistent hub.",
+    "data": "REAL -- Sleep-EDF Expanded (PhysioNet sleep-edfx), one overnight polysomnogram (subject SC4001) with the expert hypnogram",
+    "artifacts": ["artifacts/netphys_summary.csv", "artifacts/netphys_network_by_stage.csv", "artifacts/netphys_node_degree.csv"],
+    "all_pass": true,
+    "note": "The reproducible finding is the sleep-stage-dependent RECONFIGURATION of the physiological network (density + link set change; REM most integrated; EEG-delta hub), computed with surrogate-thresholded TDS. HONEST scope: (1) SINGLE subject, single night -- the reconfiguration (that the network changes with stage) is the robust, established phenomenon; the exact link counts (9/9/10/11) and density values are subject/night-specific, not universal constants. (2) The surrogate threshold + link counts are DETERMINISTIC given the fixed seed (seed=1, 30 phase-randomised surrogates); a different seed shifts the threshold and can move counts near it by +/-1. (3) Nodes are three EEG band-powers + EOG/EMG/respiration variance at 1 Hz; no ECG is in the sleep-cassette montage, so heart is not a node. (4) TDS windows are 60 s (30 s step, max lag 8 s), the standard network-physiology scale. (5) Stages N1+N2 are pooled as Light and N3+N4 as Deep."
+  },
+  "open_questions": [
+    { "q": "A group-level analysis across the sleep-edfx cohort (many subjects/nights), a full brain-organ montage including ECG-derived heart rate, and the directed/lagged link structure (who leads whom) would turn the single-subject demonstration into a population network-physiology result. Documented, not escalated.", "artifact": "artifacts/netphys_node_degree.csv", "escalate": null }
+  ],
+  "reference_tools": [],
+  "status": "validated"
+}

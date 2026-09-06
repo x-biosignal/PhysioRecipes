@@ -1,0 +1,33 @@
+{
+  "id": "renyi-entropy-eegmmidb",
+  "title": "The entropy family: Renyi entropy (a newly-authored op), bit-for-bit against NeuroKit2 across alpha",
+  "modality": ["eeg", "complexity", "renyi-entropy", "information-theory", "generalized-entropy"],
+  "packages": ["PhysioEEG"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "The Renyi entropy is a one-parameter family that generalizes the Shannon entropy of a distribution: at order alpha=1 it IS Shannon, at alpha=2 the collision entropy, at alpha->inf the min-entropy, and it is non-increasing in alpha. The ecosystem had Shannon-based entropies (permutation, sample, spectral) but not the generalized family; this case introduces a NEWLY-AUTHORED op, renyiEntropy. On a real eyes-closed posterior EEG channel it reproduces NeuroKit2 entropy_renyi BIT-FOR-BIT (max |diff| ~4e-16) across alpha = {0.5, 1, 2, 3}; the alpha=1 value exactly recovers the Shannon entropy (2.325 nats), and the family is monotonically decreasing in alpha -- the defining structure.",
+  "opdag": ["renyiEntropy"],
+  "claims": [
+    { "id": "renyi_collision", "statement": "Renyi collision entropy (alpha=2) of the POz amplitude distribution (nats)", "value": 2.1665324673, "artifact": "artifacts/renyi_summary.csv", "status": "PASS" },
+    { "id": "renyi_shannon", "statement": "Renyi entropy at alpha=1 -- exactly the Shannon entropy (the family's special case)", "value": 2.3247657693, "artifact": "artifacts/renyi_summary.csv", "status": "PASS" },
+    { "id": "max_diff_nk", "statement": "max |renyiEntropy - NeuroKit2 entropy_renyi| over alpha = {0.5, 1, 2, 3} (bit-exact family)", "value": 4.440892e-16, "artifact": "artifacts/renyi_summary.csv", "status": "PASS" },
+    { "id": "n_bins", "statement": "equal-width bins in the amplitude histogram", "value": 16, "artifact": "artifacts/renyi_summary.csv", "status": "PASS" },
+    { "id": "monotonic", "statement": "H_alpha is non-increasing in alpha (1 = the defining Renyi-family property holds)", "value": 1, "artifact": "artifacts/renyi_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored renyiEntropy op is validated against NeuroKit2 entropy_renyi across alpha = {0.5, 1, 2, 3}. NeuroKit2 re-computes the Renyi entropy from the identical amplitude histogram (freq = p); the agreement is BIT-FOR-BIT (max |diff| ~4e-16) because both compute H_alpha = 1/(1-alpha) ln(sum p^alpha) in nats. The alpha=1 value (2.325 nats) exactly recovers the Shannon entropy, and the family is monotonically decreasing in alpha (2.492 -> 2.325 -> 2.167 -> 2.095).",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), channel POz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/renyi_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the newly-authored renyiEntropy reproduces NeuroKit2 entropy_renyi bit-for-bit (max |diff| ~4e-16) across alpha = {0.5, 1, 2, 3}; (2) the alpha=1 value exactly recovers the Shannon entropy and the family is monotonically decreasing in alpha. HONEST scope: (1) this op is NEWLY AUTHORED to fill a gap -- the ecosystem had Shannon-based entropies (permutation, sample, spectral) but not the generalized Renyi family; (2) this is a genuine MACHINE-PRECISION match -- the op and NeuroKit2 compute the IDENTICAL formula in nats on the same histogram, so the ~4e-16 residual is the floating-point floor, not a convention agreement; the alpha=1 = Shannon and non-increasing-in-alpha properties are the family's defining mathematical structure, verified here; (3) the value is a histogram-based amplitude-distribution entropy (16 equal-width bins), so it is bin-count-dependent -- the reproducible content is the bit-exact family and its structure, not an absolute physiological quantity; (4) run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "The Renyi family's alpha-dependence (the 'Renyi spectrum') characterizes a distribution's tail structure: alpha < 1 weights rare bins, alpha > 1 weights frequent ones. Computing the Renyi spectrum across EEG states (eyes-open vs eyes-closed) or channels -- and its curvature -- would turn the single-alpha value into a multifractal-like descriptor. Documented, not escalated.", "artifact": "artifacts/renyi_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["NeuroKit2 entropy_renyi (Python)"],
+  "status": "validated"
+}

@@ -1,0 +1,35 @@
+{
+  "id": "cca-gait-wbds",
+  "title": "The linear lens: canonical correlation of gait kinematics and kinetics, validated against stats::cancor",
+  "modality": ["biomechanics", "gait", "cross-modal", "kinematics", "kinetics", "canonical-correlation"],
+  "packages": ["PhysioCrossModal"],
+  "dataset": {
+    "name": "WBDS -- a public data set of overground and treadmill walking (Fukuchi et al. 2018)",
+    "version": "figshare 5722711",
+    "record": "five subjects (WBDS01-05), treadmill walking; sagittal knee + ankle flexion angles (kinematics) and antero-posterior + vertical GRF (kinetics), 450 aligned samples -- the SAME blocks as the dCor and RSA cases",
+    "url": "https://doi.org/10.6084/m9.figshare.5722711",
+    "public": true,
+    "citation": "Fukuchi CA, Fukuchi RK, Duarte M. A public dataset of overground and treadmill walking kinematics and kinetics in healthy individuals. PeerJ 2018;6:e4640. Data: figshare doi:10.6084/m9.figshare.5722711 (CC-BY 4.0). Method: Hotelling H, Biometrika 1936."
+  },
+  "proposition": "Three cross-modal questions, one data set. Having asked whether gait kinematics and kinetics are dependent at all (distance correlation) and whether they share a representational geometry (RSA), the natural third question is the classical one: what is the maximal LINEAR relationship between them? Canonical correlation analysis (Hotelling 1936) answers it by finding the weighted combination of the knee+ankle angles and the weighted combination of the ground-reaction forces that correlate most strongly. On real WBDS walking that first canonical correlation is 0.737 (second 0.299), and it is strong and consistent across all five subjects (0.74-0.85, mean 0.79). The ecosystem's cca reproduces base R's stats::cancor -- a non-trivial, independent SVD computation -- to machine precision (max |difference| = 1.1x10^-16). Tellingly, the first canonical correlation (0.737) is almost identical to the distance correlation on the same data (0.72): the kinematics-kinetics coupling is largely LINEAR, captured by a single canonical pair. Three lenses, three canonical references, one honest picture.",
+  "opdag": ["cca"],
+  "claims": [
+    { "id": "cca_r1",       "statement": "first canonical correlation between gait kinematics and kinetics, WBDS01", "value": 0.7371211004, "artifact": "artifacts/cca_summary.csv", "status": "PASS" },
+    { "id": "cca_r2",       "statement": "second canonical correlation", "value": 0.2987900654, "artifact": "artifacts/cca_summary.csv", "status": "PASS" },
+    { "id": "max_abs_diff", "statement": "max |cca - stats::cancor| over the canonical correlations (machine precision)", "value": 1.11e-16, "artifact": "artifacts/cca_summary.csv", "status": "PASS" },
+    { "id": "r1_mean5",     "statement": "mean first canonical correlation across all five WBDS subjects", "value": 0.7949007814, "artifact": "artifacts/cca_summary.csv", "status": "PASS" },
+    { "id": "r1_min5",      "statement": "minimum first canonical correlation across the five subjects (robustness floor)", "value": 0.7371211004, "artifact": "artifacts/cca_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "Canonical correlation is a classical multivariate method whose base R implementation, stats::cancor, is a canonical, independent reference. A correct implementation must reproduce it. On the real gait kinematics/kinetics blocks, cca matches stats::cancor to machine precision (max |diff| = 1.1e-16 over both canonical correlations). The first canonical correlation is 0.737 for WBDS01 and 0.74-0.85 (mean 0.79) across five subjects.",
+    "data": "REAL -- WBDS (Fukuchi et al. 2018, PeerJ; figshare 5722711, CC-BY 4.0), five subjects of treadmill walking; sagittal knee+ankle flexion angles + AP+vertical GRF",
+    "artifacts": ["artifacts/cca_summary.csv", "artifacts/cca_by_subject.csv"],
+    "all_pass": true,
+    "note": "The reproducible finding is the machine-precision agreement with stats::cancor (max |diff| = 1.1e-16) and the strong, consistent first canonical correlation (0.737, 5-subject 0.74-0.85). HONEST scope: (1) that gait kinematics and kinetics are linearly coupled is expected biomechanically -- the contribution is a VALIDATED, general CCA op, NOT a novel physiological claim; (2) CCA captures LINEAR canonical structure; the first canonical correlation (0.737) being close to the distance correlation on the same data (0.72) indicates the coupling is largely linear (a single canonical pair captures most of it) -- reported as a cross-method comparison; (3) the blocks are 2-dimensional (knee+ankle vs fx+fy), so there are exactly two canonical correlations; (4) this is an EXTERNAL cross-tool validation (base R stats::cancor), not a self-comparison; (5) run_simulation = FALSE (deterministic). Together with the dCor case (any dependence, 0.72) and the RSA case (rank geometry, 0.34), this completes a three-lens cross-modal analysis of the identical data, each validated against a different canonical reference (energy::dcor / vegan::mantel / stats::cancor)."
+  },
+  "open_questions": [
+    { "q": "CCA also yields the canonical LOADINGS -- which kinematic and kinetic degrees of freedom drive the coupling -- and higher-dimensional blocks (all joint angles vs the full GRF + moments) would reveal more canonical pairs. A regularized/sparse CCA would handle wide blocks and select the driving variables; comparing the canonical loadings across subjects or against a clinical group would turn this validated estimator into a cross-modal coordination study. The near-equality of the first canonical correlation and the distance correlation also invites a systematic map of when a coupling is linear. Documented, not escalated.", "artifact": "artifacts/cca_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["stats::cancor (R, base)"],
+  "status": "validated"
+}

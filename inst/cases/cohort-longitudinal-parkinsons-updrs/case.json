@@ -1,0 +1,36 @@
+{
+  "id": "cohort-longitudinal-parkinsons-updrs",
+  "title": "A real longitudinal patient cohort: the ecosystem's mixed-model wrapper reproduces lme4 exactly on 6 months of Parkinson's UPDRS telemonitoring",
+  "modality": ["clinical", "cohort", "longitudinal", "mixed-models"],
+  "packages": ["PhysioClinStats", "PhysioCore"],
+  "dataset": {
+    "name": "Oxford Parkinson's Disease Telemonitoring",
+    "version": "UCI Machine Learning Repository id 189 (Tsanas et al. 2010)",
+    "record": "42 early-stage Parkinson's patients; ~5875 biweekly voice recordings over ~6 months (~140/subject); 16 dysphonia features plus age/sex and clinician-scored motor_UPDRS/total_UPDRS, tracked longitudinally by test_time (days since recruitment)",
+    "url": "https://archive.ics.uci.edu/dataset/189/parkinsons+telemonitoring",
+    "public": true,
+    "citation": "Tsanas A, Little MA, McSharry PE, Ramig LO. Accurate telemonitoring of Parkinson's disease progression by non-invasive speech tests. IEEE Trans Biomed Eng 2010;57(4):884-893. Data: UCI ML Repository id 189, doi:10.24432/C5ZS3N (CC BY 4.0)."
+  },
+  "proposition": "On a REAL 42-patient longitudinal cohort, PhysioClinStats::fitMixedModel reproduces the reference mixed-model engine lme4::lmer EXACTLY: fitting total_UPDRS ~ test_time + age + sex + PPE + (1 | subject), the two engines' fixed effects agree to machine precision (max absolute difference = 0) and their random-intercept SD is identical (10.07 UPDRS points). PhysioCore::PhysioCohort represents the 42-subject container end-to-end and PhysioClinStats::doseResponse runs on it. Over the ~6-month window total UPDRS drifts upward (+0.019 points/day) -- the expected slow progression direction. This validates the longitudinal-cohort analysis chain on genuine patient data via the same 'recover the reference engine' bar the ecosystem meets elsewhere.",
+  "opdag": ["fitMixedModel", "PhysioCohort", "doseResponse"],
+  "claims": [
+    { "id": "n_subjects",       "statement": "Parkinson's patients in the longitudinal telemonitoring cohort",                                "value": 42,     "artifact": "artifacts/cohort_summary.csv", "status": "PASS" },
+    { "id": "n_recordings",     "statement": "voice recordings analysed (repeated measures over ~6 months)",                                  "value": 5875,   "artifact": "artifacts/cohort_summary.csv", "status": "PASS" },
+    { "id": "fixef_agreement",  "statement": "max |PhysioClinStats::fitMixedModel - lme4::lmer| fixed effects (byte-identical reproduction)", "value": 0,      "artifact": "artifacts/cohort_summary.csv", "status": "PASS" },
+    { "id": "ranef_sd",         "statement": "subject random-intercept SD, identical across both engines (UPDRS points)",                     "value": 10.07,  "artifact": "artifacts/cohort_summary.csv", "status": "PASS" },
+    { "id": "beta_testtime",    "statement": "total-UPDRS change per day (> 0 = progression over the ~6 months)",                             "value": 0.0188, "artifact": "artifacts/cohort_summary.csv", "status": "PASS" },
+    { "id": "cohort_n",         "statement": "subjects in the PhysioCohort container built end-to-end",                                       "value": 42,     "artifact": "artifacts/cohort_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The reference mixed-model engine lme4::lmer (Bates, Machler, Bolker, Walker 2015, J Stat Softw 67:1-48) fitting total_UPDRS ~ test_time + age + sex + PPE + (1 | subject). A correct wrapper must reproduce its fixed-effect estimates and random-intercept SD to numeric precision -- the same 'recover the reference engine' criterion the ecosystem meets for JMLE vs eRm and ENMO vs GGIR.",
+    "data": "REAL -- UCI Parkinson's Telemonitoring (Tsanas et al. 2010), 42 early-stage PD patients, ~5875 biweekly voice recordings over ~6 months, motor_/total_UPDRS tracked with test_time (days since recruitment); CC BY 4.0.",
+    "artifacts": ["artifacts/cohort_summary.csv"],
+    "all_pass": true,
+    "note": "The reproducible result is EXACT reference-engine agreement: fitMixedModel reproduces lme4::lmer's fixed effects (max abs diff = 0) and random-intercept SD (10.07 UPDRS points) on this real longitudinal patient cohort, PhysioCohort represents the 42-subject container, and doseResponse runs on it. Honest scope: (1) this is VOICE telemonitoring, not gait/rehab -- but it is the realistic genuinely-longitudinal, fully-downloadable, public patient cohort with a tracked clinical outcome (serial-Fugl-Meyer stroke-rehab cohorts are DUA-gated and fail the public-data bar); (2) UPDRS is a SUMMARY score, so item-level Rasch / scoreCohort byte-exact reproduction is not available from this dataset; (3) the +0.019 UPDRS/day test_time slope is reported as a demonstrated progression DIRECTION, not validated against an external landmark. The validated claim is the reference-engine reproduction -- a true numeric validation on real patient data."
+  },
+  "open_questions": [
+    { "q": "A truly longitudinal STROKE-REHAB cohort with serial Fugl-Meyer (for proportionalRecoveryRule / item-level Rasch byte-exact validation) is almost always access-controlled (DUA) and fails the public-data gate; this public PD voice cohort is the honest ceiling for a fully-downloadable longitudinal patient cohort. Documented, not escalated.", "artifact": "artifacts/cohort_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["lme4"],
+  "status": "validated"
+}

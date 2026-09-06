@@ -1,0 +1,35 @@
+{
+  "id": "eeg-pac-sleep-spindle-sleepedf",
+  "title": "The sleeping brain's rhythm-within-a-rhythm: slow-oscillation<->spindle coupling, validated against tensorpac",
+  "modality": ["eeg", "sleep", "cross-frequency-coupling", "phase-amplitude-coupling", "spindle"],
+  "packages": ["PhysioCrossModal"],
+  "dataset": {
+    "name": "Sleep-EDF Expanded (sleep-edfx)",
+    "version": "PhysioNet 1.0.0",
+    "record": "subject SC4001, overnight PSG; EEG Fpz-Cz at 100 Hz; the first 30 min of concatenated NREM (N2+N3) epochs from the expert hypnogram",
+    "url": "https://physionet.org/content/sleep-edfx/1.0.0/",
+    "public": true,
+    "citation": "Kemp B, Zwinderman AH, Tuk B, Kamphuisen HAC, Oberye JJL. Analysis of a sleep-dependent neuronal feedback loop: the slow-wave microcontinuity of the EEG. IEEE Trans Biomed Eng 2000;47(9):1185-1194. Sleep-EDF Expanded, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "During deep sleep the brain nests one rhythm inside another: the up-state of the slow oscillation (~1 Hz) gates the thalamocortical sleep spindles (~13 Hz), so the spindle amplitude rises and falls with the slow-oscillation phase. This slow-oscillation<->spindle coupling is a hallmark of NREM sleep and is implicated in memory consolidation. Measuring it on a real overnight polysomnogram with the Tort modulation index gives MI = 0.00035 on the NREM EEG (Fpz-Cz), and it is unmistakably real: the observed coupling sits z = 9.6 above a circular-shift surrogate null and exceeds every one of 200 surrogates. The ecosystem's phaseAmplitudeCoupling reproduces the canonical Python tensorpac to machine precision (|difference| = 5e-17) -- fed the identical phase and amplitude, the two engines return the same modulation index to the last digit. The coupling is a genuine physiological signal, and the operator that finds it is exactly the field-standard one.",
+  "opdag": ["phaseAmplitudeCoupling"],
+  "claims": [
+    { "id": "pac_mi",       "statement": "SO-spindle Tort modulation index on the NREM EEG (SO phase 0.5-1.25 Hz, spindle amp 12-15 Hz)", "value": 0.0003487050, "artifact": "artifacts/pac_summary.csv", "status": "PASS" },
+    { "id": "tensorpac_mi", "statement": "the same Tort MI recomputed by the canonical Python tensorpac (op == tensorpac)", "value": 0.0003487050, "artifact": "artifacts/pac_summary.csv", "status": "PASS" },
+    { "id": "abs_diff",     "statement": "|phaseAmplitudeCoupling - tensorpac|, the cross-tool agreement (machine precision)", "value": 0.0, "artifact": "artifacts/pac_summary.csv", "status": "PASS" },
+    { "id": "surrogate_z",  "statement": "z-score of the observed MI against a circular-shift surrogate null (real coupling)", "value": 9.585758, "artifact": "artifacts/pac_summary.csv", "status": "PASS" },
+    { "id": "n_exceed",     "statement": "surrogates (of 200) the observed MI exceeds -- significance of the coupling", "value": 200, "artifact": "artifacts/pac_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "tensorpac (Python; Combrisson et al. 2020) is a canonical reference implementation of phase-amplitude coupling, and the Tort modulation index (Tort et al. 2010) is a standard PAC statistic. A correct implementation must reproduce it. Fed the IDENTICAL phase + amplitude, phaseAmplitudeCoupling and tensorpac.methods.modulation_index return the same Tort MI to machine precision (|diff| = 5e-17) on the real NREM EEG. The coupling is shown genuine by a circular-shift surrogate null: the observed MI is z = 9.6 above the surrogate mean and exceeds all 200 surrogates.",
+    "data": "REAL -- Sleep-EDF Expanded (sleep-edfx, PhysioNet), subject SC4001 overnight PSG, EEG Fpz-Cz, 30 min of NREM (N2+N3)",
+    "artifacts": ["artifacts/pac_summary.csv", "artifacts/pac_phase_distribution.csv"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the SO-spindle coupling is real -- observed MI z = 9.6 above a circular-shift null, exceeding all 200 surrogates -- and (2) phaseAmplitudeCoupling == tensorpac to machine precision. HONEST scope: (1) the two engines are fed the IDENTICAL phase + amplitude (the same .pac_extract feeds both), so the machine-precision agreement validates the Tort-MI computation, not the whole filtering chain; (2) significance is established against a circular-shift surrogate null (a standard, conservative PAC control), not merely by a non-zero MI; (3) single subject, single channel (Fpz-Cz), first 30 min of NREM -- the absolute MI magnitude depends on the montage and the chosen SO/spindle bands, so it is a demonstration of the method + a real coupling, not a normative value; (4) run_simulation = FALSE -- the op is deterministic and the surrogate null is seeded, so the reported z replays."
+  },
+  "open_questions": [
+    { "q": "The coupling was measured on one channel of one night. Its preferred SO phase (where spindles peak) and its strength are themselves biomarkers: tracking them across N2 vs N3, across the night, across subjects, and against a memory-task outcome would turn this validated PAC operator into a sleep/memory study; a comodulogram (a grid of phase x amplitude bands) would locate the coupling in frequency space rather than assuming the SO/spindle bands. Documented, not escalated.", "artifact": "artifacts/pac_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["tensorpac (Python, PyPI)"],
+  "status": "validated"
+}

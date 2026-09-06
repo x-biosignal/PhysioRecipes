@@ -1,0 +1,10 @@
+{
+  "dataset": "Sleep-EDF Database Expanded (sleep-cassette)",
+  "source": "PhysioNet sleep-edfx, subject SC4001 (SC4001E0-PSG.edf + SC4001EC-Hypnogram.edf)",
+  "url": "https://physionet.org/content/sleep-edfx/",
+  "license": "Open Data Commons Attribution License v1.0 (PhysioNet)",
+  "record_used": "one overnight polysomnogram, 100 Hz. NODES (6): from EEG Fpz-Cz, band-power variance per 1 s in delta (0.5-4 Hz), alpha (8-12 Hz) and sigma (12-16 Hz); plus per-1 s variance of EOG horizontal, EMG submental, and oro-nasal respiration. Restricted to the scored sleep period (+/-20 min margin) = ~6.7 h (24029 s). STATES: the expert hypnogram grouped as Wake (W) / Light (N1+N2) / Deep (N3+N4) / REM (R), one label per second.",
+  "pipeline": "PhysioNetPhysiology::physioNodeMatrix(standardize=TRUE) -> timeDelayStability(1 Hz, 60 s window, 30 s step, 8 s max lag, min_stable=4) -> tdsNetwork(surrogate=TRUE, n_surrogates=30) for the significance threshold -> tdsNetworkByState(states, threshold) -> per-stage network + tdsReconfiguration.",
+  "determinism": "seed=1 fixes the 30 phase-randomised surrogates and hence the significance threshold; all reported counts/densities are deterministic given the seed.",
+  "note": "Links are kept only if their time-delay stability exceeds the 95th-percentile of phase-randomised surrogates (which preserve each node's own spectrum). Single subject / single night: the sleep-stage RECONFIGURATION is the robust, established phenomenon; the exact link counts are subject/night-specific. No ECG in the sleep-cassette montage, so heart is not a node."
+}

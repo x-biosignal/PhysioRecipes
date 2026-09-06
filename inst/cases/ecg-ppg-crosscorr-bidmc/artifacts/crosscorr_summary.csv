@@ -1,0 +1,9 @@
+"metric","value"
+"peak_lag",49
+"peak_lag_seconds",0.392
+"peak_correlation",-0.32570468
+"max_diff_numpy",2.542e-14
+"scipy_peak_lag_abs",49
+"n_lags",181
+"sr_hz",125
+"n_samples",30000
