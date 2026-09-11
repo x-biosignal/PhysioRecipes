@@ -1,0 +1,155 @@
+---
+title: "Which drives which? Directed cardiorespiratory coupling by Granger causality"
+subtitle: "A worked directed-connectivity case study on real respiration + PPG, checked against statsmodels"
+categories: [connectivity, granger-causality, cardiorespiratory, ppg, respiration, validated]
+author: "Yusuke Matsui"
+date: "2026-09-03"
+---
+
+> **What this case shows** — coherence (the sibling case) tells you two signals are
+> coupled, but not which *leads*. **Granger causality** adds the arrow: a signal
+> *x* Granger-causes *y* if *x*'s past improves the prediction of *y* beyond *y*'s own
+> past. On a real simultaneous **respiration + PPG** recording, the ecosystem's
+> `grangerCausality` measures the coupling in **both directions at once** and finds it
+> strong and **bidirectional** — cardiorespiratory coupling runs both ways — with
+> **respiration → pulse** the net-dominant direction (respiration modulating the
+> peripheral pulse) in **15 of 20** BIDMC subjects. And the measure is trustworthy:
+> `grangerCausality` reproduces the field-standard `statsmodels` Granger test to
+> **~3.5e-7** (an agreement, limited by an intercept convention) and an independent
+> from-scratch OLS to **~1.8e-9**, both directions — and `statsmodels`' F-test confirms
+> both directions are overwhelmingly significant (F ≈ 54, p < 1e-100).
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for directed coupling between two signals:
+`grangerCausality(x, y, order)` → read `gc_xy` (x→y), `gc_yx` (y→x), and `net_gc` (the
+asymmetry) in one call.
+**Way of thinking** — Granger causality is *predictive* coupling: does the past of one
+signal help forecast another? It is temporal precedence, **not** proof of a physical
+cause. Read the *net* direction, and remember coupling is usually two-way.
+**Ecosystem usage** — `PhysioCrossModal::grangerCausality()`, with a `method =
+"nonparametric"` spectral path (`partialDirectedCoherence()` / `directedTransferFunction()`
+for the frequency-resolved, multivariate cases).
+:::
+
+## Proposition
+
+On real simultaneous respiration + PPG (BIDMC), time-domain Granger causality is strong
+and bidirectional, with respiration → pulse net-dominant in 15/20 subjects, and
+`grangerCausality` reproduces `statsmodels.tsa.stattools.grangercausalitytests` (~3.5e-7)
+and an independent numpy OLS (~1.8e-9) on the real signals, both directions.
+
+## Question & goal
+
+**The question is directional: does respiration drive the peripheral pulse, the pulse
+drive respiration, or both — and does the ecosystem measure it the way the field-standard
+tool does?** Coherence cannot answer the first part (it is symmetric). Granger causality
+can. The goal is a head-to-head of `grangerCausality` against `statsmodels`, and a clear
+read of the arrow on real cardiorespiratory data.
+
+## Challenge & approach
+
+Time-domain Granger causality fits two OLS regressions per direction — the target on its
+own lagged past (restricted), and on its past *plus* the driver's past (unrestricted) —
+and takes **GC = log(var_restricted / var_unrestricted)** (Geweke's measure). We compute
+both directions with `grangerCausality`, and re-compute each with `statsmodels`
+(restricted/unrestricted SSRs) and an independent from-scratch numpy OLS.
+
+```
+RESP, PLETH (BIDMC, 25 Hz) → grangerCausality(order=10) → gc_xy, gc_yx, net_gc
+                                                          vs statsmodels grangercausalitytests
+                                                          vs independent numpy OLS
+                                                          → agreement + F-test + net direction
+```
+
+## Data
+
+**BIDMC PPG and Respiration Dataset (PhysioNet)**: subject **bidmc01**, simultaneous
+**RESP** (impedance-pneumography respiration) and **PLETH** (fingertip PPG), decimated
+125→25 Hz, a 200 s segment (5001 samples). The net-direction summary repeats the same
+extraction on **bidmc01–bidmc20**. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: on BIDMC-01, the two directional Granger magnitudes (respiration→pulse and pulse→respiration) computed three ways — grangerCausality (blue), statsmodels (orange), and an independent numpy OLS (grey) — sit on top of each other (max |op − statsmodels| = 3.5e-7, max |op − numpy OLS| = 1.8e-9). Right: the net Granger causality (respiration→pulse minus pulse→respiration) across 20 BIDMC subjects, sorted; 15 of 20 are positive (green) — respiration → pulse is the net-dominant direction — while 5 (red) run the other way, so the coupling is genuinely bidirectional.](artifacts/figure.png)
+
+*How to read this:* the left panel is the **validation** — three independent
+implementations agree. The right panel is the **finding** — a mostly-positive net
+Granger causality: respiration tends to drive the peripheral pulse, but not exclusively.
+
+| Quantity | This reproduction | Reference |
+|---|---|---|
+| GC respiration → pulse (BIDMC-01) | **0.1031** | statsmodels 0.1031 |
+| GC pulse → respiration (BIDMC-01) | **0.1017** | statsmodels 0.1017 |
+| net GC (respiration → pulse) | **+0.0015** | — |
+| max \|op − statsmodels\| (both directions) | **3.5e-7** | 0 (agreement) |
+| max \|op − independent numpy OLS\| | **1.8e-9** | 0 (op's ridge floor) |
+| statsmodels F (both directions) | **54.0 / 53.2**, p < 1e-100 | both significant |
+| respiration → pulse net-dominant | **15 / 20 subjects** | — |
+
+Both directions are strong and significant; the net arrow points respiration → pulse in
+the majority. Values trace to
+[`artifacts/granger_summary.csv`](artifacts/granger_summary.csv) and the per-subject table
+in [`artifacts/granger_multisubject.csv`](artifacts/granger_multisubject.csv).
+
+## Conclusion
+
+The ecosystem's Granger causality is the same measure `statsmodels` computes — to a
+convention-limited 3.5e-7, and to 1.8e-9 against an independent OLS — and it reads the
+arrow on real cardiorespiratory data: coupling is bidirectional, with respiration → pulse
+net-dominant in most subjects. The transferable takeaway: **use Granger causality when you
+need direction, not just coupling; read the *net* magnitude and treat it as predictive
+precedence, not physical cause; and validate the estimator against the field-standard tool
+before trusting the arrow.**
+
+## Open questions
+
+- `grangerCausality` also implements a **nonparametric spectral** path (Wilson
+  minimum-phase factorization of the cross-spectrum), giving **frequency-resolved** Granger
+  causality — which would show *where* in the spectrum (the respiratory band vs the cardiac
+  band) each direction dominates, and a **conditional/multivariate** GC would separate
+  direct from mediated coupling. Extending this to the spectral and conditional cases — and
+  to a respiration → instantaneous-heart-rate (RSA) tachogram design where the direction is
+  textbook — would turn a validated pairwise op into a network-physiology study.
+  *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| directed coupling, two signals (time domain) | `grangerCausality()` | PhysioCrossModal |
+| frequency-resolved directed coupling | `grangerCausality(method = "nonparametric")` | PhysioCrossModal |
+| multivariate directed connectivity | `partialDirectedCoherence()` / `directedTransferFunction()` | PhysioCrossModal |
+| symmetric coupling (the sibling measure) | `coherence()` | PhysioCrossModal |
+
+**Choosing the parameters.**
+
+- **order** — the number of lags in the autoregressive models (here 10, ≈ 400 ms at
+  25 Hz); it sets how far back the "past" reaches. Too small misses slow coupling; too
+  large overfits. Match it to the timescale of the coupling you expect.
+- **sr** — the sampling rate; it does not change the time-domain GC value, but it sets the
+  physical meaning of `order` (lags × 1/sr seconds).
+- **direction** — `grangerCausality` returns *both* directions and their difference in one
+  call; read `net_gc` for the asymmetry, and never read a single direction as "the cause".
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioCrossModal)
+
+g <- grangerCausality(resp, pleth, sr = 25, order = 10)
+g$gc_xy      # respiration -> pulse   (0.1031)
+g$gc_yx      # pulse -> respiration   (0.1017)
+g$net_gc     # net direction          (+0.0015: respiration -> pulse dominates)
+
+# reproduces statsmodels.tsa.stattools.grangercausalitytests (~3.5e-7) and an
+# independent OLS (~1.8e-9), both directions.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/`](artifacts/) — the summary in
+[`granger_summary.csv`](artifacts/granger_summary.csv) and the per-subject net directions
+in [`granger_multisubject.csv`](artifacts/granger_multisubject.csv) — and
+[`audit.py`](audit.py) re-checks each reported number, the statsmodels + numpy agreement,
+the F-test significance, the 15/20 net direction, and the honestly-noted intercept
+convention and bidirectionality.

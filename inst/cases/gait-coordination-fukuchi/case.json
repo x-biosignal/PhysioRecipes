@@ -1,0 +1,35 @@
+{
+  "id": "gait-coordination-fukuchi",
+  "title": "How the hip and knee coordinate in walking: continuous relative phase and vector coding on real sagittal gait kinematics",
+  "modality": ["gait", "biomechanics", "coordination", "kinematics"],
+  "packages": ["PhysioMoCap"],
+  "dataset": {
+    "name": "A public dataset of overground and treadmill walking kinematics and kinetics (WBDS)",
+    "version": "figshare 5722711 (Fukuchi et al. 2018)",
+    "record": "42 healthy adults, 3D motion capture; SAGITTAL hip and knee joint angles (RHipAngleZ, RKneeAngleZ) time-normalised to the gait cycle (101 points), overground and treadmill walking across speeds (328 treadmill + 123 overground trial-cycles used)",
+    "url": "https://peerj.com/articles/4640/",
+    "public": true,
+    "citation": "Fukuchi CA, Fukuchi RK, Duarte M. A public dataset of overground and treadmill walking kinematics and kinetics in healthy individuals. PeerJ 2018;6:e4640; data figshare doi:10.6084/m9.figshare.5722711 (CC-BY 4.0)."
+  },
+  "proposition": "Smoothness describes one joint; COORDINATION describes how two move together. On real SAGITTAL hip and knee angles the ecosystem recovers the same hip-knee coordination structure with two independent methods: continuous relative phase gives a mean absolute relative phase of 84 deg (the joints are substantially out of phase, not in lockstep), and vector coding finds the modal pattern is DISTAL / knee-led (0.36) with in-phase 0.29, proximal / hip-led 0.20 and anti-phase 0.15 -- the knee's large, fast swing excursion leading the smaller, slower hip arc. Two methods agree on the same structure.",
+  "opdag": ["continuousRelativePhase", "vectorCoding", "coordinationVariability"],
+  "claims": [
+    { "id": "marp",       "statement": "mean absolute relative phase, hip-knee (deg)",                       "value": 83.8, "artifact": "artifacts/coordination_summary.csv", "status": "PASS" },
+    { "id": "distal",     "statement": "vector-coding distal (knee-led) proportion (the modal pattern)",      "value": 0.36, "artifact": "artifacts/coordination_summary.csv", "status": "PASS" },
+    { "id": "in_phase",   "statement": "vector-coding in-phase proportion",                                   "value": 0.29, "artifact": "artifacts/coordination_summary.csv", "status": "PASS" },
+    { "id": "proximal",   "statement": "vector-coding proximal (hip-led) proportion",                         "value": 0.20, "artifact": "artifacts/coordination_summary.csv", "status": "PASS" },
+    { "id": "n_cycles",   "statement": "treadmill trial-cycles analysed",                                     "value": 328,  "artifact": "artifacts/coordination_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The sagittal hip-knee angle-angle relationship is dominated by the knee: through swing the knee flexes and extends over a large (~60 deg) range while the hip moves through a smaller (~40 deg), slower arc, so the coordination is knee-led (distal) and the joints are substantially out of phase -- not simple in-phase lockstep. Two independent methods (continuous relative phase, giving MARP, and vector coding, giving the coupling-angle pattern proportions) must agree on this structure.",
+    "data": "REAL -- Fukuchi et al. 2018 (figshare 5722711), 42 subjects, 3D motion-capture SAGITTAL gait kinematics (RHipAngleZ / RKneeAngleZ)",
+    "artifacts": ["artifacts/coordination_summary.csv", "artifacts/coordination_variability.csv"],
+    "all_pass": true,
+    "note": "The reproducible result is the coordination STRUCTURE, on which two independent methods agree: MARP is a substantial 84 deg (out of phase, not in lockstep) and the modal vector-coding pattern is DISTAL / knee-led (0.36) -- the knee's dominant swing excursion leading the hip -- with in-phase 0.29, proximal 0.20 and anti-phase 0.15 (proportions sum to 1). INTEGRITY NOTE: an earlier version of this case used the RHipAngleX/RKneeAngleX columns, which in WBDS are the small-amplitude NON-sagittal components (~10-13 deg), not flexion/extension; the sagittal flexion is the Z axis (~40-68 deg). The corrected sagittal analysis gives the numbers above (the earlier 'in-phase-dominant, hip-led' reading was an axis artefact). The coordination VARIABILITY (deviation phase ~35 deg, coordination_variability.csv) is BETWEEN-trial/subject variability across the cohort and speeds, NOT stride-to-stride motor variability (which needs continuous multi-stride data this ensemble-cycle dataset lacks); treadmill and overground are similar (35.0 vs 34.0) precisely because the pooled measure is not cycle-to-cycle, so no condition difference is claimed."
+  },
+  "open_questions": [
+    { "q": "Cycle-to-cycle (stride-to-stride) coordination variability -- the motor-control marker elevated in injury and neurological disease -- needs continuous multi-stride joint-angle streams, which this ensemble-averaged dataset does not provide; validating it on real data awaits a continuous-gait kinematics source. Documented, not escalated.", "artifact": "artifacts/coordination_variability.csv", "escalate": null }
+  ],
+  "reference_tools": [],
+  "status": "validated"
+}

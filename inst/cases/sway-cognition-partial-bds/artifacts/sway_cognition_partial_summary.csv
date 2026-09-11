@@ -1,0 +1,12 @@
+"metric","value"
+"partial_spearman_r",0.2008706993
+"p_value",0.0116505603963104
+"neg_log10_p",1.933653
+"df",155
+"max_diff_ppcor",1.94289029309402e-16
+"max_diff_formula",3.33066907387547e-16
+"partial_pearson_r",0.047520292
+"partial_pearson_p",0.554518
+"marginal_spearman",0.5316791333
+"attenuated",1
+"n",158

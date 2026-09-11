@@ -1,0 +1,10 @@
+"metric","value"
+"n_records",9
+"total_beats",22923
+"total_pvc",5182
+"TP",3703
+"FP",178
+"FN",1479
+"pooled_sensitivity",0.7146
+"pooled_ppv",0.9541
+"pooled_f1",0.8172

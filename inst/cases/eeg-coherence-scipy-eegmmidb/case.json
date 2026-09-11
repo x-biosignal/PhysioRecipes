@@ -1,0 +1,34 @@
+{
+  "id": "eeg-coherence-scipy-eegmmidb",
+  "title": "Is the alpha rhythm synchronized across the scalp? EEG coherence, bit-for-bit against scipy",
+  "modality": ["eeg", "connectivity", "coherence", "alpha", "synchrony", "posterior"],
+  "packages": ["PhysioEEG"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, run R02 (eyes-closed), eight parieto-occipital channels (PO7, PO3, POz, PO4, PO8, O1, Oz, O2), first 10 s at 160 Hz",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "Where the Welch case gave the alpha POWER and the spectrogram its time course, coherence gives its spatial STRUCTURE: how consistently two channels share a phase-and-amplitude relationship at each frequency. On the eight parieto-occipital channels of real eyes-closed EEG, eegCoherence's magnitude-squared coherence reproduces scipy.signal.coherence BIT-FOR-BIT (max |diff| ~2e-16 across all 28 pairs) once conventions are matched (symmetric Hann, matched window/overlap, detrend=False; the coherence ratio cancels the window normalization). And the finding: posterior alpha coherence is high (mean 0.63, peaking 0.90 between adjacent occipital channels PO3-O1) -- the eyes-closed alpha rhythm is spatially synchronized across the posterior scalp.",
+  "opdag": ["eegCoherence"],
+  "claims": [
+    { "id": "max_diff_scipy", "statement": "max |eegCoherence - scipy.signal.coherence| over all 28 channel pairs (bit-exact)", "value": 2.220446e-16, "artifact": "artifacts/coherence_summary.csv", "status": "PASS" },
+    { "id": "mean_coherence", "statement": "mean posterior alpha-band coherence across the 28 pairs -- the eyes-closed alpha synchrony", "value": 0.627992, "artifact": "artifacts/coherence_summary.csv", "status": "PASS" },
+    { "id": "max_coherence", "statement": "peak alpha coherence -- the most synchronized pair (adjacent occipital channels PO3-O1)", "value": 0.896151, "artifact": "artifacts/coherence_summary.csv", "status": "PASS" },
+    { "id": "min_coherence", "statement": "minimum alpha coherence -- the least synchronized posterior pair", "value": 0.363215, "artifact": "artifacts/coherence_summary.csv", "status": "PASS" },
+    { "id": "n_channels", "statement": "posterior EEG channels (parieto-occipital)", "value": 8, "artifact": "artifacts/coherence_summary.csv", "status": "PASS" },
+    { "id": "n_pairs", "statement": "channel pairs in the coherence matrix (8 choose 2)", "value": 28, "artifact": "artifacts/coherence_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "eegCoherence (magnitude-squared coherence, Welch-averaged cross/auto spectra) is validated against scipy.signal.coherence, the gold-standard implementation. scipy re-computes the pairwise coherence matrix with matched conventions -- symmetric Hann window, matched window length (round(window_sec*sr), forced even) + hop, no detrend (detrend=False) -- band-averaged over the identical 8-13 Hz band. The agreement is BIT-FOR-BIT (max |diff| ~2e-16 across all 28 pairs), machine epsilon, because the coherence ratio |Sxy|^2/(Sxx*Syy) cancels the window normalization. The finding: posterior alpha coherence is high (mean 0.63, peaking 0.90 between adjacent occipital channels), the eyes-closed alpha rhythm's spatial synchrony.",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), eight parieto-occipital channels, 10 s at 160 Hz",
+    "artifacts": ["artifacts/coherence_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) eegCoherence reproduces scipy.signal.coherence bit-for-bit (max |diff| ~2e-16) across all 28 posterior channel pairs; (2) posterior alpha coherence is high (mean 0.63, peak 0.90). HONEST scope: (1) this is the FIRST external-reference (scipy) certification of eegCoherence -- it was internally validated only ('golden'), never against the gold-standard scipy.signal.coherence; the op is NOT new; (2) this is a genuine MACHINE-PRECISION match -- once the conventions are matched (symmetric Hann, matched window/overlap, detrend=False), the op and scipy compute the IDENTICAL magnitude-squared coherence, so the ~2e-16 residual is machine epsilon, not a convention agreement; the match is exact because the coherence RATIO cancels the window normalization; (3) IMPORTANT caveat: magnitude-squared coherence is INFLATED by volume conduction -- a shared source projects to nearby electrodes at zero lag, so high coherence between adjacent channels is not proof of true cortico-cortical coupling; the op also offers imaginary coherence (method='imaginary'), which suppresses the zero-lag volume-conduction component (not used here); (4) the finding -- high posterior alpha coherence -- is the expected eyes-closed spatial synchrony, cross-consistent with the Welch/spectrogram/Hjorth cases on the SAME data; a descriptive spatial pattern on one subject/segment/8 channels, not a clinical claim; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "Magnitude-squared coherence cannot separate genuine coupling from volume conduction (a single source seen by two electrodes). The op's imaginary coherence (method='imaginary') keeps only the lagged (non-zero-phase) component, which volume conduction cannot produce; computing it across the montage -- and contrasting eyes-closed with eyes-open -- would isolate the true posterior alpha network from the shared-source inflation. Documented, not escalated.", "artifact": "artifacts/coherence_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.signal.coherence (Python, SciPy)"],
+  "status": "validated"
+}

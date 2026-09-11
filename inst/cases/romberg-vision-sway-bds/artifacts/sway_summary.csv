@@ -1,0 +1,11 @@
+"metric","value"
+"t_statistic",7.5662786061
+"neg_log10_p",9.053223
+"df",49
+"max_diff_scipy",0
+"max_diff_baser",0
+"ec_eo_ratio",1.2977151933
+"n_ec_gt_eo",43
+"n_subjects",50
+"mean_ec",217.217
+"mean_eo",167.3842

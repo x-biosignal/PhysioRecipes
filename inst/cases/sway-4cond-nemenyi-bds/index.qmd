@@ -1,0 +1,123 @@
+---
+title: "Vision matters far more on foam, certified: the eyes-open/closed effect is borderline on firm ground but strong on foam"
+subtitle: "The Nemenyi post-hoc resolves the Friedman case — which sensory conditions differ, and how vision reweights"
+categories: [posturography, balance, vision, proprioception, validated]
+author: "Yusuke Matsui"
+date: "2026-09-11"
+---
+
+> **What this case shows** — the [Friedman sibling](../sway-4cond-friedman-bds/index.qmd) found the four
+> vision × surface conditions differ in sway and gave a monotone rank order; *which* pairs differ, and does
+> vision matter more on foam? Here the **Nemenyi** test — the repeated-measures post-hoc — answers it. The
+> **newly-authored** `nemenyiTest` runs all 6 pairwise comparisons, reproducing **`PMCMRplus`**
+> **bit-for-bit** and **`scikit_posthocs`** to machine precision. All six pairs differ, but the vision
+> effect **depends on the surface**: eyes-open vs eyes-closed is only **borderline on firm ground**
+> (p=0.044) yet **strong on foam** (p=3.1e-8) — when proprioception is degraded, balance leans much more on
+> vision.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — the subjects × conditions matrix → `nemenyiTest()` → read the pairwise comparisons.
+**Way of thinking** — Nemenyi is to Friedman what Tukey is to ANOVA and Dunn is to Kruskal-Wallis: the
+family-wise-controlled post-hoc for its omnibus. Comparing the *same* effect (eyes-open vs eyes-closed)
+across two surfaces reads off the sensory reweighting directly.
+**Ecosystem usage** — `PhysioMoCap::swayMetrics()`, `PhysioAnalysis::nemenyiTest()`.
+:::
+
+## Proposition
+
+In the Nemenyi post-hoc of COP path length across the four BDS conditions (n=158), all six condition pairs
+differ, and the vision effect is much weaker on firm ground (Open-Firm vs Closed-Firm, p=0.044) than on foam
+(Open-Foam vs Closed-Foam, p=3.1e-8); `nemenyiTest` reproduces `PMCMRplus::frdAllPairsNemenyiTest`
+bit-for-bit and `scikit_posthocs.posthoc_nemenyi_friedman` to machine precision.
+
+## Question & goal
+
+**The question is which conditions differ and how vision reweights with the surface.** The Friedman sibling
+certified the omnibus difference and the rank order and deferred the pairwise structure; this fold performs
+the post-hoc, authoring the Nemenyi op and resolving the open question.
+
+## Challenge & approach
+
+We take the same certified per-subject sway for the four conditions and run `nemenyiTest` — all 6 pairwise
+comparisons from the within-block mean ranks, family-wise controlled — checking every p against
+`PMCMRplus` and `scikit_posthocs`, and reading the eyes-open/closed contrast on firm vs foam.
+
+```
+158 subjects × 4 conditions (swayMetrics, certified) → nemenyiTest (6 comparisons)
+  all 6 pairs significant; the vision effect by surface:
+    firm ground:  Open-Firm vs Closed-Firm   p = 0.044   (borderline)
+    foam:         Open-Foam vs Closed-Foam    p = 3.1e-8  (strong)
+     vs PMCMRplus::frdAllPairsNemenyiTest        → max |p| = 0 (bit-for-bit)
+     vs scikit_posthocs.posthoc_nemenyi_friedman → max |p| ~ 5e-13 (machine precision)
+```
+
+## Data
+
+**Santos & Duarte (2016) BDS balance dataset (figshare)**: per subject, COP path length in each of the four
+vision × surface quiet-standing conditions, for the 158 subjects with all four. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the Nemenyi −log10(adjusted p) matrix over the four conditions; a star marks significant pairs — all six differ. Right: the eyes-open/closed vision effect by surface — barely over the significance line on firm ground (p=0.044) but far above it on foam (p=3.1e-8), a ~6-order-of-magnitude difference.](artifacts/figure.png)
+
+*How to read this:* on the left, every off-diagonal cell is starred — the four conditions are pairwise
+distinct. On the right, the same manipulation (closing the eyes) barely registers on firm ground yet
+dominates on foam: with the feet's proprioception degraded, the balance system reweights toward vision.
+
+| Comparison | p (adjusted) |
+|---|--:|
+| eyes-open vs eyes-closed, **firm** | **0.044** (borderline) |
+| eyes-open vs eyes-closed, **foam** | **3.1e-8** (strong) |
+| Open-Firm vs Closed-Foam (extreme) | ~0 (statistic 18.0) |
+| pairs significant | **6 / 6** |
+| vs `PMCMRplus` (\|diff\|) | **0** (bit-for-bit) |
+| vs `scikit_posthocs` (\|diff\|) | **< 1e-9** (~5e-13) |
+
+Every comparison equals both references to machine precision. Values trace to
+[`artifacts/nemenyi_summary.csv`](artifacts/nemenyi_summary.csv).
+
+## Conclusion
+
+`nemenyiTest` completes the post-hoc set (Tukey for ANOVA, Dunn for Kruskal-Wallis, Nemenyi for Friedman) and
+reproduces the reference on the certified `swayMetrics`. The transferable takeaway: **the same sensory
+manipulation can matter enormously or barely at all depending on context. Here closing the eyes is nearly
+inconsequential on firm ground but decisive on foam — a quantified read-out of how standing balance
+reweights from proprioception to vision as the surface becomes unreliable.**
+
+## Open questions
+
+- The Nemenyi post-hoc quantifies the surface-dependent vision effect pairwise; a formal two-way (vision ×
+  surface) model with an explicit interaction term would test the reweighting directly and give it an effect
+  size. The distribution-free Nemenyi post-hoc is the honest first-line answer after Friedman. *Documented,
+  not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Posturography sway metrics | `swayMetrics()` | PhysioMoCap |
+| Friedman (omnibus, repeated measures) | `friedmanTest()` | PhysioAnalysis |
+| Nemenyi (post-hoc) | `nemenyiTest()` | PhysioAnalysis |
+
+**Reading the result.**
+
+- **adjusted p** — already family-wise controlled across all pairs; compare to your alpha directly.
+- **same effect across contexts** — reading one manipulation (vision) across two surfaces is more
+  informative than either alone; the gap is the reweighting.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis)
+
+# M: subjects x conditions matrix of swayMetrics path lengths
+nemenyiTest(M)   # a data frame of all pairwise statistics and family-wise-adjusted p -- bit-for-bit vs PMCMRplus
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/nemenyi_summary.csv`](artifacts/nemenyi_summary.csv), and [`audit.py`](audit.py) re-checks the
+pairwise statistics and adjusted p-values, the bit-exact match against PMCMRplus and the machine-precision
+match against scikit_posthocs, the firm-vs-foam vision-effect contrast, the significance count, and the
+honestly noted scope (authors the new nemenyiTest op; sway from the certified swayMetrics; surface-dependent
+vision reweighting; cross-sectional association).

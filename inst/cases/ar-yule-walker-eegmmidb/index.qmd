@@ -1,0 +1,122 @@
+---
+title: "From ACF to a model: the AR Yule-Walker fit, a newly-authored op, bit-for-bit against statsmodels"
+subtitle: "A worked time-series case study on real EEG, introducing and certifying arYuleWalker"
+categories: [eeg, time-series, autoregressive, cross-tool-validation, validated]
+author: "Yusuke Matsui"
+date: "2026-09-07"
+---
+
+> **What this case shows** — the ACF told us how long the signal's memory is, the PACF told us its
+> order; the **autoregressive (AR) model** turns that into a *generative description*. This case adds
+> the fit itself — **`arYuleWalker`**, solving the Yule-Walker equations from the ACF via
+> Durbin-Levinson. On a real eyes-closed EEG channel it reproduces
+> **`statsmodels.regression.yule_walker(method="mle")`** **bit-for-bit** — both the AR coefficients
+> (max |diff| ~**5e-15**) and the innovation variance — and the fitted AR(4) is **stationary**, with a
+> parametric spectrum that peaks in the **alpha band** (~12 Hz).
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `arYuleWalker(x, order)` → AR coefficients + innovation variance.
+**Way of thinking** — an AR model says "the next sample is a weighted sum of the last p, plus noise".
+Its coefficients are the memory; its innovation variance is what's left unpredicted; and its spectrum
+is a low-parameter alternative to the periodogram — sharp where the dynamics are resonant.
+**Ecosystem usage** — `PhysioAnalysis::arYuleWalker()`, with `partialAutocorrelation()` for the order.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, `arYuleWalker` reproduces `statsmodels.regression.yule_walker(method="mle")`
+bit-for-bit for the AR(4) coefficients (max |diff| ~5e-15) and the innovation variance (~5e-13); the fit
+is stationary (all roots outside the unit circle), and its spectrum peaks at ~12 Hz.
+
+## Question & goal
+
+**The question is a gap and its payoff: having added the ACF and PACF, can we author the AR fit they
+lead to, reproduce statsmodels exactly, and confirm the model is a valid (stationary) generative
+description of the alpha dynamics?** The goal is to introduce `arYuleWalker`, certify it bit-for-bit,
+and read the AR structure.
+
+## Challenge & approach
+
+The AR(p) Yule-Walker fit solves the Yule-Walker equations formed from the biased demeaned
+autocovariance (here via the Durbin-Levinson recursion on `autocorrelation`), giving the AR
+coefficients and the innovation variance. We compute the AR(4) fit and check it against
+`statsmodels.regression.yule_walker(method="mle")` on the identical signal.
+
+```
+EEG POz (eegmmidb) → ACF → Durbin-Levinson (Yule-Walker) → AR(4) coeffs + innovation variance
+                    vs statsmodels.regression.yule_walker(method="mle") → bit-exact (~5e-15 coeffs)
+                    fit stationary (roots outside unit circle);  AR spectrum peaks ~12 Hz (alpha)
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz**, 10 s at 160 Hz — the same git-tracked vector the
+[autocorrelation](../autocorrelation-eegmmidb/index.qmd) and [PACF](../pacf-eegmmidb/index.qmd) cases
+use. Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the four AR(4) coefficients from PhysioAnalysis (blue) and statsmodels (red) — identical (green =), with the negative lag-2 coefficient marking oscillatory dynamics. Right: the fitted AR(4) parametric spectrum — a smooth, low-parameter PSD that peaks in the alpha band (~12 Hz, green), the resonance the model has captured.](artifacts/figure.png)
+
+*How to read this:* the left panel is the certification (coefficients equal statsmodels); the right
+panel is the payoff — the AR fit's spectrum, a compact parametric view of the alpha rhythm.
+
+| Quantity | Value |
+|---|--:|
+| **AR coefficient φ₁** | **1.180** |
+| **AR coefficient φ₂** (oscillatory) | **−0.291** |
+| **innovation variance** | **348.5** |
+| coeffs vs `statsmodels` (max \|diff\|) | **5e-15** (bit-exact) |
+| innovation variance vs `statsmodels` (\|diff\|) | **5e-13** (bit-exact) |
+| fitted AR(4) stationary | **yes** |
+
+The newly-authored op equals statsmodels for coefficients and variance, and the fit is a valid
+stationary model. Values trace to [`artifacts/ar_summary.csv`](artifacts/ar_summary.csv).
+
+## Conclusion
+
+`arYuleWalker` completes the ACF → PACF → AR-fit lane — the classical time-series toolchain — and it is
+exact: bit-for-bit against statsmodels for both coefficients and variance. The transferable takeaway:
+**the AR model is the ACF made generative. Choose its order from the PACF, fit it by Yule-Walker, check
+it is stationary, and read its spectrum for a low-variance, sharp-peaked alternative to the
+periodogram.**
+
+## Open questions
+
+- The AR fit yields a parametric spectrum with sharp peaks at fewer parameters than Welch; exposing it
+  as an op (`arSpectrum`) and comparing its alpha peak against the folded Welch estimate, with AIC/BIC
+  order selection over `arYuleWalker` fits, is the companion step. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| AR(p) Yule-Walker fit | `arYuleWalker()` | PhysioAnalysis |
+| AR order (PACF cut-off) | `partialAutocorrelation()` | PhysioAnalysis |
+| Autocorrelation | `autocorrelation()` | PhysioAnalysis |
+
+**Choosing the parameters.**
+
+- **order** — the AR order p (default 4); pick it from the `partialAutocorrelation` cut-off (the last
+  lag whose PACF leaves the ±2/√N band), or by AIC/BIC over a range of orders.
+- **method** — Yule-Walker with the biased (MLE) autocovariance, matching
+  `statsmodels.regression.yule_walker(method = "mle")`; the unbiased ("adjusted") variant differs.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis)
+
+fit <- arYuleWalker(x, order = 4)
+fit$ar          # AR coefficients (phi_1 .. phi_p)
+fit$var_pred    # innovation variance
+all(Mod(polyroot(c(1, -fit$ar))) > 1)   # stationary?
+# reproduces statsmodels.regression.yule_walker(method = "mle") bit-for-bit.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/ar_summary.csv`](artifacts/ar_summary.csv), and [`audit.py`](audit.py) re-checks the first
+two AR coefficients, the innovation variance, the bit-exact statsmodels(mle) match for both, the
+stationarity, and the honestly-noted scope (newly-authored op building on autocorrelation; MLE/biased
+convention; machine-precision).

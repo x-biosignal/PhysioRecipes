@@ -1,0 +1,123 @@
+---
+title: "The full multivariable model, certified: adjusting for age, cognitive speed adds nothing to predicting sway"
+subtitle: "Multiple regression closes the cognitive-motor thread — age is the whole story"
+categories: [posturography, balance, cognition, aging, validated]
+author: "Yusuke Matsui"
+date: "2026-09-11"
+---
+
+> **What this case shows** — the [partial-correlation sibling](../sway-cognition-partial-bds/index.qmd)
+> found the sway–cognition link is mostly age; its open question asked for a fuller multivariable model.
+> Here it is. The **newly-authored** `multipleRegression` fits sway ~ age + Trail Making Test A,
+> reproducing base R **`lm`** **bit-for-bit** and **`statsmodels`** OLS to machine precision. In the joint
+> model **age dominates** (β=1.59 cm/year, p=2e-8) while **cognitive speed adds nothing** (β=0.12, p=0.55).
+> The model explains ~28% of sway variance — essentially all of it from age.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — a response + predictors matrix → `multipleRegression()` → read the coefficient table and fit.
+**Way of thinking** — a partial correlation answers "does this one association survive?"; a multiple
+regression answers the whole question at once — each predictor's independent contribution and how much the
+model explains. Put the candidate predictors in together and let the coefficients adjudicate.
+**Ecosystem usage** — `PhysioMoCap::swayMetrics()`, `PhysioAnalysis::multipleRegression()`.
+:::
+
+## Proposition
+
+In the multiple OLS regression of eyes-closed-foam sway on age and TMT-A (n=158), age is significant
+(β=1.59, p=2e-8) and TMT-A is not (β=0.12, p=0.55); the model R²=0.276, F(2,155)=29.5, p=1.4e-11;
+`multipleRegression` reproduces base R `lm` bit-for-bit and `statsmodels` OLS to machine precision.
+
+## Question & goal
+
+**The question is the complete multivariable decomposition: with age and cognition in the model together,
+what independently predicts sway?** The partial-correlation sibling certified that the cognitive effect
+largely vanishes under age adjustment and deferred the full model; this fold fits it, authoring the
+multiple-regression op.
+
+## Challenge & approach
+
+We take each subject's eyes-closed-foam sway (from `swayMetrics`, certified against the Prieto reference in
+the [sway-posturography-bds](../sway-posturography-bds/index.qmd) case), age and TMT-A, and fit
+`multipleRegression` — checking every coefficient, the R² and the F against base R `lm` and `statsmodels`.
+
+```
+158 subjects: sway ~ age + TMT-A   (OLS, via QR)
+  age:    beta = 1.59 cm/year   (p = 2e-8)   <- dominant
+  TMT-A:  beta = 0.12 cm/s       (p = 0.55)   <- not significant once age is in
+  model:  R2 = 0.276,  F(2,155) = 29.5,  p = 1.4e-11
+     vs base R lm         → coefficients |diff| = 0 (bit-for-bit)
+     vs statsmodels OLS   → coefficients |diff| ~ 1e-13 (machine precision)
+```
+
+## Data
+
+**Santos & Duarte (2016) BDS balance dataset (figshare)**: per subject, eyes-closed-foam COP path length,
+age and Trail Making Test A time, for the 158 subjects with all three. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the coefficient forest plot — age (red) sits well away from zero with a tight interval (p=2e-8), while TMT-A (grey) straddles zero (p=0.55). Right: −log10(p) for the two predictors — age towers over the significance line, TMT-A falls below it. The model (R²=0.28, F(2,155)=29.5) is essentially all age.](artifacts/figure.png)
+
+*How to read this:* with both predictors in the model, only age's coefficient is distinguishable from zero.
+TMT-A's marginal correlation with sway (certified earlier) is fully absorbed by age — its adjusted
+contribution is indistinguishable from nothing.
+
+| Quantity | Value |
+|---|--:|
+| **age coefficient** | **1.59 cm/year** (p = 2e-8) |
+| **TMT-A coefficient** | **0.12** (p = 0.55, ns) |
+| model **R²** / adj R² | **0.276** / 0.267 |
+| F (df 2, 155) | 29.5 (p = 1.4e-11) |
+| n | 158 |
+| vs base R `lm` (\|diff\|) | **0** (bit-for-bit) |
+| vs `statsmodels` OLS (\|diff\|) | **< 1e-9** (~1e-13) |
+
+The coefficients equal base R exactly and statsmodels to machine precision. Values trace to
+[`artifacts/mlr_summary.csv`](artifacts/mlr_summary.csv).
+
+## Conclusion
+
+`multipleRegression` reproduces the reference on the certified `swayMetrics`. The transferable takeaway:
+**put the competing predictors in one model and read the coefficients. Here it closes the cognitive-motor
+thread cleanly — the marginal link between cognitive speed and sway is entirely age; cognition adds nothing
+once age is accounted for. The coefficient t-test on TMT-A reproduces the partial correlation exactly, two
+views of the same adjustment.**
+
+## Open questions
+
+- The model is linear and additive; an age × cognition interaction, non-linear age terms, or additional
+  predictors (vestibular function, strength, medication) might reveal structure this two-predictor model
+  cannot. The complete two-predictor OLS is the honest resolution of the partial-correlation case's call for
+  a fuller model. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Posturography sway metrics | `swayMetrics()` | PhysioMoCap |
+| Multiple OLS regression | `multipleRegression()` | PhysioAnalysis |
+| Simple regression / partial correlation | `linearRegression()`, `partialCorrelation()` | PhysioAnalysis |
+
+**Reading the result.**
+
+- **coefficient + p** — each predictor's effect holding the others fixed; a predictor whose marginal
+  association vanishes here was explained by the others.
+- **R² and F** — how much the whole model explains and whether it beats nothing; report them alongside the
+  coefficients.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis)
+
+# first column = response, remaining columns = predictors
+multipleRegression(cbind(sway, age, tmt))   # coefficient table + R2/F -- bit-for-bit vs base R lm
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/mlr_summary.csv`](artifacts/mlr_summary.csv), and [`audit.py`](audit.py) re-checks the
+coefficients and p-values, the R² and F, the bit-exact match against base R lm and the machine-precision
+match against statsmodels, the age-dominant / TMT-non-significant split, the sample size, and the honestly
+noted scope (authors the new multipleRegression op; sway from the certified swayMetrics; cognition fully
+accounted for by age; cross-sectional association, additive model).

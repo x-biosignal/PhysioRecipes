@@ -1,0 +1,35 @@
+{
+  "id": "crossmodal-dcor-gait-wbds",
+  "title": "Kinematics and kinetics move together: a validated distance-correlation measure of cross-modal gait coupling",
+  "modality": ["biomechanics", "gait", "cross-modal", "kinematics", "kinetics", "dependence"],
+  "packages": ["PhysioCrossModal"],
+  "dataset": {
+    "name": "WBDS -- a public data set of overground and treadmill walking (Fukuchi et al. 2018)",
+    "version": "figshare 5722711",
+    "record": "five subjects (WBDS01-05), treadmill walking; sagittal knee + ankle flexion angles (kinematics) and antero-posterior + vertical ground reaction force (kinetics), time-aligned and down-sampled to 450 samples",
+    "url": "https://doi.org/10.6084/m9.figshare.5722711",
+    "public": true,
+    "citation": "Fukuchi CA, Fukuchi RK, Duarte M. A public dataset of overground and treadmill walking kinematics and kinetics in healthy individuals. PeerJ 2018;6:e4640. Data: figshare doi:10.6084/m9.figshare.5722711 (CC-BY 4.0)."
+  },
+  "proposition": "Gait is multi-modal: a walker is described at once by how the limbs move (kinematics) and by the forces under the foot (kinetics). Do the two modalities carry the same information? The distance correlation (Szekely, Rizzo & Bakirov 2007) answers this without assuming linearity: it is zero if and only if two multivariate blocks are independent, and detects ANY dependence a Pearson or linear-canonical measure would miss. On real WBDS treadmill walking, regressing nothing and simply measuring the dependence between the sagittal knee+ankle flexion angles and the antero-posterior+vertical GRF gives dCor = 0.72 (permutation p = 0.001, 999 permutations) for subject WBDS01, and 0.71-0.78 across all five subjects (mean 0.74) -- a strong, significant, and remarkably consistent cross-modal coupling. The ecosystem's distanceCorrelation reproduces the canonical energy::dcor to machine precision (|difference| < 1e-13), so the measure is exact, not approximate. Limb configuration and ground reaction force are two views of one act of walking.",
+  "opdag": ["distanceCorrelation"],
+  "claims": [
+    { "id": "dcor",        "statement": "distance correlation between gait kinematics (knee+ankle flexion) and kinetics (GRF), WBDS01", "value": 0.7224907526, "artifact": "artifacts/crossmodal_dcor_summary.csv", "status": "PASS" },
+    { "id": "p_value",     "statement": "permutation p-value of the distance correlation (999 permutations, seed 1)", "value": 0.001, "artifact": "artifacts/crossmodal_dcor_summary.csv", "status": "PASS" },
+    { "id": "dcor_energy", "statement": "the same statistic recomputed by the canonical energy::dcor (op == energy to machine precision)", "value": 0.7224907526, "artifact": "artifacts/crossmodal_dcor_summary.csv", "status": "PASS" },
+    { "id": "dcor_mean5",  "statement": "mean distance correlation across all five WBDS subjects", "value": 0.7446955784, "artifact": "artifacts/crossmodal_dcor_summary.csv", "status": "PASS" },
+    { "id": "dcor_min5",   "statement": "minimum distance correlation across the five subjects (robustness floor)", "value": 0.7118385738, "artifact": "artifacts/crossmodal_dcor_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The distance correlation (Szekely, Rizzo & Bakirov 2007, Ann Statist) is a well-defined statistic whose canonical implementation is the R package energy (energy::dcor). A correct implementation must (1) reproduce energy::dcor exactly on the same data, and (2) recover the true dependence structure -- a strong, significant coupling between gait kinematics and kinetics on real walking data. The ecosystem does both: distanceCorrelation == energy::dcor to machine precision (|diff| = 9.9e-15), dCor = 0.7225 (p = 0.001) for WBDS01, and 0.71-0.78 (mean 0.74, all significant) across the five subjects.",
+    "data": "REAL -- WBDS (Fukuchi et al. 2018, PeerJ; figshare 5722711, CC-BY 4.0), five subjects of treadmill walking; sagittal knee+ankle flexion angles + AP+vertical GRF",
+    "artifacts": ["artifacts/crossmodal_dcor_summary.csv", "artifacts/crossmodal_dcor_by_subject.csv"],
+    "all_pass": true,
+    "note": "The reproducible finding is the cross-modal dependence: dCor = 0.7225 (WBDS01, p = 0.001), reproduced by energy::dcor to machine precision, and 0.71-0.78 across five subjects. HONEST scope: (1) that gait kinematics and kinetics are coupled is expected biomechanically (limb configuration and ground reaction force are mechanically linked) -- the contribution is a VALIDATED, general cross-modal dependence-testing op demonstrated to detect + quantify that dependence on real data, NOT a novel physiological claim; (2) the distance correlation is exactly the energy::dcor statistic, so this is an EXTERNAL cross-tool validation, not a self-comparison; (3) the kinematics are offline marker-derived sagittal angles and the kinetics the raw AP+vertical GRF, one trial per subject; (4) the walking is treadmill, so the markers oscillate about fixed positions (no forward drift that would inflate the coupling); (5) run_simulation = FALSE -- the only randomness is the permutation null, fixed by seed = 1, so the p-value replays byte-identically."
+  },
+  "open_questions": [
+    { "q": "Distance correlation is symmetric and marginal; a partial/conditional distance correlation would ask whether kinematics and kinetics remain coupled after removing gait speed, and a distance-correlation SCREEN across many channel pairs would map WHICH kinematic and kinetic degrees of freedom drive the coupling. Extending from this whole-block measure to conditional + channel-resolved dependence, and to genuinely different modalities (EEG<->EMG, EMG<->force), would turn a validated coupling statistic into a cross-modal discovery tool. Documented, not escalated.", "artifact": "artifacts/crossmodal_dcor_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["energy::dcor (R, CRAN)"],
+  "status": "validated"
+}

@@ -1,0 +1,12 @@
+"metric","value"
+"te_resp_pleth",0.03577692
+"te_pleth_resp",0.02395327
+"net",0.01182365
+"te_resp_pleth_numpy",0.03577692
+"te_pleth_resp_numpy",0.02395327
+"max_diff_numpy",6.245e-17
+"te_constructed_xy",0.667948
+"te_constructed_yx",0.064132
+"net_constructed",0.603816
+"n_samples",5001
+"bins",8

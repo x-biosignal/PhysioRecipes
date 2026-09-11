@@ -1,0 +1,35 @@
+{
+  "id": "eeg-permutation-entropy-eegmmidb",
+  "title": "Complexity, exactly: EEG permutation entropy reproduced to machine precision against antropy",
+  "modality": ["eeg", "complexity", "nonlinear-dynamics", "permutation-entropy", "biomarker"],
+  "packages": ["PhysioEEG"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)",
+    "version": "PhysioNet 1.0.0",
+    "record": "subject S001, baseline run R02 (eyes-closed rest), all 64 EEG channels, 160 Hz, ~61 s",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+    "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "The complexity of a brain signal -- how unpredictable its moment-to-moment fluctuations are -- is a workhorse biomarker: permutation entropy tracks cortical state, depth of anaesthesia, consciousness, and neurological disease. But a complexity number is only useful if it is computed correctly, and complexity measures are notorious for implementation-dependent definitions. Permutation entropy (Bandt & Pompe 2002) is the exception: it counts the ordinal (rank) patterns of the signal and takes the normalized Shannon entropy of their distribution -- an exactly-defined, deterministic algorithm. Running eegComplexity on all 64 channels of a real eyes-closed resting EEG and comparing, channel by channel, against the canonical Python antropy shows they agree not approximately but to MACHINE PRECISION: the per-channel entropies correlate 1.0 with a maximum absolute difference of 2x10^-16, and the values are physiologically plausible (mean 0.91, range 0.74-0.98 of the normalized scale). The complexity biomarker the ecosystem reports is, to the last bit, the field-standard one.",
+  "opdag": ["eegComplexity"],
+  "claims": [
+    { "id": "max_abs_diff",    "statement": "max per-channel |permutation entropy diff| between eegComplexity and antropy (machine precision)", "value": 2.22e-16, "artifact": "artifacts/perm_entropy_summary.csv", "status": "PASS" },
+    { "id": "pe_corr",         "statement": "correlation of the per-channel permutation entropy (eegComplexity vs antropy) across the 64 channels", "value": 1.0, "artifact": "artifacts/perm_entropy_summary.csv", "status": "PASS" },
+    { "id": "mean_pe_op",      "statement": "mean permutation entropy across channels (eegComplexity)", "value": 0.9079831260, "artifact": "artifacts/perm_entropy_summary.csv", "status": "PASS" },
+    { "id": "mean_pe_antropy", "statement": "mean permutation entropy across channels (canonical antropy)", "value": 0.9079831260, "artifact": "artifacts/perm_entropy_summary.csv", "status": "PASS" },
+    { "id": "n_channels",      "statement": "EEG channels with a permutation entropy", "value": 64, "artifact": "artifacts/perm_entropy_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "antropy (Python; Vallat) is a canonical reference implementation of signal-complexity measures, and permutation entropy (Bandt & Pompe 2002) is an exactly-defined algorithm. A correct implementation must reproduce it. Computed per channel on the real 64-channel resting EEG, eegComplexity's permutation entropy matches antropy.perm_entropy to machine precision (max |diff| = 2.2e-16, correlation 1.0), with physiologically plausible normalized values (mean 0.91).",
+    "data": "REAL -- eegmmidb (PhysioNet), S001 eyes-closed baseline run R02, all 64 EEG channels, 160 Hz",
+    "artifacts": ["artifacts/perm_entropy_summary.csv", "artifacts/perm_entropy_by_channel.csv"],
+    "all_pass": true,
+    "note": "The reproducible finding is the machine-precision agreement (max |diff| = 2.2e-16, r = 1.0 across 64 channels). HONEST scope: (1) permutation entropy is chosen precisely because it is EXACTLY defined (ordinal patterns + normalized Shannon entropy) -- so this is a true machine-precision cross-tool validation, whereas the tolerance-dependent sample entropy and the PSD-dependent spectral entropy do NOT match antropy exactly (they differ by ~0.01-0.02 in the same setup) and are deliberately not claimed here; (2) single subject, single eyes-closed run; the absolute entropy depends on the order/delay (here order 3, delay 1) and the montage, so it is a validated computation, not a normative value; (3) run_simulation = FALSE (deterministic on both sides, so the values replay byte-identically)."
+  },
+  "open_questions": [
+    { "q": "Permutation entropy is a per-channel scalar; its power as a biomarker comes from contrasts -- eyes-open vs eyes-closed, across sleep stages, across the scalp as a complexity topography, or against a clinical group. Extending this validated estimator to a within-subject state contrast (does complexity drop when the eyes close?) or a multiscale version (Costa's MSE across time scales) would turn a validated number into a complexity study. Documented, not escalated.", "artifact": "artifacts/perm_entropy_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["antropy (Python, PyPI)"],
+  "status": "validated"
+}

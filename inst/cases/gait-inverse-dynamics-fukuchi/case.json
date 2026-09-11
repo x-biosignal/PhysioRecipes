@@ -1,0 +1,35 @@
+{
+  "id": "gait-inverse-dynamics-fukuchi",
+  "title": "Recovering joint kinetics from motion: inverse dynamics on real WBDS walking, validated against the dataset's own moments",
+  "modality": ["gait", "biomechanics", "kinetics", "inverse-dynamics", "kinematics"],
+  "packages": ["PhysioMoCap", "PhysioIO"],
+  "dataset": {
+    "name": "A public dataset of overground and treadmill walking kinematics and kinetics (WBDS)",
+    "version": "figshare 5722711 (Fukuchi et al. 2018)",
+    "record": "5 adults (WBDS01-05), self-selected-speed treadmill walking (walkT05); marker trajectories (mkr) + ground reaction force (grf) as inputs, and the dataset's own inverse-dynamics joint moments (knt) as the validation reference; right-limb sagittal ankle/knee/hip",
+    "url": "https://peerj.com/articles/4640/",
+    "public": true,
+    "citation": "Fukuchi CA, Fukuchi RK, Duarte M. A public dataset of overground and treadmill walking kinematics and kinetics in healthy individuals. PeerJ 2018;6:e4640; data figshare doi:10.6084/m9.figshare.5722711 (CC-BY 4.0)."
+  },
+  "proposition": "Motion capture measures how the body MOVES (kinematics); the clinically decisive quantities are the joint MOMENTS that cause the motion (kinetics), and inverse dynamics is how you get from one to the other. Driving the ecosystem's 2-D Newton-Euler inverse dynamics with real WBDS markers + ground reaction force -- and validating against the dataset's OWN independently-computed joint moments -- the recovered sagittal moments agree strongly and, revealingly, with a DISTAL-TO-PROXIMAL accuracy gradient: ankle r = 0.97, knee r = 0.85, hip r = 0.77 (mean over 5 subjects). The ankle (nearest the measured GRF) is recovered almost exactly, including the ~1.5-1.7 N·m/kg push-off plantarflexor peak; the hip degrades and its peak inflates -- the textbook error-propagation of inverse dynamics up the kinematic chain, here compounded by the greater-trochanter hip-centre proxy. The case reproduces a real methodological truth, not just a number.",
+  "opdag": ["inverseDynamics2D"],
+  "claims": [
+    { "id": "ankle_r",       "statement": "mean correlation of the recovered sagittal ANKLE moment with the WBDS reference moment (5 subjects)", "value": 0.973,  "artifact": "artifacts/id_summary.csv", "status": "PASS" },
+    { "id": "knee_r",        "statement": "mean correlation of the recovered sagittal KNEE moment with the reference (5 subjects)",           "value": 0.847,  "artifact": "artifacts/id_summary.csv", "status": "PASS" },
+    { "id": "hip_r",         "statement": "mean correlation of the recovered sagittal HIP moment with the reference (5 subjects; degrades proximally)", "value": 0.774, "artifact": "artifacts/id_summary.csv", "status": "PASS" },
+    { "id": "ankle_ref_peak","statement": "reference ankle plantarflexor push-off peak, body-mass-normalised (N·m/kg)",                    "value": 1.6594, "artifact": "artifacts/id_summary.csv", "status": "PASS" },
+    { "id": "n_subjects",    "statement": "subjects analysed (WBDS01-05, self-selected-speed treadmill walking)",                            "value": 5,      "artifact": "artifacts/id_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The WBDS distribution provides its OWN inverse-dynamics joint moments (knt files, computed by the dataset authors' independent pipeline) -- a real, external ground truth. A correct inverse-dynamics implementation must (1) recover the sagittal moment WAVEFORMS (high correlation), most accurately at the ankle (closest to the measured GRF); (2) recover the physiological ankle plantarflexor push-off peak magnitude (~1.5-1.7 N·m/kg); and (3) exhibit the known distal-to-proximal accuracy degradation of inverse dynamics -- which the ecosystem reproduces (ankle 0.97 > knee 0.85 > hip 0.77).",
+    "data": "REAL -- Fukuchi et al. 2018 (figshare 5722711), 5 subjects, 3D motion capture + force-plate treadmill; inputs = markers + GRF, reference = the dataset's own knt joint moments",
+    "artifacts": ["artifacts/id_summary.csv", "artifacts/id_agreement.csv", "artifacts/id_waveform_S001.csv"],
+    "all_pass": true,
+    "note": "The reproducible finding is that the ecosystem's Newton-Euler inverse dynamics recovers walking joint kinetics from real kinematics + GRF, validated against the dataset's OWN moments, with the expected distal-to-proximal accuracy gradient (ankle r=0.973, knee r=0.847, hip r=0.774 over 5 subjects). HONEST scope: (1) the recovered moment SIGN is a per-joint convention (extensor/flexor); agreement is on the sign-aligned waveform (|r|) and peak magnitude. (2) 2-D SAGITTAL analysis only -- WBDS's own moments are 3-D; the frontal/transverse components are out of scope. (3) The HIP degrades (r=0.77) and its peak INFLATES (recovered ~1.46 vs reference ~0.93 N·m/kg) because the greater-trochanter marker is a crude proxy for the true (medial) hip joint centre and inverse-dynamics error accumulates up the chain -- this is a real, documented limitation, reported not hidden. (4) The right belt = the right foot was confirmed empirically (its GRF gives the physically-consistent ankle moment, r=0.97); WBDS treadmill trials carry no force-plate-foot assignment."
+  },
+  "open_questions": [
+    { "q": "A functional hip-joint-centre estimate (from the pelvis markers) instead of the greater-trochanter proxy, and a full 3-D inverse dynamics (frontal/transverse moments), would tighten the proximal agreement; an OpenSim residual-reduction / static-optimisation pass (PhysioOpenSim) would push toward muscle-level kinetics. Documented, not escalated.", "artifact": "artifacts/id_agreement.csv", "escalate": null }
+  ],
+  "reference_tools": [],
+  "status": "validated"
+}

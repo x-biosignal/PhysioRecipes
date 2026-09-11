@@ -1,0 +1,149 @@
+---
+title: "The linear lens: canonical correlation of gait kinematics and kinetics"
+subtitle: "A worked CCA case study on real WBDS walking, validated against stats::cancor — completing the dCor/RSA/CCA trilogy"
+categories: [biomechanics, gait, cross-modal, canonical-correlation, validated]
+author: "Yusuke Matsui"
+date: "2026-09-03"
+---
+
+> **What this case shows** — three cross-modal questions, one data set. Having asked
+> whether gait kinematics and kinetics are *dependent at all* (distance correlation)
+> and whether they share a *representational geometry* (RSA), the natural third
+> question is the classical one: what is the maximal **linear** relationship between
+> them? **Canonical correlation analysis** (Hotelling 1936) answers it by finding the
+> weighted combination of knee+ankle angles and the weighted combination of ground
+> forces that correlate most strongly. On real WBDS walking that first canonical
+> correlation is **0.737** (second 0.299), strong and consistent across five subjects
+> (0.74–0.85). The ecosystem's `cca` reproduces base R's **`stats::cancor`** — a
+> non-trivial, independent SVD computation — to **machine precision** (max |diff| =
+> 1.1×10⁻¹⁶). And tellingly, that 0.737 is almost the distance correlation on the same
+> data (0.72): the coupling is **largely linear**, captured by a single canonical pair.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for two aligned blocks: call `cca(X, Y)` → read the **canonical
+correlations** (`$cor`) and, if you need them, the canonical coefficients/scores.
+**Way of thinking** — CCA is the *linear* cross-modal lens: it asks for the best
+linear combination of each block. Reading its first canonical correlation *next to* a
+nonlinear dependence measure (distance correlation) tells you how much of the coupling
+is linear — if they agree, a single linear pair explains it.
+**Ecosystem usage** — `PhysioCrossModal::cca()`, alongside `distanceCorrelation()`
+(any dependence), `representationalSimilarity()` (rank geometry), `jive()` and
+`multipleFactorAnalysis()` for the rest of the cross-modal toolkit.
+:::
+
+## Proposition
+
+On real WBDS walking, the first canonical correlation between gait kinematics and
+kinetics is 0.737 (WBDS01) and 0.74–0.85 (mean 0.79) across five subjects, and `cca`
+reproduces base R's `stats::cancor` to machine precision (max |diff| = 1.1×10⁻¹⁶).
+
+## Question & goal
+
+**The question is the maximal linear coupling between two modalities — and whether the
+ecosystem computes it exactly.** Canonical correlation is a non-trivial eigenvalue/SVD
+problem, so a correct implementation must match the reference. The goal is a
+head-to-head against base R's `stats::cancor`, and a comparison of the first canonical
+correlation to the distance correlation to see how *linear* the coupling is.
+
+## Challenge & approach
+
+The two blocks live in different units, so we ask CCA for the linear combinations that
+line up best. We compute the canonical correlations with `cca` and with `stats::cancor`
+and compare — expecting an exact match — then read the first canonical correlation
+beside the distance correlation.
+
+```
+knee+ankle angles ┐
+                  ├─ cca → canonical correlations (r1, r2)   (== stats::cancor)
+AP+vertical GRF   ┘         r1 vs distance correlation → how linear?
+```
+
+## Data
+
+**WBDS — Fukuchi, Fukuchi & Duarte (2018), PeerJ** (figshare 5722711, CC-BY 4.0): five
+subjects of treadmill walking. Sagittal **knee + ankle flexion angles** and the
+**antero-posterior + vertical GRF**, 450 aligned samples — the *same* blocks as the
+[dCor](../crossmodal-dcor-gait-wbds/) and [RSA](../rsa-mantel-gait-wbds/) cases. Details
+in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the first canonical variate pair for WBDS01 — the kinematic canonical variate against the kinetic one; CCA rotates each block so this pair correlates as strongly as possible (r1 = 0.737, exactly stats::cancor). Right: the first canonical correlation for all five subjects (0.74–0.85, mean 0.79) — a strong, consistent linear coupling.](artifacts/figure.png)
+
+*How to read this:* CCA finds the single best linear "view" of each block; the left
+panel is those two views plotted against each other, and their correlation is r1.
+
+| Quantity | This reproduction | Reference |
+|---|---|---|
+| First canonical correlation r1 | **0.7371** | `stats::cancor` = 0.7371 |
+| Second canonical correlation r2 | **0.2988** | `stats::cancor` = 0.2988 |
+| max \|diff\| vs cancor | **1.1×10⁻¹⁶** | 0 (identical) |
+| Mean r1, 5 subjects | **0.7949** | — |
+| Distance correlation (same data) | 0.72 | *(dCor case)* |
+
+The op reproduces `stats::cancor` exactly, the coupling is strong across subjects, and
+r1 ≈ dCor says it is largely linear. Values trace to
+[`artifacts/cca_summary.csv`](artifacts/cca_summary.csv) and
+[`artifacts/cca_by_subject.csv`](artifacts/cca_by_subject.csv).
+
+## Conclusion
+
+Canonical correlation gives the linear lens on gait's kinematics–kinetics coupling, and
+the ecosystem computes it exactly as base R does. The transferable takeaway: **use CCA
+for the maximal linear relationship between two modalities, and read its first canonical
+correlation next to a nonlinear dependence measure — when they agree, as here (0.74 vs
+0.72), a single linear canonical pair explains the coupling.** Across the three cases —
+distance correlation (any dependence, 0.72), RSA (rank geometry, 0.34), CCA (linear
+canonical, 0.74) — the same data has been read through three lenses, each validated
+against a different canonical reference.
+
+## Open questions
+
+- CCA also yields the canonical **loadings** — which kinematic and kinetic degrees of
+  freedom drive the coupling — and higher-dimensional blocks (all joint angles vs the
+  full GRF + moments) would reveal more canonical pairs. A **regularized/sparse CCA**
+  would handle wide blocks and select the driving variables; comparing loadings across
+  subjects or against a clinical group would turn this validated estimator into a
+  cross-modal coordination study. The near-equality of r1 and the distance correlation
+  also invites a systematic map of *when* a coupling is linear. *Documented, not
+  escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| canonical correlation (linear) | `cca()` | PhysioCrossModal |
+| distance correlation (any dependence) | `distanceCorrelation()` | PhysioCrossModal |
+| representational similarity (rank geometry) | `representationalSimilarity()` | PhysioCrossModal |
+| shared vs individual structure | `jive()` | PhysioCrossModal |
+
+**Choosing the parameters.**
+
+- **Blocks** — pass the two matrices with the same rows (aligned observations); CCA
+  finds the best linear combinations, so no channel pre-selection.
+- **Number of canonical pairs** — at most `min(ncol(X), ncol(Y))`; here 2. Read them in
+  order — r1 is the strongest.
+- **Regularization** — for wide/collinear blocks use `lambda_x` / `lambda_y` > 0
+  (ridge-regularized CCA) to stabilize the solution.
+- **Interpretation** — compare r1 to a nonlinear dependence measure; if r1 ≈ dCor the
+  coupling is essentially linear.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioCrossModal)
+
+# X = kinematics (n x p), Y = kinetics (n x q), same rows
+cc <- cca(X, Y)
+cc$cor          # c(0.7371, 0.2988) -- the canonical correlations
+
+# exact by construction: matches base R's stats::cancor
+stopifnot(max(abs(cc$cor - stats::cancor(X, Y)$cor)) < 1e-9)
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/`](artifacts/) — the summary in
+[`cca_summary.csv`](artifacts/cca_summary.csv) and the per-subject r1 in
+[`cca_by_subject.csv`](artifacts/cca_by_subject.csv) — and [`audit.py`](audit.py)
+re-checks each reported number, the exact `stats::cancor` agreement, the ordering of the
+canonical correlations, and the five-subject robustness.

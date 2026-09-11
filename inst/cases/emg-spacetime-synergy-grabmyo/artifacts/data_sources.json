@@ -1,0 +1,10 @@
+{
+  "dataset": "GRABMyo (Gesture Recognition and Biometrics ElectroMyogram)",
+  "authors": "Pradhan A, He J, Jiang N",
+  "repository": "PhysioNet",
+  "doi": "10.13026/rd4p-4w49",
+  "license": "PhysioNet Open Access",
+  "url": "https://physionet.org/content/grabmyo/",
+  "record_used": "session1 participant1, 16 forearm channels; 2 gestures x 7 trials; 20-450 Hz bandpass -> rectified -> 8 Hz envelope -> per-muscle normalised -> time-normalised to 60 points",
+  "note": "EMG envelopes (non-negative). Gestures 1 and 5 of the GRABMyo gesture set."
+}

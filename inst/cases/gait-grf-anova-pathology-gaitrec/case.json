@@ -1,0 +1,38 @@
+{
+  "id": "gait-grf-anova-pathology-gaitrec",
+  "title": "Flattened GRF is a shared signature of impaired gait, certified: healthy controls have ~1.65x the vertical-GRF dynamic range of four pathology classes (one-way ANOVA F bit-for-bit vs base R, machine-precision vs scipy)",
+  "modality": ["gait", "ground-reaction-force", "pathology", "cohort", "cross-tool-validation"],
+  "packages": ["PhysioAnalysis", "PhysioMoCap"],
+  "dataset": {
+    "name": "GaitRec -- large-scale ground reaction force dataset of healthy and impaired gait", "version": "2020",
+    "record": "vertical GRF (processed, BW- and time-normalised), five gait classes: healthy control (n=208), ankle (n=483), knee (n=499), hip (n=364), calcaneus (n=290) pathology; shod, standardised speed, baseline sessions",
+    "url": "https://doi.org/10.1038/s41597-020-0481-z", "public": true,
+    "citation": "Horsak B, Slijepcevic D, Raberger AM, Schwab C, Worisch M, Zeppelzauer M. GaitRec, a large-scale ground reaction force dataset of healthy and impaired gait. Scientific Data 2020;7:143. doi:10.1038/s41597-020-0481-z."
+  },
+  "proposition": "Healthy walking produces a double-humped vertical ground-reaction force; pathological gait flattens it. The prior two-sample fold certified this for knee pathology; this case generalises it to all five GaitRec gait classes with an omnibus one-way ANOVA. Each subject's vGRF dynamic range (loading peak minus mid-stance trough) is computed via the certified grfLandmarks; the NEWLY-AUTHORED oneWayAnova compares the five classes, reproducing base R stats::oneway.test(var.equal=TRUE) BIT-FOR-BIT and scipy.stats.f_oneway to machine precision. The dynamic range differs across classes (F(4,1839)=73.4, p~8.9e-58), driven by healthy controls (mean 0.365 BW) having a much larger dynamic range than every pathology class (ankle 0.223, knee 0.215, hip 0.225, calcaneus 0.227 BW, tightly clustered; control/pathology ratio ~1.65) -- GRF flattening is a SHARED signature of impaired gait, not knee-specific.",
+  "opdag": ["oneWayAnova"],
+  "claims": [
+    { "id": "F_statistic", "statement": "one-way ANOVA omnibus F-statistic of the vertical-GRF dynamic range across the five gait classes", "value": 73.4071188266, "artifact": "artifacts/grf_anova_summary.csv", "status": "PASS" },
+    { "id": "neg_log10_p", "statement": "-log10(omnibus p): the group difference is overwhelmingly significant", "value": 57.048778, "artifact": "artifacts/grf_anova_summary.csv", "status": "PASS" },
+    { "id": "df1", "statement": "between-groups degrees of freedom (k - 1)", "value": 4, "artifact": "artifacts/grf_anova_summary.csv", "status": "PASS" },
+    { "id": "df2", "statement": "within-groups degrees of freedom (N - k)", "value": 1839, "artifact": "artifacts/grf_anova_summary.csv", "status": "PASS" },
+    { "id": "max_diff_scipy", "statement": "|oneWayAnova F - scipy.stats.f_oneway F| (machine precision, < 1e-9; multi-group SS accumulation diverges at the last ULP)", "value": 0, "artifact": "artifacts/grf_anova_summary.csv", "status": "PASS" },
+    { "id": "max_diff_baser", "statement": "|oneWayAnova F - base R oneway.test(var.equal=TRUE) F| (bit-for-bit)", "value": 0, "artifact": "artifacts/grf_anova_summary.csv", "status": "PASS" },
+    { "id": "hc_pathology_ratio", "statement": "mean healthy-control dynamic range / mean pooled-pathology dynamic range (the effect size)", "value": 1.6466485511, "artifact": "artifacts/grf_anova_summary.csv", "status": "PASS" },
+    { "id": "hc_gt_pathology", "statement": "healthy controls have a larger vGRF dynamic range than the pooled pathology classes (group means)", "value": 1, "artifact": "artifacts/grf_anova_summary.csv", "status": "PASS" },
+    { "id": "n_total", "statement": "total subjects across the five classes", "value": 1844, "artifact": "artifacts/grf_anova_summary.csv", "status": "PASS" },
+    { "id": "k_groups", "statement": "number of gait classes compared", "value": 5, "artifact": "artifacts/grf_anova_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored oneWayAnova op (classic equal-variance one-way ANOVA) is validated against BOTH scipy.stats.f_oneway AND base R stats::oneway.test(var.equal=TRUE) on the identical five groups -- a double reference. All three compute the omnibus F of the vGRF dynamic range across the five gait classes; base R oneway.test agrees BIT-FOR-BIT (|diff| = 0) and scipy agrees to machine precision (|diff| ~ 4e-14, floating-point associativity in the multi-group sum-of-squares accumulation; base R aov agrees only to ~1e-14 via its QR path). The per-subject dynamic ranges come from PhysioMoCap::grfLandmarks (certified in the sibling gait-grf-gaitrec case). The control/pathology ratio is reported.",
+    "data": "REAL -- GaitRec (Horsak et al. 2020), processed vertical GRF, five gait classes: healthy control (n=208), ankle (n=483), knee (n=499), hip (n=364), calcaneus (n=290) pathology",
+    "artifacts": ["artifacts/grf_anova_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) oneWayAnova reproduces base R oneway.test(var.equal=TRUE) bit-for-bit and scipy.stats.f_oneway to machine precision on the 5-class GRF cohort; (2) pathological gait flattens the vGRF double-hump across every pathology class, a very large omnibus group effect. HONEST scope: (1) this AUTHORS A NEW OP, oneWayAnova (the many-group generalisation of the certified twoSampleTTest), and reuses the certified grfLandmarks op (validated in the sibling gait-grf-gaitrec case) for the per-trial dynamic range; (2) the omnibus F reproduces base R oneway.test(var.equal=TRUE) BIT-FOR-BIT (|diff| = 0) and scipy.stats.f_oneway to MACHINE PRECISION (|diff| ~ 4e-14 -- the multi-group sum-of-squares accumulation diverges from scipy at the last ULP by floating-point associativity, whereas base R's oneway.test matches exactly; base R aov agrees only to ~1e-14 via its QR path), so base R is the exact reference and scipy the machine-precision cross-check; (3) the dynamic range = loading peak minus mid-stance trough, per subject, from the certified grfLandmarks on the body-weight- and time-normalised vertical GRF; (4) the finding: the vGRF dynamic range differs across the five classes -- F(4,1839)=73.4, p~8.9e-58 -- driven by healthy controls (mean 0.365 BW) having a much larger dynamic range than every pathology class (ankle 0.223, knee 0.215, hip 0.225, calcaneus 0.227 BW), which are tightly clustered; the control/pooled-pathology ratio is ~1.65; GRF flattening is therefore a SHARED signature of impaired gait, not knee-specific, closing the sibling fold's open question; (5) the omnibus F is driven primarily by the healthy-vs-pathology contrast (the four pathology classes are similar to one another) -- post-hoc pairwise tests and per-class effect sizes are the natural follow-up; (6) a real cross-sectional cohort (ASSOCIATION, NOT CAUSATION), one processed vGRF per subject, initial-presentation baseline sessions; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "The omnibus F certifies that the five classes differ, driven by the healthy-vs-pathology contrast; the four pathology classes are tightly clustered. Post-hoc pairwise tests (e.g. Tukey HSD), per-class effect sizes, and the other GRF features (peaks, impulses, loading rates) would resolve the finer between-pathology structure. The double-hump dynamic range shown here is the single most interpretable summary of the flattening. Documented, not escalated.", "artifact": "artifacts/grf_anova_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.stats.f_oneway (Python)", "base R stats::oneway.test(var.equal=TRUE)"],
+  "status": "validated"
+}

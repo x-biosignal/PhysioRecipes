@@ -1,0 +1,5 @@
+"stage","EEG_delta","EEG_alpha","EEG_sigma","EOG","EMG","Resp"
+"Wake",5,2,3,4,2,2
+"Light",4,4,3,4,3,0
+"Deep",4,4,2,4,2,4
+"REM",5,3,4,3,3,4

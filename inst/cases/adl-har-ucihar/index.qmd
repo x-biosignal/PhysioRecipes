@@ -1,0 +1,130 @@
+---
+title: "Locomotion and posture ADLs from a waist smartphone: a wearable ICF performance profile"
+subtitle: "A worked human-activity-recognition case study on the UCI HAR benchmark"
+categories: [adl, wearable, har, mobility, icf, validated]
+author: "Yusuke Matsui"
+date: "2026-08-17"
+---
+
+> **What this case shows** — much of the ICF **d4 mobility** domain is everyday
+> movement: walking, stairs, sitting, standing, lying. On the standard **UCI HAR**
+> benchmark — 30 people, one waist smartphone — the ecosystem's dependency-free
+> activity-recognition pipeline reaches **0.83** six-class accuracy on the
+> provided subject-disjoint test split, and maps what it recognises to ICF codes
+> (posture **d415**, walking **d450**, moving-around **d455**) — the real-world
+> **performance** profile a clinic test cannot see. **What reproduces, and what
+> doesn't** — the recognition reproduces on held-out subjects; the confusions are
+> the physiologically expected ones — walking-**upstairs** vs downstairs (0.60),
+> sitting vs standing (both static, separated only by orientation). Laying is
+> perfectly separable (**1.00**). A simple 36-feature + k-NN pipeline is a
+> **floor** (the literature reaches ~0.96 with 561 features + SVM), not a
+> ceiling. **How to read it** — left, per-activity recall (blue = locomotion,
+> green = posture, dashed = 0.17 chance); right, the ICF performance profile.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — the wearable-ADL pipeline at its most standard: **window** → HAR
+**features** → **classify** → **map to ICF** — on the reference benchmark so you
+can calibrate what "good" looks like.
+**Way of thinking** — evaluate on the *provided subject-disjoint split* (never
+mix a subject's windows across train and test), read accuracy against chance and
+against the literature ceiling, and expect the confusions physiology predicts
+(ascent/descent, sit/stand). A simple model sets the floor; report it as such.
+**Ecosystem usage** — `adlFeatures()` → `trainADL()` / `recognizeADL()` →
+`adlToICF()` (PhysioWearable); the classifier is swappable for PhysioML ROCKET
+without touching the recipe.
+:::
+
+## Proposition
+
+On the UCI HAR benchmark's provided subject-disjoint split, the HAR pipeline
+reaches **0.83** six-class accuracy and maps the recognised locomotion/posture
+activities to their ICF codes (d415 posture, d450 walking, d455 moving around).
+Laying is perfectly recognised (**1.00**); walking-upstairs is the hardest
+(**0.60**).
+
+## Question & goal
+
+**The question comes from the benchmark's design.** UCI HAR (Anguita et al. 2013)
+was built as *the* public reference for recognising activities of daily living
+from a smartphone: 30 people wore a waist phone through walking, ascending and
+descending stairs, sitting, standing and lying, with a subject-disjoint train/test
+split published so methods are comparable. We ask the benchmark's question and add
+the clinical one: do the recognised activities map to the ICF mobility codes that
+make them a *performance* measure?
+
+## Challenge & approach
+
+The challenge is set by the benchmark: generalise to **new people**, and separate
+activities that share a signal — ascent from descent, sitting from standing. We
+take each provided 128-sample window, extract the standard 36-feature descriptor,
+train a dependency-free k-nearest-neighbours classifier on the training subjects,
+and evaluate on the disjoint test subjects. `adlToICF()` maps the predictions to
+ICF d-codes.
+
+## Data
+
+The **UCI HAR** smartphone accelerometer dataset (Anguita et al. 2013, UCI #240)
+— 30 subjects, 50 Hz, six activities, provided train/test split. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Per-activity recall on the provided subject-disjoint test split (left; blue =
+locomotion, green = posture, dashed = 0.17 chance) and the ICF performance
+profile (right).](artifacts/figure.png)
+
+*How to read this:* every activity clears the chance line; laying is perfect,
+upstairs is the weakest (confused with downstairs). On the right the recognised
+time becomes an ICF mobility profile — posture-heavy, as expected for a mostly
+sedentary benchmark day.
+
+| quantity | value |
+|---|---|
+| 6-class accuracy (subject-disjoint) | **0.83** |
+| walking (d450) recall / laying (d415) recall | 0.89 / 1.00 |
+| walking-upstairs recall (hardest) | 0.60 |
+| test windows (30-subject benchmark) | 2947 |
+
+## Conclusion
+
+A single waist accelerometer recognises the mobility and posture ADLs well enough
+to build a real-world ICF performance profile — and does so on new people, with
+the expected confusions and a clear headroom above a simple model. The
+transferable takeaway: **benchmark on the provided subject-disjoint split, treat
+a simple pipeline's number as the floor, and let ICF turn recognised activity into
+a clinical performance picture.**
+
+## Open questions
+
+- Walking-upstairs is the weakest class (0.60), confused with downstairs; whether
+  a richer feature set or barometer fusion resolves ascent vs descent is open.
+  *Documented, not escalated.*
+
+## Using this in your own analysis
+
+The recipe is the standard wearable-ADL pipeline:
+
+| step | function | package |
+|---|---|---|
+| window + extract HAR features | `adlFeatures()` | PhysioWearable |
+| train / apply an activity recogniser | `trainADL()` / `recognizeADL()` | PhysioWearable |
+| map activities to ICF performance codes | `adlToICF()` | PhysioWearable |
+
+**Choosing the parameters:** use the sensor's native window (2.56 s at 50 Hz here);
+always evaluate subject-disjoint; when you need the literature's accuracy, swap the
+k-NN for `PhysioML::rocket()` + a classifier — the ICF mapping is unchanged. See
+`adl-selfcare-hmp` / `adl-washing-htad` for the wrist-sensor siblings and
+`adl-rasch-verbagg` for the capacity side.
+
+```r
+library(PhysioWearable)
+feats <- adlFeatures(accel, sampling_rate = 50)
+model <- trainADL(train_feats, train_labels)
+adlToICF(recognizeADL(model, accel, sampling_rate = 50))   # ICF performance profile
+```
+
+One line for the technical reader: every number traces to
+[`artifacts/summary.csv`](artifacts/summary.csv),
+[`artifacts/per_class_recall.csv`](artifacts/per_class_recall.csv) and
+[`artifacts/icf_profile.csv`](artifacts/icf_profile.csv), re-checked by
+[`audit.py`](audit.py) and `tools/validate_case.py`.

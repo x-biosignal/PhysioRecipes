@@ -1,0 +1,36 @@
+{
+  "id": "romberg-vision-sway-bds",
+  "title": "The visual contribution to balance, certified: eyes-closed foam sway is ~1.3x eyes-open (Romberg) -- completing the posturographic sensory triad",
+  "modality": ["posturography", "balance", "vision", "cohort", "cross-tool-validation"],
+  "packages": ["PhysioAnalysis", "PhysioMoCap"],
+  "dataset": {
+    "name": "A public data set of human balance evaluations (BDS)", "version": "figshare 2016",
+    "record": "50 subjects, eyes-closed vs eyes-open foam quiet standing (60 s, force-plate COP at 100 Hz)",
+    "url": "https://doi.org/10.6084/m9.figshare.3394432", "public": true,
+    "citation": "Santos DA, Duarte M. A public data set of human balance evaluations. PeerJ 2016;4:e2648. doi:10.7717/peerj.2648."
+  },
+  "proposition": "The Romberg phenomenon -- more sway with eyes closed than open -- quantifies the visual contribution to standing balance. On a foam surface, where proprioception is already degraded, vision carries the balance load, so removing it destabilizes markedly. This case demonstrates and certifies that across a real cohort. For each of 50 subjects, foam-surface COP path length with eyes closed and open comes from the certified swayMetrics; the certified pairedTTest compares them, reproducing BOTH scipy.stats.ttest_rel AND base R t.test(paired=TRUE) BIT-FOR-BIT. Eyes-closed sway (mean 217 cm) exceeds eyes-open (mean 167 cm), a ratio of ~1.30 (t=7.57, p~8.8e-10, eyes-closed greater in 43 of 50 subjects). Together with the foam-vs-firm (proprioception) and age effects, this completes the posturographic sensory triad.",
+  "opdag": ["pairedTTest"],
+  "claims": [
+    { "id": "t_statistic", "statement": "paired t-statistic of eyes-closed vs eyes-open foam sway (positive = eyes-closed sways more)", "value": 7.5662786061, "artifact": "artifacts/sway_summary.csv", "status": "PASS" },
+    { "id": "neg_log10_p", "statement": "-log10(two-sided p): the Romberg effect is highly significant", "value": 9.053223, "artifact": "artifacts/sway_summary.csv", "status": "PASS" },
+    { "id": "df", "statement": "degrees of freedom (n - 1)", "value": 49, "artifact": "artifacts/sway_summary.csv", "status": "PASS" },
+    { "id": "max_diff_scipy", "statement": "|pairedTTest t - scipy.stats.ttest_rel t| (bit-exact)", "value": 0, "artifact": "artifacts/sway_summary.csv", "status": "PASS" },
+    { "id": "max_diff_baser", "statement": "|pairedTTest t - base R t.test(paired=TRUE) t| (bit-exact)", "value": 0, "artifact": "artifacts/sway_summary.csv", "status": "PASS" },
+    { "id": "ec_eo_ratio", "statement": "mean eyes-closed sway / mean eyes-open sway (the Romberg / vision effect size)", "value": 1.2977151933, "artifact": "artifacts/sway_summary.csv", "status": "PASS" },
+    { "id": "n_ec_gt_eo", "statement": "subjects with eyes-closed sway > eyes-open sway (out of 50)", "value": 43, "artifact": "artifacts/sway_summary.csv", "status": "PASS" },
+    { "id": "n_subjects", "statement": "paired subjects in the cohort", "value": 50, "artifact": "artifacts/sway_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The certified pairedTTest op is validated against BOTH scipy.stats.ttest_rel AND base R t.test(paired=TRUE) on the identical paired data -- a double reference. All three compute the paired t of eyes-closed minus eyes-open foam sway and agree BIT-FOR-BIT (statistic and p, |diff| 0 vs each). The per-subject path lengths come from PhysioMoCap::swayMetrics (certified against the Prieto reference in the sibling case). The eyes-closed/eyes-open ratio and per-subject direction are reported.",
+    "data": "REAL -- Santos & Duarte (2016) balance dataset (figshare), 50 subjects, eyes-closed vs eyes-open foam-surface quiet-standing COP",
+    "artifacts": ["artifacts/sway_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) pairedTTest reproduces scipy and base R bit-for-bit on new data; (2) the Romberg / vision effect (eyes-closed >> eyes-open sway) is strong and near-universal. HONEST scope: (1) this REUSES the certified pairedTTest op (validated bit-for-bit against scipy.stats.ttest_rel and base R in the sibling posturography-foam-firm-bds case) -- it is a NEW FINDING, NOT A NEW OP; (2) the paired t reproduces BOTH scipy.stats.ttest_rel AND base R t.test(paired=TRUE) BIT-FOR-BIT (statistic and p, |diff| = 0 vs each) on the new data; (3) the per-subject COP path lengths that feed the test come from SWAYMETRICS, itself CERTIFIED bit-for-bit against the Prieto reference in the sibling sway-posturography-bds case, so the inputs are validated end to end; (4) the finding is the ROMBERG / VISION effect: EYES-CLOSED foam-surface sway (mean path 217 cm) exceeds eyes-open sway (mean 167 cm), a ratio of about 1.30, the difference is highly significant (t = 7.57 on 49 df, p ~ 8.8e-10), and eyes-closed exceeds eyes-open in 43 of 50 subjects (the 7 exceptions reflect that foam already destabilizes strongly); on a foam surface, where ankle proprioception is already unreliable, vision carries the balance load, so removing it destabilizes -- together with the foam-vs-firm (proprioception) and age effects, this COMPLETES the posturographic SENSORY TRIAD, the three inputs to standing balance (somatosensory, visual, and the age-related capacity to use them); (5) a real cohort of 50 subjects, one trial per condition; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "This shows the vision effect on foam (where it is largest); the classic Romberg is on firm ground, where healthy adults compensate and the effect is smaller and age-dependent. The BDS's four vision x surface conditions across the full cohort support a two-way analysis of how the sensory contributions combine and change with age. The foam eyes-open-vs-closed contrast shown here is the clearest single vision effect. Documented, not escalated.", "artifact": "artifacts/sway_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.stats.ttest_rel (Python)", "base R stats::t.test(paired=TRUE)"],
+  "status": "validated"
+}

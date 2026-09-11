@@ -1,0 +1,114 @@
+---
+title: "The Falls Efficacy Scale is internally consistent, certified: Cronbach's alpha = 0.82"
+subtitle: "A psychometric reliability check — the summed fear-of-falling score is measuring one coherent thing"
+categories: [psychometrics, reliability, balance, validated]
+author: "Yusuke Matsui"
+date: "2026-09-11"
+---
+
+> **What this case shows** — the sway–cognition cases used the **Falls Efficacy Scale (FES)** total, a
+> summed fear-of-falling score. A summed score is only meaningful if the items hang together. The
+> **newly-authored** `cronbachAlpha` measures that internal consistency across 163 BDS subjects,
+> reproducing base R, **`psych::alpha`** **bit-for-bit** and **`pingouin.cronbach_alpha`** to machine
+> precision. The 7 FES items have **good internal consistency (α = 0.82**, mean inter-item r = 0.41) — they
+> measure one coherent construct.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — a respondents × items matrix → `cronbachAlpha()` → read α and the mean inter-item correlation.
+**Way of thinking** — before you sum a questionnaire into one score, check that its items are consistent.
+Cronbach's alpha asks "do these items co-vary as if they measure the same thing?" — a prerequisite for
+treating the total as a single number, and a different question from the signal analyses elsewhere.
+**Ecosystem usage** — `PhysioAnalysis::cronbachAlpha()`.
+:::
+
+## Proposition
+
+The 7 Falls Efficacy Scale items in the BDS cohort (n=163) have Cronbach's raw α = 0.823 (mean inter-item
+correlation 0.41), i.e. good internal consistency; `cronbachAlpha` reproduces `psych::alpha` (raw_alpha)
+bit-for-bit and `pingouin.cronbach_alpha` to machine precision.
+
+## Question & goal
+
+**The question is a prerequisite made explicit: is the FES total a legitimate single score?** The
+sway–cognition cases leaned on the summed FES; this fold certifies that the items are internally consistent
+enough to sum, and authors a psychometric reliability op.
+
+## Challenge & approach
+
+We take the 163 × 7 matrix of FES item responses (4-point Likert), compute `cronbachAlpha` from the item and
+total-score variances, and check α and the mean inter-item correlation against `psych::alpha` and
+`pingouin.cronbach_alpha`.
+
+```
+163 subjects × 7 FES items → cronbachAlpha
+  raw alpha = 0.823   (mean inter-item r = 0.41)   ->  "good" (> 0.8)
+     vs psych::alpha raw_alpha        → |diff| = 0 (bit-for-bit)
+     vs pingouin.cronbach_alpha       → |diff| ~ 1e-16 (machine precision)
+```
+
+## Data
+
+**Santos & Duarte (2016) BDS balance dataset (figshare)**: the seven Falls Efficacy Scale items (FES_1..FES_7,
+concern about falling during daily activities), for the 163 subjects. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the 7×7 inter-item correlation matrix of the FES items — uniformly positive correlations (mean r=0.41) as expected for a consistent scale. Right: Cronbach's α = 0.82 against the conventional benchmarks — above the "good" (0.8) line, below "excellent" (0.9).](artifacts/figure.png)
+
+*How to read this:* left — every pair of items is positively correlated, none near zero, so no item is
+pulling against the rest. Right — α clears the "good" threshold, supporting use of the summed total.
+
+| Quantity | Value |
+|---|--:|
+| **Cronbach's α** | **0.823** (good) |
+| mean inter-item correlation | 0.41 |
+| items / respondents | 7 / 163 |
+| vs `psych::alpha` (\|diff\|) | **0** (bit-for-bit) |
+| vs `pingouin.cronbach_alpha` (\|diff\|) | **< 1e-9** (~1e-16) |
+
+α equals psych exactly and pingouin to machine precision. Values trace to
+[`artifacts/cronbach_summary.csv`](artifacts/cronbach_summary.csv).
+
+## Conclusion
+
+`cronbachAlpha` reproduces the reference and broadens the ecosystem into psychometrics. The transferable
+takeaway: **when you reduce a questionnaire to a total, certify its internal consistency first. Here α=0.82
+justifies treating the seven FES items as one fear-of-falling score — the same score the sway–cognition
+cases correlate with balance. Reliability is a prerequisite, checked, not assumed.**
+
+## Open questions
+
+- Alpha establishes internal consistency, not dimensionality or validity; a factor analysis would confirm
+  the FES is unidimensional, and item-total / drop-one-alpha statistics would flag any weak item. Alpha also
+  rises with item count. The single raw-alpha here is the standard first-line reliability check. *Documented,
+  not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Internal-consistency reliability | `cronbachAlpha()` | PhysioAnalysis |
+| Correlation among items | `correlationTest()` | PhysioAnalysis |
+
+**Reading the result.**
+
+- **α** — internal consistency (0–1); conventional bands are ~0.7 acceptable, 0.8 good, 0.9 excellent.
+  Report it before summing items into a score.
+- **mean inter-item r** — a scale-length-independent companion to α; ~0.15–0.5 is typical for a coherent
+  but not redundant scale.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis)
+
+cronbachAlpha(fes_items)   # respondents x items matrix -> alpha + mean inter-item r, bit-for-bit vs psych::alpha
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/cronbach_summary.csv`](artifacts/cronbach_summary.csv), and [`audit.py`](audit.py) re-checks the
+alpha and the mean inter-item correlation, the bit-exact match against psych and the machine-precision match
+against pingouin, the good-reliability threshold, the item/respondent counts, and the honestly noted scope
+(authors the new cronbachAlpha op; a self-report scale, not a signal; reliability is consistency, not
+validity).

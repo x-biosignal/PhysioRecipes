@@ -1,0 +1,23 @@
+{
+  "dataset": "Sleep-EDF Database Expanded (sleep-cassette)",
+  "url": "https://physionet.org/content/sleep-edfx/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Kemp B, Zwinderman AH, Tuk B, Kamphuisen HAC, Oberye JJL. Analysis of a sleep-dependent neuronal feedback loop... IEEE Trans Biomed Eng. 2000;47(9):1185-94. Goldberger AL, et al. PhysioNet. Circulation. 2000;101(23):e215-20.",
+  "channels": "EEG Fpz-Cz + EEG Pz-Oz @ 100 Hz",
+  "epoch_sec": 30,
+  "aasm_mapping": "W->W, 1->N1, 2->N2, 3&4->N3, R->REM; movement/unscored dropped",
+  "records": {
+    "SC4001": {
+      "psg": "SC4001E0-PSG.edf",
+      "psg_sha256": "2b40a18adf76af69a42d6db1f30f31d26b369f6d27ca0050ef30147ef892b131",
+      "hypnogram": "SC4001EC-Hypnogram.edf",
+      "hypnogram_sha256": "a4cf67694ade1b52a0ddd06d5817fd45d2d3e8bac5302f640f3e9cfbbf12a996"
+    },
+    "SC4011": {
+      "psg": "SC4011E0-PSG.edf",
+      "psg_sha256": "9e4c34f3f631275990fd7a2d61a24e998c7b03eb9b37ebe5cd7c8323d8310a15",
+      "hypnogram": "SC4011EH-Hypnogram.edf",
+      "hypnogram_sha256": "5bbf7b4ed8a95c8d20e4347b08c2ded2ee21e2dac4680dedf629795adc2edc83"
+    }
+  }
+}

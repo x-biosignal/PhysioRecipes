@@ -1,0 +1,34 @@
+{
+  "id": "dispersion-entropy-eegmmidb",
+  "title": "Dispersion entropy (a newly-authored op): a symbolic-dynamics complexity, bit-for-bit against NeuroKit2",
+  "modality": ["eeg", "complexity", "dispersion-entropy", "symbolic-dynamics", "information-theory"],
+  "packages": ["PhysioEEG"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "Dispersion entropy (Rostaghi & Azami 2016) is a fast, outlier-robust complexity measure with a mechanism distinct from every entropy folded so far: instead of binning amplitudes (Renyi/Tsallis) or ranking them ordinally (permutation entropy), it maps the signal to c amplitude classes through the normal CDF (NCDF), forms length-m 'dispersion patterns', and takes the normalized Shannon entropy of the pattern distribution. The ecosystem lacked it; this case introduces a NEWLY-AUTHORED op, dispersionEntropy. On a real eyes-closed posterior EEG channel it reproduces NeuroKit2 entropy_dispersion BIT-FOR-BIT for BOTH the dispersion entropy DispEn (max |diff| 0) and the reverse dispersion entropy RDEn (max |diff| ~7e-18) across (c, dimension, delay) settings; the signal realizes only 108 of the 216 = c^m possible dispersion patterns (structured, not pattern-saturating).",
+  "opdag": ["dispersionEntropy"],
+  "claims": [
+    { "id": "dispen", "statement": "dispersion entropy (DispEn) of the POz signal at c=6, dimension=3, delay=1", "value": 1.1170837477, "artifact": "artifacts/dispersion_summary.csv", "status": "PASS" },
+    { "id": "rden", "statement": "reverse dispersion entropy (RDEn) -- deviation of the pattern distribution from uniformity", "value": 0.0162243036, "artifact": "artifacts/dispersion_summary.csv", "status": "PASS" },
+    { "id": "max_diff_nk_dispen", "statement": "max |dispersionEntropy - NeuroKit2 entropy_dispersion| (DispEn) over the (c,m,delay) family (bit-exact)", "value": 0, "artifact": "artifacts/dispersion_summary.csv", "status": "PASS" },
+    { "id": "max_diff_nk_rden", "statement": "max |RDEn - NeuroKit2 RDEn| over the (c,m,delay) family (bit-exact)", "value": 6.938894e-18, "artifact": "artifacts/dispersion_summary.csv", "status": "PASS" },
+    { "id": "n_patterns_observed", "statement": "distinct dispersion patterns realized by the signal (out of c^m = 216)", "value": 108, "artifact": "artifacts/dispersion_summary.csv", "status": "PASS" },
+    { "id": "dispen_below_ceiling", "statement": "DispEn lies below the NeuroKit2 normalization ceiling 1/ln(2) = 1.443 (1 = holds)", "value": 1, "artifact": "artifacts/dispersion_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored dispersionEntropy op is validated against NeuroKit2 entropy_dispersion across (c, dimension, delay) settings. NeuroKit2 re-computes both the dispersion entropy DispEn and the reverse dispersion entropy RDEn from the identical NCDF symbolization + dispersion-pattern pipeline; the agreement is BIT-FOR-BIT (DispEn max |diff| 0, RDEn max |diff| ~7e-18) because both implement DispEn = [-sum p log2(p)] / ln(c^m) on the same pattern distribution. On real eyes-closed POz EEG the signal realizes only 108 of the 216 (=c^m) possible dispersion patterns, and DispEn (1.117) sits below the base-2/natural-log normalization ceiling 1/ln(2) = 1.443.",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), channel POz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/dispersion_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the newly-authored dispersionEntropy reproduces NeuroKit2 entropy_dispersion bit-for-bit for both DispEn (max |diff| 0) and RDEn (max |diff| ~7e-18) across (c,dimension,delay) settings; (2) the signal realizes only 108 of the 216 possible dispersion patterns (structured, not pattern-saturating), and DispEn lies below the 1/ln(2) ceiling. HONEST scope: (1) this op is NEWLY AUTHORED to fill a gap -- the ecosystem had amplitude-histogram entropies (Renyi, Tsallis), ordinal permutation entropy, SVD/Petrosian complexity, and sample/approximate entropy, but not the NCDF-based dispersion entropy; (2) this is a genuine MACHINE-PRECISION match -- the op and NeuroKit2 compute the IDENTICAL NCDF + dispersion-pattern + normalized-Shannon pipeline, so the residual is the floating-point floor, not a convention agreement; (3) the mechanism is genuinely distinct (NCDF amplitude ranking + embedding patterns, outlier-robust, no threshold-crossing boundary effects), which is the reason to add it alongside the existing entropies; (4) the NCDF classes are near-equiprobable by construction (1/c target), so the complexity lives in the pattern/embedding distribution, not the marginal; (5) the normalization follows NeuroKit2 exactly (a base-2 Shannon term divided by the natural-log ln(c^m)), so DispEn ranges in [0, 1/ln2 = 1.443] rather than [0,1] -- this convention is reproduced, not corrected, and is honestly noted; (6) run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "Multiscale dispersion entropy (MDE) applies DispEn to coarse-grained versions of the signal across temporal scales, giving a complexity-vs-scale curve that separates physiological states more sharply than single-scale DispEn. Building MDE on top of this op (coarse-grain -> dispersionEntropy per scale) and comparing the curves across EEG states would extend the measure without changing its validated core. Documented, not escalated.", "artifact": "artifacts/dispersion_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["NeuroKit2 entropy_dispersion (Python)"],
+  "status": "validated"
+}

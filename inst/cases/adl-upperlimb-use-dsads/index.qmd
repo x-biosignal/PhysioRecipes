@@ -1,0 +1,138 @@
+---
+title: "What the arm actually does: the use ratio as a capacity-performance gap"
+subtitle: "A worked real-world upper-limb-use case study on real dual-arm accelerometry"
+categories: [imu, accelerometry, upper-limb, adl, validated]
+author: "Yusuke Matsui"
+date: "2026-08-17"
+---
+
+> **What this case shows** — the clinic measures *capacity* (what an arm **can**
+> do on command); daily life reveals *performance* (what it **actually** does).
+> These come apart, and the wearable **use ratio** and **magnitude ratio**
+> quantify the gap between the two arms. On real dual-arm accelerometry from a
+> healthy person the ecosystem recovers the **symmetric reference**: whenever the
+> arms are in use, **both** are used near-equally — every one of the **14 dynamic
+> activities** has a **|magnitude ratio| < 0.5** (max **0.34**, mean **0.12**) and
+> a use ratio of **1.0**, and the overall magnitude ratio is **−0.05** (0 =
+> symmetric). This is the healthy baseline against which the stroke
+> affected/unaffected asymmetry — use ratio far below 1, magnitude ratio strongly
+> negative — is read. **What reproduces, and what doesn't** — the *symmetry*
+> reproduces on the freely public data; the *clinical asymmetry* needs
+> bilateral-**wrist** recordings from an impaired cohort (DUA-gated), so it is the
+> documented target application, not a claim made here. **How to read it** — left,
+> per-activity arm-use symmetry (bars near zero = both arms used equally); right,
+> the overall symmetric use.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — from two limb-worn accelerometers, compute the **use ratio**
+(active hours of one arm ÷ the other) and the **magnitude ratio** (log ratio of
+per-epoch activity), summarising *how symmetric* everyday arm use is.
+**Way of thinking** — a wearable measures **performance**, not capacity; the
+clinically meaningful quantity is the *gap between the arms*, and its natural
+zero is healthy **symmetry** — so validate the metric by showing it *recovers
+symmetry* where symmetry is expected, before trusting the asymmetry it reports in
+patients.
+**Ecosystem usage** — `upperLimbUse()` (PhysioWearable) on right/left
+accelerometer streams from any reader.
+:::
+
+## Proposition
+
+Capacity and performance are different things, and the use ratio / magnitude ratio
+measure the gap. On real dual-arm accelerometry from a healthy person the ecosystem
+recovers the symmetric reference — every dynamic activity has |magnitude ratio| <
+0.5 (max **0.34**, mean **0.12**), use ratio **1.0**, overall magnitude ratio
+**−0.05** — the baseline against which stroke asymmetry is measured.
+
+## Question & goal
+
+**The question is a capacity-versus-performance one.** Upper-limb rehabilitation
+has long known that what a patient *can* do in a five-minute clinic assessment is
+not what the arm *does* over a day at home. Wrist-worn accelerometry made the
+second thing measurable: Bailey, Lang and Uswatte defined the **use ratio** (how
+long the affected arm is active relative to the unaffected) and the **magnitude
+ratio** (how *hard* each arm works), whose natural zero point is healthy
+**symmetry**. We ask: on real two-arm accelerometry, does `upperLimbUse()` recover
+that symmetric reference?
+
+## Challenge & approach
+
+The metric is only trustworthy in patients if it reads *symmetric* where symmetry
+is real. We take a healthy subject's **right-arm and left-arm** accelerometers
+across 19 daily and sports activities, convert to *g*, and run `upperLimbUse()` per
+activity and overall. The honest reading separates two regimes: **dynamic**
+activities, where both arms cross the movement threshold and symmetry is
+meaningful, and **static** ones (sitting, lying), where the arms barely move and
+the ratio is undefined-by-inactivity rather than asymmetry.
+
+## Data
+
+**DSADS** (Barshan & Altun, UCI #256) — five IMUs including a right-arm and a
+left-arm unit at 25 Hz, 19 activities × 60 five-second segments per subject.
+Accelerometry in m/s² → *g*. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Per-activity arm-use symmetry for the 14 activities in which both arms are used
+(left; bars within ±0.5 = symmetric, all are), and the overall symmetric use
+(right).](artifacts/figure.png)
+
+*How to read this:* on the left, each bar is one activity's magnitude ratio (log
+right/left activity); every dynamic activity sits within ±0.5 of zero — both arms
+work near-equally, the healthy symmetric pattern. On the right, the overall use
+ratio (0.86, pulled below 1 only by the static activities where neither arm is
+used) and the near-zero overall magnitude ratio.
+
+| quantity | value |
+|---|---|
+| overall use ratio (1 = symmetric) | **0.86** |
+| overall magnitude ratio (0 = symmetric) | **−0.05** |
+| activities with both arms in use | **14** |
+| largest per-activity \|magnitude ratio\| (all < 0.5) | **0.34** |
+| mean per-activity \|magnitude ratio\| | **0.12** |
+
+## Conclusion
+
+On real dual-arm data the use ratio and magnitude ratio recover exactly what a
+healthy body should show — **both arms used, near-equally, whenever the arms are
+used at all**. The transferable takeaway: **a wearable measures performance, not
+capacity, and the clinically meaningful signal is the gap between the arms —
+validate the metric by confirming it recovers symmetry in the unimpaired before
+trusting the asymmetry it reports in patients.**
+
+## Open questions
+
+- The clinical capacity-performance gap — affected-arm use ratio well below 1 and
+  a strongly negative magnitude ratio in stroke or cerebral palsy — needs
+  bilateral-**wrist** recordings from an impaired cohort (e.g. NICHD DASH). Those
+  are data-use-agreement gated, not freely public, so this case validates the
+  method against the healthy symmetric reference and documents the clinical
+  asymmetry as the target application. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| step | function | package |
+|---|---|---|
+| read two limb accelerometer streams | any reader → matrices | PhysioWearable |
+| use ratio + magnitude ratio + laterality | `upperLimbUse()` | PhysioWearable |
+
+**Choosing the parameters:** pass the **affected** arm first and the **unaffected**
+second (in the clinic that is contralesional/ipsilesional; here right/left),
+`sampling_rate` and `epoch_sec` to match your device, and read the **use ratio**
+(1 = symmetric, → 0 as one arm drops out) with the **magnitude ratio** (0 =
+symmetric, negative = the first arm works less) *together* — one counts *whether*
+the arm is used, the other *how hard*. Interpret only over epochs where the body
+is active; static periods are undefined-by-inactivity, not asymmetry.
+
+```r
+library(PhysioWearable)
+u <- upperLimbUse(right_arm_acc, left_arm_acc, sampling_rate = 25, epoch_sec = 5)
+u$use_ratio        # 1 = symmetric; << 1 = the first arm is used far less
+u$magnitude_ratio  # 0 = symmetric; < 0 = the first arm works less hard
+```
+
+One line for the technical reader: every number traces to
+[`artifacts/overall_use.csv`](artifacts/overall_use.csv) and
+[`artifacts/per_activity_use.csv`](artifacts/per_activity_use.csv), re-checked by
+[`audit.py`](audit.py) and `tools/validate_case.py`.

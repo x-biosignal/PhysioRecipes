@@ -1,0 +1,122 @@
+---
+title: "The confirmatory pair: the KPSS test, a newly-authored op, agrees with ADF"
+subtitle: "A worked stationarity case study on real EEG, introducing and certifying kpssTest"
+categories: [eeg, time-series, stationarity, cross-tool-validation, validated]
+author: "Yusuke Matsui"
+date: "2026-09-07"
+---
+
+> **What this case shows** — the ADF test rejected a unit root, but one test is never enough: **ADF and
+> KPSS are complementary** — ADF's null is a *unit root*, KPSS's null is *stationarity* — and the pair
+> only convinces when they agree. This case adds the **KPSS test** (**`kpssTest`**), the missing half.
+> On a real eyes-closed EEG channel its statistic reproduces **`statsmodels.tsa.stattools.kpss`**
+> **bit-for-bit** (|diff| ~**7e-16**), and it **fails to reject stationarity** — which **agrees with
+> ADF**. Both tests concur: the segment is stationary.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `kpssTest(x, lag)$statistic` → the KPSS stationarity statistic.
+**Way of thinking** — ADF and KPSS point their nulls in opposite directions on purpose. Run both:
+*ADF rejects + KPSS fails to reject* = confidently stationary; *ADF fails + KPSS rejects* = confidently
+a unit root; *both reject* = neither — a warning of long memory / fractional integration.
+**Ecosystem usage** — `PhysioAnalysis::kpssTest()` with `adfTest()` — the confirmatory pair.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, the `kpssTest` statistic reproduces `statsmodels.tsa.stattools.kpss`
+(regression = "c") bit-for-bit (|diff| ~7e-16); at 0.20 it is below the 5% critical value (0.463), so it
+fails to reject stationarity — agreeing with the ADF test, so the pair concurs the segment is stationary.
+
+## Question & goal
+
+**The question is a gap and a confirmation: having added ADF, can we author its complement KPSS,
+reproduce statsmodels exactly, and check that the two complementary stationarity tests actually agree?**
+The goal is to introduce `kpssTest`, certify its statistic bit-for-bit, and confirm the pair.
+
+## Challenge & approach
+
+KPSS demeans the signal, cumulatively sums the residuals to partial sums S_t, and forms
+η = N⁻²·Σ S_t² / λ̂², where λ̂² is a Bartlett (Newey-West) long-run variance with truncation lag. We
+compute it (lag 10, level) and check it against `statsmodels.tsa.stattools.kpss(regression="c",
+nlags=10)`, and re-run ADF for the pair.
+
+```
+EEG POz (eegmmidb) → demean → S_t = cumsum → eta = N^-2 sum S_t^2 / long-run-var
+                    vs statsmodels.kpss(regression="c") → bit-exact (|diff| ~7e-16)
+                    KPSS 0.20 < crit 0.463 -> fail to reject stationarity;  ADF rejects unit root -> AGREE
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz**, 10 s at 160 Hz — the same git-tracked vector the
+[autocorrelation](../autocorrelation-eegmmidb/index.qmd), [AR](../ar-yule-walker-eegmmidb/index.qmd)
+and [ADF](../adf-eegmmidb/index.qmd) cases use. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the KPSS partial sums S_t of the demeaned signal — they stay bounded and mean-reverting (the hallmark of stationarity; under a unit root they would wander like a random walk), and the statistic 0.20 sits below the 0.463 threshold. Right: the ADF/KPSS confirmatory pair on a common scale (statistic / 5% critical) — KPSS is below its threshold (fails to reject stationarity) and ADF is well past its threshold (rejects the unit root); both verdicts are "stationary".](artifacts/figure.png)
+
+*How to read this:* the left panel is the KPSS building block (bounded partial sums → stationary); the
+right panel is the joint verdict — the two complementary tests point the same way.
+
+| Quantity | Value |
+|---|--:|
+| **KPSS statistic** (lag 10, level) | **0.20** |
+| statistic vs `statsmodels` (\|diff\|) | **7e-16** (bit-exact) |
+| 5% KPSS critical value | **0.463** |
+| KPSS fails to reject stationarity | **yes** |
+| ADF rejects the unit root | **yes** |
+| **ADF + KPSS agree: stationary** | **yes** |
+
+The newly-authored op's statistic equals statsmodels, and the confirmatory pair concurs. Values trace to
+[`artifacts/kpss_summary.csv`](artifacts/kpss_summary.csv).
+
+## Conclusion
+
+`kpssTest` completes the ADF/KPSS confirmatory pair, and its statistic is exact: bit-for-bit against
+statsmodels. The transferable takeaway: **never conclude stationarity from one test. Run ADF and KPSS
+together — agreement (as here) is the strong verdict, and disagreement is itself the finding, flagging
+long-memory dynamics a single test would have hidden.**
+
+## Open questions
+
+- The informative case is disagreement (ADF rejects a unit root but KPSS also rejects stationarity),
+  which signals long memory / fractional integration; running the pair on longer, drift-prone recordings
+  is where that would appear and a fractional-differencing follow-up would begin. *Documented, not
+  escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| KPSS stationarity test | `kpssTest()` | PhysioAnalysis |
+| ADF unit-root test | `adfTest()` | PhysioAnalysis |
+| Autocorrelation (assumes stationarity) | `autocorrelation()` | PhysioAnalysis |
+
+**Choosing the parameters and reading the pair.**
+
+- **lag** — the Bartlett long-run-variance truncation (default 10); larger lags down-weight high-order
+  autocovariances, changing the statistic modestly.
+- **the pair** — *ADF rejects + KPSS fails to reject* → stationary (this case); *ADF fails + KPSS rejects*
+  → unit root; *both reject* → long memory (consider fractional differencing).
+- **honest caveat** — only the statistic is exact; the KPSS critical values / p-value come from the
+  reference tables and are not computed by this op.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis)
+
+k <- kpssTest(x, lag = 10)
+k$statistic < 0.463                       # below the 5% KPSS critical -> fail to reject stationarity
+adfTest(x)$statistic < -2.86              # ADF also says stationary -> confirmatory pair agrees
+# the KPSS statistic reproduces statsmodels.tsa.stattools.kpss(regression = "c") bit-for-bit.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/kpss_summary.csv`](artifacts/kpss_summary.csv), and [`audit.py`](audit.py) re-checks the KPSS
+statistic, the bit-exact statsmodels match, the 5% critical value, the KPSS and ADF verdicts and their
+agreement, and the honestly-noted scope (newly-authored op; statistic bit-exact but critical-values / p
+from tables; confirmatory-pair agreement).

@@ -1,0 +1,10 @@
+{
+  "dataset": "A public data set of human balance evaluations (BDS)",
+  "source": "figshare",
+  "url": "https://doi.org/10.6084/m9.figshare.3394432",
+  "license": "CC BY 4.0",
+  "citation": "Santos DA, Duarte M. A public data set of human balance evaluations. PeerJ 2016;4:e2648. doi:10.7717/peerj.2648.",
+  "record_used": "subject 1, eyes-open firm-surface trial (BDS00001), 60 s of quiet standing on a force platform, center of pressure (COPx=ML, COPy=AP, in cm) at 100 Hz (6000 samples).",
+  "pipeline": "readRDS(cop_eo_firm_s1) -> PhysioMoCap::swayMetrics(sampling_rate=100, entropy=FALSE): the Prieto et al. (1996) posturography metrics (mean/RMS distance, path length, mean velocity, 95% confidence circle/ellipse area, sway area, ...). The reference re-computes the key metrics with an independent Python reimplementation of the Prieto formulas (via reticulate) and computes the fraction of COP samples inside the 95% confidence ellipse. Deterministic.",
+  "note": "This is a CROSS-TOOL AUDIT of the shipped PhysioMoCap::swayMetrics -- not a new op; it had never been certified against the reference. It reproduces an independent Python reimplementation of the Prieto et al. (1996) posturography formulas BIT-FOR-BIT (max |diff| ~7e-13, dominated by the F-quantile in the ellipse-area term) -- identical deterministic closed forms. Construct check: the 95% confidence ellipse contains 96.7% of the COP samples, close to the nominal 95%, confirming the ellipse-area metric is correctly scaled (the small excess reflects that real COP is not perfectly bivariate normal). The values are typical of a young healthy adult in quiet stance (path length ~37 cm over 60 s, mean velocity ~0.6 cm/s, 95% ellipse ~0.94 cm^2). Posturography sway metrics are the standard quiet-stance balance and fall-risk measures in rehabilitation."
+}

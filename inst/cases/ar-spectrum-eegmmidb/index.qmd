@@ -1,0 +1,122 @@
+---
+title: "The AR model's payoff: the parametric spectrum, a newly-authored op, agrees with the periodogram"
+subtitle: "A worked spectral case study on real EEG, introducing and certifying arSpectrum"
+categories: [eeg, time-series, spectral, cross-tool-validation, validated]
+author: "Yusuke Matsui"
+date: "2026-09-07"
+---
+
+> **What this case shows** — the AR fit gave coefficients; its **payoff is a spectrum**. The
+> **AR (parametric) spectral density** turns a handful of coefficients into a smooth, sharp-peaked PSD —
+> the parametric alternative to the periodogram. This case adds it (**`arSpectrum`**), completing the
+> time-series lane. On a real eyes-closed EEG channel it reproduces **`stats::spec.ar`** **bit-for-bit**
+> (max |rel diff| ~**5e-14**), and its peak (**10.9 Hz**) lands in the **alpha band** and agrees within
+> **~0.5 Hz** with the nonparametric periodogram peak — two spectral estimators, one verdict.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `arSpectrum(x, order, n_freq)` → the parametric AR spectral density over frequency.
+**Way of thinking** — a periodogram spends one parameter per frequency; an AR spectrum spends `order`
+parameters total and interpolates the rest. That makes it smooth and low-variance — ideal for a clean
+resonant peak — but it can only show as much structure as its order allows. Read it alongside the
+periodogram: agreement is confidence, divergence is a hint to raise the order.
+**Ecosystem usage** — `PhysioAnalysis::arSpectrum()`, built on `arYuleWalker()`.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, `arSpectrum` reproduces `stats::spec.ar` bit-for-bit (max |rel diff|
+~5e-14); its peak (10.9 Hz) is in the alpha band and agrees within ~0.5 Hz with the smoothed-periodogram
+peak (11.4 Hz).
+
+## Question & goal
+
+**The question is a gap and a cross-check: having fit the AR model, can we author its parametric
+spectrum, reproduce base-R spec.ar exactly, and confirm its alpha peak agrees with the nonparametric
+periodogram?** The goal is to introduce `arSpectrum`, certify it bit-for-bit, and read the cross-method
+agreement.
+
+## Challenge & approach
+
+The AR spectral density is S(f) = σ²/|1 − Σ φ_k e^{−i2πf k}|², from a Yule-Walker AR(order) fit
+(`arYuleWalker`), evaluated on n_freq frequencies in [0, 0.5]. We compute the AR(8) spectrum and check
+it against `stats::spec.ar`, then compare its peak to `stats::spec.pgram` (smoothed periodogram).
+
+```
+EEG POz (eegmmidb) → AR(8) Yule-Walker → S(f) = var / |1 - sum phi_k e^{-i2pi f k}|^2  (500 freqs)
+                    vs stats::spec.ar → bit-exact (~5e-14, incl. N/(N-p-1) variance)
+                    AR peak 10.9 Hz  ~=  periodogram peak 11.4 Hz  (alpha; parametric vs nonparametric)
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz**, 10 s at 160 Hz — the same git-tracked vector the
+[autocorrelation](../autocorrelation-eegmmidb/index.qmd), [PACF](../pacf-eegmmidb/index.qmd) and
+[AR](../ar-yule-walker-eegmmidb/index.qmd) cases use. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the AR(8) parametric spectrum (red, smooth) and the nonparametric smoothed periodogram (blue, jagged) — both peak in the alpha band, with the AR peak at 10.9 Hz and the periodogram peak at 11.4 Hz. Right: the newly-authored arSpectrum (red) overlaid with stats::spec.ar (green rings) — they coincide at every frequency to machine precision (max |rel diff| ~5e-14).](artifacts/figure.png)
+
+*How to read this:* the left panel is the cross-method comparison (parametric vs nonparametric spectrum,
+agreeing on the alpha peak); the right panel is the certification against base-R spec.ar.
+
+| Quantity | Value |
+|---|--:|
+| **AR spectrum peak** | **10.9 Hz** (alpha) |
+| op vs `stats::spec.ar` (max \|rel diff\|) | **5e-14** (bit-exact) |
+| frequency bins | **500** |
+| peak in alpha band (8-13 Hz) | **yes** |
+| smoothed-periodogram peak | **11.4 Hz** |
+| \|AR − periodogram\| peak difference | **0.5 Hz** |
+
+The newly-authored op equals spec.ar at every frequency, and its alpha peak matches the periodogram.
+Values trace to [`artifacts/arspec_summary.csv`](artifacts/arspec_summary.csv).
+
+## Conclusion
+
+`arSpectrum` completes the ACF → PACF → AR → tests lane with the AR model's spectral payoff, and it is
+exact: bit-for-bit against `stats::spec.ar`. The transferable takeaway: **the AR spectrum and the
+periodogram are two lenses on the same power. The AR lens is smooth and cheap — perfect for a clean
+resonant peak like alpha — and when it agrees with the periodogram (as here, within 0.5 Hz), you can
+trust the peak; when it doesn't, raise the order or reach for the nonparametric estimate.**
+
+## Open questions
+
+- The AR order controls smoothness (too low blurs peaks, too high adds spurious ones); AIC/BIC selection
+  over `arYuleWalker` fits would make `arSpectrum` self-tuning, and comparing the AR peak's bandwidth to
+  the periodogram's would quantify the resolution/variance trade-off. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| AR parametric spectrum | `arSpectrum()` | PhysioAnalysis |
+| AR fit (coefficients) | `arYuleWalker()` | PhysioAnalysis |
+| AR order (PACF cut-off) | `partialAutocorrelation()` | PhysioAnalysis |
+
+**Choosing the parameters.**
+
+- **order** — the AR order (default 8); higher orders resolve more peaks but risk spurious ones. Pick it
+  from the PACF cut-off or by AIC/BIC.
+- **n_freq** — the number of frequency bins in [0, 0.5] (default 500); the AR spectrum is smooth, so a
+  moderate grid suffices.
+- **convention** — matches `stats::spec.ar` (the small-sample innovation variance N/(N−p−1)); multiply by
+  the sampling rate to place the frequency axis in Hz.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis)
+
+s <- arSpectrum(x, order = 8, n_freq = 500)
+s$freq[which.max(s$spec)] * 160   # peak frequency in Hz (sampling rate 160)
+# reproduces stats::spec.ar bit-for-bit; the peak agrees with the periodogram.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/arspec_summary.csv`](artifacts/arspec_summary.csv), and [`audit.py`](audit.py) re-checks the
+AR peak frequency, the bit-exact spec.ar match, the alpha-band peak, the periodogram peak and their
+cross-method difference, and the honestly-noted scope (newly-authored op building on arYuleWalker;
+machine-precision incl. the spec.ar variance convention; parametric/nonparametric agreement).

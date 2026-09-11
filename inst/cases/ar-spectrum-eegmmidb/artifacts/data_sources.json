@@ -1,0 +1,10 @@
+{
+  "dataset": "EEG Motor Movement/Imagery Database (eegmmidb)",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples) -- the SAME git-tracked vector the autocorrelation, PACF and AR cases use.",
+  "pipeline": "readRDS(eeg_poz_s002r02) -> PhysioAnalysis::arSpectrum(order=8, n_freq=500): fit an AR(8) model by Yule-Walker (arYuleWalker) and evaluate S(f)=var/|1-sum phi_k e^-i2pifk|^2 over 500 frequencies in [0,0.5]. The reference re-computes it with stats::spec.ar and contrasts the peak with stats::spec.pgram (smoothed periodogram). Deterministic.",
+  "note": "The root is the POz channel numeric vector (shared with the autocorrelation, PACF and AR cases). The AR (parametric) spectrum is the spectral payoff of the Yule-Walker AR fit: smooth, low-variance, sharp-peaked, from only `order` parameters -- the parametric alternative to the periodogram/Welch PSD. arSpectrum is a NEW op (building on arYuleWalker) completing the time-series lane. It reproduces stats::spec.ar BIT-FOR-BIT (max |rel diff| ~5e-14), including spec.ar small-sample innovation-variance convention N/(N-p-1) (which differs from arYuleWalker MLE variance by exactly that factor -- documented, not an error). Finding: the AR spectrum peak (10.90 Hz) falls in the alpha band and agrees within ~0.5 Hz with the nonparametric smoothed-periodogram peak (11.40 Hz) -- the parametric and nonparametric spectral estimates concur on the eyes-closed alpha rhythm, each a check on the other. HONEST: a spectral density (up to the estimator scaling); the reproducible content is the bit-exact spec.ar match + the alpha-peak agreement."
+}

@@ -1,0 +1,38 @@
+{
+  "id": "gait-pushoff-age-regression-gaitrec",
+  "title": "Healthy-aging propulsion decline, certified: the vertical-GRF push-off peak falls ~0.012 BW per decade (OLS slope bit-for-bit vs scipy.stats.linregress and base R lm)",
+  "modality": ["gait", "ground-reaction-force", "aging", "cohort", "cross-tool-validation"],
+  "packages": ["PhysioAnalysis", "PhysioMoCap"],
+  "dataset": {
+    "name": "GaitRec -- large-scale ground reaction force dataset of healthy and impaired gait", "version": "2020",
+    "record": "healthy controls (n=208, ages 15-78); age + vertical-GRF push-off peak (grfLandmarks 3rd landmark); shod, standardised speed, baseline sessions",
+    "url": "https://doi.org/10.1038/s41597-020-0481-z", "public": true,
+    "citation": "Horsak B, Slijepcevic D, Raberger AM, Schwab C, Worisch M, Zeppelzauer M. GaitRec, a large-scale ground reaction force dataset of healthy and impaired gait. Scientific Data 2020;7:143. doi:10.1038/s41597-020-0481-z."
+  },
+  "proposition": "The push-off peak (late-stance propulsion, driven chiefly by the ankle plantarflexors) declines with age. In GaitRec healthy controls (n=208, ages 15-78), each subject's push-off peak comes from the certified grfLandmarks; the NEWLY-AUTHORED linearRegression regresses it on age, reproducing scipy.stats.linregress BIT-FOR-BIT and base R stats::lm to machine precision. The slope is -0.00120 BW/year (-0.012 BW/decade; intercept 1.144 BW), t(206)=-4.61, p~7.0e-6, R-squared 0.094 -- a modest but highly significant healthy-aging propulsion decline.",
+  "opdag": ["linearRegression"],
+  "claims": [
+    { "id": "slope", "statement": "OLS slope of push-off peak on age (BW per year; negative = decline)", "value": -0.001202775159, "artifact": "artifacts/pushoff_age_regression_summary.csv", "status": "PASS" },
+    { "id": "slope_per_decade", "statement": "push-off decline per decade of age (BW)", "value": -0.01202775, "artifact": "artifacts/pushoff_age_regression_summary.csv", "status": "PASS" },
+    { "id": "intercept", "statement": "OLS intercept (modelled push-off at age 0, extrapolated)", "value": 1.1436454, "artifact": "artifacts/pushoff_age_regression_summary.csv", "status": "PASS" },
+    { "id": "r_squared", "statement": "R-squared: fraction of push-off variance explained by age", "value": 0.0936119568, "artifact": "artifacts/pushoff_age_regression_summary.csv", "status": "PASS" },
+    { "id": "neg_log10_p", "statement": "-log10(two-sided slope p): the age effect is highly significant", "value": 5.156119, "artifact": "artifacts/pushoff_age_regression_summary.csv", "status": "PASS" },
+    { "id": "df", "statement": "residual degrees of freedom (n - 2)", "value": 206, "artifact": "artifacts/pushoff_age_regression_summary.csv", "status": "PASS" },
+    { "id": "max_diff_slope_scipy", "statement": "|linearRegression slope - scipy.stats.linregress slope| (bit-for-bit)", "value": 0, "artifact": "artifacts/pushoff_age_regression_summary.csv", "status": "PASS" },
+    { "id": "max_diff_slope_lm", "statement": "|linearRegression slope - base R lm slope| (machine precision, < 1e-9)", "value": 0, "artifact": "artifacts/pushoff_age_regression_summary.csv", "status": "PASS" },
+    { "id": "slope_negative", "statement": "the slope is negative (push-off peak declines with age)", "value": 1, "artifact": "artifacts/pushoff_age_regression_summary.csv", "status": "PASS" },
+    { "id": "n", "statement": "healthy-control subjects regressed", "value": 208, "artifact": "artifacts/pushoff_age_regression_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored linearRegression op (simple univariate OLS) is validated against BOTH scipy.stats.linregress AND base R stats::lm/summary.lm on the identical (age, push-off) pairs -- a double reference. scipy.stats.linregress agrees BIT-FOR-BIT (|diff| = 0 for the slope and R-squared; both use the closed-form estimator) and base R lm agrees to machine precision (|diff| ~ 1e-18 on the slope; lm uses a QR path). The per-subject push-off peaks come from PhysioMoCap::grfLandmarks (3rd landmark; certified in the sibling gait-grf-gaitrec case).",
+    "data": "REAL -- GaitRec (Horsak et al. 2020), vertical-GRF push-off peak vs age, healthy controls (n=208, ages 15-78)",
+    "artifacts": ["artifacts/pushoff_age_regression_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) linearRegression reproduces scipy.stats.linregress bit-for-bit and base R lm to machine precision; (2) the push-off peak declines with age in healthy controls. HONEST scope: (1) this AUTHORS A NEW OP, linearRegression (simple univariate OLS), and reuses the certified grfLandmarks op (validated in the sibling gait-grf-gaitrec case) for the push-off peak (its 3rd landmark); (2) the OLS slope, R-squared and slope p-value reproduce scipy.stats.linregress BIT-FOR-BIT (|diff| = 0; both use the closed-form estimator) and base R stats::lm to MACHINE PRECISION (|diff| ~ 1e-18 on the slope; lm uses a QR path); (3) the finding: in healthy controls (n=208, ages 15-78) the push-off peak DECLINES with age at a slope of -0.00120 BW/year (-0.012 BW/decade; intercept 1.144 BW), t(206) = -4.61, p ~ 7.0e-6, R-squared 0.094 -- a modest but highly significant healthy-aging propulsion decline (age explains about 9% of the between-subject variance in push-off); (4) the regression SLOPE gives the RATE of decline, which a correlation alone does not; (5) HONEST LIMITS: the GaitRec healthy-control age distribution is young-skewed (median 32, only 2 subjects over 70), so the slope is best interpreted over the well-sampled 15-55 range; this is a CROSS-SECTIONAL association (age differences between people, NOT within-person change over time) and NOT causation; one processed vGRF per subject; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "The healthy-control age distribution is young-skewed (only 2 subjects over 70), so the linear slope may understate the decline at older ages where ankle push-off power is known to drop more steeply; a cohort with denser older sampling (or a non-linear/spline fit) would refine the trajectory. This is also cross-sectional, not longitudinal. The single linear slope is the most interpretable first-order rate. Documented, not escalated.", "artifact": "artifacts/pushoff_age_regression_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.stats.linregress (Python)", "base R stats::lm"],
+  "status": "validated"
+}

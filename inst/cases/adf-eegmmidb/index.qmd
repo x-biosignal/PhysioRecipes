@@ -1,0 +1,122 @@
+---
+title: "Checking the assumption: the Augmented Dickey-Fuller test, a newly-authored op, vs statsmodels"
+subtitle: "A worked stationarity case study on real EEG, introducing and certifying adfTest"
+categories: [eeg, time-series, stationarity, cross-tool-validation, validated]
+author: "Yusuke Matsui"
+date: "2026-09-07"
+---
+
+> **What this case shows** — the ACF, PACF, AR and Ljung-Box folds all *assumed* the EEG was stationary.
+> The **Augmented Dickey-Fuller (ADF) test** checks that assumption: is there a **unit root** — a
+> random-walk drift — or is the signal stationary? This case adds the test (**`adfTest``). On a real
+> eyes-closed EEG channel its statistic reproduces **`statsmodels.tsa.stattools.adfuller`**
+> **bit-for-bit** (|diff| ~**7e-15**), and the verdict is decisive: the statistic (**−22.36**) sits
+> **~19.5 below** the 5% threshold, so the unit-root null is rejected — the segment is stationary.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `adfTest(x, lag)$statistic` → the ADF unit-root statistic.
+**Way of thinking** — every spectral and autocorrelation method quietly assumes stationarity. The ADF
+test makes that assumption falsifiable: a statistic well below the Dickey-Fuller critical value says
+"no drift, safe to proceed"; one near zero warns that a trend or slow electrode drift is contaminating
+your estimates.
+**Ecosystem usage** — `PhysioAnalysis::adfTest()` alongside the ACF/PACF/AR/Ljung-Box lane.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, the `adfTest` statistic reproduces `statsmodels.tsa.stattools.adfuller`
+bit-for-bit (|diff| ~7e-15); at −22.36 it lies ~19.5 below the 5% critical value (−2.86), decisively
+rejecting the unit-root null — the segment is stationary.
+
+## Question & goal
+
+**The question is a gap and a check: the ecosystem's time-series methods assumed stationarity — can we
+author the ADF test, reproduce the statsmodels statistic exactly, and confirm the eyes-closed EEG is in
+fact stationary?** The goal is to introduce `adfTest`, certify its statistic bit-for-bit, and report the
+verdict.
+
+## Challenge & approach
+
+The ADF regression is Δy_t = α + β·y_{t−1} + Σ γ_i·Δy_{t−i} + ε_t, and the statistic is the t-statistic
+on β (the lagged level). We compute it (lag 1, with constant) and check it against
+`statsmodels.tsa.stattools.adfuller(autolag=None, regression="c")` on the identical signal.
+
+```
+EEG POz (eegmmidb) → Δy_t ~ const + y_{t-1} + Δy_{t-1} → ADF stat = t-stat on y_{t-1}
+                    vs statsmodels.adfuller(autolag=None) → bit-exact (|diff| ~7e-15)
+                    ADF = -22.36  vs  5% critical -2.86  → 19.5 below → reject unit root (stationary)
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz**, 10 s at 160 Hz — the same git-tracked vector the
+[autocorrelation](../autocorrelation-eegmmidb/index.qmd), [PACF](../pacf-eegmmidb/index.qmd),
+[AR](../ar-yule-walker-eegmmidb/index.qmd) and [Ljung-Box](../ljung-box-eegmmidb/index.qmd) cases use.
+Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the POz signal (grey) with its 1-second running mean (red) — flat, with no drift, the visual signature of stationarity. Right: the ADF statistic (red dashed) against the 1%, 5% and 10% Dickey-Fuller critical values (green) — the statistic sits far below all of them, so the unit-root null is rejected.](artifacts/figure.png)
+
+*How to read this:* the left panel shows *why* the test rejects (a flat running mean — no unit-root
+drift); the right panel is the decision (the statistic is orders of magnitude past the thresholds).
+
+| Quantity | Value |
+|---|--:|
+| **ADF statistic** (lag 1, constant) | **−22.36** |
+| statistic vs `statsmodels` (\|diff\|) | **7e-15** (bit-exact) |
+| 5% Dickey-Fuller critical value | **−2.86** |
+| unit-root null rejected (stationary) | **yes** |
+| margin below the 5% critical value | **−19.5** |
+| ADF regression sample size | **1598** |
+
+The newly-authored op's statistic equals statsmodels, and the verdict is unambiguous stationarity.
+Values trace to [`artifacts/adf_summary.csv`](artifacts/adf_summary.csv).
+
+## Conclusion
+
+`adfTest` adds the assumption-check the time-series lane was missing, and its statistic is exact:
+bit-for-bit against statsmodels. The transferable takeaway: **stationarity is an assumption you can
+test, not just hope for. Run the ADF test before trusting an ACF, an AR fit, or a PSD — on a clean
+10-second eyes-closed segment it passes decisively, but on longer recordings where drift creeps in, the
+same test is what catches it.**
+
+## Open questions
+
+- ADF and KPSS are complementary (ADF's null is a unit root; KPSS's null is stationarity); adding a KPSS
+  op and reporting both gives the standard confirmatory pair, and running ADF on longer recordings is
+  where a non-rejection would actually appear. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| ADF unit-root / stationarity test | `adfTest()` | PhysioAnalysis |
+| Autocorrelation (assumes stationarity) | `autocorrelation()` | PhysioAnalysis |
+| AR fit (assumes stationarity) | `arYuleWalker()` | PhysioAnalysis |
+
+**Choosing the parameters and reading the result.**
+
+- **lag** — the number of augmenting lagged differences (default 1); increase it if the residuals are
+  themselves autocorrelated (a Ljung-Box test on the ADF residuals guides this).
+- **decision** — compare `adfTest(x)$statistic` against the Dickey-Fuller critical value for the
+  constant regression (≈ −2.86 at 5% for large N): below it → reject the unit root (stationary).
+- **honest caveat** — only the statistic is exact; the critical values / p-value come from the
+  MacKinnon reference tables and are not computed by this op.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis)
+
+adf <- adfTest(x, lag = 1)
+adf$statistic < -2.86      # below the 5% Dickey-Fuller critical value -> stationary
+# the statistic reproduces statsmodels.tsa.stattools.adfuller(autolag = None) bit-for-bit.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/adf_summary.csv`](artifacts/adf_summary.csv), and [`audit.py`](audit.py) re-checks the ADF
+statistic, the bit-exact statsmodels match, the 5% critical value, the rejection and its margin, and the
+honestly-noted scope (newly-authored op; statistic bit-exact but critical-values/p from MacKinnon
+tables; decisive-but-expected stationarity verdict).

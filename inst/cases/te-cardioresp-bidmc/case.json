@@ -1,0 +1,34 @@
+{
+  "id": "te-cardioresp-bidmc",
+  "title": "Model-free directed coupling: transfer entropy of cardiorespiratory signals, checked against an independent implementation",
+  "modality": ["connectivity", "transfer-entropy", "directed", "information-theory", "cardiorespiratory"],
+  "packages": ["PhysioCrossModal"],
+  "dataset": {
+    "name": "BIDMC PPG and Respiration Dataset", "version": "PhysioNet 1.0.0",
+    "record": "subject bidmc01, RESP + PLETH decimated 125->25 Hz, 200 s (5001 samples each)",
+    "url": "https://physionet.org/content/bidmc/1.0.0/", "public": true,
+    "citation": "Pimentel MAF et al. Toward a robust estimation of respiratory rate from pulse oximeters. IEEE Trans Biomed Eng 2017;64(8):1914-1923. BIDMC PPG and Respiration Dataset, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "Granger causality (the sibling case on this pair) measures directed coupling by fitting a LINEAR autoregression. Transfer entropy (Schreiber 2000) measures the same directed influence WITHOUT a model: it is the reduction in uncertainty about y's future from x's past, beyond y's own past, in bits -- so it captures nonlinear directed coupling too. On real cardiorespiratory signals the model-free respiration->pulse transfer entropy (0.036 bits) exceeds pulse->respiration (0.024), net +0.012 -- the same directed asymmetry the linear Granger analysis found. And the estimate is exact: transferEntropy (histogram estimator) reproduces an independent from-scratch numpy transfer entropy BIT-FOR-BIT (max |diff| ~6e-17), and it recovers a constructed directed coupling (x drives y -> TE 0.67 in the driving direction vs 0.06 in reverse).",
+  "opdag": ["transferEntropy"],
+  "claims": [
+    { "id": "te_resp_pleth", "statement": "transfer entropy respiration -> PPG pulse (model-free directed info flow, bits)", "value": 0.03577692, "artifact": "artifacts/te_summary.csv", "status": "PASS" },
+    { "id": "te_pleth_resp", "statement": "transfer entropy PPG pulse -> respiration", "value": 0.02395327, "artifact": "artifacts/te_summary.csv", "status": "PASS" },
+    { "id": "net", "statement": "net transfer entropy (respiration->pulse minus pulse->respiration) -- the directed asymmetry", "value": 0.01182365, "artifact": "artifacts/te_summary.csv", "status": "PASS" },
+    { "id": "max_diff_numpy", "statement": "max |transferEntropy - independent numpy transfer entropy| over both directions (bit-exact)", "value": 6.245e-17, "artifact": "artifacts/te_summary.csv", "status": "PASS" },
+    { "id": "te_constructed_xy", "statement": "TE in the DRIVING direction of a constructed x->y coupling -- directed recovery (large)", "value": 0.667948, "artifact": "artifacts/te_summary.csv", "status": "PASS" },
+    { "id": "te_constructed_yx", "statement": "TE in the REVERSE direction of the constructed coupling -- much smaller (directed recovery)", "value": 0.064132, "artifact": "artifacts/te_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "Transfer entropy (Schreiber 2000, histogram estimator) is validated two ways. (1) An independent from-scratch numpy transfer entropy (matched embedding, equal-width binning bins=8, and the Schreiber formula, in a DIFFERENT language) reproduces it BIT-FOR-BIT (max |diff| ~6e-17 over both directions) -- the arithmetic is exactly correct. (2) Directed recovery: on a constructed x->y coupling (x drives y at lag 2) the TE is 0.67 in the driving direction vs 0.06 in reverse (net +0.60), so the measure correctly identifies the driver. The finding: the real respiration->pulse TE (0.036) exceeds pulse->respiration (0.024), net +0.012 -- a weak model-free directed info flow consistent with the Granger result.",
+    "data": "REAL -- BIDMC (PhysioNet), subject bidmc01, RESP + PLETH decimated to 25 Hz, 200 s",
+    "artifacts": ["artifacts/te_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) transferEntropy reproduces an independent numpy transfer entropy bit-for-bit (~6e-17) and recovers a constructed directed coupling (x->y TE 0.67 vs reverse 0.06); (2) the real respiration->pulse TE (0.036) exceeds pulse->respiration (0.024), net +0.012. HONEST scope: (1) this is a genuine MACHINE-PRECISION cross-tool match -- the op and the independent numpy implementation compute the IDENTICAL histogram-transfer-entropy formula (matched embedding + binning), so the ~6e-17 residual is the floating-point floor, not a convention/agreement difference; (2) this is the HISTOGRAM estimator with equal-width binning -- transfer entropy is ESTIMATOR-DEPENDENT (the KSG/kNN estimator is also available and gives different absolute values), so the reproducible quantity is THIS estimator's TE; the histogram estimator has a positive finite-sample bias, so the small real TE values are upper-ish estimates, NOT significance tests (the op's effective-TE surrogate option addresses that but is not used here); (3) the finding -- a weak net respiration->pulse info flow (+0.012) -- is the model-free complement to the Granger result on the same pair, on one subject; (4) single subject, 200 s; run_simulation = FALSE for the real-data TE (the directed-recovery check uses a seeded constructed coupling)."
+  },
+  "open_questions": [
+    { "q": "This uses the histogram estimator (fast, biased); the KSG/kNN estimator (estimator='ksg', also implemented) is less biased for continuous data, and the effective-TE option (surrogate-corrected, effective=TRUE) tests significance against IAAFT surrogates. Computing the effective KSG transfer entropy across a cohort -- and comparing its directed map to the linear Granger map -- would show where the coupling is genuinely nonlinear. Documented, not escalated.", "artifact": "artifacts/te_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["independent numpy histogram transfer entropy (Python)"],
+  "status": "validated"
+}

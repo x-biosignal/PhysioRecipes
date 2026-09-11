@@ -1,0 +1,123 @@
+---
+title: "The GRF dynamic range separates healthy from pathological gait — but not the pathologies, certified"
+subtitle: "A Tukey HSD post-hoc resolves the ANOVA case's open question: which classes actually differ"
+categories: [gait, ground-reaction-force, pathology, cohort, validated]
+author: "Yusuke Matsui"
+date: "2026-09-11"
+---
+
+> **What this case shows** — the [ANOVA sibling](../gait-grf-anova-pathology-gaitrec/index.qmd) found the
+> five gait classes differ overall in vertical-GRF dynamic range, and noticed the four pathology classes
+> clustered. *Which* pairs differ? Here a **Tukey HSD** post-hoc answers it under family-wise error control.
+> The **newly-authored** `tukeyHSD` runs all 10 pairwise comparisons, reproducing base R **`TukeyHSD`** and
+> **`scipy.stats.tukey_hsd`** to machine precision. Healthy controls differ from **all four** pathology
+> classes (every adjusted p < 2e-11); **none** of the six pathology-pathology pairs differ (smallest p =
+> 0.61). **The dynamic range flags impairment, but does not tell the pathologies apart.**
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — the grouped feature → `tukeyHSD()` → read the pairwise comparisons.
+**Way of thinking** — an omnibus test says *something* differs; a post-hoc says *what*. Tukey HSD controls
+the family-wise error across all pairs, so "all healthy-vs-pathology significant, no pathology-pathology
+significant" is a calibrated statement, not ten uncorrected p-values.
+**Ecosystem usage** — `PhysioMoCap::grfLandmarks()` (via the sibling), `PhysioAnalysis::tukeyHSD()`.
+:::
+
+## Proposition
+
+In the Tukey HSD post-hoc of the vertical-GRF dynamic range across GaitRec's five gait classes (n=1844), all
+four healthy-vs-pathology pairs are significant (adjusted p < 2e-11) and none of the six pathology-pathology
+pairs are (smallest p = 0.61); `tukeyHSD` reproduces base R `TukeyHSD` and `scipy.stats.tukey_hsd` to machine
+precision.
+
+## Question & goal
+
+**The question is which groups differ, calibrated for multiplicity.** The ANOVA sibling certified the
+omnibus difference and explicitly deferred the pairwise structure; this fold performs the post-hoc, authoring
+the Tukey HSD op and resolving the open question.
+
+## Challenge & approach
+
+We take the same certified per-subject dynamic range (loading peak − mid-stance trough from `grfLandmarks`)
+for the five classes and run `tukeyHSD` — all 10 pairwise mean comparisons with studentized-range p-values
+and single-step family-wise error control — checking every difference and p-value against base R `TukeyHSD`
+and `scipy.stats.tukey_hsd`.
+
+```
+GaitRec dynamic range, 5 classes (HC, A, K, H, C), n=1844 → tukeyHSD (10 pairwise comparisons)
+  healthy vs pathology:   A-HC, K-HC, H-HC, C-HC   all p < 2e-11   (4/4 significant)
+  pathology vs pathology: K-A, H-A, H-K, C-A, C-K, C-H   all p > 0.05   (0/6 significant, min 0.61)
+     vs base R TukeyHSD          → max |p| ~ 1e-13
+     vs scipy.stats.tukey_hsd    → max |p| ~ 2e-11 (scipy floors tiny p to 0)
+```
+
+## Data
+
+**GaitRec (Horsak et al. 2020)**: the vertical-GRF dynamic range for the five gait classes — healthy
+control (n=208), ankle (n=483), knee (n=499), hip (n=364), calcaneus (n=290). The same matched cohort as the
+ANOVA sibling. Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Tukey HSD pairwise differences with 95% family-wise confidence intervals, sorted by effect. The four healthy-vs-pathology comparisons (red) sit far from zero with tight intervals — all significant. The six pathology-pathology comparisons (grey) straddle zero — none significant. The dynamic range separates healthy from pathological gait, and only that.](artifacts/figure.png)
+
+*How to read this:* an interval that clears zero is a significant difference. Every red (healthy-vs-pathology)
+interval clears zero; every grey (pathology-pathology) interval contains it. The GRF dynamic range is a
+healthy-vs-impaired discriminator, not a pathology classifier.
+
+| Comparison group | result |
+|---|---|
+| healthy vs pathology (A, K, H, C) | **4/4 significant** (adjusted p < 2e-11) |
+| pathology vs pathology (6 pairs) | **0/6 significant** (smallest p = 0.61) |
+| representative: ankle vs healthy | diff −0.142 BW, −log₁₀ p = 10.8 |
+| representative: knee vs ankle | p = 0.83 |
+| vs base R `TukeyHSD` (\|diff\|) | **< 1e-9** (~1e-13) |
+| vs `scipy.stats.tukey_hsd` (\|diff\|) | **< 1e-9** (~2e-11) |
+
+Every pairwise comparison equals both references to machine precision. Values trace to
+[`artifacts/tukey_summary.csv`](artifacts/tukey_summary.csv).
+
+## Conclusion
+
+`tukeyHSD` reproduces the reference on the certified dynamic range. The transferable takeaway: **follow an
+omnibus with a multiplicity-controlled post-hoc, and read the pattern, not just the p-values. Here the
+pattern is clean — the GRF dynamic range is a healthy-vs-impaired discriminator that cannot tell ankle, knee,
+hip and calcaneus gait apart. To grade the pathologies you need a different feature (the sibling case shows
+the push-off peak does).**
+
+## Open questions
+
+- The dynamic range separates healthy from pathological but not the pathologies; the push-off case shows a
+  different landmark grades them. A multivariate GRF-landmark profile (loading peak, trough, push-off,
+  impulses, loading rates) with a discriminant or classifier would give a fuller pathology fingerprint. The
+  single-feature Tukey post-hoc is the honest answer for the dynamic range. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| GRF landmarks (peaks, trough) | `grfLandmarks()` | PhysioMoCap |
+| One-way ANOVA (omnibus) | `oneWayAnova()` | PhysioAnalysis |
+| Tukey HSD (all pairwise post-hoc) | `tukeyHSD()` | PhysioAnalysis |
+
+**Reading the result.**
+
+- **adjusted p** — already corrected for all pairwise comparisons; compare directly to your alpha, no
+  further Bonferroni needed.
+- **the pattern** — group the comparisons (here healthy-vs-pathology vs pathology-pathology) and read which
+  block is significant; that is more informative than any single pair.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis)
+
+tukeyHSD(list(HC = hc_dr, Ankle = a_dr, Knee = k_dr, Hip = h_dr, Calcaneus = c_dr))
+# a data frame of all pairwise diffs, CIs and family-wise-adjusted p -- bit-for-bit vs base R and scipy
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/tukey_summary.csv`](artifacts/tukey_summary.csv), and [`audit.py`](audit.py) re-checks the
+pairwise differences and adjusted p-values, the machine-precision match against base R and scipy, the
+healthy-vs-pathology (4/4) and pathology-pathology (0/6) significance split, the comparison count, and the
+honestly noted scope (authors the new tukeyHSD op; dynamic range from the certified grfLandmarks; separates
+healthy vs pathological only; cross-sectional association).

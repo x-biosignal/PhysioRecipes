@@ -1,0 +1,11 @@
+{
+  "dataset": "MNE-Python fNIRS motor dataset (finger tapping)",
+  "source": "mne.datasets.fnirs_motor.data_path() (Participant-1)",
+  "format": "NIRx continuous-wave (.hdr/.wl1/.wl2), converted to SNIRF for the ecosystem reader",
+  "url": "https://mne.tools/stable/generated/mne.datasets.fnirs_motor.data_path.html",
+  "license": "openly distributed by MNE-Python for tutorials/examples",
+  "record_used": "single subject; 8 sources x 16 detectors x 2 wavelengths (760/850 nm) = 56 raw channels -> 28 source-detector pairs after the modified Beer-Lambert law; sampling 7.8125 Hz; ~50 min. Block-design finger-tapping task, three conditions (Control / Tapping_Left / Tapping_Right), 30 blocks each (5 s block duration), read from the recording's own event markers.",
+  "pipeline": "PhysioNIRS::readSNIRF -> intensityToOD (mean-baseline) -> mbll (modified Beer-Lambert, pathlength factor 6, Scholkmann DPF, the MNE-licensed haemoglobin extinction table) -> nirsActivationGLM (canonical HRF + polynomial drift + AR prewhitening) -> nirsActivationContrast (Tapping - Control, contrast c = [-1, 0.5, 0.5]).",
+  "cross_validation": "The Beer-Lambert step (mbll) is cross-validated against MNE-Python mne.preprocessing.nirs.beer_lambert_law(ppf=6.0) on the identical data: per-channel HbO and HbR correlation = 1.000000 in all 28 channels; the only difference is the concentration unit (PhysioNIRS uM vs MNE M, a 1e6 scale factor).",
+  "note": "The MNE dataset ships as NIRx, which MNE reads but cannot write to SNIRF; a SNIRF file was constructed from the intensity + probe geometry + event markers so the recipe uses the ecosystem's own reader (readSNIRF). The grand-average block response is baseline-corrected to the 2 s pre-onset window."
+}

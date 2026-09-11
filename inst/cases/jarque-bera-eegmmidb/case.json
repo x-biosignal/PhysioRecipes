@@ -1,0 +1,34 @@
+{
+  "id": "jarque-bera-eegmmidb",
+  "title": "Descriptive vs formal: the Jarque-Bera normality test (a newly-authored op) rejects, bit-for-bit vs scipy.stats",
+  "modality": ["eeg", "statistics", "normality-test", "cross-tool-validation", "signal-analysis"],
+  "packages": ["PhysioAnalysis"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "signalMoments found the eyes-closed EEG amplitude distribution descriptively near-Gaussian (mild skew/kurtosis). The Jarque-Bera test asks it formally: is the distribution actually normal? The ecosystem had no normality test; this case introduces a NEWLY-AUTHORED op, jarqueBeraTest (built on signalMoments). On a real eyes-closed posterior EEG channel it reproduces scipy.stats.jarque_bera BIT-FOR-BIT for both the statistic and the p-value; and the instructive nuance is that JB=15.5 REJECTS normality (p=4.3e-4) even though signalMoments finds the distribution descriptively near-Gaussian -- because at N=1600 the test detects the mild skew (-0.23) and kurtosis (+0.16), the same large-N power phenomenon as the decisive ADF and Ljung-Box rejections.",
+  "opdag": ["jarqueBeraTest"],
+  "claims": [
+    { "id": "jb_statistic", "statement": "Jarque-Bera statistic of the POz amplitude distribution", "value": 15.49279000, "artifact": "artifacts/jb_summary.csv", "status": "PASS" },
+    { "id": "jb_stat_diff_scipy", "statement": "|Jarque-Bera statistic - scipy.stats.jarque_bera| (bit-exact)", "value": 1.776357e-14, "artifact": "artifacts/jb_summary.csv", "status": "PASS" },
+    { "id": "jb_pvalue_diff_scipy", "statement": "|Jarque-Bera p-value - scipy p-value| (bit-exact)", "value": 4.011548e-18, "artifact": "artifacts/jb_summary.csv", "status": "PASS" },
+    { "id": "critical_value_95", "statement": "95% chi-square critical value at 2 df (the rejection threshold)", "value": 5.991465, "artifact": "artifacts/jb_summary.csv", "status": "PASS" },
+    { "id": "reject_normality", "statement": "the normality null is rejected (JB > critical; 1 = rejected)", "value": 1, "artifact": "artifacts/jb_summary.csv", "status": "PASS" },
+    { "id": "descriptive_near_gaussian", "statement": "signalMoments finds it descriptively near-Gaussian -- yet JB rejects (the large-N nuance)", "value": 1, "artifact": "artifacts/jb_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored jarqueBeraTest op is validated against scipy.stats.jarque_bera on the identical signal. Both compute JB = N/6 (S^2 + K^2/4) and the chi-square(2) p-value; both the statistic and the p-value agree BIT-FOR-BIT (|diff| ~2e-14 / ~4e-18). JB=15.5 exceeds the 5.99 critical value, rejecting normality (p=4.3e-4), while signalMoments finds the distribution descriptively near-Gaussian.",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), channel POz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/jb_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the newly-authored jarqueBeraTest reproduces scipy.stats.jarque_bera bit-for-bit for both the statistic and the p-value; (2) JB rejects normality yet signalMoments finds the distribution descriptively near-Gaussian -- the large-N nuance. HONEST scope: (1) this op is NEWLY AUTHORED, building on the just-added signalMoments, as the formal normality test the ecosystem lacked (the confirmatory partner of the descriptive moments, analogous to Ljung-Box for the ACF); (2) this is a genuine MACHINE-PRECISION match -- the identical closed-form JB statistic and chi-square p-value, so the residual is the floating-point floor, not a convention agreement; (3) the finding is an instructive NUANCE: JB = 15.5 REJECTS normality (p = 4.3e-4, above the 5.99 critical value), even though signalMoments finds the distribution descriptively near-Gaussian (|skewness| < 0.5 and |excess kurtosis| < 1) -- because at N = 1600 the test has enough power to detect the mild skew (-0.23) and kurtosis (+0.16); this is the same large-N phenomenon as the decisive ADF and Ljung-Box rejections, and the honest lesson is that a formal normality test on a long physiological signal will almost always reject, so 'approximately Gaussian' is a descriptive (effect-size) statement, not a test outcome; (4) the value is a signal property; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "Because JB (and any normality test) rejects at large N, the practically useful question is effect size, not significance: reporting the moments (skew/kurtosis) alongside JB, or subsampling to a fixed N for a comparable test, would separate 'meaningfully non-Gaussian' from 'trivially significant'. A per-epoch JB (like per-epoch kurtosis) is also an artifact-screening layer. Documented, not escalated.", "artifact": "artifacts/jb_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.stats.jarque_bera (Python)"],
+  "status": "validated"
+}

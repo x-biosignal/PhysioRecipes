@@ -1,0 +1,36 @@
+{
+  "id": "adl-rasch-verbagg",
+  "title": "From an ordinal ADL scale to an interval measure: Rasch analysis of a polytomous rating scale",
+  "modality": ["adl", "psychometrics", "rasch", "outcome-measure"],
+  "packages": ["PhysioAppKit", "PhysioClinical"],
+  "dataset": {
+    "name": "VerbAgg (Verbal Aggression) polytomous item-response data",
+    "version": "lme4 R package (CRAN)",
+    "record": "316 persons x 24 three-category items (no / perhaps / yes); the canonical Partial Credit Model benchmark, with the SAME ordered-category structure as ADL/IADL scales (Barthel, Lawton)",
+    "url": "https://cran.r-project.org/package=lme4",
+    "public": true,
+    "citation": "De Boeck P, Wilson M (eds). Explanatory Item Response Models. Springer 2004; data distributed with lme4 (Bates D et al., J Stat Softw 2015;67:1-48)."
+  },
+  "proposition": "A raw ADL-scale total is NOT an interval measure: equal point-gains mean different real gains at different score levels. Fitting a polytomous Rasch (Partial Credit) model converts the ordered-category responses to an interval (logit) scale and ranks the items by the ability each demands. On real polytomous data the ecosystem's dependency-free JMLE engine reproduces the reference eRm (conditional ML) item and person calibrations essentially exactly (item-location Spearman and Pearson = 1.00, person-measure Pearson = 1.00), with a person separation reliability of 0.86.",
+  "opdag": ["raschAnalyze", "pcm_measure"],
+  "claims": [
+    { "id": "item_spearman",     "statement": "item-difficulty rank agreement, pcm_measure (JMLE) vs eRm (CML)", "value": 1.0,   "artifact": "artifacts/agreement.csv", "status": "PASS" },
+    { "id": "item_pearson",      "statement": "item-difficulty linear agreement vs eRm",                          "value": 1.0,   "artifact": "artifacts/agreement.csv", "status": "PASS" },
+    { "id": "person_pearson",    "statement": "person-measure agreement vs eRm",                                  "value": 1.0,   "artifact": "artifacts/agreement.csv", "status": "PASS" },
+    { "id": "person_reliability","statement": "person separation reliability",                                    "value": 0.863, "artifact": "artifacts/agreement.csv", "status": "PASS" },
+    { "id": "n_items",           "statement": "items calibrated",                                                 "value": 24,    "artifact": "artifacts/item_hierarchy.csv", "status": "PASS" },
+    { "id": "n_persons",         "statement": "non-extreme persons calibrated (of 316; 6 all-min/all-max dropped)", "value": 310, "artifact": "artifacts/agreement.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "eRm (Mair & Hatzinger) Partial Credit Model by conditional maximum likelihood -- an independent estimator and implementation",
+    "data": "REAL -- lme4::VerbAgg, 316 persons x 24 three-category items (no/perhaps/yes)",
+    "artifacts": ["artifacts/item_hierarchy.csv", "artifacts/agreement.csv"],
+    "all_pass": true,
+    "note": "JMLE (ours) and CML (eRm) are different estimators, so exact numeric equality is not guaranteed a priori; here they agree to 1.00 in item and person ordering AND scaling on this 24-item / 316-person set. The item hierarchy is the substantive output (want-to-curse easiest to endorse, do-shout hardest -- the established VerbAgg finding); for a real ADL instrument the same call runs via raschAnalyze() on the Barthel/Lawton item responses. What does NOT transfer is a universal cut score: the logit scale is anchored to this item set, so measures are comparable within, not across, instruments unless co-calibrated."
+  },
+  "open_questions": [
+    { "q": "Person separation reliability is 0.86 for 24 items; a shorter ADL scale (Barthel's 10 weighted items, Katz's 6) will separate persons less precisely, so the interval measure's standard error near the floor and ceiling should be reported per person rather than assumed uniform. Documented, not escalated.", "artifact": "artifacts/item_hierarchy.csv", "escalate": null }
+  ],
+  "reference_tools": ["eRm (CRAN)"],
+  "status": "validated"
+}

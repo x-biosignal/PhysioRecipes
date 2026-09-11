@@ -1,0 +1,38 @@
+{
+  "id": "gait-grf-pushoff-dunn-gaitrec",
+  "title": "Push-off grades gait pathology, certified: Dunn's post-hoc finds 4/6 pathology-pathology pairs differ (vs 0/6 for the dynamic range), calcaneus most distinct -- machine precision vs PMCMRplus and scikit_posthocs",
+  "modality": ["gait", "ground-reaction-force", "pathology", "cohort", "cross-tool-validation"],
+  "packages": ["PhysioAnalysis", "PhysioMoCap"],
+  "dataset": {
+    "name": "GaitRec -- large-scale ground reaction force dataset of healthy and impaired gait", "version": "2020",
+    "record": "vertical-GRF push-off peak (grfLandmarks 3rd landmark); five gait classes: healthy control (n=208), ankle (n=483), knee (n=499), hip (n=364), calcaneus (n=290)",
+    "url": "https://doi.org/10.1038/s41597-020-0481-z", "public": true,
+    "citation": "Horsak B, Slijepcevic D, Raberger AM, Schwab C, Worisch M, Zeppelzauer M. GaitRec, a large-scale ground reaction force dataset of healthy and impaired gait. Scientific Data 2020;7:143. doi:10.1038/s41597-020-0481-z."
+  },
+  "proposition": "The Kruskal-Wallis sibling found the push-off peak separates the five gait classes; its open question asked which pairs differ. The NEWLY-AUTHORED dunnTest runs all 10 pairwise Dunn comparisons (Bonferroni), reproducing PMCMRplus::kwAllPairsDunnTest and scikit_posthocs.posthoc_dunn to machine precision. Healthy controls differ from all four pathology classes (4/4, |z| up to 16.0) AND -- unlike the dynamic range, where the Tukey sibling found 0/6 pathology-pathology pairs -- the push-off peak GRADES the pathologies: 4 of 6 pathology-pathology pairs are significant (calcaneus distinct from ankle, knee and hip; hip distinct from ankle), the calcaneus propulsion deficit the most distinct.",
+  "opdag": ["dunnTest"],
+  "claims": [
+    { "id": "max_abs_z", "statement": "largest Dunn z-statistic (healthy control vs calcaneus, the strongest separation)", "value": 16.0253871660, "artifact": "artifacts/dunn_summary.csv", "status": "PASS" },
+    { "id": "p_adj_C_A", "statement": "Bonferroni-adjusted p of calcaneus vs ankle (a significant pathology-pathology pair)", "value": 0.0000017246, "artifact": "artifacts/dunn_summary.csv", "status": "PASS" },
+    { "id": "p_adj_K_A", "statement": "Bonferroni-adjusted p of knee vs ankle (borderline, non-significant)", "value": 0.0674892556, "artifact": "artifacts/dunn_summary.csv", "status": "PASS" },
+    { "id": "p_adj_H_K", "statement": "Bonferroni-adjusted p of hip vs knee (non-significant)", "value": 1.0, "artifact": "artifacts/dunn_summary.csv", "status": "PASS" },
+    { "id": "max_diff_z_pmcmr", "statement": "max |dunnTest z - PMCMRplus z| across all 10 pairs (machine precision)", "value": 0, "artifact": "artifacts/dunn_summary.csv", "status": "PASS" },
+    { "id": "max_diff_padj_scipy", "statement": "max |dunnTest p_adj - scikit_posthocs.posthoc_dunn p_adj| across all 10 pairs (machine precision)", "value": 0, "artifact": "artifacts/dunn_summary.csv", "status": "PASS" },
+    { "id": "n_sig_hc_vs_pathology", "statement": "number of healthy-vs-pathology pairs significant (all 4)", "value": 4, "artifact": "artifacts/dunn_summary.csv", "status": "PASS" },
+    { "id": "n_sig_pathology_pathology", "statement": "number of pathology-pathology pairs significant (4 of 6 -- push-off grades the pathologies)", "value": 4, "artifact": "artifacts/dunn_summary.csv", "status": "PASS" },
+    { "id": "n_pairs", "statement": "total pairwise comparisons (5 choose 2)", "value": 10, "artifact": "artifacts/dunn_summary.csv", "status": "PASS" },
+    { "id": "n_total", "statement": "total subjects across the five classes", "value": 1844, "artifact": "artifacts/dunn_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored dunnTest op (all pairwise rank comparisons after Kruskal-Wallis, tie-corrected rank variance, Bonferroni family-wise control) is validated against BOTH the PMCMRplus package (kwAllPairsDunnTest) AND scikit_posthocs.posthoc_dunn -- a triple check with the independent op formula. Across all 10 pairwise comparisons the z-statistics match PMCMRplus to ~2e-15 and the Bonferroni-adjusted p-values match scikit_posthocs to ~7e-17 (machine precision). The push-off peaks come from PhysioMoCap::grfLandmarks (certified in the sibling gait-grf-gaitrec case).",
+    "data": "REAL -- GaitRec (Horsak et al. 2020), vertical-GRF push-off peak, five gait classes: healthy control (n=208), ankle (n=483), knee (n=499), hip (n=364), calcaneus (n=290)",
+    "artifacts": ["artifacts/dunn_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) dunnTest reproduces PMCMRplus::kwAllPairsDunnTest and scikit_posthocs.posthoc_dunn to machine precision on all 10 pairwise comparisons; (2) the push-off peak grades the pathologies, unlike the dynamic range. HONEST scope: (1) this AUTHORS A NEW OP, dunnTest (all pairwise rank comparisons after Kruskal-Wallis, tie-corrected rank variance, Bonferroni family-wise control; the non-parametric counterpart of tukeyHSD), and reuses the certified grfLandmarks-derived push-off peak from the sibling gait-grf-pushoff-kruskal-gaitrec case; (2) the z-statistics and adjusted p-values reproduce base R's Dunn formula, the PMCMRplus package (z to ~2e-15, adjusted p to ~4e-40) AND scikit_posthocs.posthoc_dunn (adjusted p to ~7e-17) to MACHINE PRECISION; (3) the finding: healthy controls differ from all four pathology classes (4/4 pairs significant, |z| up to 16.0) AND -- in sharp contrast to the dynamic range, where the Tukey sibling (gait-grf-tukey-pathology-gaitrec) found 0/6 pathology-pathology pairs -- the push-off peak GRADES the pathologies: 4 of the 6 pathology-pathology pairs are significant (calcaneus differs from ankle p~2e-6, from knee p~3e-13 and from hip p~2e-15; hip differs from ankle p~2e-3), while knee-vs-ankle (p=0.067) and hip-vs-knee (p=1.0) are not; the calcaneus group's propulsion deficit is the most distinct; (4) this resolves the Kruskal case's open question and, with the Tukey sibling, shows the two GRF features play different roles -- the dynamic range flags impairment, the push-off peak grades it; (5) a cross-sectional cohort (ASSOCIATION, NOT causation); run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "The push-off peak grades the pathologies but does not fully separate them (knee-vs-ankle and hip-vs-knee remain non-significant); a multivariate GRF-landmark profile (loading peak, mid-stance trough, push-off, impulses, loading rates) with a discriminant or classifier would give a fuller pathology fingerprint and quantify which features separate which classes. The single-feature Dunn post-hoc shown here is the honest answer for the push-off peak. Documented, not escalated.", "artifact": "artifacts/dunn_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["PMCMRplus::kwAllPairsDunnTest (R)", "scikit_posthocs.posthoc_dunn (Python)"],
+  "status": "validated"
+}

@@ -1,0 +1,36 @@
+{
+  "id": "sampen-apen-eegmmidb",
+  "title": "Sample and approximate entropy (shipped ops) reproduce antropy AND NeuroKit2 bit-for-bit -- and the ApEn self-match bias",
+  "modality": ["eeg", "complexity", "entropy", "cross-tool-validation", "signal-analysis"],
+  "packages": ["PhysioMoCap"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "Sample entropy (Richman-Moorman) and approximate entropy (Pincus) are the two most widely used regularity measures. The ecosystem ships both (PhysioMoCap::sampleEntropy, approximateEntropy) but had certified them only against a base-R Pincus recompute on accelerometer data. This case is their first certification against the gold-standard Python references on EEG: on a real eyes-closed posterior channel both ops reproduce BOTH antropy AND NeuroKit2 BIT-FOR-BIT (max |diff| ~2e-16 vs each). The finding: sample entropy (1.327) exceeds approximate entropy (1.292) -- the textbook ApEn self-match bias, in which ApEn counts each template's match with itself and so systematically underestimates entropy; SampEn removes the self-count and is the less biased estimator.",
+  "opdag": ["sampleEntropy", "approximateEntropy"],
+  "claims": [
+    { "id": "sample_entropy", "statement": "sample entropy (Richman-Moorman, m=2, r=0.2*SD) of the POz channel", "value": 1.3272319919, "artifact": "artifacts/sampen_summary.csv", "status": "PASS" },
+    { "id": "approximate_entropy", "statement": "approximate entropy (Pincus, m=2, r=0.2*SD) of the POz channel", "value": 1.2922631002, "artifact": "artifacts/sampen_summary.csv", "status": "PASS" },
+    { "id": "max_diff_sampen_antropy", "statement": "|sampleEntropy - antropy.sample_entropy| (bit-exact)", "value": 0, "artifact": "artifacts/sampen_summary.csv", "status": "PASS" },
+    { "id": "max_diff_sampen_neurokit", "statement": "|sampleEntropy - NeuroKit2 entropy_sample| (bit-exact)", "value": 2.22044604925031e-16, "artifact": "artifacts/sampen_summary.csv", "status": "PASS" },
+    { "id": "max_diff_apen_antropy", "statement": "|approximateEntropy - antropy.app_entropy| (bit-exact)", "value": 0, "artifact": "artifacts/sampen_summary.csv", "status": "PASS" },
+    { "id": "max_diff_apen_neurokit", "statement": "|approximateEntropy - NeuroKit2 entropy_approximate| (bit-exact)", "value": 0, "artifact": "artifacts/sampen_summary.csv", "status": "PASS" },
+    { "id": "sampen_gt_apen", "statement": "sample entropy exceeds approximate entropy (the ApEn self-match bias)", "value": 1, "artifact": "artifacts/sampen_summary.csv", "status": "PASS" },
+    { "id": "n_samples", "statement": "samples in the analyzed channel (10 s at 160 Hz)", "value": 1600, "artifact": "artifacts/sampen_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The shipped PhysioMoCap::sampleEntropy and approximateEntropy ops are validated against BOTH antropy (sample_entropy, app_entropy) AND NeuroKit2 (entropy_sample, entropy_approximate) on the identical signal -- a double external reference for each. All compute template-match entropies (Chebyshev distance, tolerance r = 0.2*SD, embedding m = 2) and agree BIT-FOR-BIT (max |diff| ~2e-16 vs each). The ApEn-vs-SampEn relationship is reported.",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), channel POz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/sampen_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) both shipped ops reproduce two gold-standard references bit-for-bit; (2) sample entropy exceeds approximate entropy (the ApEn self-match bias). HONEST scope: (1) this is a CROSS-TOOL AUDIT of shipped, registered ops (PhysioMoCap::sampleEntropy, approximateEntropy) -- these are NOT NEW OPS; they were previously certified only against an independent base-R Pincus recompute on accelerometer data (the gait-regularity case), so this is their FIRST certification against the gold-standard Python references (antropy, NeuroKit2) and on EEG; (2) both ops reproduce BOTH antropy AND NeuroKit2 BIT-FOR-BIT (max |diff| ~2e-16 vs each) -- a genuine machine-precision agreement of the same template-counting algorithm (Chebyshev distance, tolerance r a fraction of the SD, inclusive match), NOT A CONVENTION AGREEMENT; (3) the finding: sample entropy (1.327) exceeds approximate entropy (1.292) -- the textbook ApEn self-match bias, in which approximate entropy counts each template's match with itself and so systematically UNDERESTIMATEs entropy (over-estimates regularity); sample entropy removes the self-count and is the less biased estimator; (4) the values are signal properties on one subject/segment; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "Both entropies depend on the tolerance r and embedding m; a small r or short segment can leave templates with no matches (SampEn undefined via log(0)). Reporting SampEn/ApEn together with the match counts, or sweeping (m, r), guards against the degenerate regime; multiscale entropy extends this across coarse-grainings. Documented, not escalated.", "artifact": "artifacts/sampen_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["antropy.sample_entropy / app_entropy (Python)", "NeuroKit2 entropy_sample / entropy_approximate (Python)"],
+  "status": "validated"
+}

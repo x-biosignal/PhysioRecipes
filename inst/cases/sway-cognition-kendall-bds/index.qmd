@@ -1,0 +1,127 @@
+---
+title: "The cognitive-motor link, certified: slower processing speed tracks more postural sway"
+subtitle: "Kendall's tau-b completes the rank-correlation trio — the robust choice for skewed clinical scores"
+categories: [posturography, balance, cognition, validated]
+author: "Yusuke Matsui"
+date: "2026-09-11"
+---
+
+> **What this case shows** — standing still is not purely mechanical: attention and executive function help
+> hold posture, so people with slower cognitive processing tend to sway more (the cognitive-motor link
+> behind dual-task interference and fall risk). Across 158 BDS subjects, eyes-closed-foam sway rises with
+> Trail Making Test A time. Each subject's sway comes from the **certified** `swayMetrics`; the
+> **newly-authored** `kendallTau` — Kendall's tau-b, the concordance-based rank correlation — measures the
+> association, reproducing base R **`cor.test(method="kendall")`** and **`scipy.stats.kendalltau`**
+> **bit-for-bit**. tau-b = **0.368** (p~7e-12). On the same data Pearson r = 0.335 < Spearman rho = 0.532,
+> so the relation is more monotonic than linear — which is why a rank correlation belongs here.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — one `swayMetrics()` value and one cognitive score per subject → `kendallTau()`.
+**Way of thinking** — pick the correlation that fits the data. When both variables are skewed clinical
+scores with ties, Kendall's tau-b (concordance among pairs) is more robust than Pearson's r; comparing r,
+rho and tau tells you whether a relationship is linear or merely monotonic.
+**Ecosystem usage** — `PhysioMoCap::swayMetrics()`, `PhysioAnalysis::kendallTau()`.
+:::
+
+## Proposition
+
+In the BDS cohort (n=158), eyes-closed-foam COP path length is positively associated with Trail Making Test
+A time (slower processing → more sway): Kendall's tau-b = 0.368, z = 6.85, p ~ 7.2e-12; `kendallTau`
+reproduces `scipy.stats.kendalltau` and base R `cor.test(method="kendall")` bit-for-bit. On the same data
+Pearson r = 0.335 and Spearman rho = 0.532.
+
+## Question & goal
+
+**The question is a link and the right correlation for it: does slower cognitive processing track more
+postural sway, and does Kendall's tau-b reproduce the reference?** This authors the third rank-correlation
+method (after Pearson and Spearman), the robust choice for skewed, tied clinical scores.
+
+## Challenge & approach
+
+For each subject we pair the eyes-closed-foam COP path length (from `swayMetrics`, certified against the
+Prieto reference in the [sway-posturography-bds](../sway-posturography-bds/index.qmd) case) with the Trail
+Making Test A time, and compute `kendallTau` — checking tau-b and its p against `scipy.stats.kendalltau` and
+base R, and comparing with Pearson r and Spearman rho.
+
+```
+158 subjects: TMT-A time (processing speed) vs eyes-closed-foam sway (swayMetrics, certified)
+  Kendall tau-b = 0.368,  z = 6.85,  p ~ 7.2e-12
+     vs scipy.stats.kendalltau           → |diff| = 0 (bit-for-bit)
+     vs base R cor.test(method="kendall") → |diff| = 0 (bit-for-bit)
+  context:  Pearson r = 0.335  <  Spearman rho = 0.532   (monotonic > linear)
+```
+
+## Data
+
+**Santos & Duarte (2016) BDS balance dataset (figshare)**: per subject, Trail Making Test part A time (a
+timed visual-attention / processing-speed task) and eyes-closed-foam COP path length (the most challenging
+quiet-standing condition), for the 158 subjects with both. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Eyes-closed-foam sway vs Trail Making Test A time for 158 subjects, with a LOWESS trend (red). Sway rises as the test time lengthens — Kendall tau-b = 0.368 (p~7e-12). The three correlation coefficients (Pearson r = 0.335, Spearman rho = 0.532, Kendall tau-b = 0.368) all agree in sign; the rank coefficients exceed Pearson, marking a monotonic rather than strictly linear relationship.](artifacts/figure.png)
+
+*How to read this:* the upward trend is the cognitive-motor link — slower processing, more sway. That
+Spearman and Kendall exceed Pearson says the association is monotonic but curved (both variables are
+right-skewed), so a rank correlation reads it more faithfully than a straight-line r.
+
+| Quantity | Value |
+|---|--:|
+| **Kendall tau-b** | **0.368** |
+| z (normal approx.) | 6.85 |
+| −log₁₀ p | 11.1 (p ~ 7.2e-12) |
+| Spearman rho / Pearson r | 0.532 / 0.335 |
+| n | 158 |
+| vs `scipy.stats.kendalltau` (\|diff\|) | **0** (bit-for-bit) |
+| vs base R `cor.test(kendall)` (\|diff\|) | **0** (bit-for-bit) |
+
+The tau-b equals both references exactly. Values trace to
+[`artifacts/sway_cognition_kendall_summary.csv`](artifacts/sway_cognition_kendall_summary.csv).
+
+## Conclusion
+
+`kendallTau` completes the rank-correlation trio (Pearson / Spearman / Kendall) and reproduces the reference
+on the certified `swayMetrics`. The transferable takeaway: **the correlation you report should match your
+data — for skewed, tied clinical scores, Kendall's tau-b (pair concordance) is the robust read-out, and
+comparing it with Pearson r and Spearman rho reveals whether a link is linear or monotonic. Here it
+certifies a real cognitive-motor association: slower processing speed goes with more sway.**
+
+## Open questions
+
+- The association is marginal (unadjusted); age is a shared correlate of both slower TMT and more sway, so a
+  partial correlation or a multiple regression adjusting for age would separate a direct cognitive-motor
+  link from age confounding. TMT-B (set-shifting) and explicit dual-task paradigms would probe executive
+  control specifically. The single tau-b is the robust first-line rank correlation. *Documented, not
+  escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Posturography sway metrics | `swayMetrics()` | PhysioMoCap |
+| Kendall's tau-b | `kendallTau()` | PhysioAnalysis |
+| Pearson / Spearman correlation | `correlationTest(..., method=)` | PhysioAnalysis |
+
+**Reading the result.**
+
+- **tau-b** — the concordance of ranked pairs (−1 to 1); more robust to outliers and ties than Pearson,
+  and more conservative than Spearman (tau ≈ 2/3 · rho for many distributions).
+- **r vs rho vs tau** — if the rank coefficients exceed Pearson r, the relationship is monotonic but not
+  linear; report the one that fits and say why.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioMoCap); library(PhysioAnalysis)
+
+sway <- vapply(subjects, function(s) swayMetrics(cop[[s]], 100)$path_length, numeric(1))
+kendallTau(tmt_time, sway)   # tau-b, p, z -- bit-for-bit vs scipy.stats.kendalltau and base R cor.test
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/sway_cognition_kendall_summary.csv`](artifacts/sway_cognition_kendall_summary.csv), and
+[`audit.py`](audit.py) re-checks the tau-b, its z and p, the bit-exact match against scipy and base R, the
+positive direction, the Pearson/Spearman context (rank > linear), the sample size, and the honestly noted
+scope (authors the new kendallTau op; sway from the certified swayMetrics; marginal/unadjusted, age a shared
+correlate; cross-sectional association).

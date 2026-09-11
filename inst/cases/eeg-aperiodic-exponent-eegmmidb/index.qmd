@@ -1,0 +1,149 @@
+---
+title: "The 1/f exponent, reproduced: EEG aperiodic parameterization matches the canonical fooof"
+subtitle: "A worked qEEG case study validating specparam against fooof across 64 channels of real resting EEG"
+categories: [eeg, spectral, aperiodic, qeeg, biomarker, validated]
+author: "Yusuke Matsui"
+date: "2026-09-03"
+---
+
+> **What this case shows** — the EEG power spectrum is not just its oscillatory
+> peaks: beneath them lies an **aperiodic 1/f background** whose slope, the
+> **aperiodic exponent**, has become a widely-used marker of cortical
+> excitation/inhibition balance and state (Donoghue et al. 2020). The question is
+> whether the ecosystem's parameterization of that background is trustworthy.
+> Running `eegAperiodic` (the specparam engine) on all **64 channels** of a real
+> eyes-closed resting EEG and comparing, channel by channel, against the canonical
+> Python **fooof** shows they agree strongly: the per-channel exponents correlate
+> **r = 0.98**, with a mean absolute difference of just **0.07**, and both engines
+> return physiologically plausible resting exponents (specparam **1.38**, fooof
+> **1.45**; mean fit **R² = 0.93**). **The ecosystem reproduces the field-standard
+> tool — so its aperiodic exponent is a validated qEEG biomarker, not a bespoke
+> number.**
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — to parameterize the spectrum: read the EEG → call
+`eegAperiodic(pe, freq_range, aperiodic_mode)` → read the per-channel **exponent**
+(the 1/f slope), **offset**, and the separated oscillatory **peaks** → map the
+exponent as a qEEG biomarker (topomap, group contrast).
+**Way of thinking** — never read a "band power" without accounting for the 1/f
+background: a change in the aperiodic slope shifts *every* band. specparam / FOOOF
+separates the genuine oscillations from the 1/f, so the exponent and the peaks are
+each interpretable on their own.
+**Ecosystem usage** — `PhysioEEG::eegAperiodic()` (EEG-facing) wraps
+`PhysioAnalysis::specparam()` (the engine); pair with `eegComplexity()` for
+time-domain complexity and `bandPower()` for the oscillatory bands.
+:::
+
+## Proposition
+
+On all 64 channels of a real eyes-closed resting EEG (eegmmidb S001R02),
+`eegAperiodic` reproduces the canonical Python fooof: the per-channel aperiodic
+exponents correlate r = 0.98, mean |diff| = 0.07, both means ~1.4 (mean R² = 0.93).
+
+## Question & goal
+
+**The question is whether the ecosystem's 1/f estimate is the field-standard
+estimate.** The aperiodic exponent is only useful as a biomarker if it is
+*comparable* — if the number the ecosystem reports is the number fooof would
+report. The goal is a channel-by-channel head-to-head on real data, feeding the
+*identical* power spectrum to both engines so any difference is the algorithm, not
+the input.
+
+## Challenge & approach
+
+Two independent implementations of the same FOOOF model can drift — they fit the 1/f
+iteratively and remove oscillatory peaks with slightly different heuristics. So we
+compute the Welch PSD once, hand the *same* spectrum to `eegAperiodic` (specparam)
+and to fooof with matched settings, and compare the per-channel exponents.
+
+```
+readEDF → eegAperiodic (specparam, per channel) ┐
+                                                ├─ compare exponents → r, mean|diff|
+same Welch PSD → fooof (Python, matched)        ┘
+```
+
+## Data
+
+**eegmmidb — EEG Motor Movement/Imagery Database (PhysioNet)**: subject S001,
+baseline run **R02 (eyes-closed rest)**, all 64 channels, 160 Hz, ~61 s — the
+canonical resting condition for a 1/f analysis. The same EDF the sibling
+`eeg-alpha` / `eeg-berger` cases read. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the aperiodic exponent for each of the 64 channels — eegAperiodic (specparam) versus the canonical fooof, on the dashed identity line (r = 0.98, mean |diff| = 0.07). Right: the per-channel absolute difference, sorted; only 4 of 64 channels (occipital, plus one temporal edge) exceed 0.15 (red), where a strong alpha peak makes the two peak-removal heuristics diverge.](artifacts/figure.png)
+
+*How to read this:* if the ecosystem reproduced fooof exactly, every point on the
+left would sit on the dashed line. They cluster tightly along it (r = 0.98); the
+spread on the right is small and concentrated at the occipital electrodes.
+
+| Quantity | This reproduction | Reference |
+|---|---|---|
+| Exponent correlation (64 ch) | **0.98** | fooof (Python) |
+| Mean \|exponent diff\| | **0.070** | — |
+| Mean exponent | **1.38** (specparam) | **1.45** (fooof) |
+| Mean fit R² | **0.93** | — |
+
+The two engines agree strongly across the head, with a small systematic offset
+(specparam slightly below fooof) and the largest divergence at the occipital
+electrodes. Values trace to
+[`artifacts/eeg_aperiodic_summary.csv`](artifacts/eeg_aperiodic_summary.csv) and the
+per-channel table
+[`artifacts/eeg_aperiodic_by_channel.csv`](artifacts/eeg_aperiodic_by_channel.csv).
+
+## Conclusion
+
+The ecosystem's aperiodic parameterization reproduces the field-standard fooof on
+real resting EEG — so the aperiodic exponent it reports is a *validated* qEEG
+biomarker. The transferable takeaway: **separate the 1/f background before you read
+the spectrum, and use an estimator you have checked against the canonical tool — the
+exponent is only a biomarker if it is comparable.**
+
+## Open questions
+
+- The occipital divergence traces to peak-model differences under a strong alpha
+  rhythm; a **knee-mode** fit, a broader peak-width prior, or matched peak-removal
+  settings would likely tighten the agreement there. Extending to multi-subject
+  **test-retest** (is the exponent a stable trait?), an **eyes-open vs eyes-closed**
+  contrast (does it track arousal?), and a clinical group difference would turn a
+  validated estimator into a qEEG biomarker study. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| aperiodic (1/f) parameterization | `eegAperiodic()` | PhysioEEG |
+| the specparam engine (any signal) | `specparam()` | PhysioAnalysis |
+| band power (oscillatory bands) | `bandPower()` | PhysioEEG |
+| time-domain complexity | `eegComplexity()` | PhysioEEG |
+
+**Choosing the parameters.**
+
+- **freq_range** — fit over a range that captures the 1/f without edge artefacts
+  (here 1–40 Hz); avoid the line-noise band.
+- **aperiodic_mode** — `"fixed"` for a straight 1/f in log-log; `"knee"` when the
+  spectrum bends (broadband or long recordings).
+- **peak settings** — `max_n_peaks` / `peak_width_limits` control how oscillations
+  are separated from the background; mismatched peak settings are the usual source
+  of exponent disagreement (see the occipital channels here).
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioEEG)
+
+pe <- readEDF("S001R02.edf")                       # 64-ch eyes-closed rest
+ap <- eegAperiodic(pe, freq_range = c(1, 40), aperiodic_mode = "fixed")
+ap$aperiodic$exponent                              # per-channel 1/f slope (biomarker)
+mean(ap$aperiodic$exponent)                         # 1.38  (fooof: 1.45)
+mean(ap$aperiodic$r_squared)                        # 0.93  (fit quality)
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/`](artifacts/) — the summary in
+[`eeg_aperiodic_summary.csv`](artifacts/eeg_aperiodic_summary.csv) and the
+per-channel exponents in
+[`eeg_aperiodic_by_channel.csv`](artifacts/eeg_aperiodic_by_channel.csv) — and
+[`audit.py`](audit.py) re-checks each reported number, the fooof agreement, the fit
+quality, and the honestly-reported occipital divergence.

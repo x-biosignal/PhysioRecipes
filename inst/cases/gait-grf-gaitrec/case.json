@@ -1,0 +1,35 @@
+{
+  "id": "gait-grf-gaitrec",
+  "title": "Knee-pathology gait signature in real GaitRec ground-reaction force",
+  "modality": ["gait", "grf"],
+  "packages": ["PhysioGaitNorm", "PhysioIO"],
+  "dataset": {
+    "name": "GaitRec",
+    "record": "vertical GRF (left+right), healthy controls (HC) vs knee-pathology (K)",
+    "url": "https://doi.org/10.6084/m9.figshare.c.4788012",
+    "public": true,
+    "citation": "Horsak B, et al. GaitRec, a large-scale ground reaction force dataset of healthy and impaired gait. Sci Data. 2020;7:143."
+  },
+  "proposition": "On real GaitRec vertical ground-reaction force, the ecosystem reproduces the knee-pathology gait signature versus healthy controls: a reduced first (loading) peak (1.019 vs 1.116 BW) and a raised mid-stance trough (0.836 vs 0.744 BW) — the flattened GRF double-hump of reduced weight-acceptance modulation.",
+  "opdag": ["readGRF", "timeNormalizeStance", "grfLandmarks"],
+  "claims": [
+    { "id": "control_peak1_bw", "statement": "control first (loading) GRF peak, BW", "value": 1.1159, "artifact": "artifacts/gaitrec_grf_realdata_validation.csv", "status": "PASS" },
+    { "id": "patient_peak1_bw", "statement": "knee-pathology first (loading) GRF peak, BW (reduced)", "value": 1.0185, "artifact": "artifacts/gaitrec_grf_realdata_validation.csv", "status": "PASS" },
+    { "id": "control_trough_bw", "statement": "control mid-stance GRF trough, BW", "value": 0.7437, "artifact": "artifacts/gaitrec_grf_realdata_validation.csv", "status": "PASS" },
+    { "id": "patient_trough_bw", "statement": "knee-pathology mid-stance GRF trough, BW (raised)", "value": 0.8355, "artifact": "artifacts/gaitrec_grf_realdata_validation.csv", "status": "PASS" },
+    { "id": "control_peak2_bw", "statement": "control second (push-off) GRF peak, BW", "value": 1.0978, "artifact": "artifacts/gaitrec_grf_realdata_validation.csv", "status": "PASS" },
+    { "id": "patient_peak2_bw", "statement": "knee-pathology second (push-off) GRF peak, BW (reduced)", "value": 1.0381, "artifact": "artifacts/gaitrec_grf_realdata_validation.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "GaitRec cohort contrast (HC vs K) and the established clinical GRF-modulation pattern",
+    "data": "REAL — GaitRec vertical GRF, n_control = 180, n_patient = 178 (K), BW-normalised, 0-100% stance",
+    "artifacts": ["artifacts/gaitrec_grf_realdata_validation.csv", "artifacts/gaitrec_grf_group_comparison.csv"],
+    "all_pass": true,
+    "note": "The reduced loading/push-off peaks and the raised mid-stance trough in the K group reproduce the expected reduced weight-acceptance modulation of pathological gait. GaitRec provides no joint kinematics/timing, so no ICC/knee-angle claims are made here (those tracks are synthetic in the source and are excluded)."
+  },
+  "open_questions": [
+    { "q": "None escalated: this reproduces an established clinical GRF pattern on public data. Joint-kinematics reproducibility is out of scope for GaitRec (not measured).", "artifact": null, "escalate": null }
+  ],
+  "reference_tools": [],
+  "status": "validated"
+}

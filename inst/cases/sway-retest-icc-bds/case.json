@@ -1,0 +1,38 @@
+{
+  "id": "sway-retest-icc-bds",
+  "title": "A single quiet-standing trial is reliable, certified: COP path length has good test-retest ICC(2,1)=0.83, excellent over 3-trial average ICC(2,k)=0.93 (machine precision vs psych and pingouin)",
+  "modality": ["posturography", "reliability", "balance", "cohort", "cross-tool-validation"],
+  "packages": ["PhysioAnalysis", "PhysioMoCap"],
+  "dataset": {
+    "name": "BDS -- a public data set of human balance evaluations (Santos & Duarte 2016)", "version": "2016",
+    "record": "163 subjects x 3 repeated eyes-open-firm quiet-standing trials; COP path length (PhysioMoCap::swayMetrics)",
+    "url": "https://doi.org/10.7717/peerj.2648", "public": true,
+    "citation": "Santos DA, Duarte M. A public data set of human balance evaluations. PeerJ 2016;4:e2648. doi:10.7717/peerj.2648."
+  },
+  "proposition": "Posturography reduces a quiet-standing trial to metrics like COP path length; their value depends on being reliable across repeated trials. The NEWLY-AUTHORED intraclassCorrelation computes the six McGraw-Wong ICC forms, reproducing psych::ICC(lmer=FALSE) and pingouin.intraclass_corr to machine precision. Across 3 repeated eyes-open-firm trials in 163 BDS subjects, a single trial's COP path length has GOOD test-retest reliability (ICC(2,1)=0.825) and the 3-trial average is EXCELLENT (ICC(2,k)=0.934) -- single-trial posturography is trustworthy and averaging trials improves it (Spearman-Brown).",
+  "opdag": ["intraclassCorrelation"],
+  "claims": [
+    { "id": "icc2_single", "statement": "ICC(2,1): single-trial test-retest reliability of COP path length", "value": 0.8252765473, "artifact": "artifacts/icc_summary.csv", "status": "PASS" },
+    { "id": "icc2k_average", "statement": "ICC(2,k): reliability of the average of the 3 trials", "value": 0.93408038, "artifact": "artifacts/icc_summary.csv", "status": "PASS" },
+    { "id": "icc1_single", "statement": "ICC(1,1) (one-way random) for context", "value": 0.8243552837, "artifact": "artifacts/icc_summary.csv", "status": "PASS" },
+    { "id": "icc3_single", "statement": "ICC(3,1) (two-way mixed, consistency) for context", "value": 0.8384699745, "artifact": "artifacts/icc_summary.csv", "status": "PASS" },
+    { "id": "max_diff_psych", "statement": "max |intraclassCorrelation - psych::ICC(lmer=FALSE)| over the 6 forms (machine precision)", "value": 0, "artifact": "artifacts/icc_summary.csv", "status": "PASS" },
+    { "id": "max_diff_pingouin", "statement": "max |intraclassCorrelation - pingouin.intraclass_corr| over the 6 forms (machine precision)", "value": 0, "artifact": "artifacts/icc_summary.csv", "status": "PASS" },
+    { "id": "good_single", "statement": "single-trial reliability is good (ICC(2,1) > 0.75)", "value": 1, "artifact": "artifacts/icc_summary.csv", "status": "PASS" },
+    { "id": "excellent_average", "statement": "3-trial-average reliability is excellent (ICC(2,k) > 0.9)", "value": 1, "artifact": "artifacts/icc_summary.csv", "status": "PASS" },
+    { "id": "n", "statement": "subjects with 3 trials", "value": 163, "artifact": "artifacts/icc_summary.csv", "status": "PASS" },
+    { "id": "k", "statement": "repeated trials per subject", "value": 3, "artifact": "artifacts/icc_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored intraclassCorrelation op (the six McGraw & Wong 1996 ICC forms from a two-way ANOVA) is validated against BOTH psych::ICC(lmer=FALSE) AND pingouin.intraclass_corr on the identical 163 x 3 matrix -- a triple check with the independent op formula. Over all six ICC forms the values match pingouin AND psych (ANOVA method) to machine precision (|diff| ~ 1e-15). psych's default lmer=TRUE gives ~1e-7-different REML variance-component values, so the ANOVA method (lmer=FALSE) is the bit-exact reference. The per-trial sway comes from PhysioMoCap::swayMetrics (path_length, certified against Prieto in the sibling sway-posturography-bds case).",
+    "data": "REAL -- Santos & Duarte (2016) BDS; COP path length across 3 repeated eyes-open-firm quiet-standing trials, n=163",
+    "artifacts": ["artifacts/icc_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) intraclassCorrelation reproduces psych::ICC(lmer=FALSE) and pingouin.intraclass_corr to machine precision; (2) posturography sway is reliable across repeated trials. HONEST scope: (1) this AUTHORS A NEW OP, intraclassCorrelation (the six McGraw & Wong 1996 ICC forms from a two-way ANOVA), extending the ecosystem's reliability/psychometrics tools, and reuses the certified swayMetrics op (path_length, validated against Prieto in the sibling sway-posturography-bds case) for the per-trial sway; (2) the ICCs reproduce pingouin.intraclass_corr AND psych::ICC(lmer=FALSE) to MACHINE PRECISION (|diff| ~ 1e-15 vs each; both are ANOVA-based, differing only in floating-point associativity); psych's DEFAULT lmer=TRUE gives ~1e-7-different REML variance-component values, so the ANOVA method (lmer=FALSE) is the bit-exact reference -- an honest cross-tool caveat; (3) the finding: a single quiet-standing trial's COP path length has GOOD test-retest reliability -- ICC(2,1) = 0.825 -- and the average of the 3 trials is EXCELLENT -- ICC(2,k) = 0.934; so a single trial is already trustworthy and averaging trials improves reliability as expected (Spearman-Brown); the trial means drift slightly down (habituation over the session); (4) 3 repeated trials within one session (NOT across days -- within-session repeatability, not day-to-day stability), one condition (eyes-open firm), one cohort; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "This is within-session repeatability (3 trials in one visit); across-day (test-retest over weeks) reliability, which matters for tracking change, would need repeated visits and is typically lower. Reliability also varies by condition (foam/eyes-closed trials are noisier) and by metric (some sway measures are less reliable than path length). The single-condition, within-session ICC shown here is the standard first-line repeatability check. Documented, not escalated.", "artifact": "artifacts/icc_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["psych::ICC(lmer=FALSE) (R)", "pingouin.intraclass_corr (Python)"],
+  "status": "validated"
+}

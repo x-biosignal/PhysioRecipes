@@ -1,0 +1,10 @@
+{
+  "dataset": "EEG Motor Movement/Imagery Database (eegmmidb)",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "subject S002, baseline run R02 (eyes-closed rest), all 64 EEG channels, first 10 s (1600 samples) at 160 Hz, read from the git-tracked EDF (S002R02.edf) via readEDF and segmented offline.",
+  "pipeline": "readEDF(S002R02.edf) -> 64-channel PhysioExperiment -> first 10 s -> PhysioEEG::eegComplexity(measures=c('hjorth_mobility','hjorth_complexity')), the Hjorth mobility (sqrt(var(x')/var(x))) + complexity (mobility(x')/mobility(x)) per channel. The reference re-computes them per channel with an independent numpy implementation matched to R's unbiased (n-1) variance (a bit-exact formula check) and the canonical antropy.hjorth_params (biased n variance), via reticulate. Deterministic.",
+  "note": "The tracked input is eval/data/hjorth-eeg/eeg64_s002r02.rds (64-channel eyes-closed EEG). The Hjorth parameters are an O(N) time-domain descriptor: mobility approximates the mean frequency, complexity the bandwidth. eegComplexity reproduces an independent numpy implementation (unbiased variance) BIT-FOR-BIT (max |diff| ~ 9e-16 across all 64 channels) and antropy.hjorth_params to ~3e-7 -- the residual being purely the variance ddof convention (antropy uses the biased n-denominator, the op the unbiased n-1). The finding: mobility is lowest over the parieto-occipital region (POz, 0.53) and highest over temporal cortex (T7, 1.45) -- the eyes-closed posterior alpha rhythm (a slow oscillation) shows up as a low mean frequency, so mobility maps the alpha topography."
+}

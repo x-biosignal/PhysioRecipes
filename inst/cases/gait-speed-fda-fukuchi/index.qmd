@@ -1,0 +1,125 @@
+---
+title: "How walking speed reshapes the knee waveform: function-on-scalar regression"
+subtitle: "A worked functional-regression case study on real gait kinematics"
+categories: [gait, biomechanics, kinematics, functional-data, validated]
+author: "Yusuke Matsui"
+date: "2026-08-17"
+---
+
+> **What this case shows** — SPM tests *whether two groups of curves differ*;
+> **functional regression** models a curve as a *function of a covariate*, giving
+> a **coefficient curve** — how, and *where along the movement*, the waveform
+> changes per unit predictor. On 42 adults walking at 8 treadmill speeds, the
+> ecosystem recovers the established speed-dependence of the knee: the fitted
+> **speed-coefficient curve** is significant (curve-wide permutation **p =
+> 0.0005**), **positive**, and peaks at **65% of the gait cycle** — the
+> swing-flexion peak — at **+3.34° per speed level** (faster walking = more knee
+> flexion), with a second positive lobe at the loading-response flexion (~15%).
+> Pooled peak knee flexion rises with speed (**r = 0.63**). **What reproduces** —
+> exactly the speed-modulation gait biomechanics describes, with a method that
+> localises *where* in the cycle speed acts. **How to read it** — left, one
+> subject's knee angle fanning open with speed; centre, the speed-coefficient
+> curve (where speed matters); right, peak flexion rising with speed.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — to relate a *waveform* to a *scalar* covariate, fit a pointwise
+linear model across the cycle and read the **coefficient curve** with its
+curve-wide (family-wise) permutation p-value — the functional analogue of a
+regression slope.
+**Way of thinking** — a coefficient *curve* answers "*where* along the movement
+does the predictor act?", which a single scalar (e.g. peak flexion) cannot; and
+remove each subject's mean first so the coefficient is the **within-subject**
+effect, not a between-subject artefact.
+**Ecosystem usage** — `functionalRegression()` (PhysioAnalysis) on a curves ×
+covariate design; pair with `scalarOnFunctionRegression()` for the reverse
+direction.
+:::
+
+## Proposition
+
+On real gait kinematics, function-on-scalar regression recovers the established
+speed-dependence of the knee waveform — a significant (p = 0.0005), positive
+speed-coefficient curve peaking at the swing-flexion (65% cycle, +3.34°/level),
+with peak knee flexion rising with speed (r = 0.63).
+
+## Question & goal
+
+**The question is where, not just whether.** It is textbook that people flex the
+knee more as they walk faster — but *where in the gait cycle* does speed act, and
+how much? A scalar summary (peak flexion) throws away the shape. The WBDS dataset
+was built as *reference gait kinematics* across a speed sweep precisely so these
+speed–waveform relationships can be modelled. We ask: does a function-on-scalar
+regression, on these real angles, recover the speed-dependence and localise it?
+
+## Challenge & approach
+
+We take the sagittal knee angle (`RKneeAngleZ`) over the gait cycle for 42 adults
+at 8 treadmill speeds, remove each subject's across-speed mean (so the coefficient
+is the within-subject speed effect, uncontaminated by between-subject offsets),
+and fit `functionalRegression()` of the knee curve on the (centred, ordinal) speed
+level. The coefficient curve is tested curve-wide by permutation.
+
+## Data
+
+**WBDS** (Fukuchi et al. 2018) — 42 adults, 3D motion capture, sagittal knee angle
+over the gait cycle at 8 treadmill speeds (328 subject-speed curves). Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![One subject's knee angle by speed (left; fast in yellow reaches a higher swing
+peak), the fitted speed-coefficient curve (centre; positive where speed increases
+flexion) and peak knee flexion versus speed (right).](artifacts/figure.png)
+
+*How to read this:* the centre panel is the recipe's product — the coefficient
+curve peaks at **65%** (swing-flexion) and again near **15%** (loading response),
+the two moments where speed most opens the knee, and dips toward zero through
+mid-stance. The whole curve is significant by a family-wise permutation test.
+
+| quantity | value |
+|---|---|
+| speed coefficient peak location | **65% cycle** (swing) |
+| speed coefficient at peak | **+3.34°** per speed level |
+| curve-wide permutation p | **0.0005** |
+| peak-flexion vs speed correlation | **r = 0.63** |
+| subject-speed curves | **328** (42 subjects × 8 speeds) |
+
+## Conclusion
+
+Function-on-scalar regression recovers, on real gait, exactly the speed-dependence
+of the knee the literature describes — and pins it to the swing-flexion and
+loading-response moments. The transferable takeaway: **when a waveform depends on
+a covariate, fit a coefficient *curve*, not a scalar — it tells you *where* the
+covariate acts — and remove subject means first so the effect is within-subject.**
+
+## Open questions
+
+- Modelling speed in **m/s** (not an ordinal level) would make the coefficient
+  read as degrees per m/s and compare across labs; that needs the WBDS per-subject
+  speed table. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| step | function | package |
+|---|---|---|
+| joint-angle curves from markers | `calculateJointAngles()` | PhysioMoCap |
+| function-on-scalar (coefficient curve + p) | `functionalRegression()` | PhysioAnalysis |
+| scalar-from-curve (reverse) | `scalarOnFunctionRegression()` | PhysioAnalysis |
+| multilevel (strides in subjects) | `functionalMixedModel()` | PhysioAnalysis |
+
+**Choosing the parameters:** pass one row per curve and the matching covariate,
+remove nuisance means (here each subject's) first, use enough permutations
+(≥1000) for a stable curve-wide p, and read the **coefficient curve** — its sign
+says the direction, its shape says *where* the covariate acts.
+
+```r
+library(PhysioAnalysis)
+fit <- functionalRegression(knee_curves, speed, n_perm = 2000)
+fit$coefficients["x1", ]   # the speed coefficient CURVE (deg per unit speed)
+fit$p_global["x1"]         # curve-wide (family-wise) significance
+```
+
+One line for the technical reader: every number traces to
+[`artifacts/fda_summary.csv`](artifacts/fda_summary.csv) and
+[`artifacts/coefficient_curve.csv`](artifacts/coefficient_curve.csv), re-checked
+by [`audit.py`](audit.py) and `tools/validate_case.py`.

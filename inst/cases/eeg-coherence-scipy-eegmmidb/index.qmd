@@ -1,0 +1,138 @@
+---
+title: "Is the alpha rhythm synchronized across the scalp? EEG coherence, bit-for-bit against scipy"
+subtitle: "A worked connectivity case study on real eyes-closed EEG, certifying eegCoherence against scipy.signal.coherence"
+categories: [eeg, connectivity, coherence, alpha, synchrony, validated]
+author: "Yusuke Matsui"
+date: "2026-09-05"
+---
+
+> **What this case shows** — the [Welch case](../eeg-bandpower-welch-eegmmidb/index.qmd) gave the
+> alpha *power* and the [spectrogram case](../eeg-spectrogram-scipy-eegmmidb/index.qmd) its *time
+> course*. **Coherence** gives its *spatial structure*: how consistently two channels share a
+> phase-and-amplitude relationship at each frequency. On the eight parieto-occipital channels of
+> real eyes-closed EEG, `eegCoherence` reproduces `scipy.signal.coherence` **bit-for-bit**
+> (max |diff| ~**2e-16** across all 28 pairs) once the conventions match. And the finding: posterior
+> alpha coherence is **high** (mean **0.63**, peaking **0.90** between adjacent occipital channels
+> PO3–O1) — the eyes-closed alpha rhythm is spatially synchronized across the posterior scalp.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for spectral connectivity: `eegCoherence(pe, band = c(8, 13))` → a channel × channel
+coherence matrix, band-averaged.
+**Way of thinking** — coherence is a *ratio* of the cross-spectrum to the auto-spectra, so it lives
+in [0, 1] and (crucially) the window normalization cancels — two implementations that share the
+window and detrend agree to machine epsilon. But high coherence between nearby electrodes is
+partly **volume conduction**, not proof of coupling — reach for imaginary coherence when that
+matters.
+**Ecosystem usage** — `PhysioEEG::eegCoherence()`; `method = "imaginary"` to suppress the zero-lag
+(volume-conduction) component.
+:::
+
+## Proposition
+
+On real eyes-closed posterior EEG, `eegCoherence` reproduces `scipy.signal.coherence` bit-for-bit
+(max |diff| ~2e-16 over all 28 pairs); and posterior alpha coherence is high (mean 0.63, peak 0.90).
+
+## Question & goal
+
+**The question is fidelity and structure: does the ecosystem's coherence equal
+`scipy.signal.coherence` — and how spatially synchronized is the eyes-closed alpha rhythm?** The
+goal is a machine-precision certification over every channel pair and a read of the posterior alpha
+network.
+
+## Challenge & approach
+
+Magnitude-squared coherence is Cxy = |Sxy|²/(Sxx·Syy) from the Welch-averaged cross/auto spectra.
+Because it is a *ratio*, the window normalization cancels — so the only conventions that matter are
+the window shape, the segmenting, and the detrend. The op uses a symmetric Hann window, matched
+window length + hop, and no detrend; we point scipy at exactly those and compare the full matrix.
+
+```
+EEG 8 posterior ch (eegmmidb, 160 Hz) → eegCoherence(band = 8-13 Hz) → 8 × 8 coherence matrix
+                    vs scipy.signal.coherence (symmetric Hann, matched window/overlap, detrend=False) → bit-exact (~2e-16)
+                                    mean 0.63, peak 0.90 (PO3-O1) → the alpha rhythm is spatially synchronized
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, the eight **parieto-occipital** channels (PO7, PO3, POz, PO4, PO8, O1, Oz, O2), 10 s
+at 160 Hz — subset from the same git-tracked root the
+[Welch](../eeg-bandpower-welch-eegmmidb/index.qmd),
+[spectrogram](../eeg-spectrogram-scipy-eegmmidb/index.qmd), and
+[Hjorth](../eeg-hjorth-eegmmidb/index.qmd) cases use. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the 8 × 8 posterior alpha-coherence matrix — every off-diagonal cell equals scipy.signal.coherence to ~2e-16; adjacent occipital channels (PO3-O1) reach 0.90. Right: the frequency-resolved coherence for the most- and least-coherent pairs — both peak in the alpha band (8-13 Hz, shaded), so the synchrony is alpha-specific.](artifacts/figure.png)
+
+*How to read this:* the left panel is the connectivity matrix (and the validation: op = scipy over
+every pair); the right panel shows the coherence peaks in the alpha band — the shared rhythm is the
+alpha rhythm.
+
+| Quantity | Value |
+|---|--:|
+| posterior channels × pairs | **8 × 28** |
+| op vs `scipy.signal.coherence` (max \|diff\|) | **2e-16** (bit-exact) |
+| **mean posterior alpha coherence** | **0.63** |
+| **peak coherence (PO3–O1, adjacent occipital)** | **0.90** |
+| minimum coherence | **0.36** |
+
+The op equals scipy to machine epsilon over every pair, and the posterior alpha rhythm is highly
+synchronized. Values trace to [`artifacts/coherence_summary.csv`](artifacts/coherence_summary.csv).
+
+## Conclusion
+
+The ecosystem's coherence *is* `scipy.signal.coherence` — bit-for-bit over every pair, because the
+coherence ratio cancels the window normalization and the window + detrend conventions match — so the
+connectivity op is certified against the reference; and on real eyes-closed EEG it shows the
+posterior alpha rhythm as spatially synchronized, cross-consistent with the Welch (high posterior
+alpha power), spectrogram (sustained alpha), and Hjorth (low posterior mobility) cases on the same
+data. The transferable takeaway: **coherence is a normalized ratio — pin the window and detrend and
+it matches to machine epsilon; but magnitude-squared coherence is inflated by volume conduction, so
+read it as an upper bound on coupling and switch to imaginary coherence when you need the true
+network.**
+
+## Open questions
+
+- Magnitude-squared coherence cannot separate genuine coupling from **volume conduction** (one
+  source seen by two electrodes at zero lag). The op's **imaginary coherence** (`method =
+  "imaginary"`) keeps only the lagged component, which volume conduction cannot produce; computing
+  it across the montage — and contrasting eyes-closed with eyes-open — would isolate the true
+  posterior alpha network from the shared-source inflation. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| magnitude-squared coherence matrix | `eegCoherence(method = "coherence")` | PhysioEEG |
+| imaginary coherence (volume-conduction-robust) | `eegCoherence(method = "imaginary")` | PhysioEEG |
+| band power (the sibling view) | `bandPower(method = "welch")` | PhysioAnalysis |
+
+**Choosing the parameters.**
+
+- **band** — the frequency band to average coherence over (here 8–13 Hz alpha); coherence is
+  frequency-resolved, so pick the band your hypothesis names.
+- **window_sec** — the Welch segment length in seconds (here 2 s → more segments = more stable
+  coherence, but coarser frequency resolution).
+- **method** — `"coherence"` (magnitude-squared, this case) vs `"imaginary"` (keeps only the lagged
+  component, robust to volume conduction).
+- **the conventions** — coherence is a ratio, so the window normalization cancels; only the window
+  shape, segmenting, and detrend must match across tools.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioEEG)
+
+res <- eegCoherence(pe, method = "coherence", window_sec = 2, band = c(8, 13))
+cm  <- S4Vectors::metadata(res)$connectivity$matrix   # channel x channel coherence
+
+# equals scipy.signal.coherence bit-for-bit (max |diff| ~2e-16) with matched conventions:
+# get_window("hann", nperseg, fftbins = FALSE), matched noverlap, detrend = FALSE.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/coherence_summary.csv`](artifacts/coherence_summary.csv), and [`audit.py`](audit.py)
+re-checks each number, the bit-exact scipy match over all 28 pairs, the posterior alpha-synchrony
+finding, the volume-conduction caveat, and the honestly-noted scope.

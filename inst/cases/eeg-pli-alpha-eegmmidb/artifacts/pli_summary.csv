@@ -1,0 +1,16 @@
+"metric","value"
+"pli",0.01625
+"pli_scipy",0.02
+"max_diff_scipy",0.00375
+"formula_diff",0
+"plv_real",0.921505
+"plv_zerolag",0.994715
+"pli_zerolag",0.013
+"plv_lagged",0.994187
+"pli_lagged",1
+"plv_independent",0.020817
+"pli_independent",0.026
+"n_samples",1600
+"sr_hz",160
+"band_lo_hz",8
+"band_hi_hz",13

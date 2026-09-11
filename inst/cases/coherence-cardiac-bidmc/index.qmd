@@ -1,0 +1,148 @@
+---
+title: "Two sensors, one heartbeat: PPG–ECG spectral coherence"
+subtitle: "A worked spectral-connectivity case study on real BIDMC data, validated against scipy.signal.coherence"
+categories: [ppg, ecg, cardiac, cross-modal, coherence, validated]
+author: "Yusuke Matsui"
+date: "2026-09-03"
+---
+
+> **What this case shows** — a heartbeat can be sensed two utterly different ways:
+> **optically**, as the pulse of blood volume in the finger (the photoplethysmogram,
+> **PPG**), and **electrically**, as the heart's depolarization (the **ECG**). If both
+> measure the same heart, they should share a rhythm — and **magnitude-squared
+> coherence** proves it, quantifying the frequency-resolved linear coupling between two
+> signals in [0, 1]. On a real simultaneous recording the PPG–ECG coherence peaks at
+> **0.898 at 1.465 Hz** — exactly **88 beats per minute**, the subject's heart rate —
+> far above the 95% significance limit (0.026). The ecosystem's `coherence` reproduces
+> the canonical **`scipy.signal.coherence`** to **machine precision** (max |diff| =
+> 2.9×10⁻¹⁴ over the full spectrum, with the Welch settings matched exactly).
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for two signals: `coherence(x, y, sr, nperseg, noverlap)` → read the
+**coherence spectrum** and its **95% confidence limit** → find the peak in the band of
+interest.
+**Way of thinking** — coherence is the *linear frequency-domain* coupling: a peak at a
+frequency means the two signals share a rhythm there. Always read it against the
+confidence limit (coherence is biased upward with few segments), and mind the
+pre-processing — without detrending, a DC/baseline component dominates, so read the
+finding in a physiological band.
+**Ecosystem usage** — `PhysioCrossModal::coherence()` (magnitude / imaginary / lagged),
+`multitaperCoherence()`, `waveletCoherence()`, `wPLI()` for the rest of the connectivity
+toolkit.
+:::
+
+## Proposition
+
+On a real simultaneous PPG + ECG recording (BIDMC subject 01), the magnitude-squared
+coherence peaks at 0.898 at 1.465 Hz (88 bpm — the heart rate), and `coherence`
+reproduces `scipy.signal.coherence` to machine precision (max |diff| = 2.9×10⁻¹⁴).
+
+## Question & goal
+
+**The question is whether two different cardiac sensors share a rhythm, and whether the
+ecosystem measures coherence exactly.** Coherence is a Welch-based computation with
+several conventions (window, overlap, detrend), so a "correct" implementation must be
+pinned to a reference. The goal is a head-to-head against `scipy.signal.coherence` and a
+clear physiological read: do PPG and ECG cohere at the heart rate?
+
+## Challenge & approach
+
+Coherence via Welch depends on the window and detrending. We match those exactly and
+compare the whole spectrum to scipy; then we read the peak in the cardiac band, where
+the PPG and ECG — both driven by the heartbeat — should lock together.
+
+```
+PPG ┐
+    ├─ coherence (Welch, sym-Hann, no detrend) → spectrum  (== scipy.signal.coherence)
+ECG ┘        peak in the cardiac band (0.5–5 Hz) → heart rate
+```
+
+## Data
+
+**BIDMC PPG and Respiration Dataset (PhysioNet)**: subject bidmc01, the simultaneous
+**PLETH (PPG)** and **lead-II (ECG)** at 125 Hz, first 4 min. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the PPG–ECG coherence spectrum (0–10 Hz); it peaks sharply at 1.465 Hz (88 bpm, red dot) — the heart rate — with harmonics above; the dotted line is the 95% confidence limit. Right: the ecosystem's coherence against scipy.signal.coherence, frequency by frequency, on the identity line (max |diff| = 2.9×10⁻¹⁴).](artifacts/figure.png)
+
+*How to read this:* a coherence peak at a frequency means the two signals share a rhythm
+there. The sharp peak at the heart rate says the optical and electrical views of the
+heart are locked to the same beat; the right panel shows the two tools are numerically
+identical.
+
+| Quantity | This reproduction | Reference |
+|---|---|---|
+| max \|diff\| vs scipy (full spectrum) | **2.9×10⁻¹⁴** | 0 (identical) |
+| Cardiac-band peak coherence | **0.898** | — |
+| Peak frequency | **1.465 Hz (88 bpm)** | — |
+| Band-mean coherence (0.5–5 Hz) | **0.439** | — |
+
+The op reproduces scipy exactly, and the PPG and ECG cohere strongly at the heart rate.
+Values trace to
+[`artifacts/coherence_summary.csv`](artifacts/coherence_summary.csv) and the spectrum in
+[`artifacts/coherence_spectrum.csv`](artifacts/coherence_spectrum.csv).
+
+## Conclusion
+
+The optical and electrical views of the heart are locked to the same beat, and the
+ecosystem's coherence measures that coupling exactly as scipy does. The transferable
+takeaway: **coherence is the linear frequency-domain coupling — read it against the
+confidence limit and in a physiological band (detrending matters), and validate it
+against the canonical tool by matching the Welch settings, or the numbers will differ.**
+
+## Open questions
+
+- Coherence at the heart rate confirms a shared cardiac rhythm; the **respiratory band**
+  (RESP is also recorded) would map **cardiorespiratory coupling**, and the
+  **imaginary/lagged coherence** (also implemented) would separate genuine coupling from
+  zero-lag/volume-conduction artefacts. Extending to **corticomuscular / intermuscular**
+  coherence, or to a per-segment-detrended spectrum for the low-frequency couplings,
+  would turn the validated coherence op into a connectivity study. *Documented, not
+  escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| magnitude-squared coherence | `coherence()` | PhysioCrossModal |
+| multitaper coherence | `multitaperCoherence()` | PhysioCrossModal |
+| wavelet (time-frequency) coherence | `waveletCoherence()` | PhysioCrossModal |
+| phase-lag connectivity (volume-conduction robust) | `wPLI()` | PhysioCrossModal |
+
+**Choosing the parameters.**
+
+- **nperseg / noverlap** — longer segments give finer frequency resolution but fewer
+  segments (noisier coherence); 50% overlap is standard. Here 512 (4 s) resolves the
+  heart rate.
+- **confidence_limit** — always compare the coherence to the returned 95% limit; with
+  few segments coherence is biased upward.
+- **detrend / band** — the op does not detrend, so a DC/baseline component appears; read
+  the coherence in a physiological band, or pre-detrend the signals.
+- **type** — use `"imaginary"` or `"lagged"` coherence when zero-lag/volume-conduction
+  coupling must be excluded (e.g. EEG connectivity).
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioCrossModal)
+
+# x, y = two aligned numeric signals, sr in Hz
+co <- coherence(x, y, sr = 125, nperseg = 512, noverlap = 256)
+band <- co$frequencies >= 0.5 & co$frequencies <= 5      # cardiac band
+pk <- which(band)[which.max(co$coherence[band])]
+co$coherence[pk]          # 0.898  -- peak coherence
+co$frequencies[pk] * 60   # 88 bpm -- the shared heart rate
+
+# exact by construction: matches scipy.signal.coherence with matched Welch settings
+# (symmetric-Hann window, detrend = FALSE).
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/`](artifacts/) — the summary in
+[`coherence_summary.csv`](artifacts/coherence_summary.csv) and the per-frequency
+spectrum (with scipy alongside) in
+[`coherence_spectrum.csv`](artifacts/coherence_spectrum.csv) — and [`audit.py`](audit.py)
+re-checks each reported number, the machine-precision scipy agreement, the cardiac peak,
+and the honestly-noted detrend/band caveat.

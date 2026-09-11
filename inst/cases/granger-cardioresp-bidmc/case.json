@@ -1,0 +1,36 @@
+{
+  "id": "granger-cardioresp-bidmc",
+  "title": "Which drives which? Directed cardiorespiratory coupling by Granger causality, checked against statsmodels",
+  "modality": ["connectivity", "granger-causality", "ppg", "respiration", "cardiorespiratory"],
+  "packages": ["PhysioCrossModal"],
+  "dataset": {
+    "name": "BIDMC PPG and Respiration Dataset",
+    "version": "PhysioNet 1.0.0",
+    "record": "subject bidmc01, simultaneous RESP (respiration) + PLETH (PPG), decimated 125->25 Hz, 200 s segment (5001 samples); 20-subject summary over bidmc01-20",
+    "url": "https://physionet.org/content/bidmc/1.0.0/",
+    "public": true,
+    "citation": "Pimentel MAF et al. Toward a robust estimation of respiratory rate from pulse oximeters. IEEE Trans Biomed Eng 2017;64(8):1914-1923. BIDMC PPG and Respiration Dataset, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "Coherence tells you two signals are coupled, but not which leads. Granger causality adds the ARROW: signal x Granger-causes y if x's past improves the prediction of y beyond y's own past. On a real simultaneous respiration + PPG recording, the ecosystem's grangerCausality measures the coupling in BOTH directions at once (Geweke's log-ratio of prediction-error variances) and finds it strong and bidirectional -- cardiorespiratory coupling runs both ways -- with respiration -> pulse the net-dominant direction (respiration modulating the peripheral pulse) in 15 of 20 BIDMC subjects. And the measure is trustworthy: grangerCausality reproduces the field-standard statsmodels.tsa.stattools.grangercausalitytests to ~3.5e-7 (an agreement, limited by statsmodels' intercept convention) and an independent from-scratch numpy OLS to ~1.8e-9 (the op's numerical floor), both directions, on the real signals -- and statsmodels' F-test confirms both directions are overwhelmingly significant (F ~ 54, p < 1e-100).",
+  "opdag": ["grangerCausality"],
+  "claims": [
+    { "id": "gc_resp_to_pleth", "statement": "time-domain Granger causality respiration -> PPG pulse (Geweke log-variance-ratio) on BIDMC-01", "value": 0.1031367696, "artifact": "artifacts/granger_summary.csv", "status": "PASS" },
+    { "id": "gc_pleth_to_resp", "statement": "time-domain Granger causality PPG pulse -> respiration on BIDMC-01", "value": 0.101683848, "artifact": "artifacts/granger_summary.csv", "status": "PASS" },
+    { "id": "net_gc", "statement": "net Granger causality (respiration->pulse minus pulse->respiration) -- the directional asymmetry", "value": 0.0014529216, "artifact": "artifacts/granger_summary.csv", "status": "PASS" },
+    { "id": "max_diff_statsmodels", "statement": "max |grangerCausality - statsmodels grangercausalitytests| over both directions (agreement)", "value": 3.52e-07, "artifact": "artifacts/granger_summary.csv", "status": "PASS" },
+    { "id": "max_diff_numpy", "statement": "max |grangerCausality - independent numpy OLS| over both directions (op arithmetic, machine precision up to ridge)", "value": 1.785e-09, "artifact": "artifacts/granger_summary.csv", "status": "PASS" },
+    { "id": "n_subjects_resp_dominant", "statement": "BIDMC subjects (of 20) where respiration -> pulse is the net-dominant Granger direction", "value": 15, "artifact": "artifacts/granger_multisubject.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "statsmodels.tsa.stattools.grangercausalitytests (Seabold & Perktold 2010) is the field-standard Granger-causality test; it fits the same restricted (target on its own lags) and unrestricted (target + driver lags) OLS regressions. With matched model order and demeaned signals, grangerCausality's Geweke log-variance-ratio reproduces statsmodels' (from its restricted/unrestricted SSRs) to max |diff| ~ 3.5e-7 -- an AGREEMENT, since statsmodels forces an intercept while the op demeans then fits without one. Against an independent from-scratch numpy OLS built to the op's exact construction, the agreement is ~1.8e-9 (the op's ridge-regularization floor), so the op's arithmetic is machine-precise. statsmodels' ssr_ftest confirms both directions are overwhelmingly significant (F ~ 54, p < 1e-100). The finding: cardiorespiratory coupling is bidirectional, with respiration -> pulse net-dominant in 15/20 BIDMC subjects.",
+    "data": "REAL -- BIDMC PPG and Respiration Dataset (PhysioNet), subject bidmc01 (machine validation) + bidmc01-20 (net-direction summary), RESP + PLETH decimated to 25 Hz",
+    "artifacts": ["artifacts/granger_summary.csv", "artifacts/granger_multisubject.csv"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) grangerCausality reproduces statsmodels' Granger regression to ~3.5e-7 and an independent numpy OLS to ~1.8e-9 on real BIDMC resp/PPG, both directions; (2) cardiorespiratory coupling is strong and bidirectional (both directions F ~ 54, p < 1e-100), with respiration -> pulse net-dominant in 15/20 subjects (mean net +0.032). HONEST scope: (1) the statsmodels agreement (~3.5e-7) is an AGREEMENT, NOT a machine-precision match -- statsmodels forces an intercept while the op demeans then fits without one, a convention difference on the order of the lag columns' edge-sample means; the op's OWN arithmetic is validated to ~1.8e-9 against an independent from-scratch numpy OLS (the op's 1e-8-relative ridge-regularization floor); (2) both directions are strongly significant -- cardiorespiratory coupling IS bidirectional (respiratory sinus arrhythmia AND cardioventilatory coupling), so the contribution is a VALIDATED directed-connectivity op plus a modest, honestly-reported net direction, NOT a claim of unidirectional causation; (3) Granger causality is PREDICTIVE (temporal-precedence) coupling, not proof of a physical causal mechanism; (4) time-domain parametric GC at a fixed model order (10 lags at 25 Hz); the net direction is subject-dependent (5/20 subjects show pulse -> respiration net-dominant); (5) single subject for the machine validation, 200 s segment; run_simulation = FALSE (deterministic OLS both sides)."
+  },
+  "open_questions": [
+    { "q": "grangerCausality also implements a NONPARAMETRIC spectral path (Wilson minimum-phase factorization of the cross-spectrum, method='nonparametric'), giving frequency-resolved Granger causality -- which would show WHERE in the spectrum (the respiratory band vs the cardiac band) each direction dominates, and a conditional/multivariate GC would separate direct from mediated coupling. Extending this time-domain validation to the spectral and conditional cases -- and to a respiration -> instantaneous-heart-rate (RSA) tachogram design where the direction is textbook -- would turn a validated pairwise op into a network-physiology study. Documented, not escalated.", "artifact": "artifacts/granger_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["statsmodels.tsa.stattools.grangercausalitytests (Python, statsmodels)", "independent numpy OLS (Python)"],
+  "status": "validated"
+}

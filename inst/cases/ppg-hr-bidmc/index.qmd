@@ -1,0 +1,191 @@
+---
+title: "Does the optical pulse recover the heartbeat? PPG pulse rate vs ECG"
+subtitle: "A worked cross-modal agreement case study on public ICU monitoring"
+categories: [ppg, ecg, wearable, physionet, validated]
+author: "Yusuke Matsui"
+date: "2026-08-12"
+---
+
+> **What this case shows** — a photoplethysmogram (**PPG** — the optical pulse a
+> smartwatch or pulse-oximeter measures) and an ECG record the same heartbeat two
+> different ways. On 52 ICU recordings the ecosystem's **PPG pulse rate** tracks
+> the simultaneous **ECG heart rate** closely: **r = 0.96**, mean bias **−2.1 bpm**,
+> 95% limits of agreement **[−9.4, +5.1] bpm**, and **90 %** of records within
+> **±5 bpm**. **What reproduces, and what doesn't** — the agreement reproduces and
+> clears the clinical heart-rate-accuracy bar; where it widens is on poorer-quality
+> recordings, and one record is an **ECG-detection failure** (the *reference*
+> failed, not the PPG) — flagged and set aside, not hidden. **How to read it** —
+> left, each record's PPG rate against its ECG rate on the identity line; right, the
+> Bland–Altman plot showing the bias and the limits of agreement.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — validate one sensor against a reference in three moves: **detect**
+the events in each signal → **reduce** each to the same summary (a rate) →
+**agree** with a Bland–Altman method comparison, not just a correlation.
+**Way of thinking** — a correlation only says the two move together; *agreement*
+(bias + limits) says whether one can stand in for the other. Judge the *reference*
+too — an implausible reference value is a detection failure to exclude on an
+objective rule, not a data point to average in.
+**Ecosystem usage** — the same `PhysioExperiment` carries both channels, so PPG
+and ECG go through parallel one-function-per-role chains
+(`readWFDB` → `ppgDetectPulses`/`pulseRateVariability`; `readWFDB` →
+`ecgDetectRpeaks` → `ecgRRintervals`). The final section makes this reusable.
+:::
+
+## Proposition
+
+Across 52 ICU recordings the PPG-derived pulse rate agrees with the simultaneous
+ECG heart rate: **Pearson r 0.96**, Bland–Altman **bias −2.1 bpm** with **95%
+limits of agreement [−9.4, +5.1] bpm**, mean absolute error **2.2 bpm**, and
+**90 %** of records within **±5 bpm**.
+
+## Question & goal
+
+**The question comes from what the dataset pairs together.** BIDMC provides
+**simultaneous** photoplethysmogram (PLETH) and ECG from ICU patient monitors —
+assembled to benchmark vital-sign algorithms (Pimentel et al., 2017). The optical
+PPG is the signal a wrist wearable or a fingertip pulse-oximeter actually sees;
+the ECG is the electrical gold standard. So we ask the foundational
+wearable-monitoring question the paired channels let us answer directly: **does
+the optical pulse recover the electrical heartbeat** — closely enough that a PPG
+pulse rate can stand in for an ECG heart rate?
+
+## Challenge & approach
+
+Two different measurements of "the same" quantity never match exactly, and a
+correlation hides that: it can be high while one device reads systematically fast
+or drifts far on some records. The right tool is a **Bland–Altman** method
+comparison — the bias (mean difference) and the limits of agreement (how far apart
+they can be). We detect the beats in each signal, reduce each record to a mean
+rate, and compare:
+
+```
+readWFDB → PLETH → ppgDetectPulses / pulseRateVariability   (PPG pulse rate)
+readWFDB → II    → ecgDetectRpeaks → ecgRRintervals          (ECG heart rate)
+```
+
+The ECG rate is the reference — so we also **judge the reference**: a record whose
+ECG rate is physiologically implausible (here one record at 30 bpm, from an R-peak
+detection failure) is excluded on an **objective** rule (ECG rate outside
+40–180 bpm), not because it disagrees with the PPG.
+
+## Data
+
+**BIDMC PPG and Respiration Dataset** (PhysioNet) — public
+(<https://physionet.org/content/bidmc/1.0.0/>), ODbL. 53 eight-minute ICU
+recordings with **PLETH (PPG)** and **II (ECG)** at 125 Hz. The exact records
+(with checksums) are in
+[`artifacts/data_sources.json`](artifacts/data_sources.json). *Pimentel MAF, et
+al. IEEE Trans Biomed Eng. 2017;64(8):1914–23; Goldberger AL, et al. Circulation.
+2000;101(23):e215–20.*
+
+## Results
+
+![Left: each record's PPG pulse rate against its ECG heart rate; the points hug the identity line (r = 0.96), and the one excluded ECG-detection failure is marked. Right: the Bland–Altman plot — the difference (PPG − ECG) against the mean rate, with the −2.1 bpm bias and the [−9.4, +5.1] bpm limits of agreement.](artifacts/figure.png)
+
+*How to read this:* on the left, closeness to the dashed identity line is
+agreement; on the right, the solid line is the average offset (bias) and the
+dashed lines are the range within which 95 % of differences fall.
+
+**Agreement** ([`artifacts/ppg_ecg_agreement.csv`](artifacts/ppg_ecg_agreement.csv)),
+over the **52** records with a valid ECG reference:
+
+| Measure | Value |
+|---|---|
+| Pearson correlation | **0.96** |
+| Mean bias (PPG − ECG) | **−2.1 bpm** |
+| 95% limits of agreement | **[−9.4, +5.1] bpm** |
+| Mean absolute error | **2.2 bpm** |
+| Within ±5 bpm / ±10 bpm | **90.4 % / 96.2 %** |
+
+This clears the ANSI/AAMI EC13 heart-rate-accuracy bar (±5 bpm or ±10 %). One of
+the 53 records (**bidmc03**) was excluded as an **ECG-reference detection failure**
+— its R-peak detector found only 225 beats, an implausible 30 bpm — flagged by the
+objective ECG-rate rule, not by its disagreement with the PPG
+([`artifacts/ppg_ecg_per_record.csv`](artifacts/ppg_ecg_per_record.csv)). The
+widest surviving differences are on records with poorer signal quality (ICU motion
+or arrhythmia), where PPG–ECG agreement loosens — shown in full.
+
+## Conclusion
+
+On public ICU monitoring the ecosystem's optical PPG pulse rate stands in for the
+ECG heart rate to clinical accuracy, quantified honestly with a Bland–Altman
+agreement rather than a bare correlation. The transferable lesson is to validate a
+sensor by **agreement, not correlation**, and to **judge the reference** — an
+implausible gold-standard value is a detection failure to exclude on a rule, not a
+disagreement to average away.
+
+## Open questions
+
+Agreement here is a per-record mean pulse rate vs mean heart rate. Beat-to-beat
+pulse-rate-variability tracking — and how it degrades under motion, arrhythmia, or
+poor perfusion — is a finer question the paired signals support but this case does
+not pursue. Documented, not escalated.
+
+## Using this in your own analysis
+
+This case is a worked example of a **cross-modal agreement study** — the pattern
+for "can sensor A stand in for reference B?" for any paired measurement.
+
+**The general recipe** (three steps):
+
+1. **Detect** the events in each signal — PPG systolic pulses and ECG R-peaks.
+2. **Reduce** each record to the *same* summary on the *same* window — here a mean
+   rate in bpm.
+3. **Agree** with Bland–Altman: report the bias and the 95% limits of agreement
+   (and % within a clinical tolerance), and screen the reference for failures.
+
+**Which functions, and how they compose.** Each step is one ecosystem function,
+picked by *role* — I/O → analysis — and both modalities share the data model:
+
+| Step | Function | Package |
+|---|---|---|
+| load the paired PPG + ECG record | `readWFDB()` | PhysioIO |
+| detect PPG systolic pulses | `ppgDetectPulses()` | PhysioECG |
+| PPG pulse rate (+ variability) | `pulseRateVariability()` | PhysioECG |
+| detect ECG R-peaks | `ecgDetectRpeaks()` | PhysioECG |
+| ECG RR intervals → heart rate | `ecgRRintervals()` | PhysioECG |
+
+They chain because every step consumes or returns a `PhysioExperiment` — one
+channel of the same object becomes the PPG chain, another the ECG chain, so you
+compare two modalities without leaving the data model.
+
+**Choosing the parameters.**
+
+- **Channel selection** — pick the PPG (`PLETH`) and a clean ECG lead (`II`) by
+  name from the record's channels.
+- **PPG band-pass (`low`, `high`) / `refractory_ms`** in `ppgDetectPulses()` — keep
+  the pulse band (~0.5–8 Hz) and set the refractory period below the shortest
+  plausible beat interval; widen for noisy wrist PPG.
+- **Analysis window** — reduce both signals over the *same* interval so the two
+  rates are comparable; screen the reference (implausible ECG rate ⇒ exclude).
+
+**Applying it to your own hypothesis.** Swap in your own paired signals (wrist PPG
+vs chest ECG, a new HR algorithm vs a reference), keep the detect → rate →
+Bland–Altman recipe, and report agreement plus the reference-failure screen. The
+ECG half of this recipe is exactly the heart-rate and HRV pipeline used on MIT-BIH
+and Fantasia ([`ecg-hr-spectrum-mitbih`](../ecg-hr-spectrum-mitbih/),
+[`ecg-hrv-aging-fantasia`](../ecg-hrv-aging-fantasia/)).
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioIO); library(PhysioECG)
+
+rates <- function(rec) {
+  pe  <- readWFDB(rec)                                          # PLETH + II @ 125 Hz
+  lab <- toupper(SummarizedExperiment::colData(pe)$label)
+  ppg <- pulseRateVariability(pe[, which(grepl("PLETH", lab))[1]])$time$mean_pr
+  peE <- pe[, which(grepl("II", lab))[1]]
+  rr  <- ecgRRintervals(peE, ecgDetectRpeaks(peE, method = "pan_tompkins"))
+  c(ppg = ppg, ecg = 60000 / mean(rr$rr_ms))                   # PPG vs ECG rate, bpm
+}
+
+r <- rates("bidmc01"); r["ppg"] - r["ecg"]                     # per-record difference
+```
+
+**Auditing the numbers.** For readers who want to verify rather than trust: every
+record's PPG and ECG rate, the agreement statistics, and the reference-failure
+flag live in [`artifacts/`](artifacts/), and `audit.py` re-derives the bias, the
+limits of agreement, the MAE, and the ±5 bpm fraction — and re-checks the objective
+exclusion — from those files.

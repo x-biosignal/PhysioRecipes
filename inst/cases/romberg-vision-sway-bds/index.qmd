@@ -1,0 +1,120 @@
+---
+title: "The visual contribution to balance, certified: eyes-closed foam sway is ~1.3x eyes-open (Romberg) -- completing the sensory triad"
+subtitle: "The vision effect in standing balance, on real posturography data"
+categories: [posturography, balance, vision, cohort, validated]
+author: "Yusuke Matsui"
+date: "2026-09-10"
+---
+
+> **What this case shows** — close your eyes and you sway more: the Romberg phenomenon measures how much
+> standing balance leans on vision. On foam, where proprioception is already unreliable, vision carries the
+> load — so removing it destabilizes. This case demonstrates and certifies that across 50 subjects. Foam
+> COP path length with eyes closed and open comes from the **certified** `swayMetrics`; the **certified**
+> `pairedTTest` compares them, reproducing **`scipy.stats.ttest_rel`** *and* base R **`t.test`**
+> **bit-for-bit**. Eyes-closed sway is **~1.3x** eyes-open (t=7.6, p~9e-10, in 43/50 subjects). With the
+> surface (proprioception) and age effects, this **completes the posturographic sensory triad**.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — pair each subject's eyes-open and eyes-closed sway, then `pairedTTest()`.
+**Way of thinking** — balance draws on three inputs: somatosensory (foot/ankle), visual, and vestibular,
+weighted by the brain and by age. Probe each by removing or challenging it — foam degrades proprioception,
+eyes-closed removes vision — and read the sway increase as that input's contribution.
+**Ecosystem usage** — `PhysioAnalysis::pairedTTest()`, `PhysioMoCap::swayMetrics()`.
+:::
+
+## Proposition
+
+Across 50 subjects, eyes-closed foam-surface COP path length exceeds eyes-open (mean 217 vs 167 cm, ratio
+~1.30, in 43/50 subjects); the paired t-test (t=7.57, df=49, p~8.8e-10) reproduces `scipy.stats.ttest_rel`
+and base R `t.test(paired=TRUE)` bit-for-bit.
+
+## Question & goal
+
+**The question is the vision effect and the completion of a story: does closing the eyes on foam increase
+sway, and does the certified paired test reproduce the reference?** With the surface (proprioception) and
+age effects already certified, this fold adds vision — the third input to standing balance.
+
+## Challenge & approach
+
+For each subject we take the eyes-closed and eyes-open foam quiet-standing COP path lengths (from
+`swayMetrics`, certified against the Prieto reference in the
+[sway-posturography-bds](../sway-posturography-bds/index.qmd) case) and compare them with `pairedTTest`,
+checking t and p against `scipy.stats.ttest_rel` and base R.
+
+```
+50 subjects: eyes-open vs eyes-closed foam sway (swayMetrics path length, certified)
+  mean 167 vs 217 cm   ·   ratio 1.30   (eyes-closed greater in 43/50)
+  pairedTTest → t = 7.57, df = 49, p ~ 8.8e-10   vs scipy.stats.ttest_rel & base R → |diff| = 0
+```
+
+## Data
+
+**Santos & Duarte (2016) balance dataset (figshare)**: 50 subjects, one eyes-closed and one eyes-open foam
+quiet-standing trial each (60 s, force-plate COP at 100 Hz). Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: each subject's foam COP path length from eyes-open to eyes-closed — most lines rise (red = eyes-closed greater, 43/50), the group mean climbing 167→217 cm (t=7.6, p~9e-10). Right: the posturographic sensory triad — the sway ratio when each input is challenged: proprioception (foam/firm, 2.76x, from the foam-firm case), vision (eyes-closed/open, 1.30x, here); with age (r=0.62 with sway), the three inputs to standing balance.](artifacts/figure.png)
+
+*How to read this:* left — closing the eyes shifts nearly every subject up. Right — the two sensory
+challenges have different magnitudes (removing reliable proprioception matters more than removing vision,
+here), and age modulates both.
+
+| Quantity | Value |
+|---|--:|
+| mean eyes-open / eyes-closed sway | 167 / 217 cm |
+| **eyes-closed / eyes-open ratio** | **~1.30** |
+| eyes-closed > eyes-open | **43 / 50** |
+| **paired t** (df 49) | **7.57** |
+| −log₁₀ p | 9.1 (p ~ 8.8e-10) |
+| vs `scipy.stats.ttest_rel` / base R (\|diff\|) | **0** (bit-for-bit) |
+
+The paired test equals both references exactly, and the vision effect is strong. Values trace to
+[`artifacts/sway_summary.csv`](artifacts/sway_summary.csv).
+
+## Conclusion
+
+`pairedTTest` — certified in the foam-firm case — reproduces the reference here too, on the certified
+`swayMetrics`. The transferable takeaway: **standing balance rests on three inputs. Foam degrades
+proprioception (sway 2.76x), eyes-closed removes vision (1.30x), and age erodes the capacity to use both
+(sway rises with age, r=0.62). Probing each in turn, with certified metrics and tests, turns posturography
+into a mechanistic read-out of who is at risk and why.**
+
+## Open questions
+
+- This shows the vision effect on foam, where it is largest; the classic Romberg is on firm ground, where
+  healthy adults compensate and the effect is smaller and age-dependent. The BDS's four vision × surface
+  conditions across the full cohort support a two-way analysis of how the sensory contributions combine and
+  change with age. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Paired t-test | `pairedTTest()` | PhysioAnalysis |
+| Two-sample t-test / correlation | `twoSampleTTest()`, `correlationTest()` | PhysioAnalysis |
+| Posturography sway metrics | `swayMetrics()` | PhysioMoCap |
+
+**Reading the result.**
+
+- **eyes-closed vs eyes-open** — the sway increase is the visual contribution; larger on foam because the
+  other cues are already compromised.
+- **the triad together** — report the surface, vision, and age effects side by side; a person whose sway
+  jumps most when a given cue is removed is most dependent on it.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis); library(PhysioMoCap)
+
+eo <- swayMetrics(cop_eyes_open, 100)$path_length   # per subject
+ec <- swayMetrics(cop_eyes_closed, 100)$path_length
+pairedTTest(ec, eo)   # t, p, df -- reproduces scipy.stats.ttest_rel and base R bit-for-bit
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/sway_summary.csv`](artifacts/sway_summary.csv), and [`audit.py`](audit.py) re-checks the paired
+t and p, the bit-exact match against scipy and base R, the eyes-closed > eyes-open direction and ratio, and
+the honestly noted scope (reuses the certified pairedTTest; inputs from the certified swayMetrics; the
+sensory triad).

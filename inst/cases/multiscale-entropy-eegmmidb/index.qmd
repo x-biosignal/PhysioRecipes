@@ -1,0 +1,123 @@
+---
+title: "Multiscale entropy: a new op that matches NeuroKit2 per scale bit-for-bit -- and shows the EEG's multi-scale structure"
+subtitle: "A worked multiscale-entropy case on real EEG, introducing multiscaleEntropy and contrasting it with white noise"
+categories: [eeg, complexity, entropy, multiscale, validated]
+author: "Yusuke Matsui"
+date: "2026-09-07"
+---
+
+> **What this case shows** — sample entropy scores regularity at one time scale. **Multiscale entropy**
+> (Costa 2002) scores it across many, and the *shape* of the curve separates a structured signal from
+> noise. This case adds a standalone op (**`multiscaleEntropy`**, completing the entropy family). On a
+> real eyes-closed EEG channel it reproduces **NeuroKit2**'s `entropy_multiscale` **bit-for-bit** across
+> scales 1–8. And the curve carries a finding: it *rises* to a peak at scale 5, whereas white noise of
+> the same size *falls* monotonically — the signature of genuine multi-scale structure in the EEG.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `multiscaleEntropy(x, scales = 1:8)` → the sample entropy at each coarse-grained scale.
+**Way of thinking** — read the *shape*, not just the value. A curve that stays high or rises at coarse
+scales means structure across time scales; a curve that falls monotonically from scale 1 is what white
+noise does. The mean under the curve is a compact complexity index.
+**Ecosystem usage** — `PhysioEEG::multiscaleEntropy()`, alongside `sampleEntropy()` and `eegComplexity()`.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, the new `multiscaleEntropy` reproduces NeuroKit2 `entropy_multiscale` (MSEn)
+bit-for-bit across scales 1–8 (max `|diff|` ~4e-16); the curve rises from 1.327 (scale 1) to a peak of
+1.879 (scale 5) and stays above scale 1, while a same-size white-noise series falls monotonically.
+
+## Question & goal
+
+**The question is a gap and a shape: the ecosystem had multiscale entropy only inside `eegComplexity` —
+can a standalone op reproduce the reference per scale, and does the EEG's curve show the structure that
+distinguishes it from noise?** The goal is to introduce `multiscaleEntropy`, certify it per scale, and
+read the curve.
+
+## Challenge & approach
+
+At each scale `s`, the signal is coarse-grained into non-overlapping length-`s` window means, and the
+sample entropy (`m = 2`, tolerance `r = 0.2·SD` held *fixed on the original* signal) of that series is
+the MSE at scale `s`. Matching that convention (fixed tolerance, non-overlapping means) makes the curve
+line up with NeuroKit2 exactly. We compute scales 1–8 and compare, and contrast with white noise.
+
+```
+EEG POz (eegmmidb) → multiscaleEntropy(scales 1:8) → [1.327, 1.548, 1.595, 1.785, 1.879, 1.762, 1.484, 1.383]
+                    vs NeuroKit2 entropy_multiscale (MSEn) → per-scale |diff| ~4e-16 (bit-for-bit)
+                    curve RISES to a peak at scale 5   ·   white noise (same N, SD) FALLS monotonically
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz**, 10 s at 160 Hz — the same git-tracked vector the
+[sampen-apen](../sampen-apen-eegmmidb/index.qmd), [svd-entropy](../svd-entropy-eegmmidb/index.qmd) and
+[signal-moments](../signal-moments-eegmmidb/index.qmd) cases use. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the multiscale-entropy curve computed by `PhysioEEG::multiscaleEntropy` (filled) and NeuroKit2 `entropy_multiscale` (open circles) — they coincide at every scale (bit-for-bit), peaking at scale 5. Right: the EEG curve rises to a coarse-scale peak, while a white-noise series of the same length and SD falls monotonically — the EEG carries multi-scale structure the noise lacks.](artifacts/figure.png)
+
+*How to read this:* left — the two curves are indistinguishable, the op equals the reference to machine
+precision. Right — the crossover tells the story: noise is more irregular at the finest scale but loses
+that irregularity under coarse-graining; the EEG *gains* it, because its structure lives at slower scales.
+
+| Quantity | Value |
+|---|--:|
+| MSE at scale 1 (= sample entropy) | 1.327 |
+| **MSE peak (scale 5)** | **1.879** |
+| MSE at scale 8 | 1.383 |
+| mean MSE 1–8 (complexity index) | 1.595 |
+| per-scale \|diff\| vs NeuroKit2 | **~4e-16** (bit-for-bit) |
+| coarse-scale MSE > scale 1 (structure) | **yes** |
+
+The new op equals NeuroKit2 at every scale, and the rising curve marks multi-scale structure. Values
+trace to [`artifacts/mse_summary.csv`](artifacts/mse_summary.csv).
+
+## Conclusion
+
+`multiscaleEntropy` completes the entropy family and is exact against NeuroKit2 at every scale. The
+transferable takeaway: **read the MSE curve's shape. A rise or plateau at coarse scales means structure
+across time scales; a monotonic fall from scale 1 is the fingerprint of white noise. The eyes-closed EEG
+rises — its complexity lives at the slower scales of the alpha rhythm, not just in fast fluctuations.**
+
+## Open questions
+
+- The mean/area under the curve and the peak scale are compact summaries for group comparison, but both
+  depend on the maximum scale and the segment length. On a longer recording, extending to scales 1–20 and
+  comparing conditions (eyes-open vs eyes-closed, across the scalp) would test whether the coarse-scale
+  rise tracks the alpha rhythm. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Multiscale entropy (per scale) | `multiscaleEntropy()` | PhysioEEG |
+| Single-scale sample entropy | `sampleEntropy()` | PhysioMoCap |
+| Multi-measure complexity wrapper | `eegComplexity()` | PhysioEEG |
+
+**Reading the result.**
+
+- **the curve's shape** — rising/sustained at coarse scales = multi-scale structure; monotonic fall =
+  noise-like.
+- **the mean (complexity index)** — one number for comparison; pair it with the peak scale.
+- **coarse-scale stability** — a coarse-grained series is short (scale `s` leaves `N/s` points), so trust
+  high scales only when the segment is long.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioEEG)
+
+mse <- multiscaleEntropy(x, scales = 1:8)   # per-scale sample entropy
+mean(mse)                                    # complexity index
+which.max(mse)                               # peak scale
+# the per-scale curve reproduces NeuroKit2 entropy_multiscale bit-for-bit.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/mse_summary.csv`](artifacts/mse_summary.csv), and [`audit.py`](audit.py) re-checks the curve,
+the bit-exact match against NeuroKit2 at all eight scales, the non-monotonic rise (coarse > fine), and
+the honestly noted scope (new standalone op; machine precision; the white-noise structure contrast; the
+coarse-scale short-series caveat).

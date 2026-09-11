@@ -1,0 +1,9 @@
+{
+  "dataset": "BIDMC PPG and Respiration Dataset",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/bidmc/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "record_used": "subject bidmc01; the simultaneous PLETH (optical photoplethysmogram / PPG) and lead-II (electrical ECG) signals at 125 Hz, first 4 min (30000 samples each), from the git-tracked WFDB record.",
+  "pipeline": "readWFDB(bidmc01) -> extract PLETH + II -> PhysioCrossModal::coherence(x = PPG, y = ECG, sr = 125, nperseg = 512, noverlap = 256), the Welch magnitude-squared coherence spectrum. The reference re-computes the SAME spectrum with the canonical scipy.signal.coherence (matched symmetric-Hann window + no per-segment detrend, via reticulate) and reads the cardiac-band (0.5-5 Hz) peak. Deterministic.",
+  "note": "Magnitude-squared coherence is the frequency-resolved linear coupling between two signals. Here two physically different cardiac sensors -- optical (PPG) and electrical (ECG) -- are shown to share the same rhythm: coherence peaks at 0.898 at 1.465 Hz (~88 bpm), the heart rate. The tracked inputs are eval/data/coherence-cardioresp/ (ppg_bidmc01.rds + ecg_bidmc01.rds). The op computes coherence WITHOUT per-segment detrending (matching scipy's detrend=False), so the full spectrum carries a DC/baseline component; the physiological finding is read in the cardiac band (0.5-5 Hz). coherence reproduces scipy.signal.coherence to machine precision over the full spectrum (max |diff| = 2.9e-14) with the Welch settings matched exactly."
+}

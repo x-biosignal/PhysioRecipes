@@ -1,0 +1,132 @@
+---
+title: "How many dimensions is the alpha rhythm? SVD entropy, a newly-authored op, bit-for-bit against antropy"
+subtitle: "A worked complexity case study on real EEG, introducing and certifying svdEntropy"
+categories: [eeg, complexity, svd-entropy, nonlinear, validated]
+author: "Yusuke Matsui"
+date: "2026-09-05"
+---
+
+> **What this case shows** — the ecosystem's complexity suite measured *regularity* (sample entropy),
+> *ordinal structure* (permutation entropy), *compressibility* (Lempel-Ziv), and *derivative ratios*
+> (Hjorth) — but not *dimensionality*. **SVD entropy** (Roberts 1999) fills that: time-delay embed
+> the signal and read the Shannon entropy of the embedding matrix's normalized **singular-value**
+> spectrum — low for a low-dimensional (structured) signal, high for a complex one. This case
+> introduces a **newly-authored op**, `svdEntropy`. On real eyes-closed posterior EEG it reproduces
+> `antropy.svd_entropy` **bit-for-bit** (max |diff| ~**2e-16**; both via LAPACK SVD), and the finding:
+> SVD entropy is **lower over the posterior alpha region** (all **9/9** parieto-occipital channels
+> below the frontal mean) — the eyes-closed alpha rhythm is a comparatively **low-dimensional
+> oscillation**.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for a signal's dimensionality: `svdEntropy(x, order, delay)` → the Shannon entropy of
+its singular-value spectrum (in bits).
+**Way of thinking** — embed the signal, and its embedding matrix has a few large singular values if
+it's low-dimensional (an oscillation lives in a low-dimensional subspace) and many comparable ones if
+it's complex. SVD entropy is *how spread out* the singular-value spectrum is.
+**Ecosystem usage** — `PhysioEEG::svdEntropy()`; a linear-algebraic complement to
+`eegComplexity()`'s entropy/fractal measures.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, `svdEntropy` reproduces `antropy.svd_entropy` bit-for-bit (max |diff|
+~2e-16); and SVD entropy is lower over the posterior alpha region (9/9 posterior channels below the
+frontal mean).
+
+## Question & goal
+
+**The question is a gap and its fidelity: the complexity suite lacked a dimensionality measure — can
+we author SVD entropy to reproduce the reference exactly, and does it see the alpha rhythm's
+low-dimensionality?** The goal is to introduce `svdEntropy`, certify it bit-for-bit against antropy,
+and read the spatial pattern.
+
+## Challenge & approach
+
+SVD entropy embeds the signal (order = embedding dimension, delay = lag), takes the singular values
+of that matrix, normalizes them to a probability distribution, and returns their Shannon entropy. We
+implement that as `svdEntropy` and check it against `antropy.svd_entropy`; since both use LAPACK's
+SVD, the match is exact.
+
+```
+EEG POz (eegmmidb, 160 Hz) → svdEntropy(order=3, delay=1) → 1.20 bits
+                    vs antropy.svd_entropy                    → bit-exact (~2e-16)
+                    per-channel → posterior 1.24 < frontal 1.29 (9/9) → low-dimensional alpha
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz** (posterior), 10 s at 160 Hz — a numeric vector subset from the same
+git-tracked root the [Welch](../eeg-bandpower-welch-eegmmidb/index.qmd),
+[spectrogram](../eeg-spectrogram-scipy-eegmmidb/index.qmd), and
+[coherence](../eeg-coherence-scipy-eegmmidb/index.qmd) cases use; the spatial map uses all 64
+channels. Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: SVD entropy for all 64 channels, sorted and colored by region — the posterior (parieto-occipital, red) channels sit below the frontal (blue) mean (all 9 posterior channels below it). Right: the normalized singular-value spectrum (embedding order 3) for a posterior vs a frontal channel — the posterior channel's spectrum is more concentrated in its first singular value (lower entropy = more low-dimensional).](artifacts/figure.png)
+
+*How to read this:* the left panel is the finding (posterior alpha is lower-dimensional); the right
+panel is the mechanism (a concentrated singular-value spectrum → low SVD entropy).
+
+| Quantity | Value |
+|---|--:|
+| **SVD entropy (POz)** | **1.20 bits** |
+| op vs `antropy.svd_entropy` (max \|diff\|) | **2e-16** (bit-exact) |
+| samples analyzed | **1600** |
+| **posterior mean SVD entropy** | **1.24** |
+| frontal mean SVD entropy | **1.29** |
+| posterior channels below frontal mean (of 9) | **9** |
+
+The newly-authored op equals antropy to the floating-point floor, and the posterior alpha region is
+lower-dimensional. Values trace to [`artifacts/svd_summary.csv`](artifacts/svd_summary.csv).
+
+## Conclusion
+
+`svdEntropy` fills a real gap — the complexity suite measured regularity, ordinal structure,
+compressibility, and derivative ratios, but not dimensionality — and it is exact: bit-for-bit against
+antropy (both via LAPACK SVD). On real EEG it shows the eyes-closed alpha rhythm as a low-dimensional
+oscillation over the posterior scalp, consistent with the Welch, spectrogram, Hjorth, and coherence
+cases on the same data. The transferable takeaway: **SVD entropy reads a signal's *dimensionality*
+from its embedding's singular-value spectrum — a structured oscillation concentrates the spectrum
+(low entropy), so it complements the regularity/ordinal/compressibility measures with a
+linear-algebraic view.**
+
+## Open questions
+
+- SVD entropy depends on the embedding (order, delay); a sweep over order/delay — and a contrast of
+  eyes-closed vs eyes-open (alpha present vs suppressed) — would show whether the posterior
+  low-dimensionality tracks the alpha rhythm specifically. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| SVD entropy (dimensionality) | `svdEntropy()` | PhysioEEG |
+| multi-measure complexity (entropy/fractal/Hjorth) | `eegComplexity()` | PhysioEEG |
+
+**Choosing the parameters.**
+
+- **order** — the embedding dimension = the number of singular values (here 3); larger `order`
+  resolves higher-dimensional structure but needs more data.
+- **delay** — the embedding lag in samples (here 1); for oscillatory signals a delay near a
+  quarter-period can sharpen the dimensionality estimate.
+- **normalize** — `TRUE` divides by `log2(order)` to bound the result in [0, 1] for cross-`order`
+  comparison.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioEEG)
+
+h <- svdEntropy(x, order = 3, delay = 1)   # x: a numeric vector
+h   # 1.20 bits -- lower = more low-dimensional (structured)
+
+# reproduces antropy.svd_entropy bit-for-bit (max |diff| ~2e-16; both via LAPACK SVD).
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/svd_summary.csv`](artifacts/svd_summary.csv), and [`audit.py`](audit.py) re-checks the
+value, the bit-exact antropy match, the valid-entropy bound (0 < H < log2(order)), the
+posterior-vs-frontal finding and its robustness (9/9), and the honestly-noted scope (newly-authored
+op; embedding-dependent; descriptive spatial pattern).

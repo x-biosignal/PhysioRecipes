@@ -1,0 +1,35 @@
+{
+  "id": "eeg-spectrogram-scipy-eegmmidb",
+  "title": "Watching the alpha rhythm breathe: the spectrogram, bit-for-bit against scipy",
+  "modality": ["eeg", "spectral", "time-frequency", "spectrogram", "stft", "alpha"],
+  "packages": ["PhysioAnalysis"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "The Welch case averaged the periodograms of overlapping windows into one spectrum; the spectrogram keeps them -- a frequency x time power matrix that resolves how the spectrum evolves. On a real eyes-closed posterior EEG channel (POz), spectrogram reproduces scipy.signal.spectrogram BIT-FOR-BIT (max |diff| ~7e-13 over all 129 x 11 cells) once the conventions are matched (symmetric Hann, no detrend, density scaling, one-sided doubling, nperseg=256, 50% overlap, mode='psd'). And the time-frequency view reveals what the averaged spectrum hides: the alpha rhythm dominates every one of the 11 windows (peak in 8-13 Hz, median 11.25 Hz), yet its amplitude waxes and wanes across the 10 s (CV ~58%) -- the eyes-closed alpha rhythm breathing.",
+  "opdag": ["spectrogram"],
+  "claims": [
+    { "id": "max_diff_scipy", "statement": "max |spectrogram - scipy.signal.spectrogram| over all 129 x 11 (freq x time) cells (bit-exact)", "value": 6.82121e-13, "artifact": "artifacts/spectrogram_summary.csv", "status": "PASS" },
+    { "id": "n_freqs", "statement": "frequency bins in the spectrogram (window_size/2 + 1)", "value": 129, "artifact": "artifacts/spectrogram_summary.csv", "status": "PASS" },
+    { "id": "n_windows", "statement": "time windows in the spectrogram (10 s, 256-sample windows, 50% overlap)", "value": 11, "artifact": "artifacts/spectrogram_summary.csv", "status": "PASS" },
+    { "id": "median_peak_freq_hz", "statement": "median peak-power frequency across time windows -- the alpha rhythm", "value": 11.25, "artifact": "artifacts/spectrogram_summary.csv", "status": "PASS" },
+    { "id": "n_windows_alpha_peak", "statement": "time windows whose peak power is in the alpha band (8-13 Hz) -- all of them (sustained)", "value": 11, "artifact": "artifacts/spectrogram_summary.csv", "status": "PASS" },
+    { "id": "alpha_power_cv_pct", "statement": "coefficient of variation of alpha power across time -- the waxing/waning the averaged PSD hides", "value": 57.9230, "artifact": "artifacts/spectrogram_summary.csv", "status": "PASS" },
+    { "id": "mean_alpha_power", "statement": "mean alpha-band power across time windows at POz", "value": 2464.8094, "artifact": "artifacts/spectrogram_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "spectrogram (STFT) is validated against scipy.signal.spectrogram, the gold-standard time-frequency estimator. scipy re-computes the full frequency x time power matrix with matched conventions -- symmetric Hann window (fftbins=False), nperseg=256, noverlap=128, no detrend (detrend=False), density scaling, one-sided doubling, mode='psd'. The agreement is BIT-FOR-BIT (max |diff| ~7e-13 over all 129 x 11 cells), the FFT floating-point floor. The finding: at POz the peak-power frequency is in the alpha band in every window (11/11, median 11.25 Hz) while alpha power waxes and wanes across time (CV ~58%) -- the eyes-closed alpha rhythm and its amplitude modulation.",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), channel POz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/spectrogram_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the spectrogram reproduces scipy.signal.spectrogram bit-for-bit (max |diff| ~7e-13) over all 129 x 11 freq x time cells; (2) at POz the alpha rhythm dominates every window (11/11 peak in 8-13 Hz, median 11.25 Hz) while its power waxes and wanes (CV ~58%). HONEST scope: (1) this is the FIRST external-reference (scipy) certification of the spectrogram op -- it was internally validated only for compiled-kernel byte-parity to its own R reference, never against the gold-standard scipy.signal.spectrogram; the op is NOT new; (2) this is a genuine MACHINE-PRECISION match -- once the conventions are matched (symmetric Hann, no detrend, density scaling, one-sided doubling, mode='psd'), the op and scipy compute the IDENTICAL STFT, so the ~7e-13 residual is the FFT floating-point floor, not a convention agreement; the match REQUIRES those conventions (scipy's defaults -- a Tukey window, detrend='constant' -- would NOT match); (3) the finding -- alpha sustained yet waxing/waning -- is the expected eyes-closed posterior alpha rhythm AND its amplitude modulation, which the time-AVERAGED Welch PSD (the sibling case) cannot reveal; a descriptive time-frequency read on one channel/segment, cross-consistent with the Welch and Hjorth cases on the SAME data; NOT a clinical claim; (4) single subject, 10 s, one posterior channel; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "The spectrogram's real power is on NON-stationary signals -- an eyes-open->eyes-closed transition (alpha appearing), a fatiguing EMG contraction (the median frequency compressing over time), or motor-imagery event-related desynchronization. Running it across such a transition, with the exact per-window frequencies pinned against scipy, would turn the bit-exact estimator into a dynamic biomarker. Documented, not escalated.", "artifact": "artifacts/spectrogram_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.signal.spectrogram (Python, SciPy)"],
+  "status": "validated"
+}

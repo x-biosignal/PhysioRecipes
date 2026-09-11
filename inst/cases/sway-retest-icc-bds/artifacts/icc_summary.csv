@@ -1,0 +1,14 @@
+"metric","value"
+"icc2_single",0.8252765473
+"icc2k_average",0.93408038
+"icc1_single",0.8243552837
+"icc3_single",0.8384699745
+"max_diff_psych",9.99200722162641e-16
+"max_diff_pingouin",7.7715611723761e-16
+"good_single",1
+"excellent_average",1
+"n",163
+"k",3
+"trial_mean_1",64.6128
+"trial_mean_2",59.492
+"trial_mean_3",57.9302

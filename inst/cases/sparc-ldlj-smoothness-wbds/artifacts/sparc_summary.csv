@@ -1,0 +1,11 @@
+"metric","value"
+"sparc",-1.6334547237
+"ldlj",-8.2271385193
+"ref_sparc",-1.6334547237
+"ref_ldlj",-8.2271385193
+"max_diff_sparc",0
+"max_diff_ldlj",0
+"sparc_noisy",-1.6411685959
+"noise_reduces_smoothness",1
+"speed_smoothness_corr",-0.258255
+"n_samples",101

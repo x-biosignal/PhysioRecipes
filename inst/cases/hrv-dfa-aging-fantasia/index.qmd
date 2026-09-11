@@ -1,0 +1,136 @@
+---
+title: "The heartbeat loses its fractal signature with age"
+subtitle: "A worked HRV detrended-fluctuation-analysis case study on real Fantasia ECG, validated to machine precision"
+categories: [ecg, hrv, nonlinear-dynamics, dfa, aging, validated]
+author: "Yusuke Matsui"
+date: "2026-09-03"
+---
+
+> **What this case shows** — a healthy heartbeat is neither a metronome nor random
+> noise: it is **fractal**, its fluctuations statistically self-similar across time
+> scales. Detrended fluctuation analysis measures this — the short-term scaling
+> exponent **α1** is a validated cardiac-autonomic and mortality biomarker, near **1.0**
+> (1/f-like fractal dynamics) in a healthy heart and drifting toward **1.5** (smoother,
+> more Brownian, less adaptive) as that organization is lost with aging and disease. On
+> real Fantasia recordings the signature is unmistakable: α1 is **1.05 in the young**
+> (textbook healthy fractal scaling) and rises to **1.41 in the elderly** — an aging
+> effect of **+0.36**, with *every* elderly subject above the young mean. And the
+> computation is trustworthy: `ecgDFA` reproduces an independent, log-spaced standard-DFA
+> (a different least-squares fitter) to **machine precision** (max |diff| = 1.3×10⁻¹⁴).
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for HRV fractal scaling: ECG → R-peaks → RR intervals →
+`ecgDFA(rr, short_range, long_range)` → read **α1** (short-term) and **α2** (long-term).
+**Way of thinking** — α1 is a *level of fractality*: ~1.0 is healthy 1/f self-similarity;
+toward 1.5 is a smoother, more "random-walk" heartbeat that has lost its adaptive
+complexity. It is a clinical marker — below ~0.75 flags increased post-infarction
+mortality.
+**Ecosystem usage** — `PhysioECG::ecgDFA()`, and `ecgDFArolling()` +
+`dfaThresholdCrossings()` for the DFA-α1-guided exercise-intensity method.
+:::
+
+## Proposition
+
+On real Fantasia ECG, DFA α1 is 1.05 in young and 1.41 in elderly healthy subjects (an
+aging effect of +0.36), and `ecgDFA` reproduces an independent standard-DFA to machine
+precision (max |diff| = 1.3×10⁻¹⁴).
+
+## Question & goal
+
+**The question is whether heart-rate dynamics lose their fractal organization with age —
+and whether the ecosystem computes DFA correctly.** α1 is only a useful biomarker if the
+number is right, and DFA is notoriously implementation-sensitive. The goal is to recover
+the established aging effect and validate ecgDFA against an independent DFA.
+
+## Challenge & approach
+
+DFA integrates the RR series, divides it into windows across a range of scales, detrends
+each, and fits the log-log fluctuation-vs-scale slope. We compute α1/α2 with `ecgDFA` and
+with an independent reimplementation (different fitter), and compare young vs elderly.
+
+```
+ECG → R-peaks → RR intervals → ecgDFA (alpha1 4-16, alpha2 16-64 beats)
+                               vs independent log-spaced standard-DFA (machine precision)
+                               young vs elderly alpha1 → the aging effect
+```
+
+## Data
+
+**Fantasia (PhysioNet)**: 5 young (f1y01–05) + 5 elderly (f1o01–05) healthy subjects; RR
+intervals from the ECG (readWFDB → ecgDetectRpeaks → ecgRRintervals, filtered 300–2000 ms).
+Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: DFA α1 by age group — young (blue) cluster near the healthy fractal value α1 ≈ 1.0 (dotted line, mean 1.05), elderly (red) are elevated (mean 1.41); every elderly subject is above the young mean. Right: the DFA fluctuation plot for one young subject — log F(n) vs log scale; the slope over scales 4–16 beats is α1 (0.79 here).](artifacts/figure.png)
+
+*How to read this:* α1 near 1.0 is a healthy, fractal heartbeat; higher α1 (toward 1.5)
+is a smoother, less adaptive one. The elderly have lost fractal scaling — the classic
+aging effect.
+
+| Quantity | This reproduction | Reference |
+|---|---|---|
+| α1, young (mean) | **1.05** | healthy ~1.0 |
+| α1, elderly (mean) | **1.41** | elevated |
+| Aging effect (Δα1) | **+0.36** | — |
+| max \|diff\| vs independent DFA | **1.3×10⁻¹⁴** | 0 (same algorithm) |
+
+The aging effect is clear and consistent, and ecgDFA matches the independent DFA exactly.
+Values trace to
+[`artifacts/dfa_summary.csv`](artifacts/dfa_summary.csv) and the per-subject table
+[`artifacts/dfa_by_subject.csv`](artifacts/dfa_by_subject.csv).
+
+## Conclusion
+
+The heartbeat loses its fractal signature with age, and the ecosystem measures that loss
+with an operator validated to machine precision. The transferable takeaway: **read HRV
+fractal scaling with DFA α1 — a clinical risk marker near 1.0 in health — and validate
+your DFA against an independent implementation, because the algorithm is sensitive to the
+scale choice** (this very case rests on a fix that switched `ecgDFA` from linear to
+log-spaced scales — the linear version returned `NA` on long recordings).
+
+## Open questions
+
+- α1 is a clinical risk marker: below ~0.75 it flags increased mortality after myocardial
+  infarction, and it drives a **DFA-α1-guided exercise-intensity** method (`ecgDFArolling`
+  + `dfaThresholdCrossings`). Extending this validated estimator to a within-subject
+  **exercise ramp** (does α1 fall through the aerobic/anaerobic thresholds?), a **post-MI
+  cohort**, or a larger age range would turn a validated exponent into a cardiac-risk
+  study. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| R-peak detection | `ecgDetectRpeaks()` | PhysioECG |
+| RR intervals | `ecgRRintervals()` | PhysioECG |
+| DFA α1 / α2 | `ecgDFA()` | PhysioECG |
+| rolling α1 + exercise thresholds | `ecgDFArolling()`, `dfaThresholdCrossings()` | PhysioECG |
+
+**Choosing the parameters.**
+
+- **short_range / long_range** — α1 over 4–16 beats (short-term), α2 over 16–64
+  (long-term); these are the standard windows (Peng et al.).
+- **RR cleaning** — filter ectopic/artefact intervals (e.g. 300–2000 ms) before DFA;
+  ectopics distort the short-scale fluctuations that α1 depends on.
+- **length** — α1 needs a few hundred beats minimum; α2 needs more (its window reaches 64
+  beats). DFA uses log-spaced scales, so both windows are populated on long recordings.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioECG)
+
+peaks <- ecgDetectRpeaks(pe)          # pe = an ECG PhysioExperiment
+rr    <- ecgRRintervals(pe, peaks)
+rr    <- rr[rr$rr_ms > 300 & rr$rr_ms < 2000, ]   # clean ectopics
+dfa   <- ecgDFA(rr, short_range = c(4, 16), long_range = c(16, 64))
+dfa$alpha1     # 1.05 (young) ... 1.41 (elderly) -- fractal scaling of the heartbeat
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/`](artifacts/) — the summary in
+[`dfa_summary.csv`](artifacts/dfa_summary.csv) and the per-subject α1/α2 in
+[`dfa_by_subject.csv`](artifacts/dfa_by_subject.csv) — and [`audit.py`](audit.py)
+re-checks each reported number, the machine-precision independent-DFA agreement on every
+subject, and the consistent aging effect.

@@ -1,0 +1,118 @@
+---
+title: "Which muscles, and when: space-by-time muscle synergies"
+subtitle: "A worked sNM3F case study on real forearm EMG"
+categories: [emg, muscle-synergy, dimensionality-reduction, validated]
+author: "Yusuke Matsui"
+date: "2026-08-17"
+---
+
+> **What this case shows** — spatial NMF answers *which* muscles group together;
+> **space-by-time** (sNM3F) also answers *when*. On real 16-channel forearm EMG,
+> it factorises each trial's **960-value** muscle × time envelope into a few
+> **shared spatial modules** and **shared temporal modules** plus a tiny per-trial
+> **activation matrix**: a **2×2 model** (4 shared modules) reconstructs the
+> 14-trial EMG at **VAF 0.958**, a 3×3 model at **0.968** — so each trial is
+> compressed to a handful of activation numbers over common modules, and those
+> activations carry the gesture **above chance** (leave-one-out **0.64** vs 0.50).
+> **How to read it** — left, the spatial modules (which channels co-activate);
+> centre, the temporal modules (when); right, VAF rising with model size.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — decompose a *set* of muscle × time EMG trials into **shared
+spatial** synergies (muscle groupings), **shared temporal** synergies (activation
+timing) and a **per-trial activation** matrix that combines them.
+**Way of thinking** — "which muscles" and "when" are *separable* questions:
+space-by-time keeps the modules common across trials and puts the task-to-task
+difference where it belongs — in the small activation matrix — turning each trial
+into a few interpretable numbers.
+**Ecosystem usage** — `spaceByTimeSynergy()` (PhysioEMG); compare with
+`muscleSynergy()` (spatial only), `muscleSynergyTensor()` (PARAFAC) and
+`tuckerSynergy()` (non-diagonal core).
+:::
+
+## Proposition
+
+Space-by-time factorises multi-trial EMG into shared spatial + temporal modules
+with a per-trial activation. On real forearm EMG a compact model reconstructs at
+high VAF (2×2 = 0.958), VAF rises monotonically with modules, and the activations
+carry the gesture above chance (LOO 0.64).
+
+## Question & goal
+
+**The question separates structure from task.** A muscle × time EMG matrix mixes
+two things: a fixed *coordination structure* (which muscles fire together, in what
+temporal sequence) and a *task-specific drive* (how strongly each is recruited this
+trial). Space-by-time pulls them apart. We ask whether, on real forearm EMG, it
+compresses the signal into shared modules at high fidelity and leaves the task in
+the activations.
+
+## Challenge & approach
+
+We take 16-channel forearm EMG envelopes for two gestures × seven trials,
+time-normalise each to 60 points, and run `spaceByTimeSynergy()` for 1–4 modules.
+We read the reconstruction VAF, confirm it rises with model size, and test whether
+a nearest-centroid classifier on the per-trial **activations** recovers the gesture
+(leave-one-out).
+
+## Data
+
+**GRABMyo** (Pradhan et al., PhysioNet) — 16 forearm EMG channels, two gestures ×
+seven trials, enveloped and normalised. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![The shared spatial modules (left, which channels co-activate), the shared
+temporal modules (centre, when), and reconstruction VAF versus model size
+(right).](artifacts/figure.png)
+
+*How to read this:* the left heatmap and centre curves are **shared by every
+trial** — the coordination structure. Only the small activation matrix changes
+trial to trial, yet 4 modules already reconstruct the EMG at 96%.
+
+| quantity | value |
+|---|---|
+| VAF, 1×1 module | 0.930 |
+| VAF, 2×2 modules | **0.958** |
+| VAF, 3×3 modules | 0.968 |
+| gesture LOO accuracy (from activations) | **0.64** (chance 0.50) |
+| trials decomposed | 14 |
+
+## Conclusion
+
+Space-by-time compresses real multi-trial EMG into a few shared spatial and
+temporal modules at high fidelity, with the task living in a tiny activation
+matrix. The transferable takeaway: **factor "which muscles" and "when" separately —
+the shared modules are the coordination structure, and the per-trial activations
+are the compact, task-carrying code.**
+
+## Open questions
+
+- With **more gestures and participants** the activations should separate tasks far
+  more sharply (a decoding case in its own right), and the shared modules could be
+  tested for cross-participant invariance. Here, two similar gestures give only a
+  *modest* 0.64 activation accuracy. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| step | function | package |
+|---|---|---|
+| envelope + normalise each channel | `emgEnvelope()` / `emgAmplitudeNormalize()` | PhysioEMG |
+| space-by-time (spatial × temporal + activations) | `spaceByTimeSynergy()` | PhysioEMG |
+| spatial-only synergies | `muscleSynergy()` | PhysioEMG |
+| hierarchical (non-diagonal core) | `tuckerSynergy()` | PhysioEMG |
+
+**Choosing the parameters:** give one non-negative `muscle × time` matrix per
+trial (same time length), pick the spatial and temporal module counts from the VAF
+curve (the knee), and read the per-trial **activations** as the compact task code.
+
+```r
+library(PhysioEMG)
+fit <- spaceByTimeSynergy(trials, n_spatial = 2, n_temporal = 2)
+fit$vaf; fit$spatial; fit$temporal; fit$activation[[1]]
+```
+
+One line for the technical reader: every number traces to
+[`artifacts/spacetime_summary.csv`](artifacts/spacetime_summary.csv) and
+[`artifacts/vaf_curve.csv`](artifacts/vaf_curve.csv), re-checked by
+[`audit.py`](audit.py) and `tools/validate_case.py`.

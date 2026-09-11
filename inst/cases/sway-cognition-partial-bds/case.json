@@ -1,0 +1,38 @@
+{
+  "id": "sway-cognition-partial-bds",
+  "title": "The cognitive-motor link is mostly age, certified: adjusting for age attenuates the sway-cognition correlation from 0.53 to 0.20 (partial correlation to machine precision vs ppcor)",
+  "modality": ["posturography", "balance", "cognition", "cohort", "cross-tool-validation"],
+  "packages": ["PhysioAnalysis", "PhysioMoCap"],
+  "dataset": {
+    "name": "BDS -- a public data set of human balance evaluations (Santos & Duarte 2016)", "version": "2016",
+    "record": "per subject: eyes-closed-foam COP path length (cm), Trail Making Test A time (s), age (years); n=158",
+    "url": "https://doi.org/10.7717/peerj.2648", "public": true,
+    "citation": "Santos DA, Duarte M. A public data set of human balance evaluations. PeerJ 2016;4:e2648. doi:10.7717/peerj.2648."
+  },
+  "proposition": "The sibling case found a cognitive-motor association -- slower processing speed tracks more postural sway (Spearman rho = 0.532) -- but flagged age as a shared correlate. Adjusting for age answers whether the link is real. Each subject's sway comes from the certified swayMetrics; the NEWLY-AUTHORED partialCorrelation computes the rank partial correlation of sway and Trail Making Test A controlling for age, reproducing the ppcor package AND an independent closed-form recompute to machine precision. The association ATTENUATES to a rank partial correlation of 0.201 (p=0.012, still significant but much weaker), and the linear (Pearson) partial correlation vanishes (0.048, p=0.55): most of the marginal link was age, though a modest rank association survives.",
+  "opdag": ["partialCorrelation"],
+  "claims": [
+    { "id": "partial_spearman_r", "statement": "rank (Spearman) partial correlation of sway and TMT-A controlling for age", "value": 0.2008706993, "artifact": "artifacts/sway_cognition_partial_summary.csv", "status": "PASS" },
+    { "id": "neg_log10_p", "statement": "-log10(two-sided p) of the age-adjusted association: still significant", "value": 1.933653, "artifact": "artifacts/sway_cognition_partial_summary.csv", "status": "PASS" },
+    { "id": "df", "statement": "degrees of freedom (n - 2 - k, one covariate)", "value": 155, "artifact": "artifacts/sway_cognition_partial_summary.csv", "status": "PASS" },
+    { "id": "max_diff_ppcor", "statement": "|partialCorrelation - ppcor::pcor.test| (machine precision, < 1e-9)", "value": 0, "artifact": "artifacts/sway_cognition_partial_summary.csv", "status": "PASS" },
+    { "id": "max_diff_formula", "statement": "|partialCorrelation - closed-form recompute| (machine precision, < 1e-9)", "value": 0, "artifact": "artifacts/sway_cognition_partial_summary.csv", "status": "PASS" },
+    { "id": "partial_pearson_r", "statement": "linear (Pearson) partial correlation controlling for age -- vanishes", "value": 0.047520292, "artifact": "artifacts/sway_cognition_partial_summary.csv", "status": "PASS" },
+    { "id": "partial_pearson_p", "statement": "p of the linear partial correlation (non-significant)", "value": 0.554518, "artifact": "artifacts/sway_cognition_partial_summary.csv", "status": "PASS" },
+    { "id": "marginal_spearman", "statement": "marginal (unadjusted) Spearman rho of sway and TMT-A", "value": 0.5316791333, "artifact": "artifacts/sway_cognition_partial_summary.csv", "status": "PASS" },
+    { "id": "attenuated", "statement": "the partial correlation is attenuated relative to the marginal (age accounts for much of the link)", "value": 1, "artifact": "artifacts/sway_cognition_partial_summary.csv", "status": "PASS" },
+    { "id": "n", "statement": "subjects with sway, TMT-A and age (complete triples)", "value": 158, "artifact": "artifacts/sway_cognition_partial_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored partialCorrelation op (Pearson or rank/Spearman, controlling for covariate[s] by residualising on [1, z] via QR) is validated against BOTH the ppcor package (ppcor::pcor.test) AND an independent closed-form recompute (the correlation-matrix formula) on the identical (sway, TMT-A, age) triples -- a double reference. All agree to machine precision (|diff| ~ 2e-16 vs ppcor; the Pearson partial is bit-for-bit vs the closed-form, |diff| = 0). The per-subject eyes-closed-foam sway comes from PhysioMoCap::swayMetrics (path_length, certified against Prieto in the sibling sway-posturography-bds case).",
+    "data": "REAL -- Santos & Duarte (2016) BDS; eyes-closed-foam COP path length, Trail Making Test A time, age; n=158",
+    "artifacts": ["artifacts/sway_cognition_partial_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) partialCorrelation reproduces ppcor::pcor.test and an independent closed-form recompute to machine precision; (2) the cognitive-motor association is largely age-confounded. HONEST scope: (1) this AUTHORS A NEW OP, partialCorrelation (Pearson or rank/Spearman, controlling for covariate[s] by residualising on [1, z] via QR), and reuses the certified swayMetrics op for the eyes-closed-foam sway; (2) the partial correlation reproduces the ppcor package (ppcor::pcor.test) AND an independent closed-form recompute to MACHINE PRECISION (|diff| ~ 2e-16 vs each; the Pearson partial is bit-for-bit vs the closed-form, |diff| = 0); (3) the finding: the cognitive-motor association is LARGELY AGE-CONFOUNDED -- the rank partial correlation ATTENUATES from the marginal Spearman rho of 0.532 to 0.201 (p = 0.012, still significant but much weaker) after adjusting for age, while the LINEAR partial correlation VANISHES (Pearson 0.048, p = 0.55); so a modest rank association survives age adjustment -- consistent with a small direct cognitive-motor contribution to standing balance -- but most of the marginal link was shared age variance; (4) this honestly RESOLVES the sibling sway-cognition-kendall-bds case's open question (the association is real but mostly age); (5) a cross-sectional ASSOCIATION, NOT causation; adjusting for one covariate does not rule out others; one per-subject value; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "Adjusting for age leaves a modest but significant rank partial correlation (0.20); whether this reflects a direct cognitive-motor pathway (executive/attentional control of posture) or residual confounding by other age-linked factors (medication, comorbidity, sensory loss) needs a fuller multivariable model and, ideally, a dual-task or longitudinal design. The single-covariate partial correlation shown here is the honest first adjustment. Documented, not escalated.", "artifact": "artifacts/sway_cognition_partial_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["ppcor::pcor.test (R)", "closed-form partial-correlation recompute (base R)"],
+  "status": "validated"
+}

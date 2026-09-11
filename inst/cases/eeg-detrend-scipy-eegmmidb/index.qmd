@@ -1,0 +1,137 @@
+---
+title: "The quiet first step: detrending, bit-for-bit against scipy — and why linear vs constant matters"
+subtitle: "A worked preprocessing case study on real EEG, certifying detrendSignal against scipy.signal.detrend"
+categories: [eeg, preprocessing, detrend, spectral-leakage, validated]
+author: "Yusuke Matsui"
+date: "2026-09-05"
+---
+
+> **What this case shows** — detrending is the quiet first step of almost every spectral analysis:
+> remove the slow drift before you estimate the spectrum, or the trend **leaks** spurious
+> low-frequency power. `detrendSignal` runs before the [Welch](../eeg-bandpower-welch-eegmmidb/index.qmd)
+> and [spectrogram](../eeg-spectrogram-scipy-eegmmidb/index.qmd) estimates — but had never been
+> checked against the reference. Here it is certified: on a real drifting frontopolar channel (Fpz)
+> it reproduces `scipy.signal.detrend` **bit-for-bit** (max |diff| ~**1e-12** for linear, exactly
+> **0** for constant). And the finding is a real methodological point: the **linear** detrend removes
+> a low-frequency trend that **constant** (mean) removal leaves in — sub-1-Hz power falls from
+> **1284** (raw) to **59** after linear but only to **112** after constant, so the detrend *type*
+> removes ~**47%** more low-frequency leakage.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — before any spectral or fluctuation analysis: `detrendSignal(pe, type = "linear")` to
+strip the drift.
+**Way of thinking** — a trend is not noise you can ignore: it spills energy across the low
+frequencies of the spectrum (spectral leakage). *Constant* detrend (mean removal) does nothing about
+a slope; *linear* detrend removes it. Match the detrend to the drift.
+**Ecosystem usage** — `PhysioPreprocess::detrendSignal()`; `type = "linear"` (least-squares line) or
+`"constant"` (mean).
+:::
+
+## Proposition
+
+On real drifting Fpz EEG, `detrendSignal` reproduces `scipy.signal.detrend` bit-for-bit (max |diff|
+~1e-12 linear, 0 constant); and linear detrend leaves far less sub-1-Hz power (59) than constant
+(112), a ~47% reduction.
+
+## Question & goal
+
+**The question is fidelity and consequence: does the ecosystem's detrend equal
+`scipy.signal.detrend` — and does the choice of linear vs constant actually change the spectrum?**
+The goal is a machine-precision certification of the primitive and a demonstration of why its type
+matters.
+
+## Challenge & approach
+
+`detrendSignal("linear")` subtracts the least-squares line (`stats::lm.fit`); `"constant"` subtracts
+the mean — exactly `scipy.signal.detrend(type = "linear"/"constant")`. We re-compute both with scipy
+(bit-exact), and quantify the consequence with Welch's method: the sub-1-Hz power of the raw signal
+and of each detrend.
+
+```
+Fpz EEG (eegmmidb, 160 Hz) → detrendSignal(linear / constant) → detrended signal
+                    vs scipy.signal.detrend                      → bit-exact (1e-12 / 0)
+                    sub-1-Hz Welch power: raw 1284 → linear 59, constant 112 → type matters (−47%)
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **Fpz** (frontopolar — the largest linear drift of the montage), 10 s at
+160 Hz — subset from the same git-tracked root the
+[Welch](../eeg-bandpower-welch-eegmmidb/index.qmd),
+[spectrogram](../eeg-spectrogram-scipy-eegmmidb/index.qmd), and
+[coherence](../eeg-coherence-scipy-eegmmidb/index.qmd) cases use. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the raw Fpz signal (grey) with its least-squares trend (red — detrendSignal equals scipy exactly) and the linear-detrended signal (blue). Right: the sub-1-Hz Welch power of the raw signal, the constant (mean) detrend, and the linear detrend — the linear detrend cuts ~47% more low-frequency leakage than constant, because it removes the trend that mean-removal leaves in.](artifacts/figure.png)
+
+*How to read this:* the left panel is the operation (the trend the op removes, = scipy); the right
+panel is the consequence (linear detrend removes the trend's low-frequency leakage that constant
+detrend leaves behind).
+
+| Quantity | Value |
+|---|--:|
+| op vs `scipy.signal.detrend` (max \|diff\|) | **1e-12** (linear), **0** (constant) |
+| linear trend removed | **0.014** µV/sample |
+| sub-1-Hz power — raw | **1284** |
+| sub-1-Hz power — **linear** detrend | **59** |
+| sub-1-Hz power — **constant** detrend | **112** |
+| **extra leakage removed (linear vs constant)** | **47%** |
+
+The op equals scipy to the floating-point floor, and the detrend type visibly changes the
+low-frequency spectrum. Values trace to
+[`artifacts/detrend_summary.csv`](artifacts/detrend_summary.csv).
+
+## Conclusion
+
+The ecosystem's detrend *is* `scipy.signal.detrend` — bit-for-bit, because the least-squares-line and
+mean formulas are identical — so the primitive that underlies the Welch and spectrogram estimates is
+certified against the reference; and on real drifting EEG the choice of linear vs constant detrend
+changes the sub-1-Hz spectrum by ~47%. The transferable takeaway: **detrend before you estimate a
+spectrum, and match the detrend to the drift — a slope needs *linear* detrend, because *constant*
+(mean) removal leaves the trend's low-frequency leakage in; and remember that linear detrend removes
+only the linear part, so oscillatory wander still needs a high-pass filter.**
+
+## Open questions
+
+- Linear detrend removes only the **linear** trend; real EEG baseline wander is oscillatory
+  (sub-1-Hz), which a high-pass or smoothness-priors detrend removes more completely. Comparing
+  linear detrend, a 0.5-Hz high-pass, and a smoothness-priors detrend on the same channel — and their
+  effect on the downstream alpha-power estimate — would show how much residual wander still biases the
+  spectrum. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| linear / constant detrend | `detrendSignal()` | PhysioPreprocess |
+| the spectrum it precedes | `bandPower(method = "welch")` | PhysioAnalysis |
+| the time-frequency view | `spectrogram()` | PhysioAnalysis |
+
+**Choosing the parameters.**
+
+- **type** — `"linear"` (subtract the least-squares line; use when there's a slope/drift) vs
+  `"constant"` (subtract the mean; use only when there's an offset but no slope).
+- **when it's not enough** — linear detrend removes a straight-line trend; for oscillatory baseline
+  wander, follow with a high-pass filter (or use a polynomial/spline detrend).
+- **why it matters** — a residual trend leaks into the low-frequency bins of every spectrum; detrend
+  first, especially for delta-band or fluctuation (DFA) analyses.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioPreprocess)
+
+pe_dt <- detrendSignal(pe, type = "linear")   # strip the drift before the spectrum
+# assay(pe_dt, "detrended")
+
+# equals scipy.signal.detrend bit-for-bit (max |diff| ~1e-12 linear, 0 constant);
+# linear detrend removes ~47% more sub-1-Hz power than constant on a drifting channel.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/detrend_summary.csv`](artifacts/detrend_summary.csv), and [`audit.py`](audit.py) re-checks
+each number, the bit-exact scipy match (linear + constant), the linear-vs-constant leakage reduction,
+its internal consistency, and the honestly-noted methodological (not physiological) scope.

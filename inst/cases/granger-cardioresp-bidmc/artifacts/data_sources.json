@@ -1,0 +1,10 @@
+{
+  "dataset": "BIDMC PPG and Respiration Dataset",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/bidmc/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Pimentel MAF, Johnson AEW, Charlton PH, Birrenkott D, Watkinson PJ, Tarassenko L, Clifton DA. Toward a robust estimation of respiratory rate from pulse oximeters. IEEE Trans Biomed Eng 2017;64(8):1914-1923. Data derived from the MIMIC-II matched waveform database; PhysioNet (Goldberger et al. 2000).",
+  "record_used": "subject bidmc01: simultaneous RESP (impedance-pneumography respiration) and PLETH (fingertip PPG) channels at 125 Hz, decimated by 5 to 25 Hz, a 200 s segment (samples 1000-6000 of the decimated series = 5001 samples each). The 20-subject net-direction summary uses the same extraction on bidmc01-bidmc20.",
+  "pipeline": "readWFDB(bidmcNN) -> RESP + PLETH channels -> decimate 125->25 Hz (stride 5) -> 200 s segment -> demean -> PhysioCrossModal::grangerCausality(sr=25, order=10), which returns time-domain Granger causality in BOTH directions (Geweke's log-ratio of OLS prediction-error variances). The reference re-computes each direction with statsmodels.tsa.stattools.grangercausalitytests (restricted/unrestricted OLS SSR log-ratio) and an independent from-scratch numpy OLS (via reticulate), and the statsmodels ssr_ftest F-test. Deterministic (both regressions are closed-form OLS).",
+  "note": "The tracked inputs are eval/data/granger-cardioresp/{resp,pleth}_bidmc01.rds (the decimated, segmented BIDMC-01 signals). grangerCausality reproduces statsmodels' Granger regression to max |diff| ~ 3.5e-7 (an AGREEMENT: statsmodels forces an intercept, the op demeans then fits without one) and an independent numpy OLS to ~1.8e-9 (the op's ridge-regularization floor). The finding: cardiorespiratory coupling is strong and BIDIRECTIONAL (both directions F ~ 54, p < 1e-100), with respiration -> pulse net-positive in 15/20 BIDMC subjects (mean net +0.032) -- respiration modulating the peripheral pulse. Granger causality is predictive (temporal-precedence) coupling, not proof of a physical causal mechanism."
+}

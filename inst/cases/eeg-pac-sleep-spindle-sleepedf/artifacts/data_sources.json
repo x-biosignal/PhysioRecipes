@@ -1,0 +1,9 @@
+{
+  "dataset": "Sleep-EDF Expanded (sleep-edfx)",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/sleep-edfx/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "record_used": "subject SC4001, overnight polysomnogram (SC4001E0-PSG.edf) + its expert hypnogram (SC4001EC-Hypnogram.edf). EEG channel Fpz-Cz at 100 Hz; the first 30 min (180000 samples) of concatenated NREM (N2+N3) 30-s epochs, grouped from the hypnogram. The same PSG the netphys-sleep-network case reads.",
+  "pipeline": "read the PSG + hypnogram (MNE) -> concatenate the N2+N3 (NREM) epochs of EEG Fpz-Cz -> PhysioCrossModal::phaseAmplitudeCoupling(sr=100, phase_band=c(0.5,1.25), amp_band=c(12,15), method='tort'), the Tort modulation index between the slow-oscillation phase and the spindle amplitude. The reference re-computes the SAME Tort MI on the identical phase+amplitude with the canonical Python tensorpac (tensorpac.methods.modulation_index) and tests it against 200 seeded circular-shift surrogates. Deterministic (the op has no randomness; the surrogate null is seeded).",
+  "note": "Slow-oscillation<->spindle phase-amplitude coupling is the canonical scalp-EEG cross-frequency coupling and a physiological hallmark of NREM sleep (the SO up-state gates thalamocortical spindles; implicated in memory consolidation). The tracked input is eval/data/pac-sleep/nrem_eeg.rds (the 30-min NREM EEG vector). phaseAmplitudeCoupling and tensorpac are fed the IDENTICAL phase+amplitude, so the machine-precision agreement (|diff| ~ 5e-17) validates the Tort-MI computation; the coupling is shown real by the circular-shift surrogate null (z ~ 9.6, observed above every one of 200 surrogates). Honest scope: single subject, single channel, first 30 min of NREM; the absolute MI depends on montage + bands."
+}

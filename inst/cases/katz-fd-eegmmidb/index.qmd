@@ -1,0 +1,126 @@
+---
+title: "Katz's fractal dimension: a new standalone op that two reference tools agree with bit-for-bit -- and a convention fix"
+subtitle: "A worked fractal-dimension case on real EEG, introducing katzFD and correcting a cross-tool convention"
+categories: [eeg, complexity, fractal-dimension, cross-tool-validation, validated]
+author: "Yusuke Matsui"
+date: "2026-09-07"
+---
+
+> **What this case shows** — Katz's fractal dimension (KFD) is a classic waveform-complexity index, but
+> the ecosystem shipped it only *inside* `eegComplexity`, and in a convention that matched no reference
+> tool. This case adds a standalone op (**`katzFD`**, completing the fractal-dimension family with
+> `petrosianFD` and `svdEntropy`). On a real eyes-closed EEG channel it reproduces **two** independent
+> references — **`antropy.katz_fd`** *and* **NeuroKit2's `fractal_katz`** — **bit-for-bit** (`|diff| = 0`
+> against each). And it fixes a convention: the amplitude-only KFD (3.468) differs by ~1.77 from the
+> Euclidean-plane value (1.696) the op used before, which no reference tool produces.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `katzFD(x)` → the Katz fractal dimension of a signal.
+**Way of thinking** — a "fractal dimension" is only reproducible if the *convention* is pinned. The
+literature's docstrings say "Euclidean", but every major implementation (antropy, NeuroKit2, pyeeg,
+mne-features) actually measures distances in *amplitude units only*. Match the code, not the prose.
+**Ecosystem usage** — `PhysioEEG::katzFD()`, alongside `petrosianFD()` and `svdEntropy()`.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, the new standalone `katzFD` reproduces both `antropy.katz_fd` and
+NeuroKit2 `fractal_katz` bit-for-bit (KFD = 3.468, `|diff| = 0` against each); this amplitude-only value
+differs by ~1.77 from the Euclidean-plane convention (1.696) the shipped op previously used.
+
+## Question & goal
+
+**The question is a gap, a cross-check, and a convention: the ecosystem had Katz FD only inside
+`eegComplexity`, in a non-standard convention — can a standalone op reproduce the de-facto references,
+and do the two dominant ones agree with it exactly?** The goal is to introduce `katzFD`, certify it
+against *two* references at once, and correct the convention so the value is cross-tool comparable.
+
+## Challenge & approach
+
+Katz's fractal dimension is KFD = log₁₀(L/a) / log₁₀(d/a), where L is the total curve length (sum of
+successive distances), a their mean, and d the farthest distance from the first sample. The subtlety is
+what "distance" means: the original paper describes the Euclidean distance in the sample-index/amplitude
+plane, but antropy, NeuroKit2, pyeeg and mne-features all use the signal's **amplitude units only**. We
+implement the amplitude-only form and check it against both `antropy.katz_fd` and NeuroKit2's
+`fractal_katz` on the identical signal.
+
+```
+EEG POz (eegmmidb) → katzFD (amplitude-only: L=sum|dx|, a=mean|dx|, d=max|x-x0|) → KFD = 3.468
+                    vs antropy.katz_fd   → |diff| = 0  (bit-for-bit)
+                    vs NeuroKit2 fractal_katz → |diff| = 0  (bit-for-bit)   ← two references agree
+                    Euclidean-plane convention (old) = 1.696  ← the outlier the fix removes
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz**, 10 s at 160 Hz — the same git-tracked vector the
+[svd-entropy](../svd-entropy-eegmmidb/index.qmd) and [petrosian-fd](../petrosian-fd-eegmmidb/index.qmd)
+cases use. Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the eyes-closed POz waveform — the convolutedness `katzFD` quantifies. Right: the Katz fractal dimension by method. `katzFD`, `antropy.katz_fd`, and NeuroKit2 `fractal_katz` are identical (3.468, bit-for-bit); the earlier Euclidean-plane convention (1.696) is the outlier the fix removes.](artifacts/figure.png)
+
+*How to read this:* the three left bars are exactly equal — two independent reference tools and the new
+op agree to machine precision. The fourth bar shows why the fix matters: the old convention produced a
+value no reference tool would reproduce.
+
+| Quantity | Value |
+|---|--:|
+| **Katz FD (`katzFD`, amplitude-only)** | **3.468** |
+| vs `antropy.katz_fd` (\|diff\|) | **0** (bit-for-bit) |
+| vs NeuroKit2 `fractal_katz` (\|diff\|) | **0** (bit-for-bit) |
+| earlier Euclidean-plane convention | 1.696 |
+| size of the convention fix (\|diff\|) | **~1.77** |
+
+The new op equals **both** references exactly, and the convention fix restores cross-tool comparability.
+Values trace to [`artifacts/katz_summary.csv`](artifacts/katz_summary.csv).
+
+## Conclusion
+
+`katzFD` completes the fractal-dimension family (`petrosianFD`, `svdEntropy`), and it is exact against
+*two* references at once. The transferable takeaway: **a fractal dimension is only reproducible when the
+distance convention is pinned. Read the reference's code, not its docstring — antropy and NeuroKit2 both
+say "Euclidean" but compute amplitude-only, and that is the convention the field actually shares.** One
+consequence worth remembering: the amplitude-only KFD is *not* bounded to [1, 2] — real EEG scores above
+2, exactly as antropy and NeuroKit2 report.
+
+## Open questions
+
+- The amplitude-only KFD is scale-dependent (it grows with the amplitude-to-step ratio), so it is not
+  directly comparable across channels of differing amplitude; z-scoring before KFD, or pairing it with
+  the scale-free Petrosian FD, would make a spatial complexity map interpretable. *Documented, not
+  escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Katz fractal dimension | `katzFD()` | PhysioEEG |
+| Petrosian fractal dimension (scale-free) | `petrosianFD()` | PhysioEEG |
+| SVD entropy (dimensionality) | `svdEntropy()` | PhysioEEG |
+| Multi-measure complexity wrapper | `eegComplexity()` | PhysioEEG |
+
+**Reading the result.**
+
+- **higher KFD** — a more convoluted (noise-like) waveform; **lower KFD** — a smoother, more regular
+  oscillation.
+- **not in [1, 2]** — the amplitude-only convention is not bounded like a geometric dimension; compare
+  values only across signals of comparable amplitude, or normalize first.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioEEG)
+
+kfd <- katzFD(x)                 # Katz fractal dimension (amplitude-only convention)
+# reproduces antropy.katz_fd and NeuroKit2 fractal_katz bit-for-bit.
+petrosianFD(x)                   # ... the scale-free companion
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/katz_summary.csv`](artifacts/katz_summary.csv), and [`audit.py`](audit.py) re-checks the KFD,
+the bit-exact match against both antropy and NeuroKit2, the size of the convention fix, and the honestly
+noted scope (new standalone op; double-reference machine precision; the amplitude-only convention fix;
+the not-bounded caveat).

@@ -1,0 +1,121 @@
+---
+title: "Robust central heart period: the trimmed mean (a new op) matches scipy and base R bit-for-bit -- and sits between mean and median"
+subtitle: "A worked robust-location case on real RR intervals, introducing trimmedMean and completing the robust toolkit"
+categories: [ecg, hrv, statistics, robust-location, validated]
+author: "Yusuke Matsui"
+date: "2026-09-07"
+---
+
+> **What this case shows** — the ordinary mean RR is pulled up by the long intervals of a skewed HRV
+> distribution; the median throws away everything but the middle. The **trimmed mean** is the robust
+> in-between — drop the extreme fraction, average the rest. This case adds one (**`trimmedMean`**),
+> completing the robust toolkit (a robust *location* to go with the robust dispersion of `medianAbsDev`
+> and `interquartileRange`). On real Fantasia RR it reproduces **scipy.stats.trim_mean** *and* base R
+> **`mean(trim=)`** **bit-for-bit**, and it lands neatly between the mean (767 ms) and the median (756 ms).
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `trimmedMean(x, trim = 0.1)` → a robust central value.
+**Way of thinking** — report location as a family, not a point. The mean (trim 0), a trimmed mean, and the
+median (trim → 0.5) bracket how much the tail is pulling your estimate. On a skewed series they separate;
+the gap is the signal.
+**Ecosystem usage** — `PhysioAnalysis::trimmedMean()`, alongside `medianAbsDev()` and `interquartileRange()`.
+:::
+
+## Proposition
+
+On real Fantasia RR intervals, the new `trimmedMean` reproduces both `scipy.stats.trim_mean` and base R
+`mean(x, trim)` bit-for-bit (10%-trimmed = 762 ms, `|diff|` = 0 against each); and on the right-skewed RR
+the plain mean (767) exceeds the 10%-trimmed (762), which exceeds the 20%-trimmed (760), which exceeds the
+median (756).
+
+## Question & goal
+
+**The question is a gap and a progression: the ecosystem had robust dispersion but no robust location —
+can a new op reproduce the two references exactly, and where does the trimmed mean sit on a skewed RR
+series?** The goal is to introduce `trimmedMean`, certify it against both, and read the mean → trimmed →
+median progression.
+
+## Challenge & approach
+
+The trimmed mean discards the `floor(n·trim)` most extreme values from each end and averages the rest — an
+order-statistic operation, so it matches any correct implementation exactly. We check `trim = 0.1` against
+`scipy.stats.trim_mean` and base R `mean(x, trim)`, and compare the trimmed means with the plain mean and
+the median.
+
+```
+Fantasia RR (391 intervals) → trimmedMean(trim=0.1) → 762 ms
+                            vs scipy.stats.trim_mean → |diff| = 0   ·   vs base R mean(trim) → |diff| = 0
+                            mean 767 > trim 0.1 = 762 > trim 0.2 = 760 > median 756   (right-skew)
+```
+
+## Data
+
+**Fantasia (PhysioNet)**: subject **f1y01** (young healthy adult), first **5-minute RR window** (391
+intervals) — the same RR the [iqr-hrv](../iqr-hrv-fantasia/index.qmd) and
+[poincare-hrv](../poincare-hrv-fantasia/index.qmd) cases use. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the RR histogram — the mean (767, red dashed) is pulled right of the median (756, blue) by the long-interval tail, with the 10%-trimmed mean (762, orange) in between. Right: the trimmed mean as a function of the trim fraction — it slides smoothly from the ordinary mean (trim 0) down toward the median (trim → 0.5), the 10% point marked; the trimmed mean is a whole family of robust locations.](artifacts/figure.png)
+
+*How to read this:* left — mean right of median is the mark of positive skew; the trimmed mean sits
+between them. Right — increasing the trim fraction walks the estimate from mean to median; how fast it
+falls tells you how heavy the tail is.
+
+| Quantity | Value |
+|---|--:|
+| **10%-trimmed mean** (`trimmedMean`) | **762 ms** |
+| 20%-trimmed mean | 760 ms |
+| vs `scipy.stats.trim_mean` / base R `mean(trim)` (\|diff\|) | **0** (bit-for-bit) |
+| plain mean | 767 ms |
+| median | 756 ms |
+
+The new op equals both references exactly, and the trimmed mean interpolates between mean and median.
+Values trace to [`artifacts/trimmed_summary.csv`](artifacts/trimmed_summary.csv).
+
+## Conclusion
+
+`trimmedMean` completes the robust-statistics toolkit — a robust *location* (`trimmedMean`) to sit beside
+the robust *dispersion* (`medianAbsDev`, `interquartileRange`) and the classical moments
+(`signalMoments`). The transferable takeaway: **on a skewed RR series, report the mean, a trimmed mean,
+and the median together. The plain mean overstates the central heart period because the long-interval tail
+pulls it up; the trimmed mean discards that tail and lands closer to the typical beat, and the gap between
+them is a direct readout of the skew.**
+
+## Open questions
+
+- The trimmed mean is a family indexed by the trim fraction — mean at 0, median at 0.5. The fraction that
+  best balances efficiency and robustness for RR depends on the ectopy rate; reporting the trimmed mean
+  with the mean and median (as here), or choosing the trim from the observed tail heaviness, makes the
+  estimate explicit about its robustness. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Trimmed mean (robust location) | `trimmedMean()` | PhysioAnalysis |
+| Robust dispersion (MAD, IQR) | `medianAbsDev()`, `interquartileRange()` | PhysioAnalysis |
+| Classical mean / SD / skewness | `signalMoments()` | PhysioAnalysis |
+
+**Reading the result.**
+
+- **trimmed mean** — a central value that ignores the extreme `trim` fraction; on RR it resists ectopic
+  beats and long pauses.
+- **mean vs trimmed vs median** — all three equal ⇒ symmetric distribution; mean above the trimmed mean
+  above the median ⇒ a right tail is inflating the mean.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis)
+
+trimmedMean(rr, trim = 0.1)          # robust central heart period (ms)
+c(mean(rr), trimmedMean(rr, 0.1), median(rr))   # the mean -> trimmed -> median progression
+# trimmedMean reproduces scipy.stats.trim_mean and base R mean(trim) bit-for-bit.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/trimmed_summary.csv`](artifacts/trimmed_summary.csv), and [`audit.py`](audit.py) re-checks the
+trimmed means, the bit-exact match against scipy and base R, the mean > trimmed > median ordering, and the
+honestly noted scope (new robust-location op; double-reference machine precision; the skew progression).

@@ -1,0 +1,127 @@
+---
+title: "Push-off grades gait pathology, certified: Dunn's post-hoc separates the pathologies the dynamic range could not"
+subtitle: "The non-parametric post-hoc completes the two-feature story — one flags impairment, the other grades it"
+categories: [gait, ground-reaction-force, pathology, cohort, validated]
+author: "Yusuke Matsui"
+date: "2026-09-11"
+---
+
+> **What this case shows** — the [Kruskal-Wallis sibling](../gait-grf-pushoff-kruskal-gaitrec/index.qmd)
+> found the vertical-GRF push-off peak separates the five gait classes; *which* pairs differ? Here **Dunn's
+> test** — the non-parametric post-hoc — answers it under family-wise error control. The **newly-authored**
+> `dunnTest` runs all 10 pairwise comparisons, reproducing **`PMCMRplus`** and **`scikit_posthocs`** to
+> machine precision. Healthy controls differ from **all four** pathology classes, and — unlike the
+> [dynamic range](../gait-grf-tukey-pathology-gaitrec/index.qmd) (Tukey: **0/6** pathology pairs) — the
+> push-off peak **grades** the pathologies: **4/6** pathology-pathology pairs differ, with **calcaneus** the
+> most distinct.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — the grouped feature → `dunnTest()` → read the pairwise comparisons.
+**Way of thinking** — Dunn is to Kruskal-Wallis what Tukey is to ANOVA: the rank-based post-hoc for skewed
+data. Running the same post-hoc on two GRF features and comparing the significance patterns shows which
+feature does which job.
+**Ecosystem usage** — `PhysioMoCap::grfLandmarks()` (via the sibling), `PhysioAnalysis::dunnTest()`.
+:::
+
+## Proposition
+
+In Dunn's post-hoc (Bonferroni) of the vertical-GRF push-off peak across GaitRec's five gait classes
+(n=1844), all four healthy-vs-pathology pairs are significant (|z| up to 16.0) and 4 of the 6
+pathology-pathology pairs are (calcaneus vs ankle/knee/hip, hip vs ankle); `dunnTest` reproduces
+`PMCMRplus::kwAllPairsDunnTest` and `scikit_posthocs.posthoc_dunn` to machine precision.
+
+## Question & goal
+
+**The question is which classes differ, calibrated for multiplicity, on the feature that separates them.**
+The Kruskal-Wallis sibling certified the omnibus difference and deferred the pairwise structure; this fold
+performs the post-hoc, authoring the Dunn op and resolving the open question.
+
+## Challenge & approach
+
+We take the same certified per-subject push-off peak for the five classes and run `dunnTest` — all 10
+pairwise rank comparisons with the shared tie-corrected variance and Bonferroni family-wise control —
+checking every z-statistic against `PMCMRplus` and every adjusted p against `scikit_posthocs`.
+
+```
+GaitRec push-off peak, 5 classes (HC, A, K, H, C), n=1844 → dunnTest (Bonferroni, 10 comparisons)
+  healthy vs pathology:   all 4 significant   (|z| up to 16.0)
+  pathology vs pathology: C-A p~2e-6, C-K p~3e-13, C-H p~2e-15, H-A p~2e-3  (significant)
+                          K-A p=0.067, H-K p=1.0                            (not significant)
+     vs PMCMRplus::kwAllPairsDunnTest   → max |z|   ~ 2e-15
+     vs scikit_posthocs.posthoc_dunn    → max |p|   ~ 7e-17
+  contrast: dynamic range (Tukey) separated 0/6 pathology pairs; push-off separates 4/6
+```
+
+## Data
+
+**GaitRec (Horsak et al. 2020)**: the vertical-GRF push-off peak for the five gait classes — healthy control
+(n=208), ankle (n=483), knee (n=499), hip (n=364), calcaneus (n=290). The same matched cohort as the
+Kruskal-Wallis sibling. Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the Dunn post-hoc −log10(adjusted p) matrix; a star marks significant pairs. Healthy control differs from every pathology class, and the calcaneus row/column lights up against the other pathologies. Right: the contrast — the dynamic range (Tukey) separated 0 of 6 pathology-pathology pairs, while the push-off peak (Dunn) separates 4 of 6. One feature flags impairment; the other grades it.](artifacts/figure.png)
+
+*How to read this:* on the left, a starred cell is a significant pairwise difference after family-wise
+correction; the calcaneus group stands out from the other pathologies. On the right, the two GRF features
+play complementary roles — the dynamic range is a healthy-vs-impaired switch, the push-off peak a
+pathology gradient.
+
+| Comparison group | result |
+|---|---|
+| healthy vs pathology (A, K, H, C) | **4/4 significant** (\|z\| up to 16.0) |
+| pathology vs pathology (6 pairs) | **4/6 significant** (calcaneus vs A/K/H; hip vs ankle) |
+| calcaneus vs ankle | p = 1.7e-6 (significant) |
+| knee vs ankle / hip vs knee | p = 0.067 / 1.0 (not significant) |
+| vs `PMCMRplus` (\|z diff\|) | **< 1e-9** (~2e-15) |
+| vs `scikit_posthocs` (\|p diff\|) | **< 1e-9** (~7e-17) |
+
+Every comparison equals both references to machine precision. Values trace to
+[`artifacts/dunn_summary.csv`](artifacts/dunn_summary.csv).
+
+## Conclusion
+
+`dunnTest` reproduces the reference on the certified push-off peak. The transferable takeaway: **match the
+post-hoc to the omnibus (Dunn after Kruskal-Wallis, as Tukey after ANOVA) and read the pattern across
+features. Here two GRF landmarks divide the labour — the dynamic range separates healthy from pathological
+gait, the push-off peak grades the pathologies, with the calcaneus (heel/ankle) group's propulsion deficit
+the most distinct.**
+
+## Open questions
+
+- The push-off peak grades but does not fully separate the pathologies (knee-vs-ankle, hip-vs-knee remain
+  non-significant); a multivariate GRF-landmark profile with a discriminant or classifier would give a
+  fuller pathology fingerprint. The single-feature Dunn post-hoc is the honest answer for the push-off peak.
+  *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| GRF landmarks (peaks, trough) | `grfLandmarks()` | PhysioMoCap |
+| Kruskal-Wallis (omnibus) | `kruskalTest()` | PhysioAnalysis |
+| Dunn's test (rank post-hoc) | `dunnTest()` | PhysioAnalysis |
+| Tukey HSD (parametric post-hoc) | `tukeyHSD()` | PhysioAnalysis |
+
+**Reading the result.**
+
+- **adjusted p** — already corrected for all pairwise comparisons (Bonferroni); compare to your alpha
+  directly.
+- **the pattern across features** — running the post-hoc on more than one feature and comparing which pairs
+  each separates is more informative than any single test.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis)
+
+dunnTest(list(HC = hc_po, Ankle = a_po, Knee = k_po, Hip = h_po, Calcaneus = c_po), p_adjust = "bonferroni")
+# a data frame of all pairwise z and family-wise-adjusted p -- machine precision vs PMCMRplus and scikit_posthocs
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/dunn_summary.csv`](artifacts/dunn_summary.csv), and [`audit.py`](audit.py) re-checks the
+z-statistics and adjusted p-values, the machine-precision match against PMCMRplus and scikit_posthocs, the
+healthy-vs-pathology (4/4) and pathology-pathology (4/6) significance split, the comparison count, and the
+honestly noted scope (authors the new dunnTest op; push-off from the certified grfLandmarks; grades the
+pathologies where the dynamic range did not; cross-sectional association).

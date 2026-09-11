@@ -1,0 +1,7 @@
+"activity","recall","n_test_windows"
+"walking",0.891,496
+"walking_upstairs",0.601,471
+"walking_downstairs",0.824,420
+"sitting",0.796,491
+"standing",0.863,532
+"laying",1,537

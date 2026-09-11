@@ -1,0 +1,36 @@
+{
+  "id": "age-group-sway-bds",
+  "title": "Older vs younger balance, certified: older adults sway ~1.5x more on foam via a Welch two-sample t-test bit-for-bit vs scipy and base R",
+  "modality": ["posturography", "balance", "aging", "cohort", "cross-tool-validation"],
+  "packages": ["PhysioAnalysis", "PhysioMoCap"],
+  "dataset": {
+    "name": "A public data set of human balance evaluations (BDS)", "version": "figshare 2016",
+    "record": "50 subjects (older n=11, younger n=39), eyes-open foam quiet standing (60 s, force-plate COP at 100 Hz)",
+    "url": "https://doi.org/10.6084/m9.figshare.3394432", "public": true,
+    "citation": "Santos DA, Duarte M. A public data set of human balance evaluations. PeerJ 2016;4:e2648. doi:10.7717/peerj.2648."
+  },
+  "proposition": "Older adults sway more -- the age-related balance decline. This case tests it as a group comparison and certifies the test. Each subject's eyes-open foam-surface COP path length comes from the certified swayMetrics; a newly-authored twoSampleTTest (Welch) compares the older (n=11) and younger (n=39) groups, reproducing BOTH scipy.stats.ttest_ind(equal_var=FALSE) AND base R t.test BIT-FOR-BIT. Older subjects sway markedly more (mean 227 vs 151 cm, ratio ~1.5, t=3.86 on 14.5 Welch df, p=1.6e-3) -- the dichotomous complement of the continuous age-sway correlation.",
+  "opdag": ["twoSampleTTest"],
+  "claims": [
+    { "id": "t_statistic", "statement": "Welch two-sample t-statistic of older vs younger foam sway (positive = older sway more)", "value": 3.8569450652, "artifact": "artifacts/sway_summary.csv", "status": "PASS" },
+    { "id": "neg_log10_p", "statement": "-log10(two-sided p): the group difference is significant", "value": 2.784484, "artifact": "artifacts/sway_summary.csv", "status": "PASS" },
+    { "id": "df", "statement": "Welch-Satterthwaite degrees of freedom", "value": 14.500741, "artifact": "artifacts/sway_summary.csv", "status": "PASS" },
+    { "id": "max_diff_scipy", "statement": "|twoSampleTTest t - scipy.stats.ttest_ind(equal_var=FALSE) t| (bit-exact)", "value": 0, "artifact": "artifacts/sway_summary.csv", "status": "PASS" },
+    { "id": "max_diff_baser", "statement": "|twoSampleTTest t - base R t.test t| (bit-exact)", "value": 0, "artifact": "artifacts/sway_summary.csv", "status": "PASS" },
+    { "id": "old_young_ratio", "statement": "mean older sway / mean younger sway (the group effect size)", "value": 1.5033252716, "artifact": "artifacts/sway_summary.csv", "status": "PASS" },
+    { "id": "old_gt_young", "statement": "older subjects sway more than younger subjects (group means)", "value": 1, "artifact": "artifacts/sway_summary.csv", "status": "PASS" },
+    { "id": "n_total", "statement": "total subjects across the two groups", "value": 50, "artifact": "artifacts/sway_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The new twoSampleTTest op (Welch) is validated against BOTH scipy.stats.ttest_ind(equal_var=FALSE) AND base R t.test on the identical groups -- a double reference. All three compute the Welch t of older minus younger foam sway and agree BIT-FOR-BIT (t, p and the Welch-Satterthwaite df, |diff| ~1e-15 vs each). The per-subject COP path lengths come from PhysioMoCap::swayMetrics (certified against the Prieto reference in the sibling case). The older/younger ratio is reported.",
+    "data": "REAL -- Santos & Duarte (2016) balance dataset (figshare), older (n=11) vs younger (n=39) subjects' eyes-open foam-surface quiet-standing COP",
+    "artifacts": ["artifacts/sway_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) twoSampleTTest reproduces scipy and base R bit-for-bit; (2) older subjects sway significantly more than younger. HONEST scope: (1) the twoSampleTTest op is NEWLY AUTHORED (the independent TWO-SAMPLE t-test -- WELCH by default, unequal variances -- the standard two-group comparison the ecosystem lacked); (2) it reproduces BOTH scipy.stats.ttest_ind(equal_var=FALSE) AND base R t.test BIT-FOR-BIT (t, p and the Welch-Satterthwaite df, |diff| ~1e-15 vs each) -- the identical closed-form Welch t, so the residual is the floating-point floor, NOT A CONVENTION AGREEMENT; (3) the per-subject COP path lengths that feed the test come from SWAYMETRICS, itself CERTIFIED bit-for-bit against the Prieto reference in the sibling sway-posturography-bds case, so the inputs are validated end to end; (4) the finding: OLDER subjects (n=11) sway markedly more than younger subjects (n=39) on the FOAM surface -- mean path 227 vs 151 cm, a ratio of about 1.5, t = 3.86 on 14.5 (Welch) df, p = 1.6e-3; this is the age-related balance decline expressed as a GROUP COMPARISON, which COMPLEMENTs the continuous age-sway correlation (r = 0.62) in the sibling age-sway-correlation case; (5) the groups are UNBALANCED and this is a cross-sectional ASSOCIATION, NOT CAUSATION -- a young-skewed convenience sample with one trial per subject; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "The older group is small (n=11) and this is a cross-sectional convenience sample, so the point estimate of the ratio is uncertain and confounders (activity, comorbidity) are uncontrolled; the continuous correlation (sibling case) uses the full age range, and the BDS's larger full cohort and repeated trials would tighten the estimate. The group comparison is the clinically-standard framing shown here. Documented, not escalated.", "artifact": "artifacts/sway_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.stats.ttest_ind (Python)", "base R stats::t.test"],
+  "status": "validated"
+}

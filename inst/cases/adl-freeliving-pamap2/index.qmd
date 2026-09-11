@@ -1,0 +1,130 @@
+---
+title: "Free-living physical behaviour on real accelerometry, with ENMO matched to GGIR at machine precision"
+subtitle: "A worked wearable case study validating the physical-activity foundation against the field standard"
+categories: [adl, wearable, free-living, physical-behaviour, enmo, validated]
+author: "Yusuke Matsui"
+date: "2026-08-17"
+---
+
+> **What this case shows** — free-living physical-activity analysis rests on one
+> number: **ENMO**, the Euclidean-norm-minus-one acceleration. On real continuous
+> accelerometer data the ecosystem's `computeENMO()` reproduces the field-standard
+> **GGIR** implementation to **machine precision** — maximum difference **1.35 ×
+> 10⁻¹⁴ g**, correlation **1.000000** over 749 epochs. On that exact foundation the
+> free-living summary runs end to end: intensity time-use, the **Rowlands
+> intensity gradient** (−1.19) and **activity fragmentation** (active-to-sedentary
+> transition probability 0.11). **What reproduces, and what doesn't** — the ENMO
+> reproduction is exact and transferable; the summary *metrics* are demonstrated
+> on a real recording, but this recording is a scripted **protocol**, not a
+> free-living day, so the absolute intensity numbers reflect the protocol and the
+> ~1 h length makes MX metrics degenerate (not claimed). **How to read it** — left,
+> our ENMO vs GGIR's on the line of identity; right, the intensity gradient — the
+> log-log slope of time spent against acceleration intensity.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — turn raw acceleration into a physical-behaviour profile in three
+moves: **compute ENMO** per epoch → **summarise** intensity time-use, the
+intensity gradient and MX metrics → **quantify fragmentation** (how activity and
+rest are accumulated).
+**Way of thinking** — before trusting any downstream metric, verify the
+*foundation*: does your ENMO match the reference implementation on the same
+signal? Then read the intensity gradient (cut-point-free) rather than a single
+MVPA threshold, and keep the recording length in mind — MX and gradient need a
+full worn day to mean what the literature means.
+**Ecosystem usage** — `computeENMO()` → `summarizeFreeLiving()` /
+`intensityGradient()` (PhysioWearable); the same epoch series feeds every metric.
+:::
+
+## Proposition
+
+`computeENMO()` reproduces GGIR to machine precision on real accelerometer data
+(max difference **1.35 × 10⁻¹⁴ g**, correlation **1.000000**). On that foundation
+the free-living summary computes the intensity gradient (**−1.19**), MVPA time and
+activity fragmentation (ASTP **0.11**) end to end.
+
+## Question & goal
+
+**The question is one of foundations.** Free-living accelerometry has a de-facto
+reference — **GGIR** (van Hees et al.) — and any new pipeline's first duty is to
+match it on the metric everything is built from, ENMO. PAMAP2 (Reiss & Stricker
+2012) provides real continuous 100 Hz accelerometer recordings; we take one
+subject's hand sensor and ask: does `computeENMO()` reproduce GGIR's ENMO exactly,
+and does the physical-behaviour summary then run on that foundation?
+
+## Challenge & approach
+
+The challenge is honesty about two different things. **Foundation**: ENMO must
+match GGIR *exactly* — a bit-for-bit agreement, not "close". **Summary**: the
+free-living metrics (intensity gradient, MX, fragmentation) are *designed for a
+worn day*, and PAMAP2 is a lab protocol, so we compute them to demonstrate the
+pipeline but scope their interpretation. We convert the hand accelerometer to g,
+compute ENMO with both `computeENMO()` and `GGIR::g.applymetrics()` on the
+identical signal, then run `summarizeFreeLiving()`.
+
+## Data
+
+**PAMAP2** subject101 hand IMU (Reiss & Stricker 2012, UCI #231) — ~1 h of
+gap-free 100 Hz acceleration. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![ENMO agreement, computeENMO vs GGIR, on the line of identity (left) and the
+Rowlands intensity gradient — minutes vs intensity on log-log axes
+(right).](artifacts/figure.png)
+
+*How to read this:* on the left, every 5-second epoch's ENMO under our
+implementation (y) against GGIR's (x) — they are indistinguishable. On the right,
+the time spent falls log-linearly with intensity; the slope is the intensity
+gradient, a cut-point-free summary of the whole intensity distribution.
+
+| quantity | value |
+|---|---|
+| ENMO max difference vs GGIR | **1.35 × 10⁻¹⁴ g** |
+| ENMO correlation vs GGIR | **1.000000** |
+| intensity gradient | −1.19 |
+| MVPA minutes (over the recording) | 28.6 |
+| activity→sedentary transition probability | 0.11 |
+
+## Conclusion
+
+The physical-activity foundation is exact: two independent implementations agree
+to 10⁻¹⁴ g on real data, so a free-living pipeline built on `computeENMO()`
+inherits GGIR's ENMO by construction. The higher-level summary runs end to end,
+with the honest caveat that a lab protocol is not a free-living day. The
+transferable takeaway: **validate the foundation metric against the reference
+before trusting anything downstream — then read the intensity distribution, not a
+single cut-point.**
+
+## Open questions
+
+- PAMAP2 is a lab protocol, so the intensity time-use is not a real-world day;
+  the full free-living summary (MX metrics, a diurnal profile, guideline
+  attainment) needs a genuinely free-living public recording. *Documented, not
+  escalated.*
+
+## Using this in your own analysis
+
+| step | function | package |
+|---|---|---|
+| compute ENMO per epoch | `computeENMO()` | PhysioWearable |
+| free-living behaviour summary | `summarizeFreeLiving()` | PhysioWearable |
+| intensity gradient / MX metrics | `intensityGradient()` / `mxMetrics()` | PhysioWearable |
+| activity fragmentation | `activityFragmentation()` | PhysioWearable |
+
+**Choosing the parameters:** 5-second epochs and the Hildebrand cut-points are the
+GGIR defaults; auto-calibrate raw data first (`autoCalibrateAccel()`), require a
+minimum wear day (≥10 h) before trusting a person's summary, and read the
+intensity gradient alongside MVPA. Pair this with `adl-har-ucihar` (which activity)
+and the ICF performance mapping (`freeLivingICF()`).
+
+```r
+library(PhysioWearable)
+enmo <- computeENMO(accel, sampling_rate = 100, epoch_sec = 5, unit = "mg")
+summarizeFreeLiving(enmo, epoch_sec = 5)         # time-use, gradient, MX, fragmentation
+```
+
+One line for the technical reader: every number traces to
+[`artifacts/enmo_agreement.csv`](artifacts/enmo_agreement.csv) and
+[`artifacts/freeliving_summary.csv`](artifacts/freeliving_summary.csv), re-checked
+by [`audit.py`](audit.py) and `tools/validate_case.py`.

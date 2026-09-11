@@ -1,0 +1,37 @@
+{
+  "id": "iqr-hrv-fantasia",
+  "title": "Robust HRV dispersion: the interquartile range (a new op) reproduces scipy AND base R bit-for-bit -- and exposes a skewed RR distribution",
+  "modality": ["ecg", "hrv", "statistics", "robust-dispersion", "cross-tool-validation"],
+  "packages": ["PhysioAnalysis"],
+  "dataset": {
+    "name": "Fantasia database", "version": "PhysioNet 1.0.0",
+    "record": "subject f1y01 (young healthy adult), first 5-minute RR-interval window (391 intervals, ms)",
+    "url": "https://physionet.org/content/fantasia/1.0.0/", "public": true,
+    "citation": "Iyengar N, Peng CK, Morin R, Goldberger AL, Lipsitz LA. Age-related alterations in the fractal scaling of cardiac interbeat interval dynamics. Am J Physiol 1996;271:R1078-R1084. Fantasia database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "SDNN, the standard deviation of the RR intervals, is the classical HRV dispersion but is inflated by the ectopic beats and large respiratory excursions that make the RR distribution non-Gaussian. The interquartile range is the robust, quantile-based alternative. The ecosystem had the classical SD (signalMoments) and a deviation-based robust scale (medianAbsDev) but no quantile-based robust spread. This case introduces interquartileRange. On real Fantasia RR intervals it reproduces BOTH scipy.stats.iqr AND base R IQR BIT-FOR-BIT (max |diff| 0 vs each). The finding: the RR distribution is right-skewed and heavy-tailed (skewness 1.01, excess kurtosis 2.91), so the robust IQR-based SD estimate (56.3 ms) sits materially below SDNN (69.3 ms; ratio 0.81) -- the opposite of the near-Gaussian EEG (median-abs-dev case), where the robust scale matched the SD. The robust/classical ratio is a distribution-shape diagnostic.",
+  "opdag": ["interquartileRange"],
+  "claims": [
+    { "id": "iqr", "statement": "interquartile range of the RR intervals (robust HRV dispersion)", "value": 76, "artifact": "artifacts/iqr_summary.csv", "status": "PASS" },
+    { "id": "q1", "statement": "first quartile (25th percentile) of the RR intervals", "value": 724, "artifact": "artifacts/iqr_summary.csv", "status": "PASS" },
+    { "id": "q3", "statement": "third quartile (75th percentile) of the RR intervals", "value": 800, "artifact": "artifacts/iqr_summary.csv", "status": "PASS" },
+    { "id": "max_diff_scipy", "statement": "|interquartileRange - scipy.stats.iqr| (bit-exact)", "value": 0, "artifact": "artifacts/iqr_summary.csv", "status": "PASS" },
+    { "id": "max_diff_baser", "statement": "|interquartileRange - base R IQR| (bit-exact)", "value": 0, "artifact": "artifacts/iqr_summary.csv", "status": "PASS" },
+    { "id": "sdnn", "statement": "SDNN (classical SD of the RR intervals) for the robust-vs-classical comparison", "value": 69.2645032319, "artifact": "artifacts/iqr_summary.csv", "status": "PASS" },
+    { "id": "robust_classical_ratio", "statement": "robust IQR-based SD / SDNN -- below 1 for a heavy-tailed distribution", "value": 0.8133875459, "artifact": "artifacts/iqr_summary.csv", "status": "PASS" },
+    { "id": "rr_skewness", "statement": "skewness of the RR distribution (non-Gaussian, right-skewed)", "value": 1.0103112066, "artifact": "artifacts/iqr_summary.csv", "status": "PASS" },
+    { "id": "n_intervals", "statement": "RR intervals in the 5-minute window", "value": 391, "artifact": "artifacts/iqr_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The new interquartileRange op is validated against BOTH scipy.stats.iqr AND base R IQR on the identical RR vector (both type-7 quantiles) -- a double reference. All three compute IQR = Q3 - Q1 and agree BIT-FOR-BIT (max |diff| 0 vs each). SDNN, the robust IQR-based SD estimate, their ratio, and the RR skewness are reported for the robust-vs-classical comparison.",
+    "data": "REAL -- Fantasia (PhysioNet), subject f1y01, first 5-minute RR window (391 intervals)",
+    "artifacts": ["artifacts/iqr_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the new interquartileRange op reproduces scipy and base R bit-for-bit; (2) the robust IQR-based spread is well below SDNN on this skewed RR distribution. HONEST scope: (1) this is a NEW quantile-based robust-dispersion op, completing the robust toolkit alongside medianAbsDev (deviation-based scale) and signalMoments (classical SD); the ecosystem had no quantile-based robust spread; (2) with the default type-7 quantiles it reproduces BOTH scipy.stats.iqr (linear interpolation) AND base R IQR BIT-FOR-BIT (max |diff| = 0 vs each) -- a genuine DOUBLE-REFERENCE machine-precision agreement, because Q3 and Q1 are unambiguous ORDER STATISTICs under the shared convention, NOT A CONVENTION AGREEMENT; (3) the finding, and why it matters for HRV: on the Fantasia RR intervals the distribution is right-SKEWED and heavy-tailed (skewness 1.01, excess kurtosis 2.91), so the robust IQR-based SD estimate IQR/(2*qnorm(0.75)) = 56.3 ms sits materially below SDNN = 69.3 ms (ratio 0.81); the robust/classical dispersion ratio is thus a DISTRIBUTION-SHAPE DIAGNOSTIC, and here it shows SDNN IS INFLATED by the heavy right tail (long RR intervals from respiratory sinus arrhythmia and occasional ectopy) that the robust IQR ignores; (4) this is the OPPOSITE of the NEAR-GAUSSIAN eyes-closed EEG in the MEDIAN-ABS-DEV case, where the robust scale matched the SD to 0.2% (ratio 1.002); (5) IQR itself (76 ms) is a legitimate robust HRV dispersion index, resistant to the ectopic beats that corrupt SDNN; (6) the value is a property of one subject/window; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "Because the robust/classical dispersion ratio (robust IQR-scale over SDNN) drops below 1 exactly when the RR distribution departs from Gaussian, it is a cheap non-normality / artifact flag for HRV: a ratio well below 1 signals that SDNN is being driven by a heavy tail (ectopy or large respiratory excursions) rather than uniform beat-to-beat variability. Pairing IQR with SDNN, or robust-cleaning the RR series before SDNN, would separate the two. Documented, not escalated.", "artifact": "artifacts/iqr_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.stats.iqr (Python)", "base R stats::IQR"],
+  "status": "validated"
+}

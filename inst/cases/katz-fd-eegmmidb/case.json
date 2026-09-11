@@ -1,0 +1,36 @@
+{
+  "id": "katz-fd-eegmmidb",
+  "title": "Katz's fractal dimension (a new standalone op) reproduces antropy AND NeuroKit2 bit-for-bit -- and a convention fix",
+  "modality": ["eeg", "complexity", "fractal-dimension", "cross-tool-validation", "signal-analysis"],
+  "packages": ["PhysioEEG"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "Katz's fractal dimension (1988) is a classic waveform-complexity index, but the ecosystem shipped it only inside eegComplexity and in a non-standard Euclidean-plane convention that matches no reference tool. This case introduces a NEW standalone op, katzFD (completing the fractal-dimension family alongside petrosianFD and svdEntropy), in the field-standard amplitude-only convention. On a real eyes-closed posterior EEG channel it reproduces BOTH antropy.katz_fd AND NeuroKit2 fractal_katz BIT-FOR-BIT (max |diff| 0 vs each) -- a rare double-reference agreement. INTEGRITY FIX: the amplitude-only value (3.468) differs materially (~1.77) from the earlier Euclidean-plane value (1.696) the shipped op used; this fold unifies both paths to the amplitude-only convention used by antropy, NeuroKit2, pyeeg and mne-features, restoring cross-tool comparability.",
+  "opdag": ["katzFD"],
+  "claims": [
+    { "id": "katz_fd", "statement": "Katz's fractal dimension of the POz channel (amplitude-only convention)", "value": 3.4679139453, "artifact": "artifacts/katz_summary.csv", "status": "PASS" },
+    { "id": "antropy_katz_fd", "statement": "antropy.katz_fd on the identical signal", "value": 3.4679139453, "artifact": "artifacts/katz_summary.csv", "status": "PASS" },
+    { "id": "neurokit_katz_fd", "statement": "NeuroKit2 fractal_katz on the identical signal", "value": 3.4679139453, "artifact": "artifacts/katz_summary.csv", "status": "PASS" },
+    { "id": "euclidean_katz_fd", "statement": "the earlier Euclidean-plane convention value (what the shipped op previously returned)", "value": 1.6955955784, "artifact": "artifacts/katz_summary.csv", "status": "PASS" },
+    { "id": "max_diff_antropy", "statement": "|katzFD - antropy.katz_fd| (bit-exact)", "value": 0, "artifact": "artifacts/katz_summary.csv", "status": "PASS" },
+    { "id": "max_diff_neurokit", "statement": "|katzFD - NeuroKit2 fractal_katz| (bit-exact)", "value": 0, "artifact": "artifacts/katz_summary.csv", "status": "PASS" },
+    { "id": "euclidean_diff", "statement": "|amplitude-only KFD - earlier Euclidean-plane KFD| -- the size of the convention fix", "value": 1.7723183669, "artifact": "artifacts/katz_summary.csv", "status": "PASS" },
+    { "id": "n_samples", "statement": "samples in the analyzed channel (10 s at 160 Hz)", "value": 1600, "artifact": "artifacts/katz_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The new standalone katzFD op is validated against BOTH antropy.katz_fd AND NeuroKit2 fractal_katz on the identical signal -- a double external reference. All three compute the amplitude-only Katz FD = log10(L/a)/log10(d/a) (L=sum|dx|, a=mean|dx|, d=max|x-x0|) and agree BIT-FOR-BIT (max |diff| 0 vs each). The earlier Euclidean-plane convention is recomputed for the difference metric.",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), channel POz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/katz_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the NEW STANDALONE op katzFD reproduces BOTH antropy.katz_fd AND NeuroKit2 fractal_katz bit-for-bit; (2) it completes the fractal-dimension family in PhysioEEG (petrosianFD, svdEntropy); (3) an INTEGRITY FIX to the convention. HONEST scope: (1) this op is a NEW STANDALONE OP -- Katz FD previously existed only inside eegComplexity; it now completes the fractal-dimension family (the confirmatory partner of the Petrosian and SVD complexity views); (2) this is a genuine DOUBLE-REFERENCE MACHINE-PRECISION match -- the identical amplitude-only closed form in katzFD, antropy, and NeuroKit2, so the residual is exactly zero (0 vs each), a bit-for-bit agreement of two independent reference tools, not a convention agreement; (3) the INTEGRITY FIX and important CONVENTION note: the two dominant Python references (antropy, NeuroKit2), and pyeeg and mne-features, all measure the successive and extent distances in the signal's AMPLITUDE units only, even though their docstrings say 'Euclidean'; the shipped eegComplexity(measure='katz_fd') previously used the TRUE Euclidean distance in the sample-index/amplitude plane, which mixes the two axes' units, is scale-dependent, and is not comparable to any reference (KFD 1.696 vs the field-standard 3.468 here, a difference of ~1.77); this fold adopts the amplitude-only convention for both the new op and the eegComplexity path, restoring cross-tool comparability; (4) CAVEAT: the amplitude-only KFD is not bounded to [1, 2] (it scales with the signal's amplitude-to-step ratio), which is why real EEG yields values above 2 -- this matches what antropy/NeuroKit2 return and is a known property of the de-facto convention, not an error; (5) the value is a signal property on one subject/segment; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "Because the amplitude-only KFD is scale-dependent (it grows with the amplitude-to-step ratio), it is not directly comparable across channels of differing amplitude; z-scoring or per-channel normalization before KFD, or pairing it with the scale-free Petrosian FD, would make a spatial complexity map interpretable. Documented, not escalated.", "artifact": "artifacts/katz_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["antropy.katz_fd (Python)", "NeuroKit2 fractal_katz (Python)"],
+  "status": "validated"
+}

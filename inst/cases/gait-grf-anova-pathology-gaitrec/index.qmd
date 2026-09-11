@@ -1,0 +1,135 @@
+---
+title: "Flattened GRF is a shared signature of impaired gait, certified: healthy controls have ~1.65x the vertical-GRF dynamic range of four pathology classes"
+subtitle: "From a two-group knee finding to a five-class omnibus test, on 1,844 real gait subjects"
+categories: [gait, ground-reaction-force, pathology, cohort, validated]
+author: "Yusuke Matsui"
+date: "2026-09-10"
+---
+
+> **What this case shows** — healthy walking presses the ground in a double-humped pattern (a loading peak,
+> a mid-stance dip, a push-off peak). Impaired gait flattens it. The [sibling
+> case](../gait-grf-dynrange-pathology-gaitrec/index.qmd) certified that for *knee* pathology; here we ask
+> whether the flattening is shared across GaitRec's four lower-limb pathology classes. Each subject's
+> vertical-GRF *dynamic range* (loading peak − mid-stance trough) comes from the **certified**
+> `grfLandmarks`; the **newly-authored** `oneWayAnova` compares healthy controls (n=208) with ankle
+> (n=483), knee (n=499), hip (n=364) and calcaneus (n=290) pathology, reproducing base R
+> **`oneway.test(var.equal=TRUE)`** **bit-for-bit** and **`scipy.stats.f_oneway`** to machine precision.
+> The dynamic range differs across classes (**F(4,1839)=73.4, p~9e-58**), driven by controls having
+> **~1.65x** the range of the (tightly clustered) pathology classes.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `grfLandmarks()` per subject → dynamic range → `oneWayAnova()` across classes.
+**Way of thinking** — when a two-group finding is real, the honest next question is whether it generalises.
+An omnibus one-way ANOVA asks "do *any* of these groups differ?" in one test; here it certifies that the
+GRF flattening is not knee-specific but a shared mark of impaired gait.
+**Ecosystem usage** — `PhysioMoCap::grfLandmarks()`, `PhysioAnalysis::oneWayAnova()`.
+:::
+
+## Proposition
+
+The vertical-GRF dynamic range differs across the five GaitRec gait classes -- F(4,1839)=73.4, p~8.9e-58 --
+driven by healthy controls (mean 0.365 BW) having a much larger range than ankle (0.223), knee (0.215), hip
+(0.225) and calcaneus (0.227) pathology; `oneWayAnova` reproduces base R `oneway.test(var.equal=TRUE)`
+bit-for-bit and `scipy.stats.f_oneway` to machine precision.
+
+## Question & goal
+
+**The question is generalisation and a chained certification: is the flattened-GRF pattern a shared
+property of impaired gait across pathology classes, and does the newly-authored omnibus ANOVA reproduce the
+reference?** The goal is to lift the sibling case's two-group knee result to the full five-class picture --
+closing its open question -- while certifying a new op.
+
+## Challenge & approach
+
+For each subject we take the body-weight- and time-normalised vertical GRF, extract the loading peak and
+mid-stance trough with `grfLandmarks` (certified in the
+[gait-grf-gaitrec](../gait-grf-gaitrec/index.qmd) case), form the dynamic range (peak − trough), and
+compare the five classes with `oneWayAnova`, checking the omnibus F and p against
+`scipy.stats.f_oneway` and base R `oneway.test(var.equal=TRUE)`.
+
+```
+GaitRec vGRF: HC (n=208), A (483), K (499), H (364), C (290) → grfLandmarks → dynamic range = peak1 - trough
+  HC mean 0.365 BW  ·  A 0.223  ·  K 0.215  ·  H 0.225  ·  C 0.227   (HC/pathology ratio 1.65)
+  oneWayAnova → F(4,1839) = 73.4, p ~ 8.9e-58
+     vs base R oneway.test(var.equal=TRUE) → |diff| = 0 (bit-for-bit)
+     vs scipy.stats.f_oneway              → |diff| ~ 4e-14 (machine precision)
+```
+
+## Data
+
+**GaitRec (Horsak et al. 2020)**: processed vertical GRF (body-weight- and time-normalised), five gait
+classes -- healthy control (n=208) and ankle (n=483), knee (n=499), hip (n=364) and calcaneus (n=290)
+pathology -- shod, standardised speed, initial-presentation baseline sessions (one per-subject mean curve).
+Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the mean vertical GRF over stance by class — the control double-hump (blue) is pronounced, while every pathology class is flattened (lower peaks, a raised mid-stance trough), the four curves nearly overlapping. Right: the per-subject dynamic range (peak − trough) by class — controls sit well above the four pathology classes, which cluster tightly (F(4,1839)=73.4, p~9e-58).](artifacts/figure.png)
+
+*How to read this:* left — the flattening is shared: all four pathology classes collapse toward the same
+less-dynamic curve, distinct from the healthy double-hump. Right — that flattening separates controls from
+pathology cleanly, while the pathology classes are hard to tell apart on this feature alone.
+
+| Quantity | Value |
+|---|--:|
+| mean dynamic range HC / A / K / H / C (BW) | 0.365 / 0.223 / 0.215 / 0.225 / 0.227 |
+| **control / pooled-pathology ratio** | **~1.65** |
+| **omnibus F** (df 4, 1839) | **73.4** |
+| −log₁₀ p | 57.0 (p ~ 8.9e-58) |
+| n total (5 classes) | 1844 |
+| vs base R `oneway.test` (\|diff\|) | **0** (bit-for-bit) |
+| vs `scipy.stats.f_oneway` (\|diff\|) | **< 1e-9** (~4e-14, machine precision) |
+
+The omnibus test equals base R exactly and scipy to machine precision, and the group difference is a very
+large, significant effect. Values trace to [`artifacts/grf_anova_summary.csv`](artifacts/grf_anova_summary.csv).
+
+## Conclusion
+
+`oneWayAnova`, the many-group generalisation of the certified `twoSampleTTest`, reproduces the reference
+here on the certified `grfLandmarks`. The transferable takeaway: **the depth of the GRF double-hump is a
+compact read-out of gait quality, and its flattening is not specific to knee pathology — it is shared
+across ankle, knee, hip and calcaneus impairment. Reducing a waveform to a certified landmark feature and
+running one omnibus test turns "does the flattening generalise?" into a quantified, reproducible,
+statistically-certified answer.** The omnibus F is driven by the healthy-vs-pathology contrast; the four
+pathology classes are tightly clustered on this feature.
+
+## Open questions
+
+- The omnibus F certifies that the five classes differ, driven by the healthy-vs-pathology contrast; the
+  four pathology classes are tightly clustered. Post-hoc pairwise tests (e.g. Tukey HSD), per-class effect
+  sizes, and the other GRF features (peaks, impulses, loading rates) would resolve the finer
+  between-pathology structure. The double-hump dynamic range is the single most interpretable summary of
+  the flattening. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| GRF landmarks (peaks, trough) | `grfLandmarks()` | PhysioMoCap |
+| One-way ANOVA (omnibus F) | `oneWayAnova()` | PhysioAnalysis |
+| Two-sample / paired t-test | `twoSampleTTest()`, `pairedTTest()` | PhysioAnalysis |
+
+**Reading the result.**
+
+- **dynamic range** — the double-hump depth in BW; larger = more dynamic loading. A flattened GRF (small
+  range) signals cautious or impaired gait.
+- **omnibus F** — one test for "do any of the group means differ?"; report it with the class means, then
+  follow up with post-hoc pairwise tests to see *which* differ. Here the answer is: controls differ from
+  every pathology class, which cluster together.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioMoCap); library(PhysioAnalysis)
+
+dr <- function(M) apply(M, 1, function(v) { lm <- grfLandmarks(v); lm[1] - lm[2] })  # peak1 - trough
+groups <- lapply(class_vGRF_list, dr)          # list of per-class matrices -> per-subject dynamic ranges
+oneWayAnova(groups)   # omnibus F, p, df1, df2 -- bit-for-bit vs base R oneway.test, machine-precision vs scipy
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/grf_anova_summary.csv`](artifacts/grf_anova_summary.csv), and [`audit.py`](audit.py) re-checks
+the omnibus F, p and the two dfs, the bit-exact match against base R and the machine-precision match against
+scipy, the control > pathology direction and ratio, the class means and sizes, and the honestly noted scope
+(authors the new oneWayAnova op; dynamic range from the certified grfLandmarks; the omnibus F is driven by
+the healthy-vs-pathology contrast; cross-sectional association).

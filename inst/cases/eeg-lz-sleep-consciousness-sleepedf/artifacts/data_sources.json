@@ -1,0 +1,9 @@
+{
+  "dataset": "Sleep-EDF Expanded (sleep-edfx)",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/sleep-edfx/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "record_used": "subject SC4001, overnight polysomnogram (SC4001E0-PSG.edf) + its expert hypnogram (SC4001EC-Hypnogram.edf). EEG channel Fpz-Cz at 100 Hz; for each stage (Wake / N2 / N3 / REM), a 60-s fixed-length concatenation of that stage's 30-s epochs. The same PSG the netphys-sleep and pac-sleep cases read.",
+  "pipeline": "read the PSG + hypnogram (MNE) -> per stage, concatenate the stage's epochs and take a fixed 60 s (6000 samples) so the length-dependent LZ normalization is comparable across stages -> PhysioEEG::eegComplexity(measures='lempel_ziv'), the Lempel-Ziv complexity (median-binarized, normalized). The reference validates the deep-sleep (N3) LZ against the canonical Python antropy.lziv_complexity (via reticulate) and reports the per-stage gradient. Deterministic (LZ is a fixed deterministic computation on both sides).",
+  "note": "Lempel-Ziv complexity measures how compressible a signal is -- its information content -- and is the basis of the Perturbational Complexity Index, a validated index of the LEVEL of consciousness (Schartner et al. 2017). The tracked inputs are eval/data/lz-sleep/ (n3_eeg_pe.rds root + stages.rds). Because LZ is an exactly-defined algorithm, eegComplexity reproduces antropy.lziv_complexity to machine precision (max |diff| = 5.6e-17 across all four stages). The finding: cortical complexity is LOWEST in deep sleep (N3, 0.364) and higher in wake (0.464) and REM (0.464, dreaming), with N2 intermediate (0.420) -- the consciousness/complexity gradient."
+}

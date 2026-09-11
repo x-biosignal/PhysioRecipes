@@ -1,0 +1,10 @@
+{
+  "dataset": "EEG Motor Movement/Imagery Database (eegmmidb)",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples) -- the SAME git-tracked root the Welch and Hjorth cases use.",
+  "pipeline": "readRDS(eeg64_s002r02) -> PhysioAnalysis::spectrogram(channel=POz, window_size=256, overlap=0.5, window_type='hanning'): the short-time Fourier transform power matrix (frequency x time) of the posterior channel. The reference re-computes the full matrix with scipy.signal.spectrogram (symmetric Hann via fftbins=False, nperseg=256, noverlap=128, detrend=False, scaling='density', mode='psd'), via reticulate. Deterministic.",
+  "note": "The tracked input is agent/eval/data/hjorth-eeg/eeg64_s002r02.rds. The spectrogram (STFT) resolves how the spectrum evolves over time -- a frequency x time power matrix -- where Welch averages those same windows into one PSD. This is the FIRST external-reference (scipy) certification of the spectrogram op (previously validated only for compiled-kernel byte-parity to its own R reference). spectrogram reproduces scipy.signal.spectrogram BIT-FOR-BIT (max |diff| ~7e-13 over all 129 x 11 cells) once the conventions are matched: symmetric Hann window (fftbins=False), no detrend, density scaling, one-sided doubling, nperseg=256, 50% overlap, mode='psd'. The finding: at POz the peak-power frequency is in the alpha band (8-13 Hz) in every one of the 11 time windows (median 11.25 Hz), yet the alpha power waxes and wanes across the 10 s (CV ~58%) -- the amplitude modulation of the eyes-closed alpha rhythm, which the time-AVERAGED Welch PSD (the sibling case) cannot reveal."
+}

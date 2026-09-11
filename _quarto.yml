@@ -1,0 +1,30 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - index.qmd
+    - coverage.qmd
+    - inst/cases/*/index.qmd
+
+website:
+  title: "PhysioRecipes"
+  description: >-
+    Reproducible analysis case studies on public data, built on the
+    PhysioExperiment ecosystem. Every number traces to an artifact; every recipe
+    replays byte-identically.
+  navbar:
+    left:
+      - text: "Cases"
+        href: index.qmd
+      - text: "Coverage map"
+        href: coverage.qmd
+    right:
+      - icon: github
+        href: https://github.com/x-biosignal/PhysioRecipes
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-copy: true
+    anchor-sections: true

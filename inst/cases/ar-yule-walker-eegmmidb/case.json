@@ -1,0 +1,34 @@
+{
+  "id": "ar-yule-walker-eegmmidb",
+  "title": "From ACF to a model: the AR Yule-Walker fit (a newly-authored op), bit-for-bit against statsmodels",
+  "modality": ["eeg", "time-series", "autoregressive", "cross-tool-validation", "signal-analysis"],
+  "packages": ["PhysioAnalysis"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "The autoregressive (AR) model is where the ACF/PACF pair leads: the PACF chooses the order, the Yule-Walker equations fit the coefficients, and the result is a compact parametric description (and a parametric spectrum) of the signal's dynamics. The ecosystem had ACF and PACF but no univariate AR fit; this case introduces a NEWLY-AUTHORED op, arYuleWalker. On a real eyes-closed posterior EEG channel it reproduces statsmodels.regression.yule_walker(method='mle') BIT-FOR-BIT for both the AR coefficients (max |diff| ~5e-15) and the innovation variance (~5e-13); the fitted AR(4) is stationary (all roots outside the unit circle, min |root| ~1.09) with a negative lag-2 coefficient, and its parametric spectrum peaks in the alpha band (~12 Hz) -- a valid oscillatory generative model of eyes-closed alpha.",
+  "opdag": ["arYuleWalker"],
+  "claims": [
+    { "id": "ar_phi1", "statement": "first AR coefficient (lag 1) of the AR(4) Yule-Walker fit", "value": 1.18036606, "artifact": "artifacts/ar_summary.csv", "status": "PASS" },
+    { "id": "ar_phi2", "statement": "second AR coefficient (lag 2) -- negative (oscillatory dynamics)", "value": -0.29060893, "artifact": "artifacts/ar_summary.csv", "status": "PASS" },
+    { "id": "var_pred", "statement": "innovation (one-step prediction) variance of the AR fit", "value": 348.495014, "artifact": "artifacts/ar_summary.csv", "status": "PASS" },
+    { "id": "max_diff_phi_sm", "statement": "max |AR coefficient - statsmodels yule_walker(mle)| (bit-exact)", "value": 5.440093e-15, "artifact": "artifacts/ar_summary.csv", "status": "PASS" },
+    { "id": "var_diff_sm", "statement": "|innovation variance - statsmodels variance| (bit-exact)", "value": 5.115908e-13, "artifact": "artifacts/ar_summary.csv", "status": "PASS" },
+    { "id": "stationary", "statement": "the fitted AR(4) is stationary (all roots outside the unit circle; 1 = holds)", "value": 1, "artifact": "artifacts/ar_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored arYuleWalker op is validated against the field-standard statsmodels.regression.yule_walker(method='mle') on the identical signal. Both solve the Yule-Walker equations from the biased demeaned autocovariance; the agreement is BIT-FOR-BIT for both the AR coefficients (max |diff| ~5e-15) and the innovation variance (~5e-13). The fitted AR(4) is stationary (all roots of the AR polynomial outside the unit circle) with a negative lag-2 coefficient.",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), channel POz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/ar_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the newly-authored arYuleWalker reproduces statsmodels.regression.yule_walker(method='mle') bit-for-bit for both the AR coefficients and the innovation variance; (2) the fitted AR(4) is stationary and its parametric spectrum peaks in the alpha band. HONEST scope: (1) this op is NEWLY AUTHORED, building on the just-added autocorrelation and partialAutocorrelation, to complete the ACF/PACF/AR-fit lane -- the ecosystem had no univariate AR fit; (2) this is a genuine MACHINE-PRECISION match -- the op and statsmodels use the IDENTICAL biased/MLE autocovariance in the Yule-Walker equations, so the residual is the floating-point floor, not a convention agreement (note: the 'adjusted'/unbiased convention and base-R ar.yw's small-sample variance correction differ by construction and are NOT the target); (3) the finding is that the fitted AR(4) is stationary (all roots of the AR polynomial outside the unit circle, min |root| ~1.09), so the model is a valid generative description; the negative lag-2 coefficient and the alpha-band spectral peak (~12 Hz) show it captures the oscillatory eyes-closed alpha dynamics, consistent with the AR(2)-like PACF; (4) the coefficients and variance are signal properties (the variance in the signal's squared units); the reproducible content is the bit-exact AR fit and the stationarity, not an absolute physiological constant; (5) run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "The AR fit yields a parametric (AR) spectrum with sharp peaks at fewer parameters than the Welch PSD; exposing that spectrum as an op (arSpectrum) and comparing its alpha peak against the Welch estimate already folded would give a low-variance parametric alternative for narrow-band rhythms. Order selection by AIC/BIC over arYuleWalker fits (using the PACF as a prior) is the companion step. Documented, not escalated.", "artifact": "artifacts/ar_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["statsmodels.regression.yule_walker (Python)"],
+  "status": "validated"
+}

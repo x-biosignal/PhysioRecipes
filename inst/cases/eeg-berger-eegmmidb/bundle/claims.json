@@ -1,0 +1,84 @@
+{
+  "paper": "closed_O1",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "claims": [
+    {
+      "id": "delta",
+      "statement": "relative delta power (O1.., eyes_closed)",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "channel",
+        "key": "O1..",
+        "val_col": "delta"
+      },
+      "expect": 0.2027,
+      "tol": 0.0005,
+      "render": [
+        "0.2027"
+      ]
+    },
+    {
+      "id": "theta",
+      "statement": "relative theta power (O1.., eyes_closed)",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "channel",
+        "key": "O1..",
+        "val_col": "theta"
+      },
+      "expect": 0.05,
+      "tol": 0.0005,
+      "render": [
+        "0.0500"
+      ]
+    },
+    {
+      "id": "alpha",
+      "statement": "relative alpha power (O1.., eyes_closed)",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "channel",
+        "key": "O1..",
+        "val_col": "alpha"
+      },
+      "expect": 0.6284,
+      "tol": 0.0005,
+      "render": [
+        "0.6284"
+      ]
+    },
+    {
+      "id": "beta",
+      "statement": "relative beta power (O1.., eyes_closed)",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "channel",
+        "key": "O1..",
+        "val_col": "beta"
+      },
+      "expect": 0.1129,
+      "tol": 0.0005,
+      "render": [
+        "0.1129"
+      ]
+    },
+    {
+      "id": "gamma",
+      "statement": "relative gamma power (O1.., eyes_closed)",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "channel",
+        "key": "O1..",
+        "val_col": "gamma"
+      },
+      "expect": 0.006,
+      "tol": 0.0005,
+      "render": [
+        "0.0060"
+      ]
+    }
+  ]
+}

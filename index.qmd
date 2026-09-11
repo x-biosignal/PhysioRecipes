@@ -1,0 +1,93 @@
+---
+title: "PhysioRecipes"
+subtitle: "Reproducible analysis case studies on public physiological data — every number traced, every recipe replayable"
+listing:
+  contents: inst/cases
+  type: grid
+  sort: "date desc"
+  fields: [title, subtitle, categories, date]
+  categories: true
+  sort-ui: true
+  filter-ui: true
+  page-size: 24
+---
+
+A growing, version-controlled database of **reproducible analysis case studies** built on the
+[PhysioExperiment](https://github.com/x-biosignal) ecosystem and public data. Each case states a
+proposition, answers a question on a public dataset, and completes through to figures and a conclusion —
+with **every number traced to an artifact** and the **whole recipe replayable byte-identically**.
+
+::: {.callout-tip appearance="simple"}
+## The database at a glance
+
+| | |
+|---|---|
+| **106** case studies | 100 validated · 6 verified |
+| **22** public datasets | EEG, ECG, EMG, GRF/gait, balance, PPG, EDA, accelerometer, sleep, fNIRS, TMS-EEG, … |
+| **23** field-standard references | scipy · NumPy · MNE-Python · NeuroKit2 · antropy · GGIR · lme4 · eRm · base R · … |
+| **21** ecosystem packages | one shared data model, ~144 analysis operators exercised |
+
+Every case is machine-checkable: **the operator reproduces a field-standard reference bit-for-bit (or to
+machine precision), every reported figure traces to a committed artifact, and the recorded pipeline replays
+to a byte-identical result.**
+:::
+
+## What makes a case *validated-tier*
+
+Reproducibility here is not a promise — it is a checked property. A case earns the **validated** badge only
+when an automated audit passes on three fronts:
+
+1. **Reference agreement.** The ecosystem operator is run against an independent, field-standard
+   implementation on the *same real data* — for example our `oneWayAnova` against both
+   `scipy.stats.f_oneway` and base R `oneway.test`, or `kendallTau` against `scipy.stats.kendalltau` and
+   `cor.test(method="kendall")`. The agreement is reported honestly: **bit-for-bit** (`|diff| = 0`) where
+   the arithmetic is identical, or **machine precision** (`|diff| < 1e-9`) where floating-point associativity
+   differs. Disagreements are reported, not hidden.
+2. **Traceability.** Every number printed in the write-up resolves to a value in a committed CSV artifact;
+   an `audit.py` re-checks each one, plus the direction and effect size of the finding.
+3. **Byte-identical replay.** The recorded operator pipeline re-executes to a byte-for-byte identical
+   result — the reproducibility claim itself is tested, not asserted.
+
+Findings are stated with their **honest scope**: cross-sectional associations are not dressed as causation,
+modest effects report their `R²`, and reused-versus-new operators are named explicitly. A case that raises
+an important unresolved question is escalated to a paper rather than overclaimed.
+
+::: {.callout-note}
+For the full case-unit contract see [`SCHEMA.md`](https://github.com/x-biosignal/PhysioRecipes/blob/main/SCHEMA.md).
+For a cross-cutting view — every method, the field-standard reference it was checked against, and the public
+data used — see the **[Coverage map](coverage.qmd)**.
+:::
+
+## Browse by domain
+
+Use the **category filter and search** on the cards below, or start from a theme:
+
+- **EEG & neuro** — spectral & alpha reactivity, aperiodic (1/f) slope, phase-amplitude coupling, complexity
+  & entropy (permutation, Lempel–Ziv, sample/multiscale, Katz/Higuchi), source & connectivity, TMS-EEG.
+- **Cardiac (ECG / HRV / PPG)** — QRS & PVC detection against annotations, time- & frequency-domain HRV,
+  non-linear HRV (DFA, Poincaré, CSI/CVI), PPG heart rate.
+- **Gait & ground-reaction force** — GRF landmarks and the flattened double-hump of impaired gait, pathology
+  omnibus tests, push-off propulsion and its healthy-aging decline, coordination (CRP / vector coding),
+  ProMP and functional regression on WBDS kinematics.
+- **Balance & posturography** — COP sway metrics vs the Prieto reference, the sensory hierarchy (vision ×
+  surface), Romberg and fall-risk, and the cognitive-motor link.
+- **EMG & muscle** — fatigue spectral shift, muscle-synergy extraction (NMF / space-by-time), inter-muscle
+  coordination networks, HD-sEMG motor-unit decomposition.
+- **Wearables, HAR & sleep** — free-living ENMO (vs GGIR), human-activity recognition (LOSO), self-care
+  ADL → ICF, sleep-stage spectra.
+- **Cross-modal & statistics** — distance/RSA/CCA cross-modal integration, and the full classical-statistics
+  family (t-tests, ANOVA / Friedman / Kruskal–Wallis, Pearson / Spearman / Kendall correlation, OLS
+  regression, normality & stationarity tests) each certified against scipy and base R.
+
+## A few flagship cases
+
+- **Pathological gait flattens the GRF** — a certified group difference across 707 trials, the vertical-GRF
+  dynamic range reproducing `scipy.stats.ttest_ind` *and* base R `t.test` bit-for-bit.
+- **The posturographic sensory hierarchy** — 158 subjects × 4 conditions, the correct repeated-measures
+  Friedman test placing sway in a monotone order (eyes-open-firm < … < eyes-closed-foam).
+- **QRS detection vs annotations** — beat detection benchmarked against the MIT-BIH `.atr` reference on real
+  arrhythmia recordings.
+- **Aperiodic EEG slope vs FOOOF** — the 1/f exponent reproduced against the Python `fooof`/`specparam`
+  reference.
+
+*The complete, filterable catalogue follows.*

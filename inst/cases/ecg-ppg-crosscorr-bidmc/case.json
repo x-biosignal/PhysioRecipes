@@ -1,0 +1,36 @@
+{
+  "id": "ecg-ppg-crosscorr-bidmc",
+  "title": "How long does the pulse take to reach the finger? ECG-PPG cross-correlation, checked against numpy and scipy",
+  "modality": ["ecg", "ppg", "cross-correlation", "coupling", "cardiovascular"],
+  "packages": ["PhysioCrossModal"],
+  "dataset": {
+    "name": "BIDMC PPG and Respiration Dataset",
+    "version": "PhysioNet 1.0.0",
+    "record": "subject bidmc01, simultaneous lead-II ECG + fingertip PPG at 125 Hz, 4 min (30000 samples each)",
+    "url": "https://physionet.org/content/bidmc/1.0.0/",
+    "public": true,
+    "citation": "Pimentel MAF et al. Toward a robust estimation of respiratory rate from pulse oximeters. IEEE Trans Biomed Eng 2017;64(8):1914-1923. BIDMC PPG and Respiration Dataset, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "The sibling coherence case showed the ECG and PPG share the heart rate in the FREQUENCY domain. In the TIME domain, the cross-correlation adds the delay: it is the Pearson correlation between two signals as a function of the lag, and its peak lag is a time offset. On real simultaneous ECG + PPG, the cross-correlation peaks at 0.39 s -- the pulse arrival time, the delay for the pressure pulse to travel from the heart (its ECG) to the fingertip (its PPG). And the measure is exact: crossCorrelation reproduces an independent from-scratch numpy normalized cross-correlation BIT-FOR-BIT (max |diff| ~ 3e-14 across all lags), and its peak lag matches scipy.signal.correlate.",
+  "opdag": ["crossCorrelation"],
+  "claims": [
+    { "id": "peak_lag", "statement": "lag (samples) of the peak ECG-PPG cross-correlation within +/- 0.72 s", "value": 49, "artifact": "artifacts/crosscorr_summary.csv", "status": "PASS" },
+    { "id": "peak_lag_seconds", "statement": "the peak lag in seconds -- the pulse arrival time (heart -> fingertip)", "value": 0.392, "artifact": "artifacts/crosscorr_summary.csv", "status": "PASS" },
+    { "id": "peak_correlation", "statement": "the peak normalized cross-correlation (negative: ECG QRS vs PPG pulse morphology)", "value": -0.32570468, "artifact": "artifacts/crosscorr_summary.csv", "status": "PASS" },
+    { "id": "max_diff_numpy", "statement": "max |crossCorrelation - independent numpy normalized cross-correlation| over all lags (bit-exact)", "value": 2.542e-14, "artifact": "artifacts/crosscorr_summary.csv", "status": "PASS" },
+    { "id": "scipy_peak_lag_abs", "statement": "peak-lag magnitude from scipy.signal.correlate (within the matched window) -- agrees with the op", "value": 49, "artifact": "artifacts/crosscorr_summary.csv", "status": "PASS" },
+    { "id": "n_lags", "statement": "lags in the cross-correlation profile (2*max_lag + 1)", "value": 181, "artifact": "artifacts/crosscorr_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "crossCorrelation (stats::ccf, normalized) is validated two ways. (1) An independent from-scratch numpy normalized cross-correlation (demean, cross-covariance/n, normalize by sqrt(c_xx(0) c_yy(0)), matched to R's ccf lag convention lag k = Corr(x[t+k], y[t])) reproduces it BIT-FOR-BIT (max |diff| ~ 2.5e-14 over all 181 lags) -- the arithmetic is exactly correct. (2) The peak lag matches scipy.signal.correlate (within the matched +/- max_lag window; scipy uses the opposite lead/lag sign convention, so magnitudes are compared). The finding: the ECG-PPG cross-correlation peaks at 0.392 s -- the pulse arrival time.",
+    "data": "REAL -- BIDMC (PhysioNet), subject bidmc01, simultaneous lead-II ECG + fingertip PPG, 4 min at 125 Hz",
+    "artifacts": ["artifacts/crosscorr_summary.csv", "artifacts/crosscorr_profile.csv"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) crossCorrelation reproduces an independent numpy normalized cross-correlation bit-for-bit (~2.5e-14) and its peak lag matches scipy.signal.correlate; (2) the ECG-PPG cross-correlation peaks at 0.392 s. HONEST scope: (1) this is a genuine MACHINE-PRECISION cross-tool match -- the op (stats::ccf) and the independent numpy implementation compute the IDENTICAL normalized-cross-correlation formula, so the ~2.5e-14 residual is the floating-point floor, not a convention/agreement difference; the scipy peak-lag check compares MAGNITUDES because scipy.signal.correlate uses the opposite lead/lag sign convention; (2) the finding -- a 0.39 s peak lag -- is the pulse arrival time (heart-to-finger); the peak correlation is NEGATIVE because the sharp ECG QRS and the smooth PPG pulse align in anti-phase at that lag, so the magnitude (0.33) and the lag are the meaningful quantities, NOT the sign; (3) the ECG-PPG cross-correlation is quasi-periodic (it repeats at the cardiac cycle), so the +/- 0.72 s window (under one RR interval) isolates the first, pulse-arrival peak -- a wider window would find the recurring cardiac peaks; the pulse arrival time is a proxy, not the clinical pulse-transit-time (R-peak-to-PPG-foot); (4) single subject, 4-min segment; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "The cross-correlation gives one delay for the whole segment; a SLIDING cross-correlation (slidingCrossCorrelation, also implemented) would track how the pulse arrival time varies beat-to-beat (with blood pressure / vascular tone), and pairing it with the exact R-peak-to-PPG-foot pulse transit time would calibrate the cross-correlation proxy against the clinical measure. Documented, not escalated.", "artifact": "artifacts/crosscorr_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["independent numpy normalized cross-correlation (Python)", "scipy.signal.correlate (Python, SciPy)"],
+  "status": "validated"
+}

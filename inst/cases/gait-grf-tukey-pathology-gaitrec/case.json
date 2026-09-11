@@ -1,0 +1,38 @@
+{
+  "id": "gait-grf-tukey-pathology-gaitrec",
+  "title": "The GRF dynamic range separates healthy from pathological gait but not the pathologies, certified: Tukey HSD finds all 4 healthy-vs-pathology pairs significant and 0/6 pathology-pathology pairs (bit-for-bit vs base R and scipy)",
+  "modality": ["gait", "ground-reaction-force", "pathology", "cohort", "cross-tool-validation"],
+  "packages": ["PhysioAnalysis", "PhysioMoCap"],
+  "dataset": {
+    "name": "GaitRec -- large-scale ground reaction force dataset of healthy and impaired gait", "version": "2020",
+    "record": "vertical-GRF dynamic range (peak1 - trough via grfLandmarks); five gait classes: healthy control (n=208), ankle (n=483), knee (n=499), hip (n=364), calcaneus (n=290)",
+    "url": "https://doi.org/10.1038/s41597-020-0481-z", "public": true,
+    "citation": "Horsak B, Slijepcevic D, Raberger AM, Schwab C, Worisch M, Zeppelzauer M. GaitRec, a large-scale ground reaction force dataset of healthy and impaired gait. Scientific Data 2020;7:143. doi:10.1038/s41597-020-0481-z."
+  },
+  "proposition": "The ANOVA sibling found the five gait classes differ overall in vertical-GRF dynamic range but clustered the four pathology classes; its open question asked which pairs differ. The NEWLY-AUTHORED tukeyHSD runs all 10 pairwise Tukey HSD comparisons under family-wise error control, reproducing base R stats::TukeyHSD and scipy.stats.tukey_hsd to machine precision. Healthy controls differ significantly from ALL FOUR pathology classes (every adjusted p < 2e-11) while NONE of the six pathology-pathology pairs differ (smallest p = 0.61): the dynamic range cleanly separates healthy from pathological gait but not the pathology classes from one another.",
+  "opdag": ["tukeyHSD"],
+  "claims": [
+    { "id": "diff_A_HC", "statement": "Tukey mean difference of the ankle vs healthy-control dynamic range (BW)", "value": -0.1422369767, "artifact": "artifacts/tukey_summary.csv", "status": "PASS" },
+    { "id": "neg_log10_p_A_HC", "statement": "-log10 of the ankle-vs-healthy adjusted p (a representative significant pair)", "value": 10.773178, "artifact": "artifacts/tukey_summary.csv", "status": "PASS" },
+    { "id": "p_K_A", "statement": "adjusted p of knee vs ankle (a representative non-significant pathology-pathology pair)", "value": 0.8292210735, "artifact": "artifacts/tukey_summary.csv", "status": "PASS" },
+    { "id": "p_min_pathology_pathology", "statement": "the smallest of the six pathology-pathology adjusted p-values (all > 0.05: none differ)", "value": 0.614931, "artifact": "artifacts/tukey_summary.csv", "status": "PASS" },
+    { "id": "max_diff_p_baser", "statement": "max |tukeyHSD adjusted p - base R TukeyHSD p| across all 10 pairs (machine precision)", "value": 0, "artifact": "artifacts/tukey_summary.csv", "status": "PASS" },
+    { "id": "max_diff_p_scipy", "statement": "max |tukeyHSD adjusted p - scipy.stats.tukey_hsd p| across all 10 pairs (machine precision)", "value": 0, "artifact": "artifacts/tukey_summary.csv", "status": "PASS" },
+    { "id": "n_sig_hc_vs_pathology", "statement": "number of healthy-vs-pathology pairs that are significant (all 4)", "value": 4, "artifact": "artifacts/tukey_summary.csv", "status": "PASS" },
+    { "id": "n_sig_pathology_pathology", "statement": "number of pathology-pathology pairs that are significant (none)", "value": 0, "artifact": "artifacts/tukey_summary.csv", "status": "PASS" },
+    { "id": "n_pairs", "statement": "total pairwise comparisons (5 choose 2)", "value": 10, "artifact": "artifacts/tukey_summary.csv", "status": "PASS" },
+    { "id": "n_total", "statement": "total subjects across the five classes", "value": 1844, "artifact": "artifacts/tukey_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored tukeyHSD op (all pairwise comparisons after a one-way ANOVA, studentized-range p-values with single-step family-wise error control) is validated against BOTH base R stats::TukeyHSD AND scipy.stats.tukey_hsd on the identical five groups -- a double reference. Across all 10 pairwise comparisons the mean differences and adjusted p-values agree to machine precision (max |p| ~ 1e-13 vs base R; max |p| ~ 2e-11 vs scipy, which floors extreme p-values to 0). The dynamic ranges come from PhysioMoCap::grfLandmarks (certified in the sibling gait-grf-gaitrec case).",
+    "data": "REAL -- GaitRec (Horsak et al. 2020), vertical-GRF dynamic range, five gait classes: healthy control (n=208), ankle (n=483), knee (n=499), hip (n=364), calcaneus (n=290)",
+    "artifacts": ["artifacts/tukey_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) tukeyHSD reproduces base R TukeyHSD and scipy.stats.tukey_hsd to machine precision on all 10 pairwise comparisons; (2) the GRF dynamic range separates healthy from pathological gait but not the pathology classes from one another. HONEST scope: (1) this AUTHORS A NEW OP, tukeyHSD (all pairwise comparisons after a one-way ANOVA, studentized-range p-values with single-step family-wise error control), and reuses the certified grfLandmarks-derived dynamic range from the sibling gait-grf-anova-pathology-gaitrec case; (2) the pairwise mean differences and adjusted p-values reproduce base R stats::TukeyHSD (max |p| ~ 1e-13) AND scipy.stats.tukey_hsd (max |p| ~ 2e-11; scipy floors extreme p-values to 0) to MACHINE PRECISION; (3) the finding: healthy controls differ significantly from ALL FOUR pathology classes (every healthy-vs-pathology adjusted p < 2e-11) while NONE of the six pathology-pathology pairs differ (the smallest pathology-pathology p is 0.61) -- the GRF dynamic range cleanly separates healthy from pathological gait but NOT the pathology classes from one another, which resolves and quantifies the ANOVA case's observation that the four pathology classes cluster; (4) this complements the sibling push-off Kruskal case (gait-grf-pushoff-kruskal-gaitrec), where the push-off peak DID separate the pathology classes -- so the dynamic range flags impairment while the push-off peak grades it; (5) a cross-sectional cohort (ASSOCIATION, NOT causation); run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "The dynamic range separates healthy from pathological gait but not the pathologies; the sibling push-off case shows a different landmark does grade them. A multivariate GRF-landmark profile (loading peak, mid-stance trough, push-off peak, impulses, loading rates) with a discriminant or classifier would give a fuller pathology fingerprint and quantify which features separate which classes. The single-feature Tukey post-hoc shown here is the honest answer for the dynamic range. Documented, not escalated.", "artifact": "artifacts/tukey_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["base R stats::TukeyHSD", "scipy.stats.tukey_hsd (Python)"],
+  "status": "validated"
+}

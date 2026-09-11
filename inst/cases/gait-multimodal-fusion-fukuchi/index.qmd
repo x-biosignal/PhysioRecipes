@@ -1,0 +1,128 @@
+---
+title: "Integrating kinematics and kinetics: what the modalities of gait share"
+subtitle: "A worked multi-modal fusion case study on real gait kinematics + kinetics"
+categories: [gait, biomechanics, kinematics, kinetics, multimodal-fusion, validated]
+author: "Yusuke Matsui"
+date: "2026-08-18"
+---
+
+> **What this case shows** — gait is measured in many modalities (angles, forces,
+> muscle activity, IMU); the integrative question is *what they share*. Fusing real
+> **kinematics** (joint angles) and **kinetics** (ground reaction force) of 42
+> adults across 8 speeds, the ecosystem finds a coupling a single number would
+> miss: **CCA** gives a top canonical correlation of **0.87** between the
+> modalities, and **JIVE**'s cross-modal **joint** component tracks walking speed
+> (**r = −0.70**) — the shared, speed-driven gait pattern — while most of each
+> modality's variance (kinematics 79%, kinetics 62%) is modality-specific. The
+> whole-block **RV is only 0.088**, which is *exactly why* you reach for CCA and
+> JIVE, not RV alone. **How to read it** — left, JIVE's joint/individual/residual
+> split per modality; centre, the shared component falling with speed; right, the
+> tight canonical coupling.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — to integrate two (or more) aligned modality blocks: **JIVE**
+splits them into structure *shared across* modalities vs *specific to* each;
+**CCA** finds the directions that co-vary most; **RV** scores the whole-block
+association.
+**Way of thinking** — "how related are these modalities?" has several answers:
+RV asks about the *whole configuration*, CCA about the *best direction*, JIVE
+about a *shared low-rank component*. A low RV with a high CCA and a meaningful JIVE
+joint means the coupling is real but *low-dimensional* — read all three.
+**Ecosystem usage** — `jive()`, `cca()`, `rvCoefficient()` (PhysioCrossModal) on a
+list of blocks that share the observation dimension; extend with `coupledNMF()`,
+`multipleFactorAnalysis()`, `multimodalGaitIndex()`.
+:::
+
+## Proposition
+
+On real gait, integrating kinematics and kinetics recovers a strong, speed-driven
+shared structure: CCA top canonical correlation 0.87, JIVE joint component vs speed
+r = −0.70, with most variance modality-specific (RV only 0.088) — so CCA and JIVE,
+not RV alone, reveal the coupling.
+
+## Question & goal
+
+**The question is integrative.** Each modality of gait tells part of the story;
+the clinically and scientifically interesting part is what they hold *in common*
+versus what is unique to each. The WBDS dataset provides both kinematics and
+kinetics for the same trials, so we can ask directly: what do the joint angles and
+the ground reaction force *share*, and does that shared part mean something (like
+walking speed)?
+
+## Challenge & approach
+
+We build two aligned blocks — **kinematics** (right hip/knee/ankle sagittal angle
+over the gait cycle) and **kinetics** (vertical GRF, time-normalised heel-strike to
+heel-strike) — for 42 adults × 8 speeds. We apply **JIVE** (joint vs individual vs
+residual per modality), **CCA** (canonical coupling), and **RV** (whole-block
+association), and ask whether the shared component tracks speed.
+
+## Data
+
+**WBDS** (Fukuchi et al. 2018) — 42 adults, kinematics + kinetics across 8 treadmill
+speeds. Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![JIVE joint/individual/residual variance per modality (left), the JIVE joint
+(shared) component versus speed (centre), and the canonical coupling of kinematics
+and kinetics (right).](artifacts/figure.png)
+
+*How to read this:* the left bars show a real shared (joint) component in *both*
+modalities (kinematics 21%, kinetics 38%) with larger modality-specific parts. The
+centre panel shows that shared component is speed-driven (r = −0.70). The right
+panel is the CCA: one direction of kinematics and one of kinetics move together at
+r = 0.87.
+
+| quantity | value |
+|---|---|
+| CCA top canonical correlation | **0.87** |
+| JIVE joint component vs speed | **r = −0.70** |
+| JIVE joint variance (kinematics / kinetics) | 0.21 / 0.38 |
+| RV coefficient (whole-block) | **0.088** (p = 0.0005) |
+| observations fused | 328 (42 × 8) |
+
+## Conclusion
+
+The modalities of gait share a real, low-dimensional, speed-driven structure that
+CCA and JIVE expose — and that the whole-block RV, on its own, would hide. The
+transferable takeaway: **integrate modalities with more than one lens — JIVE for
+shared-vs-specific, CCA for the covarying directions, RV for the whole — because a
+low RV can still hide a strong, meaningful coupling.**
+
+## Open questions
+
+- Adding **EMG and IMU** blocks (a genuine four-modality fusion) with
+  `coupledNMF()` and a `multimodalGaitIndex()` would build a full multi-modal gait
+  signature; that needs a synchronised EMG + kinematics + kinetics + IMU cohort.
+  *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| step | function | package |
+|---|---|---|
+| align modalities to a shared observation dimension | `alignSignals()` / `MultiPhysioExperiment()` | PhysioCrossModal |
+| shared vs modality-specific structure | `jive()` | PhysioCrossModal |
+| canonical coupling directions | `cca()` / `plsBlocks()` | PhysioCrossModal |
+| whole-block association | `rvCoefficient()` / `distanceCorrelation()` | PhysioCrossModal |
+| composite multi-modal deviation index | `multimodalGaitIndex()` | PhysioCrossModal |
+
+**Choosing the parameters:** give a list of blocks that share rows (here
+subject-speeds), pick JIVE ranks from a scree/permutation check, and read the joint
+scores as the integrated representation — then relate them to an outcome (here,
+speed).
+
+```r
+library(PhysioCrossModal)
+fit <- jive(list(kinematics = KIN, kinetics = KINET), rank_joint = 2, rank_individual = 2)
+fit$variance                       # joint / individual / residual per modality
+cor(fit$joint_scores[, 1], speed)  # the shared component's meaning
+cca(KIN, KINET)$cor                # canonical coupling
+```
+
+One line for the technical reader: every number traces to
+[`artifacts/fusion_summary.csv`](artifacts/fusion_summary.csv) and
+[`artifacts/jive_variance.csv`](artifacts/jive_variance.csv), re-checked by
+[`audit.py`](audit.py) and `tools/validate_case.py`; the fusion methods themselves
+are cross-validated against `energy`, `FactoMineR`, `vegan` and base R
+(`planning/crossmodal-validation/`).

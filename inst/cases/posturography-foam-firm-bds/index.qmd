@@ -1,0 +1,119 @@
+---
+title: "Sensory reweighting, certified: foam-surface sway is ~2.8x firm across 50 subjects (paired t-test bit-for-bit vs scipy and base R)"
+subtitle: "A cohort balance case: the proprioceptive contribution to standing, on real posturography data"
+categories: [posturography, balance, cohort, clinical-statistics, validated]
+author: "Yusuke Matsui"
+date: "2026-09-08"
+---
+
+> **What this case shows** — stand on foam and you sway more: the compliant surface degrades ankle
+> proprioception, so balance leans on vision and the vestibular system, and the center of pressure travels
+> farther. This case demonstrates and certifies that across a real 50-subject cohort. Per subject, COP
+> path length on firm and foam ground comes from the **certified** `swayMetrics`; a newly-authored
+> **`pairedTTest`** compares them, reproducing **`scipy.stats.ttest_rel`** *and* base R
+> **`t.test(paired = TRUE)`** **bit-for-bit**. Foam sway is **~2.8x** firm, and foam beats firm in **all
+> 50 of 50 subjects**.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `pairedTTest(x, y)` → the paired t-statistic, p-value and df for matched measurements.
+**Way of thinking** — chain validated ops: certify the per-trial metric (`swayMetrics` vs Prieto), then
+certify the group test (`pairedTTest` vs scipy/base R). The effect you report then rests on two
+bit-for-bit foundations, not one.
+**Ecosystem usage** — `PhysioAnalysis::pairedTTest()`, `PhysioMoCap::swayMetrics()`.
+:::
+
+## Proposition
+
+Across 50 subjects, COP path length is greater on foam than firm ground (mean 167 vs 61 cm, ratio 2.76 of
+the group means; all 50/50 subjects); the paired t-test (t = 17.3, df = 49, p ~ 1.6e-22) reproduces
+`scipy.stats.ttest_rel` and base R `t.test(paired = TRUE)` bit-for-bit.
+
+## Question & goal
+
+**The question is a cohort effect and a chained certification: does the shipped `swayMetrics` path length
+capture the foam-vs-firm sensory-reweighting effect, and does a newly-authored paired t-test reproduce
+the reference?** The goal is to certify `pairedTTest`, reuse the already-certified `swayMetrics`, and
+quantify the effect.
+
+## Challenge & approach
+
+For each subject we take the eyes-open firm and eyes-open foam quiet-standing trials, compute the COP path
+length with `swayMetrics` (certified against the Prieto reference in the
+[sway-posturography-bds](../sway-posturography-bds/index.qmd) case), and compare the 50 paired values with
+`pairedTTest`, checking the statistic and p against `scipy.stats.ttest_rel` and base R.
+
+```
+50 subjects × {firm, foam} COP → swayMetrics path length (certified) → 50 paired values
+  firm mean 61 cm   ·   foam mean 167 cm   ·   ratio 2.76 (all 50/50 foam > firm)
+  pairedTTest → t = 17.3, df = 49, p ~ 1.6e-22   vs scipy.stats.ttest_rel & base R → |diff| = 0
+```
+
+## Data
+
+**Santos & Duarte (2016) balance dataset (figshare)**: 50 subjects, one eyes-open firm and one eyes-open
+foam quiet-standing trial each (60 s, force-plate COP at 100 Hz). Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: every subject's COP path length rises from firm to foam (each faint line a subject; all 50 go up), the group mean (red) climbing 61→167 cm. Right: the distribution of per-subject foam/firm ratios — all above 1 (mean of the individual ratios ~2.9; the ratio of the group means is 2.76). The paired t-test gives t = 17.3, p ~ 1.6e-22.](artifacts/figure.png)
+
+*How to read this:* left — the effect is not just a mean shift, it is universal: no subject sways less on
+foam. Right — the ratio is centered well above 1, the size of the proprioceptive contribution.
+
+| Quantity | Value |
+|---|--:|
+| mean firm / foam path length | 61 / 167 cm |
+| **foam / firm ratio** (of group means) | **2.76** |
+| subjects with foam > firm | **50 / 50** |
+| **paired t** (df 49) | **17.3** |
+| −log₁₀ p | 21.8 (p ~ 1.6e-22) |
+| vs `scipy.stats.ttest_rel` / base R (\|diff\|) | **0** (bit-for-bit) |
+
+The paired test equals both references exactly, and the effect is universal. Values trace to
+[`artifacts/pairedt_summary.csv`](artifacts/pairedt_summary.csv).
+
+## Conclusion
+
+`pairedTTest` is certified against two references, and it rests on the already-certified `swayMetrics`.
+The transferable takeaway: **balance depends on proprioception — remove reliable foot-surface cues (stand
+on foam) and sway roughly triples, in every subject. This is why foam-surface posturography is a standard
+probe of the somatosensory contribution to standing, and why the firm-vs-foam contrast is a workhorse of
+fall-risk assessment.**
+
+## Open questions
+
+- This uses one eyes-open trial per surface and the path-length metric; the BDS also has eyes-closed
+  trials, three trials per condition, and the full Prieto metric set, supporting a two-way (vision ×
+  surface) repeated-measures analysis. The paired foam-vs-firm contrast shown here is the largest, most
+  reliable single effect. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Paired-samples t-test | `pairedTTest()` | PhysioAnalysis |
+| Posturography sway metrics | `swayMetrics()` | PhysioMoCap |
+
+**Reading the result.**
+
+- **t / p** — the paired t tests whether the within-subject difference is systematically non-zero; here it
+  is, overwhelmingly.
+- **ratio and n foam>firm** — report the effect size (foam/firm) and its universality alongside the
+  p-value; a significant p with a small or inconsistent effect would be far weaker evidence.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis); library(PhysioMoCap)
+
+firm <- swayMetrics(cop_firm, 100)$path_length   # per subject, per surface
+foam <- swayMetrics(cop_foam, 100)$path_length
+pairedTTest(foam, firm)                          # t, p, df -- reproduces scipy/base R bit-for-bit
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/pairedt_summary.csv`](artifacts/pairedt_summary.csv), and [`audit.py`](audit.py) re-checks the
+paired t and p, the bit-exact match against scipy and base R, `df = n − 1`, the universal foam > firm
+direction, the effect size, and the honestly noted scope (new paired-test op; the input path lengths come
+from the certified swayMetrics; the sensory-reweighting interpretation).

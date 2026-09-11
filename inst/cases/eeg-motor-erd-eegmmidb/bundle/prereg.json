@@ -1,0 +1,39 @@
+{
+  "registered_at": "2026-08-12T00:00:00Z",
+  "hypothesis": {
+    "statement": "S001 rest sensorimotor (C3/C4) band power.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "S001_rest_sensorimotor_power"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb), subjects S001-S005, motor runs R03/R07/R11 (real hand movement), 64ch, 160 Hz",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "butterworthFilter",
+        "params": {
+          "low": 1,
+          "high": 45
+        }
+      },
+      {
+        "activity": "bandPower",
+        "params": {
+          "relative": false
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "sensorimotor_band_power",
+      "estimand": "S001_rest_sensorimotor_power",
+      "threshold": "absolute mu(alpha 8-13) & beta(13-30) power at C3/C4 (ERD contrast at case level)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "c74ef593b919632cd318d07c9cc4361c6dc19edb1b742cf8101de7d7c3089370",
+    "registered_at": "2026-08-12T00:00:00Z"
+  }
+}

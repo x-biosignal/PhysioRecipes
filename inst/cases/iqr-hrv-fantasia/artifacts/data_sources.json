@@ -1,0 +1,10 @@
+{
+  "dataset": "Fantasia database",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/fantasia/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Iyengar N, Peng CK, Morin R, Goldberger AL, Lipsitz LA. Age-related alterations in the fractal scaling of cardiac interbeat interval dynamics. Am J Physiol 1996;271:R1078-R1084. Fantasia database, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "subject f1y01 (young healthy adult), first 5-minute RR-interval window (391 intervals, ms) -- the same RR the Poincare and HRV-DFA cases use, stored here as a plain numeric vector (rr_ms).",
+  "pipeline": "readRDS(rr5min_f1y01_vec) -> PhysioAnalysis::interquartileRange (IQR = Q3 - Q1, type-7 quantiles). The reference re-computes it with BOTH scipy.stats.iqr and base R IQR, via reticulate, and also computes SDNN, the robust IQR-based SD estimate (IQR/(2*qnorm(0.75))), their ratio, and the RR skewness/kurtosis (via signalMoments). Deterministic.",
+  "note": "interquartileRange is a NEW quantile-based robust-dispersion op, completing the robust toolkit alongside medianAbsDev (deviation-based scale) and signalMoments (classical SD). It reproduces BOTH scipy.stats.iqr (default linear interpolation) AND base R IQR (type-7 quantiles) BIT-FOR-BIT (max |diff| 0 vs each), because Q3 and Q1 are unambiguous order statistics under the shared convention. Finding: on the Fantasia RR intervals the distribution is right-skewed and heavy-tailed (skewness 1.01, excess kurtosis 2.91), so the robust IQR-based SD estimate (56.3 ms) sits materially below SDNN (69.3 ms; ratio 0.81) -- the OPPOSITE of the near-Gaussian eyes-closed EEG (median-abs-dev case), where the robust scale matched the SD to 0.2%. The robust/classical dispersion ratio is thus a distribution-shape diagnostic: here it shows SDNN is inflated by the heavy right tail (long RR intervals from respiratory sinus arrhythmia and occasional ectopy) that the robust IQR ignores. IQR itself (76 ms) is a robust HRV dispersion index, resistant to the ectopic beats that corrupt SDNN."
+}

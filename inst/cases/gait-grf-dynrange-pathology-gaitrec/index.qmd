@@ -1,0 +1,120 @@
+---
+title: "Pathological gait flattens the GRF, certified: controls have ~1.9x the vertical-GRF dynamic range of patients"
+subtitle: "The flattened ground-reaction force of impaired gait, as a certified group difference on a large cohort"
+categories: [gait, ground-reaction-force, pathology, cohort, validated]
+author: "Yusuke Matsui"
+date: "2026-09-10"
+---
+
+> **What this case shows** — healthy walking presses the ground in a double-humped pattern (a loading peak,
+> a mid-stance dip as the body vaults over the leg, a push-off peak). Impaired gait flattens it. This case
+> certifies that as a group difference across 707 real gait trials. Each trial's vertical-GRF *dynamic
+> range* (loading peak − mid-stance trough) comes from the **certified** `grfLandmarks`; the **certified**
+> `twoSampleTTest` compares healthy controls (n=208) and knee-pathology patients (n=499), reproducing
+> **`scipy.stats.ttest_ind`** *and* base R **`t.test`** **bit-for-bit**. Controls have **~1.87x** the
+> dynamic range (0.37 vs 0.20 BW, t=17.3, p~3e-48).
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `grfLandmarks()` per trial → dynamic range → `twoSampleTTest()` between groups.
+**Way of thinking** — turn a waveform into one interpretable number, then test it. The GRF double-hump's
+depth (dynamic range) captures how dynamically a person loads the limb; a flattened hump is the mark of
+cautious, impaired gait, and the group test makes the observation inferential.
+**Ecosystem usage** — `PhysioMoCap::grfLandmarks()`, `PhysioAnalysis::twoSampleTTest()`.
+:::
+
+## Proposition
+
+Healthy controls (n=208) have a larger vertical-GRF dynamic range than knee-pathology patients (n=499) --
+mean 0.367 vs 0.196 BW, ratio ~1.87, Welch t=17.3 on 337 df, p~2.8e-48; `twoSampleTTest` reproduces
+`scipy.stats.ttest_ind(equal_var=FALSE)` and base R `t.test` bit-for-bit.
+
+## Question & goal
+
+**The question is a pathology signature and a chained certification: is the flattened-GRF pattern of
+impaired gait a significant group difference, and does the two-sample test reproduce the reference on a
+large cohort?** The goal is to turn the sibling case's descriptive landmarks into a certified inferential
+result.
+
+## Challenge & approach
+
+For each trial we take the body-weight- and time-normalised vertical GRF, extract the loading peak and
+mid-stance trough with `grfLandmarks` (certified in the
+[gait-grf-gaitrec](../gait-grf-gaitrec/index.qmd) case), form the dynamic range (peak − trough), and
+compare controls with patients using `twoSampleTTest`, checking t and p against `scipy.stats.ttest_ind`
+and base R.
+
+```
+GaitRec vGRF: control (n=208) & patient (n=499) → grfLandmarks → dynamic range = peak1 - trough
+  control mean 0.367 BW   ·   patient mean 0.196 BW   ·   ratio 1.87
+  twoSampleTTest (Welch) → t = 17.3, df = 337, p ~ 2.8e-48   vs scipy & base R → |diff| = 0
+```
+
+## Data
+
+**GaitRec (Horsak et al. 2020)**: processed vertical GRF (body-weight- and time-normalised), healthy
+controls (n=208 trials) vs knee-pathology patients (n=499 trials), shod, standardised speed. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the mean vertical GRF over stance — the control double-hump (blue) is pronounced (loading and push-off peaks ~1.1 BW, a deep mid-stance trough ~0.75), while the patient curve (red) is flattened (lower peaks, a raised trough ~0.83). Right: the per-trial dynamic range (peak − trough) by group — control 0.37 vs patient 0.20 BW, a ~1.87x difference (t=17.3, p~3e-48).](artifacts/figure.png)
+
+*How to read this:* left — the flattening is the whole story: less dynamic loading, less mid-stance
+unloading, weaker push-off. Right — that flattening reduces the dynamic range by nearly half, cleanly
+separating the groups.
+
+| Quantity | Value |
+|---|--:|
+| control / patient mean dynamic range | 0.37 / 0.20 BW |
+| **control / patient ratio** | **~1.87** |
+| **Welch t** (df 337) | **17.3** |
+| −log₁₀ p | 47.6 (p ~ 2.8e-48) |
+| n control / patient | 208 / 499 |
+| vs `scipy.stats.ttest_ind` / base R (\|diff\|) | **0** (bit-for-bit) |
+
+The two-sample test equals both references exactly, and the flattening is a very large, significant effect.
+Values trace to [`artifacts/grf_summary.csv`](artifacts/grf_summary.csv).
+
+## Conclusion
+
+`twoSampleTTest`, certified in the balance cohort, reproduces the reference here too, on the certified
+`grfLandmarks`. The transferable takeaway: **the depth of the GRF double-hump is a compact, mechanistic
+read-out of gait quality — it nearly halves in knee pathology. Reducing a waveform to a certified landmark
+feature and testing it between groups turns a qualitative "flattened GRF" impression into a quantified,
+reproducible, statistically-certified difference.**
+
+## Open questions
+
+- This pools the knee-pathology class vs controls with one processed vGRF per trial; GaitRec spans several
+  pathology classes and sessions, supporting per-class effect sizes and a classifier, and the dynamic
+  range is one of several GRF features (peaks, impulses, loading rates). The double-hump dynamic range is
+  the single most interpretable summary of the flattening. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| GRF landmarks (peaks, trough) | `grfLandmarks()` | PhysioMoCap |
+| Two-sample (Welch) t-test | `twoSampleTTest()` | PhysioAnalysis |
+
+**Reading the result.**
+
+- **dynamic range** — the double-hump depth in BW; larger = more dynamic loading. A flattened GRF (small
+  range) signals cautious or impaired gait.
+- **effect size** — report the group means and ratio with the p-value; here the ~1.87x separation on a
+  707-trial cohort is both large and overwhelmingly significant.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioMoCap); library(PhysioAnalysis)
+
+dr <- function(M) apply(M, 1, function(v) { lm <- grfLandmarks(v); lm[1] - lm[2] })  # peak1 - trough
+twoSampleTTest(dr(control_vGRF), dr(patient_vGRF))   # Welch t, p, df -- bit-for-bit vs scipy/base R
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/grf_summary.csv`](artifacts/grf_summary.csv), and [`audit.py`](audit.py) re-checks the Welch t,
+p and df, the bit-exact match against scipy and base R, the control > patient direction and ratio, and the
+honestly noted scope (reuses the certified twoSampleTTest; dynamic range from the certified grfLandmarks;
+cross-sectional association).

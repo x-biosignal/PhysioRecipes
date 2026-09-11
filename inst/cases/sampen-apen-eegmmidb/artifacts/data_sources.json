@@ -1,0 +1,10 @@
+{
+  "dataset": "EEG Motor Movement/Imagery Database (eegmmidb)",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples) -- the SAME git-tracked vector the signal-moments, Jarque-Bera, SVD-entropy, Katz and MAD cases use.",
+  "pipeline": "readRDS(eeg_poz_s002r02) -> PhysioMoCap::sampleEntropy (Richman-Moorman, m=2, r=0.2*SD) and PhysioMoCap::approximateEntropy (Pincus, m=2, r=0.2*SD). The reference re-computes both with antropy (sample_entropy, app_entropy) AND NeuroKit2 (entropy_sample, entropy_approximate, at the matched tolerance r=0.2*SD), via reticulate. Deterministic.",
+  "note": "This is a CROSS-TOOL AUDIT of two shipped, registered ops (PhysioMoCap::sampleEntropy, approximateEntropy) -- not new ops. They were previously certified only against an independent base-R Pincus recompute on accelerometer data (the gait-regularity case); this is their FIRST certification against the gold-standard Python references (antropy, NeuroKit2) and on EEG. Both reproduce BOTH references BIT-FOR-BIT (max |diff| ~2e-16 vs antropy/NeuroKit2 -- the same template-counting algorithm: Chebyshev distance, tolerance r a fraction of the SD, inclusive match). Finding: sample entropy (1.327) exceeds approximate entropy (1.292) -- the textbook ApEn self-match bias, in which ApEn counts each template's match with itself and so systematically underestimates entropy (over-estimates regularity); SampEn removes the self-count and is the less biased estimator."
+}

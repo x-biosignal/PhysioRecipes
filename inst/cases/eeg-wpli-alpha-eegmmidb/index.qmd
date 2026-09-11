@@ -1,0 +1,128 @@
+---
+title: "The modern standard: the debiased weighted phase-lag index"
+subtitle: "A worked debiased-connectivity case on real EEG, checked against scipy"
+categories: [eeg, connectivity, phase-synchronization, wpli, volume-conduction, validated]
+author: "Yusuke Matsui"
+date: "2026-09-04"
+---
+
+> **What this case shows** — the [phase-lag index](../eeg-pli-alpha-eegmmidb/index.qmd) is
+> volume-conduction-robust, but it — like coherence — has a *positive bias* for finite data:
+> even **independent** signals produce a small spurious connectivity. The **weighted phase-lag
+> index** (Vinck 2011) fixes both problems and is the recommended modern EEG connectivity
+> measure: built from the imaginary cross-spectrum (so it discounts zero-lag / volume
+> conduction) **and debiased** (so it removes the sample-size bias). This case validates both.
+> On the same O1-Oz pair, the debiased wPLI is just **0.011** — confirming (like the PLI 0.016)
+> that the strong alpha PLV of 0.92 is mostly volume conduction. And the debiasing works: for
+> constructed **independent** signals the biased wPLI is a spurious **0.038** but the debiased
+> wPLI collapses to **0.0006**, while genuine lagged coupling keeps a debiased wPLI of **1.0**.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for the state-of-the-art connectivity value: `weightedPLI(x, y, sr, freq_band,
+debiased = TRUE)` → read `wpli_debiased`.
+**Way of thinking** — the biased wPLI/PLI/coherence all inflate for short data; the *debiased*
+wPLI is unbiased (it can even go slightly negative for uncoupled signals). Prefer it.
+**Ecosystem usage** — `PhysioCrossModal::weightedPLI()`; compare with `phaseLagIndex()` and
+`phaseLockingValue()` to complete the picture.
+:::
+
+## Proposition
+
+On real O1-Oz alpha, the debiased wPLI is low (0.011), `weightedPLI` reproduces an independent
+scipy imaginary-cross-spectrum wPLI (~7e-3), and its debiasing removes spurious connectivity
+(independent → biased 0.038 / debiased 0.0006; lagged → debiased 1.0).
+
+## Question & goal
+
+**The question is whether the debiased wPLI does what it promises: discount volume conduction
+AND remove the finite-sample bias — and whether the ecosystem computes it correctly.** The goal
+is to validate `weightedPLI` against scipy and to demonstrate the debiasing on signals with a
+known coupling type.
+
+## Challenge & approach
+
+wPLI is built from the imaginary cross-spectrum Im(analytic_x · conj(analytic_y)); the debiased
+form (Vinck Eq. 6) subtracts the diagonal terms. We compute it with `weightedPLI`, re-compute
+it with scipy, and run it on constructed independent / lagged / zero-lag signals.
+
+```
+O1, Oz EEG → weightedPLI(alpha, debiased) → wPLI = 0.113, debiased = 0.011
+                    vs scipy (Im cross-spectrum, Vinck Eq. 6)   → agreement (~7e-3)
+                    vs independent / lagged signals              → debiasing: 0.038 -> 0.0006 ; lagged 1.0
+```
+
+## Data
+
+**eegmmidb (PhysioNet)**: subject **S002**, run **R02 (eyes-closed)**, occipital **O1** and
+**Oz**, 10 s at 160 Hz — the same git-tracked pair the PLV and PLI cases use. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the debiasing. For INDEPENDENT signals the biased wPLI (orange) is a spurious 0.04, but the debiased wPLI (green) collapses to ~0 — the finite-sample bias removed; for genuinely lagged coupling both stay at 1.0; for zero-lag (volume conduction) both are ~0. Right: the real O1-Oz alpha across the connectivity family — PLV (0.92) counts volume conduction, while PLI (0.02), wPLI (0.11) and especially the debiased wPLI (0.01) all discount it, agreeing the genuine lagged coupling is minimal.](artifacts/figure.png)
+
+*How to read this:* the left panel shows *why* the debiased wPLI is trusted (it removes spurious
+connectivity); the right panel completes the PLV → PLI → wPLI story on real data.
+
+| Quantity | Value |
+|---|--:|
+| real O1-Oz wPLI (biased) | **0.113** |
+| real O1-Oz **debiased wPLI** | **0.011** |
+| independent — biased wPLI (spurious) | 0.038 |
+| independent — **debiased wPLI (corrected)** | **0.0006** |
+| lagged — debiased wPLI (genuine) | 1.00 |
+| wPLI vs scipy (max \|diff\|) | 7e-3 |
+
+The debiasing works, the op matches scipy, and the real occipital alpha coupling is minimal once
+volume conduction and bias are removed. Values trace to
+[`artifacts/wpli_summary.csv`](artifacts/wpli_summary.csv).
+
+## Conclusion
+
+The debiased weighted phase-lag index is the connectivity measure to reach for: it discounts
+volume conduction *and* removes the finite-sample bias, and on real occipital EEG it confirms
+that a headline alpha PLV of 0.92 reflects almost no genuine lagged coupling. The transferable
+takeaway: **default to the debiased wPLI for phase connectivity; a biased measure (PLI,
+coherence, PLV) can show spurious coupling on short data — the debiased wPLI won't — and a
+low debiased wPLI is a conservative lower bound on genuine lagged interaction.**
+
+## Open questions
+
+- This completes the canonical phase-connectivity trio on one pair (**PLV** volume-conduction-
+  *sensitive*; **PLI** and **debiased wPLI** volume-conduction-*robust*). The natural next step
+  is a full channel × channel debiased-wPLI matrix — the genuinely-lagged posterior alpha
+  network — and a contrast of that network eyes-closed vs eyes-open. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| debiased weighted PLI (the standard) | `weightedPLI(debiased = TRUE)` | PhysioCrossModal |
+| phase-lag index (biased, VC-robust) | `phaseLagIndex()` | PhysioCrossModal |
+| phase-locking value (VC-sensitive) | `phaseLockingValue()` | PhysioCrossModal |
+| magnitude-squared coherence | `coherence()` | PhysioCrossModal |
+
+**Choosing the parameters.**
+
+- **debiased** — keep `TRUE` (the default): the debiased estimator is unbiased for finite data;
+  the biased wPLI over-reports connectivity on short segments.
+- **freq_band** — the band to test (here `c(8, 13)`, alpha).
+- **reading a value** — a low debiased wPLI means little *lagged* coupling; it does not rule out
+  genuine zero-lag interaction (which wPLI, being VC-robust, also discounts).
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioCrossModal)
+
+w <- weightedPLI(o1, oz, sr = 160, freq_band = c(8, 13), debiased = TRUE)
+w$wpli_debiased   # 0.011 -- little genuine lagged alpha coupling (mostly volume conduction)
+
+# reproduces an independent scipy imaginary-cross-spectrum wPLI (~7e-3); debiasing verified.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/`](artifacts/) — the summary in
+[`wpli_summary.csv`](artifacts/wpli_summary.csv) — and [`audit.py`](audit.py) re-checks each
+number, the scipy agreement, the debiasing demonstration, and the honestly-noted filtfilt and
+conservativeness caveats.

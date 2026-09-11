@@ -1,0 +1,154 @@
+---
+title: "Kinematics and kinetics move together: distance correlation as a cross-modal coupling measure"
+subtitle: "A worked cross-modal case study on real WBDS walking, validated against energy::dcor"
+categories: [biomechanics, gait, cross-modal, kinematics, kinetics, validated]
+author: "Yusuke Matsui"
+date: "2026-09-03"
+---
+
+> **What this case shows** — a walker is described at once by how the limbs *move*
+> (kinematics) and by the forces under the foot (kinetics). Do the two modalities
+> carry the same information? The **distance correlation** (Székely, Rizzo & Bakirov
+> 2007) answers this *without assuming linearity*: it is zero **iff** two multivariate
+> blocks are independent, and catches any dependence a Pearson or linear-canonical
+> measure would miss. On real WBDS treadmill walking, the sagittal knee+ankle flexion
+> angles and the antero-posterior+vertical GRF have **dCor = 0.72** (permutation
+> **p = 0.001**) for one subject and **0.71–0.78** across all five (mean **0.74**) — a
+> strong, significant, strikingly consistent coupling. The ecosystem's
+> `distanceCorrelation` reproduces the canonical **`energy::dcor` to machine precision**
+> (|diff| < **1e-13**), so the measure is *exact*, not approximate.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — to ask whether two modalities are dependent: form two **time-aligned
+blocks** (here kinematics vs kinetics) → call `distanceCorrelation(X, Y,
+permutations = 999)` → read the **dCor** and its **permutation p** → (optionally) repeat
+across subjects for robustness.
+**Way of thinking** — dependence is not the same as *linear* correlation. Distance
+correlation measures dependence of *any* shape and is **zero iff independent**, so a
+near-zero dCor is real evidence of independence, and a large dCor certifies coupling
+even when no single pair of channels correlates linearly.
+**Ecosystem usage** — `PhysioCrossModal::distanceCorrelation()` for the coefficient +
+permutation test; the same package's `representationalSimilarity()`,
+`multipleFactorAnalysis()`, `coupledNMF()` and `jive()` for the wider cross-modal
+toolkit.
+:::
+
+## Proposition
+
+On real WBDS treadmill walking, gait kinematics (knee+ankle flexion) and kinetics
+(GRF) are statistically dependent: dCor = 0.7225 (permutation p = 0.001) for WBDS01
+and 0.71–0.78 (mean 0.74) across five subjects, and `distanceCorrelation` equals the
+canonical `energy::dcor` to machine precision.
+
+## Question & goal
+
+**The question is whether two modalities of the same movement carry shared
+information — and how to measure that honestly.** Linear correlation can be fooled: two
+signals can be strongly dependent yet have a Pearson correlation near zero. The
+distance correlation removes that blind spot — it is zero *if and only if* the blocks
+are independent. The goal is to (1) quantify the kinematics–kinetics coupling on real
+data and (2) show the ecosystem's operator is the *exact* Székely statistic by matching
+the reference `energy::dcor`.
+
+## Challenge & approach
+
+Kinematics and kinetics live in different units and dimensions, so a coupling measure
+must compare *blocks*, not single channels, and must not assume a linear map. Distance
+correlation does exactly this: it correlates the **pairwise-distance** structure of the
+two blocks. We form the two aligned blocks, compute dCor with a 999-permutation test,
+and cross-check every value against `energy::dcor`.
+
+```
+knee+ankle flexion angles ┐
+                          ├─ distanceCorrelation(X, Y, permutations = 999) → dCor, p
+AP+vertical GRF           ┘        (validated == energy::dcor, |diff| < 1e-13)
+```
+
+## Data
+
+**WBDS — Fukuchi, Fukuchi & Duarte (2018), PeerJ** (figshare 5722711, CC-BY 4.0): five
+subjects of treadmill walking. For each, two time-aligned blocks — sagittal **knee +
+ankle flexion angles** (marker-derived, translation-invariant) and the **antero-posterior
++ vertical GRF** — down-sampled to 450 samples. Because it is *treadmill* walking the
+markers oscillate about fixed positions (no forward drift that would inflate the
+coupling). Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: for WBDS01, each point is a *pair* of gait samples — its kinematic distance (x) versus its kinetic distance (y); the positive trend is the dependence distance correlation captures (dCor = 0.72, p = 0.001). Right: the kinematics–kinetics distance correlation for all five subjects (0.71–0.78, mean 0.74) — strong and consistent.](artifacts/figure.png)
+
+*How to read this:* distance correlation asks whether pairs of moments that are far
+apart in *kinematics* are also far apart in *kinetics*. The rising cloud on the left
+says yes; the bars on the right say it holds for every subject.
+
+| Quantity | This reproduction | Reference |
+|---|---|---|
+| dCor (WBDS01) | **0.7225** | `energy::dcor` = 0.7225 |
+| \|op − energy::dcor\| | **< 1e-13** | 0 (exact statistic) |
+| Permutation p (999 perm) | **0.001** | — |
+| Mean dCor, 5 subjects | **0.7447** | — |
+| Min dCor, 5 subjects | **0.7118** | — |
+
+The op reproduces `energy::dcor` to machine precision, the coupling is strong and
+significant, and it holds across every subject. Values trace to
+[`artifacts/crossmodal_dcor_summary.csv`](artifacts/crossmodal_dcor_summary.csv) and
+[`artifacts/crossmodal_dcor_by_subject.csv`](artifacts/crossmodal_dcor_by_subject.csv).
+
+## Conclusion
+
+Gait kinematics and kinetics are two views of one act of walking, and the distance
+correlation certifies their coupling *without* assuming linearity — on real data,
+across every subject, with an operator that is the exact Székely statistic. The
+transferable takeaway: **to test whether two modalities share information, correlate
+their distance structure — a near-zero dCor is genuine evidence of independence, and a
+large one certifies coupling even when no single channel pair correlates.**
+
+## Open questions
+
+- Distance correlation here is a **whole-block, marginal** measure. A *partial* distance
+  correlation would ask whether the coupling survives removing gait speed; a
+  channel-resolved **dCor screen** would map *which* kinematic and kinetic degrees of
+  freedom drive it; and applying the same operator to genuinely different modalities
+  (**EEG↔EMG**, **EMG↔force**) would turn a validated coupling statistic into a
+  cross-modal discovery tool. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| distance correlation + permutation test | `distanceCorrelation()` | PhysioCrossModal |
+| representational similarity (RSA) | `representationalSimilarity()` | PhysioCrossModal |
+| multiple factor analysis (blocks) | `multipleFactorAnalysis()` | PhysioCrossModal |
+| shared vs modality-specific structure | `jive()` | PhysioCrossModal |
+
+**Choosing the parameters.**
+
+- **Blocks, not channels** — pass the whole kinematic and kinetic matrices; dCor
+  compares their joint distance structure, so you do not pre-select channels.
+- **Permutations** — 999 gives a smallest p of 0.001; raise it if you need a finer tail.
+- **Alignment** — the two blocks must share rows (the same time samples / observations);
+  down-sample together so the pairing is preserved.
+- **Interpretation** — dCor ∈ [0, 1]; **0 iff independent**. Unlike |Pearson|, a small
+  value is meaningful evidence of independence.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioCrossModal)
+
+# X = kinematics (n × p), Y = kinetics (n × q), same n rows (aligned samples)
+dc <- distanceCorrelation(X, Y, permutations = 999, seed = 1)
+dc$dcor      # 0.7225  — strong cross-modal coupling
+dc$p_value   # 0.001   — significant (999-permutation null)
+
+# exact by construction: matches the canonical energy::dcor
+stopifnot(abs(dc$dcor - energy::dcor(X, Y)) < 1e-9)
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/`](artifacts/) — the summary in
+[`crossmodal_dcor_summary.csv`](artifacts/crossmodal_dcor_summary.csv) and the
+per-subject values in
+[`crossmodal_dcor_by_subject.csv`](artifacts/crossmodal_dcor_by_subject.csv) — and
+[`audit.py`](audit.py) re-checks each reported number, the exact `energy::dcor`
+agreement, the significance, and the five-subject robustness.

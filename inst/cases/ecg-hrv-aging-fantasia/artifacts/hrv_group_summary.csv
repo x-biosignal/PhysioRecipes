@@ -1,0 +1,7 @@
+"metric","n_young","n_elderly","young_median","elderly_median","direction","wilcox_p"
+"mean_hr",10,10,62,59.5,"young>elderly",0.345
+"hf",10,9,801.505,232.96,"young>elderly",0.00414
+"lf_hf_ratio",10,9,1.923,1.665,"young>elderly",0.661
+"total_power",10,9,3596.415,1020.87,"young>elderly",0.000411
+"hf_nu",10,9,34.2,37.5,"young<elderly",0.661
+"lf_nu",10,9,65.8,62.5,"young>elderly",0.661

@@ -1,0 +1,120 @@
+---
+title: "A distribution over the gait cycle: Probabilistic Movement Primitives"
+subtitle: "A worked movement-primitive case study on real knee kinematics"
+categories: [gait, biomechanics, kinematics, movement-primitives, validated]
+author: "Yusuke Matsui"
+date: "2026-08-17"
+---
+
+> **What this case shows** — a movement primitive can store not one trajectory but
+> a **distribution** over trajectories. On 42 subjects' real knee-angle gait
+> cycles, a **Probabilistic Movement Primitive** recovers the population exactly:
+> its **mean matches the ensemble average** (r = **1.000**) and its **±2 SD band
+> is calibrated** — **95.0%** of observed knee-angle points fall inside. Then
+> **Gaussian via-point conditioning** — pinning the swing-flexion peak to a target
+> — pulls the mean **25.8°** toward the target and **collapses the uncertainty**
+> there, adjusting the *whole* trajectory through the learned correlation. **How
+> to read it** — left, the population band; right, the trajectory bent to pass
+> through a via-point.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — fit a **ProMP** to a set of aligned trajectories (project onto a
+Gaussian basis, model the weights as Gaussian) to get a **mean ± variability
+band**; then **condition** on a desired point to obtain a new distribution that
+passes through it.
+**Way of thinking** — represent a movement as a *belief*, not a template: the band
+tells you what is normal, and conditioning lets you *plan* — "what does the rest of
+the cycle look like if the knee must reach this angle here?" — using the movement's
+own covariance.
+**Ecosystem usage** — `promFit()` then `promCondition()` (PhysioMoCap); compare
+with `dmpFit()`/`dmpGenerate()` for the deterministic (single-trajectory)
+primitive.
+:::
+
+## Proposition
+
+A ProMP is a distribution over trajectories. On real knee-angle gait cycles it
+recovers the population (mean r = 1.000, ±2 SD band covers 95.0%) and supports
+via-point conditioning (mean pulled 25.8°, uncertainty collapses at the pin) —
+the defining ProMP properties, on real data.
+
+## Question & goal
+
+**The question is about representing variability, not averaging it away.** Gait
+analysis usually reports an ensemble-average curve and discards the spread. But the
+spread *is* information — what is a normal amount of knee flexion at each instant?
+And can we *plan* a movement that must hit a target at one moment? A ProMP answers
+both: it is a Gaussian distribution over the whole waveform. We ask whether, on
+real kinematics, it recovers the population and conditions correctly.
+
+## Challenge & approach
+
+We take the sagittal knee angle over the gait cycle for 42 adults at a comfortable
+speed, fit a ProMP (`promFit()`), and check its three defining properties: the mean
+equals the ensemble average, the ±2 SD band is calibrated, and `promCondition()`
+on a via-point bends the trajectory through it while shrinking uncertainty there.
+
+## Data
+
+**WBDS** (Fukuchi et al. 2018) — 42 adults, sagittal knee angle over the gait cycle
+at a comfortable treadmill speed. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![The ProMP over 42 subjects (left): mean and ±2 SD band over the individual
+cycles. Via-point conditioning (right): pinning the swing-flexion peak bends the
+conditioned mean through the target and tightens the band there.](artifacts/figure.png)
+
+*How to read this:* left, the band is the *distribution* of the gait waveform, not
+a single curve; 95% of the real points lie inside ±2 SD. Right, forcing the knee to
+reach a high flexion at 65% of the cycle (black dot) pulls the whole conditioned
+trajectory up and narrows the uncertainty near the pin — the ProMP plans through
+its own covariance.
+
+| quantity | value |
+|---|---|
+| ProMP mean vs ensemble mean | **r = 1.000** |
+| ±2 SD band coverage | **95.0%** |
+| via-point mean pull | **25.8°** |
+| via-point uncertainty ratio | **~0** (collapses) |
+| subjects (trajectories) | **42** |
+
+## Conclusion
+
+On real gait, the ProMP does exactly what it should: recover the population
+distribution and condition through a via-point. The transferable takeaway:
+**represent a movement as a distribution — the band is the norm, and conditioning
+turns the primitive into a planner that respects the movement's own covariance.**
+
+## Open questions
+
+- A **within-subject stride-to-stride** ProMP (rather than the between-subject
+  ensemble distribution) needs continuous multi-stride data; and a
+  **mixture-of-ProMPs** would capture multi-modal populations (mixed pathologies).
+  *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| step | function | package |
+|---|---|---|
+| resample trajectories to a common length | `resampleSignal()` | PhysioMoCap |
+| fit the distribution (mean + band) | `promFit()` | PhysioMoCap |
+| condition on a via-point | `promCondition()` | PhysioMoCap |
+| deterministic primitive (single trajectory) | `dmpFit()` / `dmpGenerate()` | PhysioMoCap |
+
+**Choosing the parameters:** align/resample all trajectories to the same length,
+pick `n_basis` (≈15–25 for a gait cycle), and for conditioning set `obs_sd` small
+to pin the via-point tightly or larger to nudge it. Read the band as the normative
+range and the conditioned mean as a plan.
+
+```r
+library(PhysioMoCap)
+p  <- promFit(knee_cycles, n_basis = 20)             # mean + SD band
+pc <- promCondition(p, phase = 0.65, value = 70)     # pin the swing peak
+```
+
+One line for the technical reader: every number traces to
+[`artifacts/promp_summary.csv`](artifacts/promp_summary.csv) and
+[`artifacts/promp_curves.csv`](artifacts/promp_curves.csv), re-checked by
+[`audit.py`](audit.py) and `tools/validate_case.py`.

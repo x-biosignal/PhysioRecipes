@@ -1,0 +1,34 @@
+{
+  "id": "ar-spectrum-eegmmidb",
+  "title": "The AR model's payoff: the parametric spectrum (a newly-authored op) agrees with the periodogram, bit-for-bit vs spec.ar",
+  "modality": ["eeg", "time-series", "spectral", "cross-tool-validation", "signal-analysis"],
+  "packages": ["PhysioAnalysis"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "The AR fit gives coefficients; its payoff is a parametric spectrum -- smooth and sharp-peaked from only a few parameters. This case introduces a NEWLY-AUTHORED op, arSpectrum (the AR(8) Yule-Walker spectral density), completing the time-series lane. On a real eyes-closed posterior EEG channel it reproduces stats::spec.ar BIT-FOR-BIT (max |rel diff| ~5e-14, including its N/(N-p-1) variance convention); its peak (10.90 Hz) falls in the alpha band and agrees within ~0.5 Hz with the nonparametric smoothed-periodogram peak (11.40 Hz) -- the parametric and nonparametric spectral estimates concur on the eyes-closed alpha rhythm, each a check on the other.",
+  "opdag": ["arSpectrum"],
+  "claims": [
+    { "id": "ar_peak_hz", "statement": "AR parametric spectrum peak frequency (Hz) -- the alpha rhythm", "value": 10.9018, "artifact": "artifacts/arspec_summary.csv", "status": "PASS" },
+    { "id": "max_rel_diff_specar", "statement": "max |arSpectrum - stats::spec.ar| / spec.ar over all frequencies (bit-exact)", "value": 4.872831e-14, "artifact": "artifacts/arspec_summary.csv", "status": "PASS" },
+    { "id": "n_freq", "statement": "number of frequency bins in the AR spectrum", "value": 500, "artifact": "artifacts/arspec_summary.csv", "status": "PASS" },
+    { "id": "peak_in_alpha", "statement": "the AR spectral peak falls in the alpha band (8-13 Hz; 1 = yes)", "value": 1, "artifact": "artifacts/arspec_summary.csv", "status": "PASS" },
+    { "id": "periodogram_peak_hz", "statement": "nonparametric smoothed-periodogram peak frequency (Hz)", "value": 11.4000, "artifact": "artifacts/arspec_summary.csv", "status": "PASS" },
+    { "id": "cross_method_peak_diff_hz", "statement": "|AR peak - periodogram peak| -- parametric/nonparametric agreement (~0.5 Hz)", "value": 0.4982, "artifact": "artifacts/arspec_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored arSpectrum op is validated against stats::spec.ar on the identical signal. Both compute the AR spectral density S(f) = var / |1 - sum phi_k exp(-i 2pi f k)|^2; the agreement is BIT-FOR-BIT (max |rel diff| ~5e-14), and arSpectrum matches spec.ar's small-sample innovation-variance convention N/(N-p-1). The AR spectral peak (10.90 Hz) agrees within ~0.5 Hz with the nonparametric smoothed-periodogram peak (11.40 Hz).",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), channel POz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/arspec_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the newly-authored arSpectrum reproduces stats::spec.ar bit-for-bit; (2) the AR spectral peak is in the alpha band and agrees with the nonparametric periodogram peak within ~0.5 Hz. HONEST scope: (1) this op is NEWLY AUTHORED, building on the just-added arYuleWalker, as the spectral payoff of the AR lane -- the ecosystem had the nonparametric Welch PSD but not the parametric AR spectrum; (2) this is a genuine MACHINE-PRECISION match -- the op and spec.ar compute the IDENTICAL AR spectral formula and, importantly, arSpectrum matches spec.ar's small-sample innovation-variance convention N/(N-p-1) (which differs from arYuleWalker's MLE variance by exactly that factor; documented, not an error), so the ~5e-14 residual is the floating-point floor, not a convention agreement; (3) the finding is the cross-method agreement: the AR spectrum's peak (10.90 Hz) falls in the alpha band and agrees within ~0.5 Hz with the nonparametric smoothed-periodogram peak (11.40 Hz) -- the parametric (low-variance, few-parameter) and nonparametric (high-resolution) spectral estimates concur on the eyes-closed alpha rhythm, each a check on the other; (4) the value is a signal property (a spectral density, up to the estimator's scaling); the reproducible content is the bit-exact spec.ar match and the alpha-peak agreement; (5) run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "The AR order controls the parametric spectrum's smoothness (too low blurs peaks, too high adds spurious ones); selecting it by AIC/BIC over arYuleWalker fits (with the PACF as a prior) would make arSpectrum self-tuning, and comparing the AR alpha-peak bandwidth against the periodogram's would quantify the resolution/variance trade-off between parametric and nonparametric estimators. Documented, not escalated.", "artifact": "artifacts/arspec_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["stats::spec.ar (R)", "stats::spec.pgram (R)"],
+  "status": "validated"
+}

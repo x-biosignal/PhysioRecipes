@@ -1,0 +1,118 @@
+---
+title: "Geometric HRV, cross-tool: the triangular index bit-for-bit vs NeuroKit2 — and the TINN convention"
+subtitle: "A reproducibility-audit case study on real RR data, certifying ecgHRVgeometric"
+categories: [ecg, hrv, geometric, cross-tool-validation, validated]
+author: "Yusuke Matsui"
+date: "2026-09-07"
+---
+
+> **What this case shows** — the **HRV triangular index (HTI)** and **TINN** are the Task-Force
+> *geometric* HRV measures, prized because a histogram shape is robust to a few artifact beats. The
+> ecosystem ships `ecgHRVgeometric`, but it had never been checked against the field-standard
+> **NeuroKit2**. Here we close that gap. On a real RR series, **HTI matches NeuroKit2 bit-for-bit** —
+> it is an *integer ratio* (391 intervals ÷ a modal histogram height of 35 = 11.17). **TINN**, by
+> contrast, **differs** (164 vs 297 ms) — not a bug, but a documented *triangular-interpolation
+> convention*.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `ecgHRVgeometric(rr)` → the geometric HRV panel (HTI, TINN).
+**Way of thinking** — some metrics are conventions-free and some are not. HTI is a count ratio: fix the
+bin and everyone agrees. TINN fits a triangle to a histogram, and "the" triangle depends on the
+fitting rule — so certify HTI, and *report which TINN* you use.
+**Ecosystem usage** — `PhysioECG::ecgHRVgeometric()`; cross-checked here against `NeuroKit2.hrv_time`.
+:::
+
+## Proposition
+
+On real Fantasia RR (f1y01, 391 intervals), `ecgHRVgeometric` reproduces `NeuroKit2.hrv_time` HTI
+bit-for-bit (11.17 = 391 / 35); TINN differs by 133 ms (164 vs 297), a triangular-interpolation
+convention.
+
+## Question & goal
+
+**The question is a reproducibility audit: do the ecosystem's geometric HRV indices agree with the
+field-standard NeuroKit2 — and where, if anywhere, do they disagree, and why?** The goal is to certify
+`ecgHRVgeometric` against `NeuroKit2.hrv_time` and characterize each metric's portability.
+
+## Challenge & approach
+
+HTI = total NN count ÷ the modal (peak) count of the NN histogram at the 1/128 s = 7.8125 ms standard
+bin; TINN = the base width of a triangle fitted to that histogram. We run `ecgHRVgeometric` and
+`NeuroKit2.hrv_time` on the *identical* RR series (fed to NeuroKit2 as R-peak samples at 1000 Hz) and
+compare each.
+
+```
+Fantasia RR f1y01 (391 intervals) → NN histogram (1/128 s bin) → HTI = 391 / modal-count(35) = 11.17
+                    vs NeuroKit2 HRV_HTI (same bin) → bit-exact (|diff| 0)
+                    TINN: 164 ms (least-squares triangle) vs 297 ms (NeuroKit2 fit) — convention gap
+```
+
+## Data
+
+**Fantasia Database (PhysioNet)**: record **f1y01**, a 5-minute RR-interval series (391 intervals) —
+the same git-tracked RR series the [Poincaré](../poincare-hrv-fantasia/index.qmd),
+[HRA](../hra-hrv-fantasia/index.qmd) and [HRV-time](../hrv-time-neurokit-fantasia/index.qmd) cases use.
+Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the NN-interval histogram at the 1/128 s standard bin — HTI is the total count (391) divided by the modal (peak) height (35, red), an integer ratio both tools agree on exactly. Right: ecgHRVgeometric vs NeuroKit2 for HTI (identical, green =) and TINN (a visible gap) — TINN's triangular-interpolation rule differs between the tools.](artifacts/figure.png)
+
+*How to read this:* the left panel shows why HTI is portable (a count ratio, once the bin is fixed); the
+right panel shows the audit result — HTI exact, TINN convention-divergent.
+
+| Quantity | Value |
+|---|--:|
+| **HRV triangular index (HTI)** | **11.17** |
+| HTI vs NeuroKit2 (\|diff\|) | **0** (bit-exact) |
+| NN histogram modal count / interval count | **35 / 391** |
+| **TINN** (ecgHRVgeometric) | **164 ms** |
+| \|TINN − NeuroKit2 TINN\| | **133 ms** (convention) |
+
+HTI matches the field standard exactly; the lone TINN gap is a documented interpolation convention.
+Values trace to [`artifacts/hti_summary.csv`](artifacts/hti_summary.csv).
+
+## Conclusion
+
+The ecosystem's geometric HRV is now certified against NeuroKit2: HTI is bit-for-bit identical, and the
+TINN divergence is a documented triangular-interpolation convention, not an error. The transferable
+takeaway: **prefer HTI for cross-study comparison — as a count ratio at a fixed bin it is
+convention-free and portable — and when you report TINN, state the interpolation rule, because that is
+where toolchains part ways.**
+
+## Open questions
+
+- TINN's cross-tool divergence is a convention choice worth standardizing: reporting both the
+  least-squares base width and the triangle-fit variant would let users reconcile TINN across
+  toolchains, as this case does for HTI. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Geometric HRV (HTI, TINN) | `ecgHRVgeometric()` | PhysioECG |
+| Time-domain HRV (SDNN, RMSSD) | `ecgHRVtime()` | PhysioECG |
+| Nonlinear HRV (Poincaré, DFA) | `ecgHRVpoincare()`, `ecgDFA()` | PhysioECG |
+
+**Reconciling geometric HRV across tools.**
+
+- **HTI** — a count ratio at the 1/128 s (7.8125 ms) standard bin; portable and bit-exact across tools
+  once the bin matches. `ecgHRVgeometric(rr)` accepts an RR vector or an `rr_ms` data frame.
+- **TINN** — the triangle base width; depends on the fitting rule (least-squares here vs NeuroKit2's
+  fit), so report which you use, or prefer HTI for comparison.
+- **bin_ms** — the histogram bin (default 7.8125 ms); changing it changes both HTI and TINN.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioECG)
+
+g <- ecgHRVgeometric(rr)   # rr: numeric NN vector, or a data.frame(rr_ms = ...)
+g$HRV_triangular_index     # = NeuroKit2 HRV_HTI (bit-for-bit)
+g$TINN                     # least-squares triangle base width (convention-dependent)
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/hti_summary.csv`](artifacts/hti_summary.csv), and [`audit.py`](audit.py) re-checks the
+bit-exact HTI agreement, the modal-count/interval-count behind it, the TINN convention gap, and the
+honestly-noted scope (cross-tool re-certification; HTI portable integer ratio; TINN convention-dependent).

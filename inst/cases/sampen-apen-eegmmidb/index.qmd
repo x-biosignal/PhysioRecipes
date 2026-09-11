@@ -1,0 +1,120 @@
+---
+title: "Sample and approximate entropy: the shipped ops match antropy and NeuroKit2 bit-for-bit -- and reveal the ApEn self-match bias"
+subtitle: "A cross-tool audit of the two most-used regularity measures on real EEG"
+categories: [eeg, complexity, entropy, cross-tool-validation, validated]
+author: "Yusuke Matsui"
+date: "2026-09-07"
+---
+
+> **What this case shows** — sample entropy (Richman-Moorman) and approximate entropy (Pincus) are the
+> two most widely used regularity measures. The ecosystem ships both, but had checked them only against a
+> base-R recompute on accelerometer data. This case is their first certification against the gold-standard
+> Python tools on EEG: on a real eyes-closed channel, `PhysioMoCap::sampleEntropy` and
+> `approximateEntropy` reproduce **both** **`antropy`** *and* **NeuroKit2** **bit-for-bit**. And the
+> numbers carry a lesson — sample entropy (1.327) is *higher* than approximate entropy (1.292), the
+> textbook signature of ApEn's self-match bias.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `sampleEntropy(x)` and `approximateEntropy(x)` → two regularity indices.
+**Way of thinking** — prefer **sample** entropy. Approximate entropy counts each template as matching
+itself, which biases it toward "more regular" (lower entropy); sample entropy removes that self-count.
+When both are reported, SampEn > ApEn is the expected, healthier ordering.
+**Ecosystem usage** — `PhysioMoCap::sampleEntropy()`, `PhysioMoCap::approximateEntropy()`.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, the shipped `sampleEntropy` (1.327) and `approximateEntropy` (1.292)
+reproduce both `antropy` and NeuroKit2 bit-for-bit (max `|diff|` ~2e-16 vs each), and sample entropy
+exceeds approximate entropy — the ApEn self-match bias.
+
+## Question & goal
+
+**The question is a certification and a check: the ecosystem ships both entropies but had validated them
+only on accelerometer data against a base-R recompute — do they match the gold-standard Python
+references (antropy, NeuroKit2) on EEG, and does the known ApEn bias appear?** The goal is to certify
+both shipped ops against two references at once and interpret the ApEn-vs-SampEn gap.
+
+## Challenge & approach
+
+Both entropies count how often length-`m` templates recur within a tolerance `r = 0.2·SD` (Chebyshev
+distance): ApEn = φ(m) − φ(m+1) *including* self-matches; SampEn = −log(A/B) *excluding* them. Matching
+the convention (Chebyshev metric, `r` a fraction of the SD, inclusive comparison) makes the shipped ops
+line up with antropy and NeuroKit2 exactly. We compute both on the identical signal and compare.
+
+```
+EEG POz (eegmmidb) → sampleEntropy (m=2, r=0.2·SD) = 1.327   → vs antropy & NeuroKit2 → |diff| ~2e-16
+                   → approximateEntropy (m=2, r=0.2·SD) = 1.292 → vs antropy & NeuroKit2 → |diff| ~0
+                   SampEn (1.327) > ApEn (1.292)  ← ApEn self-match bias (ApEn underestimates entropy)
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz**, 10 s at 160 Hz — the same git-tracked vector the
+[signal-moments](../signal-moments-eegmmidb/index.qmd), [katz-fd](../katz-fd-eegmmidb/index.qmd) and
+[median-abs-dev](../median-abs-dev-eegmmidb/index.qmd) cases use. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the eyes-closed POz waveform. Right: sample entropy and approximate entropy, each computed three ways — `PhysioMoCap`, `antropy`, and NeuroKit2. The three bars within each measure are identical (bit-for-bit), and sample entropy (1.327) sits above approximate entropy (1.292), the ApEn self-match bias.](artifacts/figure.png)
+
+*How to read this:* within each measure the three bars coincide — the shipped op equals both references
+to machine precision. Across measures, SampEn > ApEn: approximate entropy's self-counts pull it down.
+
+| Quantity | Value |
+|---|--:|
+| **sample entropy** (`sampleEntropy`, m=2, r=0.2·SD) | **1.327** |
+| **approximate entropy** (`approximateEntropy`) | **1.292** |
+| SampEn vs `antropy` / NeuroKit2 (\|diff\|) | **~2e-16** (bit-for-bit) |
+| ApEn vs `antropy` / NeuroKit2 (\|diff\|) | **~0** (bit-for-bit) |
+| SampEn > ApEn (self-match bias) | **yes** |
+
+Both shipped ops equal both references exactly, and the ApEn bias is visible. Values trace to
+[`artifacts/sampen_summary.csv`](artifacts/sampen_summary.csv).
+
+## Conclusion
+
+The ecosystem's `sampleEntropy` and `approximateEntropy` are now certified against the two dominant
+Python references on EEG, not just against a base-R recompute on accelerometer data. The transferable
+takeaway: **report sample entropy, not approximate entropy, when you can. ApEn counts each template
+against itself, which biases it toward regularity (lower entropy); the SampEn > ApEn gap you see here is
+exactly that bias, and SampEn is the less biased estimator.**
+
+## Open questions
+
+- Both entropies depend on `r` and `m`; a small `r` or short segment can leave templates with no matches
+  (SampEn undefined via `log(0)`). Reporting the entropies with their match counts, or sweeping `(m, r)`,
+  guards the degenerate regime; multiscale entropy extends this across coarse-grainings. *Documented, not
+  escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Sample entropy (preferred) | `sampleEntropy()` | PhysioMoCap |
+| Approximate entropy | `approximateEntropy()` | PhysioMoCap |
+| Multi-measure EEG complexity wrapper | `eegComplexity()` | PhysioEEG |
+
+**Reading the result.**
+
+- **higher entropy** — a less regular, more complex signal; **lower** — more regular/periodic.
+- **SampEn vs ApEn** — expect SampEn ≥ ApEn; a large gap or an ApEn above SampEn signals the self-match
+  bias is biting (short series, small `r`).
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioMoCap)
+
+sampleEntropy(x)        # Richman-Moorman sample entropy (preferred)
+approximateEntropy(x)   # Pincus approximate entropy (self-match-biased)
+# both reproduce antropy and NeuroKit2 bit-for-bit.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/sampen_summary.csv`](artifacts/sampen_summary.csv), and [`audit.py`](audit.py) re-checks both
+entropies, the bit-exact match against antropy and NeuroKit2 for each, the SampEn > ApEn ordering, and
+the honestly noted scope (cross-tool audit of shipped ops; first antropy/NeuroKit2 and EEG certification;
+machine precision; the ApEn self-match bias).

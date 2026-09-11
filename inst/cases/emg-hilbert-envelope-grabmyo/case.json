@@ -1,0 +1,35 @@
+{
+  "id": "emg-hilbert-envelope-grabmyo",
+  "title": "The shape of muscle activation: the Hilbert EMG envelope, reproduced to machine precision against scipy",
+  "modality": ["emg", "muscle-activation", "envelope", "hilbert-transform", "biomechanics"],
+  "packages": ["PhysioEMG"],
+  "dataset": {
+    "name": "GRABMyo -- a public forearm and wrist surface-EMG database",
+    "version": "PhysioNet 1.0.2",
+    "record": "session1 participant1 gesture10 trial1; 32-channel forearm surface EMG, 10240 samples at 2048 Hz",
+    "url": "https://physionet.org/content/grabmyo/1.0.2/",
+    "public": true,
+    "citation": "Pradhan A, Jiang N, Chester V, Kuruganti U. Linear regression with frequency division technique for robust simultaneous and proportional myoelectric control. Biomed Signal Process Control 2022 (GRABMyo). PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "A surface-EMG signal is a fast, noisy oscillation, but what a movement scientist wants is its slowly-varying amplitude -- the muscle-activation envelope that says when and how hard a muscle fires. The classic way to extract it is the Hilbert transform: form the analytic signal (the EMG plus i times its Hilbert transform) and take its magnitude. On a real 32-channel forearm-EMG gesture, that envelope shows clear burst activity -- a peak/mean modulation of 6.5, the moment the gesture fires -- and identifies the most active channel (14). Because the analytic signal is an exactly-defined FFT operation, the ecosystem's emgEnvelope(method='hilbert') reproduces the canonical scipy.signal.hilbert not approximately but to MACHINE PRECISION: the envelopes agree to a maximum absolute difference of 6x10^-16 across all 32 channels. The muscle-activation envelope the ecosystem reports is, to the last bit, the field-standard one.",
+  "opdag": ["emgEnvelope"],
+  "claims": [
+    { "id": "max_abs_diff",        "statement": "max |emgEnvelope(hilbert) - scipy.signal.hilbert| over all channels (machine precision)", "value": 5.551e-16, "artifact": "artifacts/emg_envelope_summary.csv", "status": "PASS" },
+    { "id": "n_channels",          "statement": "EMG channels with a Hilbert envelope", "value": 32, "artifact": "artifacts/emg_envelope_summary.csv", "status": "PASS" },
+    { "id": "mean_envelope",       "statement": "mean Hilbert-envelope amplitude across channels (activation amplitude)", "value": 0.058412, "artifact": "artifacts/emg_envelope_summary.csv", "status": "PASS" },
+    { "id": "mean_modulation",     "statement": "mean peak/mean envelope modulation -- the gesture's burst activity", "value": 6.4672, "artifact": "artifacts/emg_envelope_summary.csv", "status": "PASS" },
+    { "id": "most_active_channel", "statement": "the most active EMG channel (highest mean envelope)", "value": 14, "artifact": "artifacts/emg_envelope_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "scipy.signal.hilbert (Python; Virtanen et al. 2020) is the canonical implementation of the analytic signal (the FFT-based Hilbert transform). A correct Hilbert envelope must reproduce its magnitude. Computed per channel on the real 32-channel forearm EMG, emgEnvelope(method='hilbert') matches |scipy.signal.hilbert| to machine precision (max |diff| = 5.6e-16). The envelope shows clear burst activity (peak/mean modulation 6.5).",
+    "data": "REAL -- GRABMyo (PhysioNet), session1 participant1 gesture10 trial1, 32-channel forearm surface EMG at 2048 Hz",
+    "artifacts": ["artifacts/emg_envelope_summary.csv", "artifacts/emg_envelope_by_channel.csv"],
+    "all_pass": true,
+    "note": "The reproducible finding is the machine-precision agreement (max |diff| = 5.6e-16 over all 32 channels). HONEST scope: (1) the Hilbert method is chosen because the analytic signal is an EXACTLY-defined FFT operation -- so this is a true machine-precision cross-tool validation, and it upgrades emgEnvelope's validation from the RMS-envelope method (checked against a naive moving-window reference, grade D) to the Hilbert method (checked against scipy, grade A); (2) the physiological read (burst modulation 6.5, most active channel 14) is a single trial of a single participant -- a demonstration, not a norm; (3) emgEnvelope is also used as a PRE-PROCESSING step in the muscle-synergy and coordination-network cases (with the RMS method) -- here it is the headline op, validated for the Hilbert method; (4) run_simulation = FALSE (deterministic on both sides, so the values replay byte-identically)."
+  },
+  "open_questions": [
+    { "q": "The envelope is the entry point to activation analysis: an onset-detection threshold on it gives muscle-activation timing, the per-channel envelopes feed muscle-synergy extraction (see the emg-synergy case), and comparing the Hilbert, RMS, and low-pass envelopes would quantify how the smoothing choice affects onset estimates. Extending this validated envelope to activation-timing across a gesture set, or to a co-contraction index between antagonists, would turn a validated estimator into a motor-control study. Documented, not escalated.", "artifact": "artifacts/emg_envelope_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.signal.hilbert (Python, SciPy)"],
+  "status": "validated"
+}

@@ -1,0 +1,12 @@
+"metric","value"
+"ankle_r_mean",0.973
+"knee_r_mean",0.8466
+"hip_r_mean",0.7741
+"ankle_id_peak_mean",1.4167
+"ankle_ref_peak_mean",1.6594
+"knee_id_peak_mean",0.7664
+"knee_ref_peak_mean",0.5957
+"hip_id_peak_mean",1.4598
+"hip_ref_peak_mean",0.9278
+"n_subjects",5
+"speed_trial",5

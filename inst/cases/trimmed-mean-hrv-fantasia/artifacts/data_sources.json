@@ -1,0 +1,10 @@
+{
+  "dataset": "Fantasia database",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/fantasia/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Iyengar N, Peng CK, Morin R, Goldberger AL, Lipsitz LA. Age-related alterations in the fractal scaling of cardiac interbeat interval dynamics. Am J Physiol 1996;271:R1078-R1084. Fantasia database, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "subject f1y01 (young healthy adult), first 5-minute RR-interval window (391 intervals, ms) -- the same RR the interquartile-range and Poincare cases use, stored as a numeric vector (rr_ms).",
+  "pipeline": "readRDS(rr5min_f1y01_vec) -> PhysioAnalysis::trimmedMean (mean after discarding floor(n*trim) values from each end; trim=0.1). The reference re-computes it with BOTH scipy.stats.trim_mean and base R mean(x, trim), via reticulate, and also computes a second trim level (0.2), the plain mean, and the median for the robust-location progression. Deterministic.",
+  "note": "trimmedMean is a NEW robust-location op, completing the robust toolkit alongside medianAbsDev and interquartileRange (robust dispersion) and signalMoments (the classical mean/SD). It reproduces BOTH scipy.stats.trim_mean AND base R mean(x, trim) BIT-FOR-BIT (max |diff| 0 vs each) at trim 0.1/0.2/0.25, because all three discard the same floor(n*trim) order statistics and average the identical retained values. Finding: on the right-skewed Fantasia RR distribution the plain mean (767 ms) is pulled up by the long RR intervals, so it exceeds the 10%-trimmed mean (762), which exceeds the 20%-trimmed mean (760), which exceeds the median (756); the trimmed mean interpolates between the mean and the median, and the mean-vs-trimmed gap measures how much the heavy tail inflates the mean -- a robust central heart-period resistant to the ectopic beats and long pauses that corrupt the plain mean. This complements the interquartile-range case (robust dispersion on the same skewed RR)."
+}

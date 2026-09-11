@@ -1,0 +1,78 @@
+---
+title: "<one-line case title>"
+subtitle: "<a plain-language hook — what you learn>"
+categories: [<modality>, <dataset>, <tags>]
+author: "Yusuke Matsui"
+date: "<YYYY-MM-DD>"
+---
+
+<!--
+Copy this to cases/<id>/index.qmd and fill every section. This is a USER-FACING
+CASE STUDY, not a provenance dump. Rules: see ../SCHEMA.md and
+../../agent/CASE_RESTYLE_SPEC.md; gold reference = cases/eeg-berger-eegmmidb/.
+Keep the machine terms (sha256, GROUNDED, byte-identical, pre-registration, SUBS,
+op-DAG) OUT of the prose — they live in bundle/ and one closing "audit" line.
+Dataset must be PUBLIC; every number traces to a file in bundle/ or artifacts/;
+also write cases/<id>/case.json and commit a pre-generated artifacts/figure.png.
+-->
+
+> **What this case shows** — <the finding in one sentence>.
+> **What reproduces, and what doesn't** — <honestly: what the ecosystem
+> reproduces here, and what it does NOT, with the reason. Never "why you can
+> trust it".>
+> **How to read it** — <what the figure/table numbers mean>.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — <the reusable step sequence for this class of question>.
+**Way of thinking** — <the judgment calls that make it valid>.
+**Ecosystem usage** — <which functions, chained by role: I/O → preprocessing →
+analysis, via the shared PhysioExperiment data model>.
+:::
+
+## Proposition
+<!-- one sentence: the central claim, plain language -->
+
+## Question & goal
+<!-- the question the SOURCE dataset was created to answer (cite the origin study) -->
+
+## Challenge & approach
+<!-- the difficulty + the ecosystem recipe (named tools, plain: "the three steps") -->
+
+## Data
+<!-- the public dataset, access URL, citation; link data_sources.json -->
+
+## Results
+
+![<caption>](artifacts/figure.png)
+
+*How to read this:* <one line on what the figure/numbers mean>
+<!-- + the tables; each value cites its source artifact; no un-sourced decimals -->
+
+## Conclusion
+<!-- plain; end on the transferable takeaway -->
+
+## Open questions
+<!-- unresolved questions; mark paper-worthy ones with escalate: paper:<slug> in case.json -->
+
+## Using this in your own analysis
+<!-- the tutorial that delivers the recipe -->
+
+**The general recipe** — <numbered general steps>.
+
+**Which functions, and how they compose** — <step | function | package table +
+one line on why they chain (shared data model)>.
+
+**Choosing the parameters** — <bulleted, case-specific guidance for each key
+parameter>.
+
+**Applying it to your own hypothesis** — <how to swap in the reader's data; link
+1–2 sibling cases the pattern generalises to>.
+
+**The recipe, copy-runnable:**
+
+```r
+# load the public data, run the named steps, obtain the reported quantity
+```
+
+**Auditing the numbers.** <one line pointing technical readers to bundle/
+(verified) or the artifacts + audit.py (validated) for the full record.>

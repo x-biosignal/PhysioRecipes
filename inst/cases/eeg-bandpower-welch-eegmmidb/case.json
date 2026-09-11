@@ -1,0 +1,36 @@
+{
+  "id": "eeg-bandpower-welch-eegmmidb",
+  "title": "The workhorse spectral estimator: Welch band power, checked bit-for-bit against scipy",
+  "modality": ["eeg", "spectral", "welch", "band-power", "alpha", "topography"],
+  "packages": ["PhysioAnalysis"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, baseline run R02 (eyes-closed), 64 EEG channels, first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "Welch's method (1967) is the workhorse of EEG spectral analysis: average the periodograms of overlapping, windowed segments to estimate the power spectral density, then integrate over frequency bands. bandPower(method='welch') is used across the EEG cases (Berger effect, alpha reactivity) for findings -- but had never been checked against the reference implementation. Here it is certified: on real eyes-closed 64-channel EEG, bandPower's Welch band powers reproduce scipy.signal.welch BIT-FOR-BIT (max |diff| ~7e-13 over 64 channels x 5 bands) once the conventions are matched (symmetric Hann window, no per-segment detrend, density scaling, one-sided doubling, nperseg=256, 50% overlap). And the finding: relative alpha power is highest over the parieto-occipital region (peak POz 0.73; posterior mean 0.69 vs frontal 0.28) -- the classic eyes-closed posterior alpha rhythm.",
+  "opdag": ["bandPower"],
+  "claims": [
+    { "id": "mean_delta_power", "statement": "mean Welch delta-band (0.5-4 Hz) power across the 64-channel montage", "value": 264.390380, "artifact": "artifacts/bandpower_summary.csv", "status": "PASS" },
+    { "id": "mean_alpha_power", "statement": "mean Welch alpha-band (8-13 Hz) power across the montage", "value": 617.382241, "artifact": "artifacts/bandpower_summary.csv", "status": "PASS" },
+    { "id": "mean_rel_alpha", "statement": "mean relative alpha power (alpha / total) across the montage", "value": 0.418457, "artifact": "artifacts/bandpower_summary.csv", "status": "PASS" },
+    { "id": "max_rel_alpha", "statement": "peak relative alpha power -- the posterior alpha-dominant channel (POz, eyes-closed)", "value": 0.734383, "artifact": "artifacts/bandpower_summary.csv", "status": "PASS" },
+    { "id": "max_diff_scipy", "statement": "max |bandPower Welch - scipy.signal.welch| over all 64 channels x 5 bands (bit-exact)", "value": 6.82121e-13, "artifact": "artifacts/bandpower_summary.csv", "status": "PASS" },
+    { "id": "posterior_mean_relalpha", "statement": "mean relative alpha over posterior (O/PO/Iz) channels", "value": 0.685932, "artifact": "artifacts/bandpower_summary.csv", "status": "PASS" },
+    { "id": "frontal_mean_relalpha", "statement": "mean relative alpha over frontal (Fp/AF/F) channels -- much lower", "value": 0.283871, "artifact": "artifacts/bandpower_summary.csv", "status": "PASS" },
+    { "id": "n_channels", "statement": "EEG channels validated (full eegmmidb montage)", "value": 64, "artifact": "artifacts/bandpower_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "bandPower(method='welch') is validated against scipy.signal.welch, the gold-standard Welch estimator. scipy re-computes every channel's five EEG-band powers with matched conventions -- symmetric Hann window (the op's .getWindow uses 0.5*(1-cos(2*pi*k/(N-1))), so scipy takes fftbins=False), nperseg=256, noverlap=128, no per-segment detrend (detrend=False), density scaling, one-sided doubling -- integrated over the identical band indices. The agreement is BIT-FOR-BIT (max |diff| ~7e-13 over all 64 channels x 5 bands), the FFT floating-point floor. The finding: relative alpha is highest over the parieto-occipital region (peak POz 0.73; posterior mean 0.69 vs frontal 0.28) -- the eyes-closed posterior alpha rhythm.",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), all 64 EEG channels, 10 s at 160 Hz",
+    "artifacts": ["artifacts/bandpower_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) bandPower's Welch band powers reproduce scipy.signal.welch bit-for-bit (max |diff| ~7e-13) across all 64 channels x 5 bands; (2) eyes-closed relative alpha is posterior-dominant (POz 0.73; posterior 0.69 vs frontal 0.28). HONEST scope: (1) this is the FIRST external-reference (scipy) certification of the bandPower Welch estimator -- bandPower is already used across the EEG cases (Berger, alpha reactivity) for findings, so it is NOT a new op; what is new is certifying its Welch computation against the gold-standard scipy.signal.welch; (2) this is a genuine MACHINE-PRECISION match -- once the conventions are matched (symmetric Hann, no detrend, density scaling, one-sided doubling), the op and scipy compute the IDENTICAL Welch estimate, so the ~7e-13 residual is the FFT floating-point floor, not a convention agreement; the match REQUIRES the symmetric-Hann + detrend=False conventions (scipy's defaults are periodic Hann + detrend='constant', which would NOT match) -- so the value of the check is exactly in pinning those conventions; (3) the finding -- posterior alpha dominance -- is the expected eyes-closed topography, a descriptive spatial pattern on one subject/segment, cross-consistent with the Hjorth case's low posterior mobility on the SAME data; NOT a clinical claim; (4) single subject, 10 s, 64 channels; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "bandPower(method='welch') matches scipy once the SYMMETRIC-Hann + no-detrend conventions are pinned; scipy's own defaults (periodic Hann, detrend='constant') differ. The op could expose window/detrend as arguments so users can select the convention their pipeline expects, and a periodic-Hann + detrend variant would then match scipy out-of-the-box. Documented, not escalated.", "artifact": "artifacts/bandpower_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.signal.welch (Python, SciPy)"],
+  "status": "validated"
+}

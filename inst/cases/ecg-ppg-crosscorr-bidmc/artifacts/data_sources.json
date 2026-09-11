@@ -1,0 +1,10 @@
+{
+  "dataset": "BIDMC PPG and Respiration Dataset",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/bidmc/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Pimentel MAF, Johnson AEW, Charlton PH, Birrenkott D, Watkinson PJ, Tarassenko L, Clifton DA. Toward a robust estimation of respiratory rate from pulse oximeters. IEEE Trans Biomed Eng 2017;64(8):1914-1923. BIDMC PPG and Respiration Dataset, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "subject bidmc01: simultaneous lead-II ECG and fingertip PLETH (PPG) at 125 Hz, 4 min (30000 samples each) -- the SAME git-tracked pair the sibling coherence case (coherence-cardiac-bidmc) uses.",
+  "pipeline": "readRDS(ecg_bidmc01) + readRDS(ppg_bidmc01) -> PhysioCrossModal::crossCorrelation(sr=125, max_lag=90): the normalized time-lagged cross-correlation (stats::ccf, Pearson at each lag from -0.72 to +0.72 s) and its peak lag. The reference reproduces it with an independent from-scratch numpy normalized cross-correlation (demean, cross-covariance/n, normalize by sqrt(c_xx(0) c_yy(0)), matched to R's ccf lag convention) and matches the peak lag against scipy.signal.correlate (via reticulate). Deterministic.",
+  "note": "The tracked inputs are eval/data/coherence-cardioresp/{ecg,ppg}_bidmc01.rds. The cross-correlation is the foundational time-domain coupling measure: its peak lag is a time delay. crossCorrelation reproduces an independent numpy normalized cross-correlation BIT-FOR-BIT (max |diff| ~ 2.5e-14 across all lags) and its peak lag matches scipy.signal.correlate (which uses the opposite lead/lag sign convention). The finding: the ECG-PPG cross-correlation peaks at 0.392 s -- the pulse arrival time (the delay for the pressure pulse to reach the fingertip PPG after the heartbeat's ECG). The peak correlation is negative (the sharp ECG QRS and the smooth PPG pulse align in anti-phase at that lag), so the magnitude (0.33) and the lag are the meaningful quantities; the cross-correlation is quasi-periodic (it repeats at the cardiac cycle), and the +/- 0.72 s window (under one RR interval) isolates the first, pulse-arrival peak."
+}

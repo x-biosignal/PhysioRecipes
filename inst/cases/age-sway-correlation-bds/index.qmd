@@ -1,0 +1,117 @@
+---
+title: "Balance declines with age, certified: postural sway rises with age (r=0.62 on foam), via a correlation test bit-for-bit vs scipy and base R"
+subtitle: "A cross-sectional cohort case: the age-related loss of balance, unmasked by a compliant surface"
+categories: [posturography, balance, aging, cohort, validated]
+author: "Yusuke Matsui"
+date: "2026-09-08"
+---
+
+> **What this case shows** — older adults sway more: balance declines with age, and fall risk climbs with
+> it. This case demonstrates and certifies that across 50 subjects (ages 18–75). Per subject, quiet-standing
+> COP path length comes from the **certified** `swayMetrics`; a newly-authored **`correlationTest`** relates
+> it to age, reproducing **`scipy.stats.pearsonr`** *and* base R **`cor.test`** **bit-for-bit**. Sway rises
+> with age (foam **r = 0.62**, p = 1.5e-6), and the age effect is **stronger on foam** (0.62) than firm
+> (0.39) — challenging proprioception unmasks the decline.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `correlationTest(x, y)` → the correlation coefficient, its p-value and df.
+**Way of thinking** — pick the condition that *exposes* the effect. On firm ground healthy adults compensate
+and the age signal is muted; on foam, where proprioception is degraded, the age-related decline shows
+clearly. The right challenge condition is half the measurement.
+**Ecosystem usage** — `PhysioAnalysis::correlationTest()`, `PhysioMoCap::swayMetrics()`.
+:::
+
+## Proposition
+
+Across 50 subjects (18–75 y), foam-surface COP path length rises with age (Pearson r = 0.62, p = 1.5e-6,
+48 df); the correlation is stronger on foam than firm (0.62 vs 0.39); and `correlationTest` reproduces
+`scipy.stats.pearsonr` and base R `cor.test` bit-for-bit.
+
+## Question & goal
+
+**The question is a cohort association and a chained certification: does sway increase with age, is the
+effect amplified by a proprioceptive challenge, and does a newly-authored correlation test reproduce the
+reference?** The goal is to certify `correlationTest`, reuse the certified `swayMetrics`, and quantify the
+age effect.
+
+## Challenge & approach
+
+For each subject we take the age and the eyes-open foam and firm quiet-standing COP path lengths (from
+`swayMetrics`, certified against the Prieto reference in the
+[sway-posturography-bds](../sway-posturography-bds/index.qmd) case), and correlate age with sway using
+`correlationTest`, checking r and p against `scipy.stats.pearsonr` and base R.
+
+```
+50 subjects: age, foam sway, firm sway (swayMetrics path length, certified)
+  correlationTest(age, foam) → r = 0.62, p = 1.5e-6   vs scipy.stats.pearsonr & base R → |diff| ~1e-16
+  correlationTest(age, firm) → r = 0.39   ← weaker: firm ground masks the age decline
+```
+
+## Data
+
+**Santos & Duarte (2016) balance dataset (figshare)**: 50 subjects (ages 18–75), one eyes-open foam and one
+eyes-open firm quiet-standing trial each (60 s, force-plate COP at 100 Hz). Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: age vs foam-surface COP path length across the 50 subjects, with the regression line — sway climbs with age (r = 0.62, p = 1.5e-6). Right: age vs sway on foam (red) and firm (blue); the foam slope is steeper (r = 0.62 vs 0.39), so a compliant surface amplifies the age-related increase.](artifacts/figure.png)
+
+*How to read this:* left — the upward trend is the age-related balance decline. Right — both surfaces trend
+up with age, but foam rises faster: removing reliable foot-surface cues exposes the deficit older adults
+would otherwise compensate for.
+
+| Quantity | Value |
+|---|--:|
+| **age vs foam sway** (Pearson r) | **0.62** |
+| p-value | 1.5e-6 (−log₁₀ p = 5.8) |
+| age vs firm sway (Pearson r) | 0.39 |
+| age effect stronger on foam | **yes** |
+| vs `scipy.stats.pearsonr` / base R (\|diff\|) | **~1e-16** (bit-for-bit) |
+
+The correlation test equals both references exactly, and the age effect is clear and surface-dependent.
+Values trace to [`artifacts/corr_summary.csv`](artifacts/corr_summary.csv).
+
+## Conclusion
+
+`correlationTest` is certified against two references and rests on the already-certified `swayMetrics`.
+The transferable takeaway: **postural sway increases with age, and a foam surface — by degrading
+proprioception — makes the age-related decline far more visible than firm ground does. This is why
+foam-surface posturography is a sensitive probe of the somatosensory contribution to balance, and why
+challenge conditions matter for detecting fall risk early.**
+
+## Open questions
+
+- This is a cross-sectional association (not causation) with one trial per subject per surface; a
+  longitudinal design would test within-person change, and the BDS's eyes-closed trials, repeats, and full
+  metric set would let age be modelled jointly with vision and surface. The foam path length gives the
+  clearest single age signal. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Correlation test (Pearson / Spearman) | `correlationTest()` | PhysioAnalysis |
+| Posturography sway metrics | `swayMetrics()` | PhysioMoCap |
+
+**Reading the result.**
+
+- **r and p** — the sign and size of the association plus its significance; report the effect size (r), not
+  just the p-value.
+- **choose the challenge condition** — an effect muted on firm ground can be clear on foam; the condition
+  that exposes the deficit is part of the measurement design.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis); library(PhysioMoCap)
+
+sway <- sapply(cop_list, function(cop) swayMetrics(cop, 100)$path_length)  # per subject
+correlationTest(age, sway)   # r, p, df -- reproduces scipy.stats.pearsonr and base R cor.test bit-for-bit
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/corr_summary.csv`](artifacts/corr_summary.csv), and [`audit.py`](audit.py) re-checks the
+correlations and p, the bit-exact match against scipy and base R, `df = n − 2`, the positive and
+surface-dependent age effect, and the honestly noted scope (new correlation op; inputs from the certified
+swayMetrics; cross-sectional association, not causation).

@@ -1,0 +1,35 @@
+{
+  "id": "ecg-pvc-mitbih",
+  "title": "Spotting premature ventricular contractions on MIT-BIH: precise, but blind to sustained runs",
+  "modality": ["ecg", "arrhythmia", "classification"],
+  "packages": ["PhysioECG", "PhysioIO"],
+  "dataset": {
+    "name": "MIT-BIH Arrhythmia Database",
+    "version": "1.0.0 (PhysioNet)",
+    "record": "9 PVC-rich records (106/119/200/203/208/214/221/223/233), MLII @ 360 Hz, cardiologist beat labels",
+    "url": "https://physionet.org/content/mitdb/1.0.0/",
+    "public": true,
+    "citation": "Moody GB, Mark RG. The impact of the MIT-BIH Arrhythmia Database. IEEE Eng Med Biol Mag. 2001;20(3):45-50. Goldberger AL, et al. PhysioNet. Circulation. 2000;101(23):e215-20."
+  },
+  "proposition": "Using the cardiologist beat locations, the ecosystem's prematurity-plus-morphology PVC detector is highly PRECISE - pooled PPV 0.954 (>= 0.99 on 7 of 9 records) - but its RECALL is pattern-dependent: pooled sensitivity 0.715, ranging from a perfect 1.00 on isolated-PVC records to 0.27 when the ventricular ectopy comes in sustained runs, which mask the prematurity the detector keys on.",
+  "opdag": ["readWFDB", "ecgRRintervals", "ecgDetectPVC"],
+  "claims": [
+    { "id": "pooled_ppv",         "statement": "pooled PVC precision (PPV) - fraction of flagged beats that are true PVCs", "value": 0.9541, "artifact": "artifacts/pvc_pooled.csv", "status": "PASS" },
+    { "id": "pooled_sensitivity", "statement": "pooled PVC recall (sensitivity) - fraction of true PVCs caught", "value": 0.7146, "artifact": "artifacts/pvc_pooled.csv", "status": "PASS" },
+    { "id": "pooled_f1",          "statement": "pooled PVC F1", "value": 0.8172, "artifact": "artifacts/pvc_pooled.csv", "status": "PASS" },
+    { "id": "isolated_f1",        "statement": "best record F1 (119, isolated PVCs) - a clean case is recovered perfectly", "value": 1.0, "artifact": "artifacts/pvc_per_record.csv", "status": "PASS" },
+    { "id": "runs_sensitivity",   "statement": "worst record recall (223, sustained runs/couplets) - the honest floor", "value": 0.2727, "artifact": "artifacts/pvc_per_record.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "Cardiologist beat annotations (AAMI) distributed with MIT-BIH - the '.atr' files; PVC = ventricular-ectopic symbol 'V', extracted with WFDB",
+    "data": "REAL - MIT-BIH Arrhythmia Database, 9 PVC-rich records, 22923 beats (5182 PVCs)",
+    "artifacts": ["artifacts/pvc_pooled.csv", "artifacts/pvc_per_record.csv", "artifacts/ref_pvc.json"],
+    "all_pass": true,
+    "note": "Aggregate acceptance criterion: pooled PPV >= 0.90 - the detector's PVC flags are trustworthy (pooled 0.954; per-record PPV >= 0.99 on all but the noisiest record 203, where false R-wave morphology drops it to 0.71). Recall is deliberately NOT part of acceptance because it is pattern-dependent and is reported in FULL per record: isolated PVCs are caught (119 Se 1.00, 106 0.97, 221 0.99), but PVCs in sustained runs / bigeminy / couplets are missed (223 Se 0.27, 208 0.41, 200 0.61) because the prematurity criterion is masked once the surrounding rhythm is itself ectopic. This is the detector's characteristic blind spot, shown rather than hidden; the low-recall records are kept in every table."
+  },
+  "open_questions": [
+    { "q": "The prematurity-based detector misses PVCs that occur in runs (bigeminy, couplets, ventricular tachycardia), where the local RR baseline is itself ectopic so no single beat looks premature. Recovering run-type ectopy needs a rhythm-level model (template libraries, sequence context) rather than a per-beat prematurity rule - a genuinely harder problem, documented not escalated.", "artifact": "artifacts/pvc_per_record.csv", "escalate": null }
+  ],
+  "reference_tools": ["WFDB 4.3.1 (.atr beat-label extraction only)"],
+  "status": "validated"
+}

@@ -1,0 +1,6 @@
+"metric","value"
+"overall_accuracy",0.603
+"selfcare_detection_rate",0.938
+"n_subjects",13
+"n_test_windows",5974
+"chance_level",0.2

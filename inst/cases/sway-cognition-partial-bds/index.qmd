@@ -1,0 +1,128 @@
+---
+title: "The cognitive-motor link is mostly age, certified: adjusting for age attenuates the sway-cognition correlation from 0.53 to 0.20"
+subtitle: "A partial correlation resolves the sibling case's confound — honestly"
+categories: [posturography, balance, cognition, validated]
+author: "Yusuke Matsui"
+date: "2026-09-11"
+---
+
+> **What this case shows** — the [sibling case](../sway-cognition-kendall-bds/index.qmd) found that slower
+> cognitive processing tracks more postural sway (Spearman rho = 0.53), but warned that *age* drives both.
+> Here we adjust for it. Each subject's sway comes from the **certified** `swayMetrics`; the
+> **newly-authored** `partialCorrelation` computes the rank partial correlation of sway and Trail Making
+> Test A **controlling for age**, reproducing the **`ppcor`** package and an independent closed-form
+> recompute to **machine precision**. The association **attenuates to 0.20** (p=0.012, still significant but
+> much weaker), and the *linear* partial correlation **vanishes** (0.05, p=0.55): **most of the marginal
+> link was age** — though a modest rank association survives.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — assemble `(x, y, covariate)` per subject → `partialCorrelation(x, y, z, method="spearman")`.
+**Way of thinking** — a marginal correlation can be a mirage of a shared cause. Before reading a link as
+real, remove the obvious confound and see what survives. The honest answer here is "mostly age, a little
+not" — and saying so is the point.
+**Ecosystem usage** — `PhysioMoCap::swayMetrics()`, `PhysioAnalysis::partialCorrelation()`.
+:::
+
+## Proposition
+
+Controlling for age, the rank partial correlation of eyes-closed-foam sway and Trail Making Test A time is
+0.201 (p=0.012, df=155) — down from a marginal Spearman rho of 0.532 — while the Pearson partial correlation
+is 0.048 (p=0.55); `partialCorrelation` reproduces `ppcor::pcor.test` and a closed-form recompute to machine
+precision.
+
+## Question & goal
+
+**The question is whether an association survives its obvious confound.** The sibling case certified the
+marginal cognitive-motor link and explicitly deferred the age adjustment; this fold performs it, authoring
+the partial-correlation op and resolving the open question.
+
+## Challenge & approach
+
+We take each subject's eyes-closed-foam COP path length (from `swayMetrics`, certified against the Prieto
+reference in the [sway-posturography-bds](../sway-posturography-bds/index.qmd) case), Trail Making Test A
+time, and age, and compute `partialCorrelation` (rank / Spearman) of sway and TMT-A controlling for age —
+checking it against `ppcor::pcor.test` and an independent closed-form recompute, and comparing with the
+marginal correlation and the Pearson partial.
+
+```
+158 subjects: sway (swayMetrics, certified), TMT-A, age
+  marginal Spearman(sway, TMT-A)        = 0.532
+  partial  Spearman(sway, TMT-A | age)  = 0.201   (p = 0.012, df = 155)   <- attenuated, survives
+  partial  Pearson (sway, TMT-A | age)  = 0.048   (p = 0.55)              <- vanishes
+     vs ppcor::pcor.test        → |diff| ~ 2e-16 (machine precision)
+     vs closed-form recompute   → |diff| ~ 3e-16 (Pearson: bit-for-bit)
+```
+
+## Data
+
+**Santos & Duarte (2016) BDS balance dataset (figshare)**: per subject, eyes-closed-foam COP path length,
+Trail Making Test A time, and age, for the 158 subjects with all three. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the correlation of sway with cognitive speed before and after adjusting for age — the marginal Spearman rho (0.53) drops to a rank partial correlation of 0.20 (p=0.012), and the linear partial correlation to 0.05 (p=0.55, non-significant). Right: the added-variable plot — sway and TMT-A ranks after age is removed from both; the weak residual slope is what survives adjustment.](artifacts/figure.png)
+
+*How to read this:* left — the tall marginal bar collapses once age is partialled out; the surviving rank
+bar is small but not zero. Right — the added-variable scatter is the partial correlation made visible: after
+age is regressed out of both, only a faint upward trend remains.
+
+| Quantity | Value |
+|---|--:|
+| marginal Spearman | 0.532 |
+| **partial Spearman \| age** | **0.201** (p = 0.012) |
+| partial Pearson \| age | 0.048 (p = 0.55, ns) |
+| df | 155 |
+| n | 158 |
+| vs `ppcor::pcor.test` (\|diff\|) | **< 1e-9** (~2e-16) |
+| vs closed-form recompute (\|diff\|) | **< 1e-9** (Pearson bit-for-bit) |
+
+The partial correlation equals both references to machine precision. Values trace to
+[`artifacts/sway_cognition_partial_summary.csv`](artifacts/sway_cognition_partial_summary.csv).
+
+## Conclusion
+
+`partialCorrelation` reproduces the reference on the certified `swayMetrics`. The transferable takeaway:
+**partial out the confound before you believe a correlation. Here it converts a striking marginal link
+(rho = 0.53) into an honest one — mostly age, with a modest rank association (0.20) surviving. A significant
+slope with a small partial correlation is a real-but-minor effect against a dominant confound; report it
+that way.**
+
+## Open questions
+
+- Age adjustment leaves a modest but significant rank partial correlation (0.20); whether it reflects a
+  direct cognitive-motor pathway or residual confounding by other age-linked factors (medication,
+  comorbidity, sensory loss) needs a fuller multivariable model and, ideally, a dual-task or longitudinal
+  design. The single-covariate partial correlation is the honest first adjustment. *Documented, not
+  escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Posturography sway metrics | `swayMetrics()` | PhysioMoCap |
+| Partial correlation (control a confound) | `partialCorrelation()` | PhysioAnalysis |
+| Marginal correlation (Pearson/Spearman/Kendall) | `correlationTest()`, `kendallTau()` | PhysioAnalysis |
+
+**Reading the result.**
+
+- **partial vs marginal** — the drop from marginal to partial is how much of the association the covariate
+  explains; here age explains most of it.
+- **rank vs linear partial** — with skewed variables the rank (Spearman) partial is the fair test; that the
+  Pearson partial vanishes while the rank partial survives says the residual link is monotonic, not linear.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioMoCap); library(PhysioAnalysis)
+
+sway <- vapply(subjects, function(s) swayMetrics(cop[[s]], 100)$path_length, numeric(1))
+partialCorrelation(sway, tmt_time, age, method = "spearman")  # partial r, p, df -- machine-precision vs ppcor
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/sway_cognition_partial_summary.csv`](artifacts/sway_cognition_partial_summary.csv), and
+[`audit.py`](audit.py) re-checks the partial correlations (rank and linear), their p-values and df, the
+machine-precision match against ppcor and the closed-form recompute, the attenuation relative to the
+marginal, the sample size, and the honestly noted scope (authors the new partialCorrelation op; sway from
+the certified swayMetrics; mostly age-confounded; one covariate; cross-sectional association).

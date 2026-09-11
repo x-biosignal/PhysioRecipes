@@ -1,0 +1,8 @@
+"metric","value"
+"n_subjects",42
+"n_basis",20
+"cor_mean_vs_ensemble",1
+"band_coverage_2sd",0.95
+"mean_band_sd_deg",5.56
+"viapoint_sd_shrink_ratio",0
+"viapoint_mean_pull_deg",25.82

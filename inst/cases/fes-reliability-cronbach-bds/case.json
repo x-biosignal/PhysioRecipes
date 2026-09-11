@@ -1,0 +1,35 @@
+{
+  "id": "fes-reliability-cronbach-bds",
+  "title": "The Falls Efficacy Scale is internally consistent, certified: Cronbach's alpha = 0.82 (bit-for-bit vs psych, machine precision vs pingouin)",
+  "modality": ["psychometrics", "reliability", "balance", "cohort", "cross-tool-validation"],
+  "packages": ["PhysioAnalysis"],
+  "dataset": {
+    "name": "BDS -- a public data set of human balance evaluations (Santos & Duarte 2016)", "version": "2016",
+    "record": "163 subjects x 7 Falls Efficacy Scale items (FES_1..FES_7, a 4-point Likert scale of concern about falling)",
+    "url": "https://doi.org/10.7717/peerj.2648", "public": true,
+    "citation": "Santos DA, Duarte M. A public data set of human balance evaluations. PeerJ 2016;4:e2648. doi:10.7717/peerj.2648."
+  },
+  "proposition": "The sway-cognition cases used the Falls Efficacy Scale (FES) total score; a summed score is only meaningful if the items are internally consistent. The NEWLY-AUTHORED cronbachAlpha computes the scale's internal-consistency reliability, reproducing base R, psych::alpha (raw_alpha) BIT-FOR-BIT and pingouin.cronbach_alpha to machine precision. The 7 FES items have GOOD internal consistency -- Cronbach's alpha = 0.823 (mean inter-item correlation 0.41, n=163) -- so they measure a coherent single construct, justifying the summed FES score.",
+  "opdag": ["cronbachAlpha"],
+  "claims": [
+    { "id": "alpha", "statement": "Cronbach's raw alpha of the 7 FES items (internal-consistency reliability)", "value": 0.8230181471, "artifact": "artifacts/cronbach_summary.csv", "status": "PASS" },
+    { "id": "average_r", "statement": "mean inter-item correlation among the 7 FES items", "value": 0.4062097132, "artifact": "artifacts/cronbach_summary.csv", "status": "PASS" },
+    { "id": "max_diff_psych", "statement": "|cronbachAlpha - psych::alpha raw_alpha| (bit-for-bit)", "value": 0, "artifact": "artifacts/cronbach_summary.csv", "status": "PASS" },
+    { "id": "max_diff_pingouin", "statement": "|cronbachAlpha - pingouin.cronbach_alpha| (machine precision, < 1e-9)", "value": 0, "artifact": "artifacts/cronbach_summary.csv", "status": "PASS" },
+    { "id": "good_reliability", "statement": "the scale's alpha exceeds 0.8 (good internal consistency)", "value": 1, "artifact": "artifacts/cronbach_summary.csv", "status": "PASS" },
+    { "id": "k", "statement": "number of scale items", "value": 7, "artifact": "artifacts/cronbach_summary.csv", "status": "PASS" },
+    { "id": "n", "statement": "respondents (complete cases)", "value": 163, "artifact": "artifacts/cronbach_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored cronbachAlpha op (internal-consistency reliability from the item and total-score variances) is validated against BOTH the psych package (psych::alpha raw_alpha) AND pingouin.cronbach_alpha on the identical 163 x 7 item matrix -- a triple check with the independent op formula. The raw alpha matches psych BIT-FOR-BIT (|diff| = 0) and pingouin to machine precision (|diff| ~ 1e-16). The mean inter-item correlation is reported.",
+    "data": "REAL -- Santos & Duarte (2016) BDS; the 7 Falls Efficacy Scale items, n=163",
+    "artifacts": ["artifacts/cronbach_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) cronbachAlpha reproduces psych::alpha raw_alpha bit-for-bit and pingouin.cronbach_alpha to machine precision; (2) the FES scale is internally consistent. HONEST scope: (1) this AUTHORS A NEW OP, cronbachAlpha (internal-consistency reliability from the item and total-score variances), broadening the ecosystem's statistics into PSYCHOMETRICS, and operates on the raw FES self-report items (a self-report scale, not a physiological signal -- honestly a different data type from most cases); (2) the raw alpha and the mean inter-item correlation reproduce base R, the psych package (psych::alpha raw_alpha) BIT-FOR-BIT (|diff| = 0) and pingouin.cronbach_alpha to MACHINE PRECISION (|diff| ~ 1e-16); (3) the finding: the 7 FES items have GOOD internal consistency -- Cronbach's alpha = 0.823 (mean inter-item correlation 0.41, n=163) -- so the items measure a coherent single construct (fear of falling), which justifies using the summed FES total score as in the sibling sway-cognition cases; (4) alpha is a RELIABILITY (consistency) index, NOT a validity claim (it does not show the scale measures the RIGHT thing), and it rises with the number of items; this is one cohort's estimate; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "Cronbach's alpha establishes internal consistency, not dimensionality or validity; a factor analysis would confirm the FES is unidimensional, and item-total / drop-one-alpha statistics would flag any weak item. Alpha also increases with item count, so a 7-item alpha of 0.82 is good but not automatically excellent. The single raw-alpha shown here is the standard first-line reliability check. Documented, not escalated.", "artifact": "artifacts/cronbach_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["psych::alpha (R)", "pingouin.cronbach_alpha (Python)"],
+  "status": "validated"
+}

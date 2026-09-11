@@ -1,0 +1,131 @@
+---
+title: "Push-off discriminates gait pathology, certified: healthy highest, calcaneus lowest across five classes"
+subtitle: "A different GRF landmark, a distribution-free test — and the pathology classes finally separate"
+categories: [gait, ground-reaction-force, pathology, cohort, validated]
+author: "Yusuke Matsui"
+date: "2026-09-10"
+---
+
+> **What this case shows** — the [ANOVA sibling](../gait-grf-anova-pathology-gaitrec/index.qmd) found the
+> vertical-GRF *dynamic range* flattens in impaired gait, but clustered the four pathology classes together.
+> A different landmark — the **push-off peak** (late-stance propulsion) — pulls them apart. Because the
+> push-off peak is right-skewed, the distribution-free **Kruskal-Wallis** test is the appropriate omnibus.
+> Each subject's push-off peak comes from the **certified** `grfLandmarks`; the **newly-authored**
+> `kruskalTest` compares the five classes, reproducing base R **`kruskal.test`** **bit-for-bit** and
+> **`scipy.stats.kruskal`** to machine precision. The push-off differs across classes (**H(4)=274, p~3e-58**):
+> **healthy highest** (1.102 BW), **calcaneus lowest** (1.008 BW).
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `grfLandmarks()` per subject → push-off peak → `kruskalTest()` across classes.
+**Way of thinking** — when one feature can't separate groups, try another; and when a feature is skewed,
+rank it rather than assume normality. The push-off peak, tested distribution-free, reveals a propulsion
+hierarchy the dynamic range hid.
+**Ecosystem usage** — `PhysioMoCap::grfLandmarks()`, `PhysioAnalysis::kruskalTest()`.
+:::
+
+## Proposition
+
+The vertical-GRF push-off peak differs across the five GaitRec gait classes (Kruskal-Wallis H=274.5 on 4 df,
+p~3.5e-58); by mean rank healthy controls are highest (1408; 1.102 BW) and calcaneus pathology lowest (632;
+1.008 BW); `kruskalTest` reproduces base R `kruskal.test` bit-for-bit and `scipy.stats.kruskal` to machine
+precision.
+
+## Question & goal
+
+**The question is discrimination and the right test for skewed data: does a different GRF landmark separate
+the pathology classes the dynamic range lumped together, and does a distribution-free omnibus reproduce the
+reference?** The ANOVA sibling's open question noted that per-class structure needed other GRF features; the
+push-off peak is the propulsion read-out.
+
+## Challenge & approach
+
+For each subject we take the push-off peak (the 3rd landmark of `grfLandmarks`, certified in the
+[gait-grf-gaitrec](../gait-grf-gaitrec/index.qmd) case) from the body-weight- and time-normalised vertical
+GRF, and compare the five classes with `kruskalTest` — chosen over ANOVA because the push-off peak is
+right-skewed (skew ~ +0.35) — checking the omnibus H and p against `scipy.stats.kruskal` and base R.
+
+```
+GaitRec vGRF push-off peak: HC (208), A (483), K (499), H (364), C (290) → grfLandmarks[3]
+  mean (BW):  C 1.008  <  A 1.034  <  K 1.045  <  H 1.050  <  HC 1.102
+  mean rank:  C 632    <  A 839    <  K 931    <  H 976    <  HC 1408
+  kruskalTest → H(4) = 274.5, p ~ 3.5e-58
+     vs base R kruskal.test   → |diff| = 0 (bit-for-bit)
+     vs scipy.stats.kruskal   → |diff| ~ 9e-13 (machine precision)
+```
+
+## Data
+
+**GaitRec (Horsak et al. 2020)**: processed vertical GRF push-off peak, five gait classes — healthy control
+(n=208) and ankle (n=483), knee (n=499), hip (n=364), calcaneus (n=290) pathology — shod, standardised
+speed, baseline sessions (one per-subject mean curve). Same matched cohort as the ANOVA sibling. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: push-off peak by class (ordered) — calcaneus lowest (1.008 BW), then ankle, knee, hip, healthy highest (1.102 BW). Right: the Kruskal-Wallis mean ranks — healthy controls tower over the pathology classes, and the pathology classes themselves separate (calcaneus clearly lowest), unlike the dynamic range that clustered them. H(4)=274, p~3e-58.](artifacts/figure.png)
+
+*How to read this:* left — push-off (propulsion) is graded: every pathology class sits below healthy, and
+the calcaneus (heel/ankle) group is lowest — a plantarflexor-driven propulsion deficit. Right — the ranks
+make the separation explicit; this landmark discriminates the pathology classes in a way the dynamic range
+did not.
+
+| Class | push-off peak (BW) | mean rank |
+|---|--:|--:|
+| Calcaneus | 1.008 | 632 |
+| Ankle | 1.034 | 839 |
+| Knee | 1.045 | 931 |
+| Hip | 1.050 | 976 |
+| Healthy | 1.102 | 1408 |
+| **Kruskal-Wallis H** (df 4) | **274.5** | |
+| −log₁₀ p | 57.5 (p ~ 3.5e-58) | |
+| vs base R `kruskal.test` (\|diff\|) | **0** (bit-for-bit) | |
+| vs `scipy.stats.kruskal` (\|diff\|) | **< 1e-9** (~9e-13) | |
+
+The omnibus equals base R exactly and scipy to machine precision. Values trace to
+[`artifacts/pushoff_kruskal_summary.csv`](artifacts/pushoff_kruskal_summary.csv).
+
+## Conclusion
+
+`kruskalTest`, the distribution-free counterpart of the certified `oneWayAnova`, reproduces the reference on
+the certified `grfLandmarks`. The transferable takeaway: **the GRF has several landmarks, and they carry
+different information — the dynamic range flags impairment but lumps the pathologies, while the push-off peak
+ranks them, with calcaneus propulsion the most impaired. Choosing the landmark that separates your groups,
+and a rank-based test when the data is skewed, turns one force curve into a graded pathology read-out.**
+
+## Open questions
+
+- The omnibus certifies the five classes differ in push-off, with a healthy-highest, calcaneus-lowest order;
+  post-hoc pairwise tests (Dunn) would establish which specific pairs differ, and a multivariate
+  GRF-landmark profile (loading peak + trough + push-off) would give a fuller pathology fingerprint. The
+  single push-off peak is the most interpretable propulsion read-out. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| GRF landmarks (peaks, trough) | `grfLandmarks()` | PhysioMoCap |
+| Kruskal-Wallis (non-parametric omnibus) | `kruskalTest()` | PhysioAnalysis |
+| One-way ANOVA / Friedman (parametric / repeated-measures) | `oneWayAnova()`, `friedmanTest()` | PhysioAnalysis |
+
+**Reading the result.**
+
+- **push-off peak** — the late-stance propulsive force in BW; lower = weaker push-off, a plantarflexor /
+  propulsion deficit.
+- **why Kruskal-Wallis** — the push-off peak is right-skewed, so a rank-based omnibus is more appropriate
+  than a normal-theory ANOVA; report the mean ranks (or medians) with H and p.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioMoCap); library(PhysioAnalysis)
+
+push <- function(M) apply(M, 1, function(v) grfLandmarks(v)[3])  # 3rd landmark = push-off peak
+kruskalTest(lapply(class_vGRF_list, push))   # omnibus H, p, df -- bit-for-bit vs base R, machine-precision vs scipy
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/pushoff_kruskal_summary.csv`](artifacts/pushoff_kruskal_summary.csv), and [`audit.py`](audit.py)
+re-checks the omnibus H, p and df, the bit-exact match against base R and the machine-precision match against
+scipy, the per-class mean ranks and the healthy-highest / calcaneus-lowest ordering, the design sizes, and
+the honestly noted scope (authors the new kruskalTest op; push-off peak from the certified grfLandmarks;
+distribution-free because the data is skewed; cross-sectional association).

@@ -1,0 +1,13 @@
+"metric","value"
+"sd1",54.33950892
+"sd2",81.50067844
+"sd1_sd2_ratio",0.66673689
+"max_diff_numpy",0
+"sd1_diff_nk",0
+"sd2_paired_vs_nk",0
+"sd2_conv_diff",0.19596081
+"n_rr",391
+"young_mean_sd1",53.1154
+"old_mean_sd1",35.3069
+"young_mean_sd2",103.5561
+"old_mean_sd2",71.7936

@@ -1,0 +1,12 @@
+"metric","value"
+"pac_mi",0.000348705
+"tensorpac_mi",0.000348705
+"abs_diff",5.32885367776625e-17
+"surrogate_z",9.585758
+"surrogate_mean",4.50256e-05
+"n_exceed",200
+"n_surrogates",200
+"phase_lo",0.5
+"phase_hi",1.25
+"amp_lo",12
+"amp_hi",15

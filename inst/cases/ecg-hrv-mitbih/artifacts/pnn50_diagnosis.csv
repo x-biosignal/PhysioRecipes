@@ -1,0 +1,5 @@
+"method","pnn50_pct","note"
+"PhysioECG_ecgHRVtime",0,"standard def, exact integer RR"
+"RHRV_CreateTimeAnalysis",22.222222,"reconstructs RR from cumulative beat times (floating point)"
+"byhand_standard_gt50_Nminus1",0,"Task Force 1996 definition, count(|dRR|>50)/(N-1)"
+"byhand_variant_ge50_Nminus1",50.505051,">=50 threshold variant"

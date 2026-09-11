@@ -1,0 +1,9 @@
+{
+  "dataset": "TESA example TMS-EEG data (Rogasch et al.)",
+  "source": "figshare 3188800 (TESA_example_data_and_scripts), file example_data_epoch_demean_cut_int_ds (.set/.fdt)",
+  "url": "https://figshare.com/articles/dataset/TESA_example_data_and_scripts/3188800",
+  "license": "GPL 2.0+ (figshare article)",
+  "record_used": "one healthy participant, 150 single monophasic TMS pulses over left superior parietal cortex (MNI -20/-65/65) at 0.2 Hz +/- 25% jitter; 59-channel EEG at 1000 Hz. This is the TESA 'epoch_demean_cut_int_ds' file: epoched, demeaned, with the TMS pulse window CUT + interpolated + (nominally) downsampled -- i.e. the large early pulse artifact was already removed at source. Epochs cropped to -250..450 ms around the pulse for the analysis.",
+  "pipeline": "MNE-Python read_epochs_eeglab -> a PhysioExperiment with a time x channels x trials assay (701 x 59 x 150) -> PhysioNeurophys::setTMSpulses -> tepAverage(components = N15/P30/N45/P60/N100/P180, baseline -200..-20 ms). Each component is the extremum within its fixed time window, per channel.",
+  "note": "The TEP components' WINDOWS are fixed a priori, so a component's latency lies within its window by construction; the data-driven, reproduced results are the correct POLARITIES (the peak sign matches the expected N/P in 88-97% of channels) and the monotonic temporal ORDER across the six windows, with the N100/P180 at their literature latencies. GMFP (global mean field power = across-channel SD per time) in tep_gmfp.csv. Single participant; parietal (not motor) stimulation. TMS-artifact removal itself (removeTMSpulse/tmsSSPSIR) is out of scope -- already done at source."
+}

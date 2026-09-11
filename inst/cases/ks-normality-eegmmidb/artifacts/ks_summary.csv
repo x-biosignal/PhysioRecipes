@@ -1,0 +1,11 @@
+"metric","value"
+"ks_statistic",0.0256387277
+"ks_pvalue",0.2436132165
+"scipy_ks_D",0.0256387277
+"baser_ks_D",0.0256387277
+"max_diff_scipy",0
+"max_diff_baser",0
+"jb_statistic",15.4927900022
+"jb_pvalue",0.0004322982
+"tests_disagree",1
+"n_samples",1600

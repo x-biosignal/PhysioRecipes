@@ -1,0 +1,7 @@
+"metric","value"
+"kpss_statistic",0.20050789
+"kpss_stat_diff_sm",6.93889390390723e-16
+"sm_critical_5pct",0.463
+"kpss_stationary",1
+"adf_stationary",1
+"both_tests_agree",1

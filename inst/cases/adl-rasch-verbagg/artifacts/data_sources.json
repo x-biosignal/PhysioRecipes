@@ -1,0 +1,11 @@
+{
+  "dataset": "VerbAgg (Verbal Aggression) polytomous item-response data",
+  "authors": "Vansteelandt K; distributed with the lme4 R package",
+  "repository": "CRAN (lme4)",
+  "license": "GPL (>= 2)",
+  "url": "https://cran.r-project.org/package=lme4",
+  "acquisition": "316 persons x 24 three-category items (no/perhaps/yes); the canonical Partial Credit Model benchmark",
+  "n_persons": 316,
+  "n_items": 24,
+  "note": "A polytomous behavioural rating scale with the SAME ordered-category structure as ADL/IADL scales (Barthel/Lawton); used here as the public stand-in for a labelled ADL scale."
+}

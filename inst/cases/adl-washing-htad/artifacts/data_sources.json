@@ -1,0 +1,12 @@
+{
+  "dataset": "HTAD: Home-Tasks Activities Dataset (wrist accelerometer + audio)",
+  "authors": "Garcia-Ceja E, Thambawita V, Hicks S, et al.",
+  "repository": "figshare / Simula",
+  "doi": "10.6084/m9.figshare.6667532",
+  "url": "https://datasets.simula.no/htad/",
+  "license": "open (research/education)",
+  "acquisition": "wrist accelerometer @ ~31 Hz, 3 subjects, 7 home tasks incl. WASHING HANDS (d510), brushing teeth, eating chips, sweeping/mopping, typing, watch TV",
+  "n_subjects": 3,
+  "activities_used": ["wash_hands", "brush_teeth", "eat_chips", "sweep", "mop_floor", "type_on_keyboard", "watch_tv"],
+  "note": "Small N (3 subjects): a demonstration that washing hands is recognisable above chance from a real wrist accelerometer, NOT a definitive validation."
+}

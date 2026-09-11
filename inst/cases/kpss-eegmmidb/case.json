@@ -1,0 +1,34 @@
+{
+  "id": "kpss-eegmmidb",
+  "title": "The confirmatory pair: the KPSS test (a newly-authored op) agrees with ADF, bit-for-bit against statsmodels",
+  "modality": ["eeg", "time-series", "stationarity", "cross-tool-validation", "signal-analysis"],
+  "packages": ["PhysioAnalysis"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "The ADF test rejected a unit root (the EEG is stationary), but ADF and KPSS are complementary -- ADF's null is a unit root, KPSS's null is stationarity -- and the pair is only convincing when they agree. This case introduces a NEWLY-AUTHORED op, kpssTest, completing the confirmatory pair. On a real eyes-closed posterior EEG channel its statistic reproduces statsmodels.tsa.stattools.kpss(regression='c') BIT-FOR-BIT (|diff| ~7e-16); the statistic (0.20) is below the 5% critical value (0.463), so it FAILS to reject stationarity, and this AGREES with the ADF test (which rejects the unit root): the two tests concur the segment is stationary -- the strongest form of the stationarity conclusion.",
+  "opdag": ["kpssTest"],
+  "claims": [
+    { "id": "kpss_statistic", "statement": "KPSS level-stationarity statistic (lag 10) of the POz signal", "value": 0.20050789, "artifact": "artifacts/kpss_summary.csv", "status": "PASS" },
+    { "id": "kpss_stat_diff_sm", "statement": "|KPSS statistic - statsmodels kpss| (bit-exact)", "value": 6.938894e-16, "artifact": "artifacts/kpss_summary.csv", "status": "PASS" },
+    { "id": "sm_critical_5pct", "statement": "statsmodels 5% KPSS critical value (reference table)", "value": 0.463, "artifact": "artifacts/kpss_summary.csv", "status": "PASS" },
+    { "id": "kpss_stationary", "statement": "KPSS fails to reject the stationarity null (statistic < critical; 1 = stationary)", "value": 1, "artifact": "artifacts/kpss_summary.csv", "status": "PASS" },
+    { "id": "adf_stationary", "statement": "ADF rejects the unit-root null (the complementary test also says stationary)", "value": 1, "artifact": "artifacts/kpss_summary.csv", "status": "PASS" },
+    { "id": "both_tests_agree", "statement": "ADF and KPSS concur the segment is stationary (the confirmatory pair agrees)", "value": 1, "artifact": "artifacts/kpss_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored kpssTest op is validated against the field-standard statsmodels.tsa.stattools.kpss(regression='c') on the identical signal. Both compute eta = N^-2 sum S_t^2 / lrv with a Bartlett long-run variance; the STATISTIC agrees BIT-FOR-BIT (|diff| ~7e-16). The statistic (0.20) is below the 5% critical value (0.463), failing to reject stationarity, in agreement with the ADF test (which rejects the unit root).",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), channel POz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/kpss_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the newly-authored kpssTest statistic reproduces statsmodels kpss bit-for-bit; (2) KPSS fails to reject stationarity AND ADF rejects the unit root -- the confirmatory pair concurs the segment is stationary. HONEST scope: (1) this op is NEWLY AUTHORED, adding the complement of adfTest (the confirmatory-pair partner) the ecosystem lacked; (2) the STATISTIC is a genuine MACHINE-PRECISION match -- an exact deterministic quantity given the truncation lag, so the ~7e-16 residual is the floating-point floor, not a convention agreement; (3) IMPORTANT honest caveat: as with ADF, only the statistic is bit-exact -- the KPSS critical values and p-value come from the reference tables (an approximation), so this op does NOT compute them, and the decision compares against statsmodels' tabulated 5% critical value; (4) the finding is the confirmatory-pair agreement: the KPSS statistic (0.20) is below the 5% critical value (0.463) so it FAILS to reject stationarity, and this AGREES with the ADF test (which REJECTS the unit root) -- the two complementary tests concur the eyes-closed EEG segment is stationary, the strongest form of the conclusion (ADF and KPSS can disagree, signalling near-unit-root or fractional integration; here they do not); (5) the value is a signal property; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "ADF and KPSS agreeing on stationarity is the clean case; the informative case is disagreement (ADF rejects a unit root but KPSS also rejects stationarity), which signals long memory / fractional integration -- running the pair on longer or drift-prone recordings (rest EEG with electrode movement, or HRV over hours) is where the disagreement, and a fractional-differencing follow-up, would appear. Documented, not escalated.", "artifact": "artifacts/kpss_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["statsmodels.tsa.stattools.kpss (Python)", "statsmodels.tsa.stattools.adfuller (Python)"],
+  "status": "validated"
+}

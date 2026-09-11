@@ -1,0 +1,126 @@
+---
+title: "Robust dispersion: the median absolute deviation (a new op) reproduces scipy and base R bit-for-bit -- and confirms the SD"
+subtitle: "A worked robust-statistics case on real EEG, introducing medianAbsDev as the robust companion of signalMoments"
+categories: [eeg, statistics, robust-dispersion, cross-tool-validation, validated]
+author: "Yusuke Matsui"
+date: "2026-09-07"
+---
+
+> **What this case shows** — the standard deviation is inflated by the spikes and artifacts that pervade
+> physiological signals; the **median absolute deviation (MAD)** is the robust alternative. `signalMoments`
+> gave the classical SD, but the ecosystem had no robust dispersion op. This case adds one
+> (**`medianAbsDev`**). On a real eyes-closed EEG channel the raw MAD reproduces **two** references —
+> **`scipy.stats.median_abs_deviation`** *and* **base R `stats::mad`** — **bit-for-bit**. And it tells us
+> something: the robust scale (48.9) matches the SD (48.8) to 0.2%, which — because MAD is robust and SD
+> is not — is evidence the channel is near-Gaussian and artifact-free.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `medianAbsDev(x)` → the raw MAD; `medianAbsDev(x, 1/qnorm(0.75))` → the robust SD estimate.
+**Way of thinking** — always read dispersion two ways. The classical SD *and* the robust MAD-scale. When
+they agree, the data are clean and near-Gaussian; when the SD runs well above the MAD-scale, heavy-tailed
+artifacts are inflating it. The gap is a free artifact detector.
+**Ecosystem usage** — `PhysioAnalysis::medianAbsDev()`, the robust companion of `signalMoments()`.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, the new `medianAbsDev` (raw MAD, constant = 1) reproduces both
+`scipy.stats.median_abs_deviation` and base R `stats::mad(constant = 1)` bit-for-bit (MAD = 33, `|diff|`
+= 0 against each); and the normal-consistent MAD-scale (48.93) matches the population SD (48.83) to
+within 0.2% (ratio 1.002).
+
+## Question & goal
+
+**The question is a gap and a cross-check: `signalMoments` gave the classical SD, but the ecosystem had
+no robust dispersion — can a new op reproduce the two dominant references exactly, and does the robust
+scale confirm the SD on a clean channel?** The goal is to introduce `medianAbsDev`, certify it against
+*both* references, and use the robust-vs-classical comparison as an artifact check.
+
+## Challenge & approach
+
+The MAD is `c · median(|x − median(x)|)`, with `c = 1` for the raw MAD and `c = 1/qnorm(0.75) ≈ 1.4826`
+for the normal-consistent robust SD estimate. The raw MAD is an *order statistic* — unambiguous — so it
+matches any correct implementation exactly. We check it against `scipy.stats.median_abs_deviation` and
+base R `mad` on the identical signal, and compare the normal-consistent scale to the SD.
+
+```
+EEG POz (eegmmidb) → medianAbsDev (raw, c=1: median|x-median x|) → MAD = 33
+                    vs scipy.stats.median_abs_deviation → |diff| = 0  (bit-for-bit)
+                    vs base R mad(constant=1)           → |diff| = 0  (bit-for-bit)   ← two references agree
+                    normal-consistent MAD-scale = 48.93  ~=  population SD = 48.83  (ratio 1.002)
+                    → robust and classical scales agree → near-Gaussian, artifact-free
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz**, 10 s at 160 Hz — the same git-tracked vector the
+[signal-moments](../signal-moments-eegmmidb/index.qmd),
+[jarque-bera](../jarque-bera-eegmmidb/index.qmd) and [katz-fd](../katz-fd-eegmmidb/index.qmd) cases use.
+Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the POz amplitude histogram, with the classical band (mean ± SD, red) and the robust band (median ± MAD-scale, blue) overlaid — they nearly coincide, the signature of clean, near-Gaussian data. Right: the raw MAD is identical across `medianAbsDev`, `scipy`, and base R `mad` (33.0, bit-for-bit); the normal-consistent MAD-scale (48.9) matches the SD (48.8).](artifacts/figure.png)
+
+*How to read this:* the three left bars are exactly equal — two independent references and the new op
+agree to machine precision. The right two bars (MAD-scale, SD) nearly coincide, confirming the SD is not
+being inflated by artifacts here.
+
+| Quantity | Value |
+|---|--:|
+| **raw MAD (`medianAbsDev`, c = 1)** | **33** |
+| vs `scipy.stats.median_abs_deviation` (\|diff\|) | **0** (bit-for-bit) |
+| vs base R `mad(constant = 1)` (\|diff\|) | **0** (bit-for-bit) |
+| normal-consistent MAD-scale (× 1/qnorm(0.75)) | 48.93 |
+| population SD (`signalMoments`) | 48.83 |
+| robust MAD-scale / SD | **1.002** |
+
+The new op equals **both** references exactly, and the robust scale confirms the SD. Values trace to
+[`artifacts/mad_summary.csv`](artifacts/mad_summary.csv).
+
+## Conclusion
+
+`medianAbsDev` is the robust companion of `signalMoments`, and it is exact against two references at
+once. The transferable takeaway: **report dispersion two ways. On this clean eyes-closed channel the
+robust MAD-scale and the classical SD agree to 0.2% — consistent with the near-Gaussian moments and the
+Jarque-Bera result on the same data. When they diverge, trust the MAD: the SD is being pulled by
+artifacts.**
+
+## Open questions
+
+- The MAD-scale/SD ratio distinguishes clean from artifact-contaminated segments, so sweeping it
+  per-epoch (or per-channel) is a lightweight artifact-screening layer: epochs where the SD greatly
+  exceeds the robust MAD-scale hold the heavy-tailed transients the SD is sensitive to and MAD is not.
+  *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Robust dispersion (median absolute deviation) | `medianAbsDev()` | PhysioAnalysis |
+| Robust SD estimate | `medianAbsDev(x, 1/qnorm(0.75))` | PhysioAnalysis |
+| Classical moments (mean, SD, skew, kurtosis) | `signalMoments()` | PhysioAnalysis |
+
+**Reading the result.**
+
+- **raw MAD** — a robust spread in the signal's own units; unlike the SD, a handful of spikes barely
+  moves it.
+- **MAD-scale vs SD** — pair the normal-consistent MAD (`× 1/qnorm(0.75)`) with `signalMoments()`'s SD:
+  agreement means clean near-Gaussian data; SD ≫ MAD-scale means artifacts.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis)
+
+medianAbsDev(x)                       # raw MAD (robust dispersion)
+medianAbsDev(x, 1 / qnorm(0.75))      # normal-consistent robust SD estimate
+# both reproduce scipy.stats.median_abs_deviation and base R mad bit-for-bit.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/mad_summary.csv`](artifacts/mad_summary.csv), and [`audit.py`](audit.py) re-checks the raw
+MAD, the bit-exact match against both scipy and base R, the robust-scale-vs-SD ratio, and the honestly
+noted scope (new robust-dispersion op; double-reference machine precision; the constant convention; the
+near-Gaussian cross-consistency with the moments and Jarque-Bera folds).

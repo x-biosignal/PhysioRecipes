@@ -1,0 +1,123 @@
+---
+title: "Is it white noise? The Ljung-Box test, a newly-authored op, bit-for-bit against statsmodels"
+subtitle: "A worked hypothesis-test case study on real EEG, introducing and certifying ljungBoxTest"
+categories: [eeg, time-series, hypothesis-test, cross-tool-validation, validated]
+author: "Yusuke Matsui"
+date: "2026-09-07"
+---
+
+> **What this case shows** — the ACF, PACF and AR folds all *described* the EEG's temporal structure;
+> the **Ljung-Box test** *tests* it. It aggregates the first *h* squared autocorrelations into a single
+> statistic **Q** and asks: could this be white noise? This case adds the test (**`ljungBoxTest`**,
+> built on the ACF). On a real eyes-closed EEG channel it reproduces
+> **`statsmodels.stats.diagnostic.acorr_ljungbox`** **bit-for-bit** — statistic *and* p-value — and the
+> answer is emphatic: **Q = 4165, about 228× the 95% threshold**, so the white-noise null is rejected
+> overwhelmingly.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `ljungBoxTest(x, lag)` → the Q statistic, p-value and df.
+**Way of thinking** — a description ("the ACF decays slowly") becomes a decision ("not white noise,
+p < 0.001") through a test. Ljung-Box is that test; on *residuals* it flips to a model-adequacy check —
+a Q *below* the threshold says your model has whitened the signal.
+**Ecosystem usage** — `PhysioAnalysis::ljungBoxTest()`, built on `autocorrelation()`.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, `ljungBoxTest` reproduces `statsmodels.stats.diagnostic.acorr_ljungbox`
+bit-for-bit for both the Q statistic and the p-value; at h=10, Q=4165 is ~228× the 95% chi-square
+critical value (18.31), so the white-noise null is rejected.
+
+## Question & goal
+
+**The question is a gap and a decision: the ecosystem had no formal autocorrelation test — can we author
+the Ljung-Box portmanteau test, reproduce statsmodels exactly, and quantify how decisively eyes-closed
+EEG departs from white noise?** The goal is to introduce `ljungBoxTest`, certify it bit-for-bit, and
+report the margin.
+
+## Challenge & approach
+
+The Ljung-Box statistic is Q = N(N+2)·Σ_{k=1}^{h} ρ̂_k²/(N−k), built from the ACF (via
+`autocorrelation`), with a chi-square(h) reference distribution under the white-noise null. We compute
+Q and its p-value and check them against `statsmodels.stats.diagnostic.acorr_ljungbox` on the identical
+signal.
+
+```
+EEG POz (eegmmidb) → ACF (lags 1..10) → Q = N(N+2)·Σ ρ_k²/(N−k) → p = chi²(10) upper tail
+                    vs statsmodels.acorr_ljungbox (same signal) → bit-exact (|diff| 0) for Q and p
+                    Q = 4165 vs critical 18.31 → 228× over → reject white noise (p ≈ 0)
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz**, 10 s at 160 Hz — the same git-tracked vector the
+[autocorrelation](../autocorrelation-eegmmidb/index.qmd), [PACF](../pacf-eegmmidb/index.qmd) and
+[AR](../ar-yule-walker-eegmmidb/index.qmd) cases use. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the cumulative Ljung-Box Q as more lags are included (log scale, red) against the matching 95% chi-square threshold (green dashed) — Q sits orders of magnitude above the threshold from the first lag. Right: the final Q (4165) versus the 95% critical value (18.31) on a log scale — a ~228× margin.](artifacts/figure.png)
+
+*How to read this:* the left panel shows the statistic overshooting the threshold at every lag; the
+right panel is the verdict — Q dwarfs the critical value, so the signal is decisively not white noise.
+
+| Quantity | Value |
+|---|--:|
+| **Ljung-Box Q** (h = 10) | **4165** |
+| Q vs `statsmodels` (\|diff\|) | **0** (bit-exact) |
+| p-value vs `statsmodels` (\|diff\|) | **0** (bit-exact) |
+| 95% chi-square critical value (10 df) | **18.31** |
+| white-noise null rejected | **yes** |
+| Q as a multiple of critical | **228×** |
+
+The newly-authored op equals statsmodels for both the statistic and the p-value, and the verdict is
+unambiguous. Values trace to
+[`artifacts/ljungbox_summary.csv`](artifacts/ljungbox_summary.csv).
+
+## Conclusion
+
+`ljungBoxTest` adds the formal counterpart to the descriptive ACF/PACF/AR lane, and it is exact:
+bit-for-bit against statsmodels for both the statistic and the p-value. The transferable takeaway:
+**describe with the ACF, decide with Ljung-Box. On a raw signal it confirms there is structure to model;
+on your model's residuals it tells you whether you have captured it — a residual Q under the threshold is
+the certificate that the model whitened the data.**
+
+## Open questions
+
+- The test is most useful on model residuals: running it on the residuals of the folded `arYuleWalker`
+  fit would test whether the AR(4) model has whitened the EEG (a residual Q below critical would confirm
+  adequacy). *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Ljung-Box white-noise / adequacy test | `ljungBoxTest()` | PhysioAnalysis |
+| Autocorrelation | `autocorrelation()` | PhysioAnalysis |
+| AR fit (residuals to test) | `arYuleWalker()` | PhysioAnalysis |
+
+**Choosing the parameters.**
+
+- **lag** — the number of autocorrelations to pool, and the chi-square degrees of freedom (default 10);
+  too few misses long-range structure, too many dilutes power. For AR residuals, use lag > model order.
+- **interpretation** — a large Q / small p means autocorrelation is present (raw signal) or the model is
+  inadequate (residuals); a small Q / large p means the series is consistent with white noise.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis)
+
+lb <- ljungBoxTest(x, lag = 10)
+lb$statistic; lb$p_value            # Q and its chi-square p-value
+lb$statistic > qchisq(0.95, lb$df)  # reject white noise at 5%?
+# reproduces statsmodels.stats.diagnostic.acorr_ljungbox bit-for-bit.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/ljungbox_summary.csv`](artifacts/ljungbox_summary.csv), and [`audit.py`](audit.py) re-checks
+the Q statistic, the bit-exact statsmodels match for both statistic and p-value, the 95% critical value,
+the rejection and its margin, and the honestly-noted scope (newly-authored op built on autocorrelation;
+machine-precision; decisive-but-expected verdict; residual-adequacy use).

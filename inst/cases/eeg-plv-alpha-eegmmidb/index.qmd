@@ -1,0 +1,137 @@
+---
+title: "Phase synchrony: the alpha phase-locking value between occipital channels"
+subtitle: "A worked phase-connectivity case study on real EEG, checked against scipy and ground truth"
+categories: [eeg, connectivity, phase-synchronization, plv, alpha, validated]
+author: "Yusuke Matsui"
+date: "2026-09-04"
+---
+
+> **What this case shows** — coherence mixes amplitude and phase; sometimes you want phase
+> *alone*. The **phase-locking value** (Lachaux 1999) is the phase-only measure of
+> synchronization: band-pass two signals, take their Hilbert phases, and ask how consistent
+> the phase *difference* is — **PLV = |mean(exp(i·(φₓ − φᵧ)))|**, from 0 (random) to 1
+> (locked). On real eyes-closed occipital EEG the two neighbouring channels **O1 and Oz are
+> strongly alpha-synchronized (PLV = 0.92**, mean phase lag ~0.08 rad — nearly in phase). And
+> the measure is trustworthy: `phaseLockingValue` recovers ground truth (phase-locked → **0.995**,
+> independent → **0.009**), reproduces an independent `scipy` Hilbert-band PLV to **~8e-5**, and
+> its summation formula is exact.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for phase-only coupling in a band: `phaseLockingValue(x, y, sr, freq_band)`
+→ read `plv` (and the `phase_diff` series).
+**Way of thinking** — PLV asks *"is the phase difference constant?"*, ignoring amplitude.
+Use it when timing/phase relationships matter more than co-fluctuating power. But remember it
+counts zero-lag (volume-conduction) coupling as real — reach for PLI/wPLI to discount that.
+**Ecosystem usage** — `PhysioCrossModal::phaseLockingValue()`; `phaseLagIndex()` /
+`weightedPLI()` for the volume-conduction-robust variants.
+:::
+
+## Proposition
+
+On real eyes-closed occipital EEG (eegmmidb S002R02, O1 & Oz), the alpha-band PLV is high
+(0.92), `phaseLockingValue` reproduces an independent scipy Hilbert-band PLV (~8e-5) and
+recovers ground truth (locked 0.995 / independent 0.009), with an exact summation formula.
+
+## Question & goal
+
+**The question is whether two occipital channels keep a constant alpha phase relationship —
+and whether the ecosystem measures it the way an independent pipeline does.** Coherence
+can't isolate phase; PLV can. The goal is a three-way validation (ground truth, scipy,
+formula) and a read of the posterior alpha synchronization.
+
+## Challenge & approach
+
+PLV band-passes each signal, extracts the Hilbert phase, and takes the length of the mean
+unit phasor of the phase difference. We compute it with `phaseLockingValue`, re-compute it
+with an independent scipy pipeline (`butter` + `filtfilt` + `hilbert`), and check it against
+constructed signals with known PLV.
+
+```
+O1, Oz EEG → phaseLockingValue(alpha 8-13 Hz) → PLV + phase-difference series
+                    vs scipy (butter+filtfilt+hilbert)         → agreement (~8e-5)
+                    vs constructed locked/independent signals   → ground truth (0.995 / 0.009)
+```
+
+## Data
+
+**eegmmidb (PhysioNet)**: subject **S002**, baseline run **R02 (eyes-closed)**, occipital
+channels **O1** and **Oz**, first 10 s at 160 Hz — from the git-tracked EDF (the same
+64-channel record the sibling [Hjorth case](../eeg-hjorth-eegmmidb/index.qmd) uses). Details
+in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the histogram of the alpha-band phase difference between O1 and Oz — tightly concentrated near 0 rad (red line = preferred phase ~0.08 rad), which is exactly what a high PLV (0.92) means: the phase relationship is nearly constant. Right: the PLV for the real O1-Oz pair computed by the op (blue) and by an independent scipy pipeline (orange) coincide (max diff 8e-5), and the op recovers ground truth on constructed signals — phase-locked → 0.995, independent → 0.009.](artifacts/figure.png)
+
+*How to read this:* the left panel *is* the PLV — a concentrated phase-difference
+distribution is high phase-locking; the right panel is the validation (op = scipy, and the
+op recovers known PLV values).
+
+| Quantity | This reproduction | Reference |
+|---|---|---|
+| O1-Oz alpha PLV | **0.92** | scipy 0.92 |
+| op vs scipy (max \|diff\|) | **8e-5** | 0 (phase-robust agreement) |
+| PLV summation formula residual | **0** | 0 (exact) |
+| ground truth — phase-locked | **0.995** | ~1 |
+| ground truth — independent | **0.009** | ~0 |
+| mean phase lag (O1 − Oz) | **0.08 rad** | — |
+
+The measure recovers known values, matches scipy, and reads a strong occipital alpha
+synchronization. Values trace to [`artifacts/plv_summary.csv`](artifacts/plv_summary.csv)
+and the phase-difference histogram in
+[`artifacts/plv_phasediff_hist.csv`](artifacts/plv_phasediff_hist.csv).
+
+## Conclusion
+
+The ecosystem's phase-locking value recovers ground truth, matches an independent scipy
+pipeline, and reads the posterior alpha rhythm as strongly phase-synchronized across O1 and
+Oz. The transferable takeaway: **use PLV when phase relationships matter and amplitude
+doesn't; validate it against known-PLV signals and a reference pipeline; and remember its one
+big caveat — PLV counts zero-lag (volume-conduction) coupling as real, so pair it with
+PLI/wPLI when that matters.**
+
+## Open questions
+
+- PLV counts zero-lag (volume-conduction) coupling as genuine synchronization, so the high
+  O1-Oz value partly reflects channel proximity / the common reference. The **phase-lag index**
+  (`phaseLagIndex`) and **weighted PLI** (`weightedPLI`, both implemented) discount near-zero-lag
+  phase differences; and a full channel × channel PLV/wPLI matrix would map the posterior alpha
+  *network* rather than a single pair. Eyes-closed vs eyes-open would show that network
+  collapsing with the rhythm. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| phase-locking value (phase-only) | `phaseLockingValue()` | PhysioCrossModal |
+| phase-lag index (volume-conduction-robust) | `phaseLagIndex()` / `weightedPLI()` | PhysioCrossModal |
+| magnitude-squared coherence (amplitude+phase) | `coherence()` | PhysioCrossModal |
+| directed coupling | `grangerCausality()` | PhysioCrossModal |
+
+**Choosing the parameters.**
+
+- **freq_band** — the band to lock in (here `c(8, 13)`, alpha); PLV is defined per band, so
+  choose the rhythm you care about.
+- **method** — `"hilbert"` (band-pass + Hilbert phase, used here); a `"wavelet"` phase path is
+  planned.
+- **caveat** — PLV is amplitude-blind but sensitive to zero-lag/volume-conduction coupling;
+  use `phaseLagIndex()` / `weightedPLI()` when you must exclude that.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioCrossModal)
+
+res <- phaseLockingValue(o1, oz, sr = 160, freq_band = c(8, 13))
+res$plv          # 0.92 -- strong occipital alpha phase synchronization
+
+# reproduces an independent scipy Hilbert-band PLV (~8e-5) and recovers ground truth
+# (phase-locked ~1, independent ~0); the summation formula is exact.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/`](artifacts/) — the summary in
+[`plv_summary.csv`](artifacts/plv_summary.csv) and the phase-difference histogram in
+[`plv_phasediff_hist.csv`](artifacts/plv_phasediff_hist.csv) — and [`audit.py`](audit.py)
+re-checks each reported number, the scipy agreement, the ground-truth recovery, the exact
+formula, and the honestly-noted filtfilt and volume-conduction caveats.

@@ -1,0 +1,127 @@
+---
+title: "Can a wrist tell washing from the other home tasks? A small-N recognition of ICF d510"
+subtitle: "A worked, honestly-scoped case study on public wrist-worn home-task data"
+categories: [adl, wearable, har, self-care, icf, validated]
+author: "Yusuke Matsui"
+date: "2026-08-17"
+---
+
+> **What this case shows** — washing (ICF **d510**, washing oneself) is the
+> self-care task the sibling case (`adl-selfcare-hmp`) had *no data* for. HTAD is
+> the one public wrist-accelerometer dataset that labels **washing hands**. Under
+> a strict leave-one-subject-out test, the ecosystem's activity-recognition
+> pipeline recognises washing at **0.53 recall** — about **3.7×** the **0.14**
+> chance level — in a seven-task home-activity problem, cross-subject. **What
+> reproduces, and what doesn't** — washing carries a wrist-detectable signature
+> above chance; but this rests on **only 3 subjects**, so it is a *demonstration*,
+> not a definitive validation, and washing stays confusable with the other
+> hand-based tasks. ICF d510 also covers bathing/showering, which HTAD does not
+> contain — only hand-washing is tested. **How to read it** — each bar is one
+> task's cross-subject recall (red = washing, dashed = 0.14 chance).
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — the same four moves as any wearable ADL recogniser: **window** →
+**features** → **classify** → **map to ICF** — applied to the hardest self-care
+task to find data for.
+**Way of thinking** — when the only public evidence is small (N = 3), say so
+*in the result*: run the strict protocol (leave-one-subject-out), report the
+above-chance signal, and record the weak evidence wherever the claim propagates
+(here, the coverage registry carries `HTAD N=3, recall 0.53`). A small-N
+above-chance result is worth publishing *as* small-N.
+**Ecosystem usage** — `adlFeatures()` → `trainADL()` / `recognizeADL()` →
+`adlToICF()` (PhysioWearable), unchanged from the sibling cases.
+:::
+
+## Proposition
+
+On the one public wrist-accelerometer dataset that labels washing hands, the HAR
+pipeline recognises washing (ICF d510) at **0.53 recall** under
+leave-one-subject-out — about **3.7×** the **0.14** chance level of a seven-task
+problem — with a 5-of-7 overall accuracy of **0.63**. This is a small-N
+(3-subject) demonstration, honestly not a definitive validation.
+
+## Question & goal
+
+**The question comes from a gap.** The sibling self-care case (HMP) had no
+washing data, so d510 stayed *supported* (pipeline-ready, unvalidated). HTAD
+(Garcia-Ceja et al. 2021) was built to test *home-task recognition from a wrist
+accelerometer and audio*, and — unusually — it includes **washing hands**. We ask
+the narrow question the data can answer: does washing carry a wrist-detectable
+signature that a recogniser can pick out, across people?
+
+## Challenge & approach
+
+Two challenges: washing hands is a hand-based rubbing motion easily confused with
+brushing teeth or eating, and there are only three subjects. We do not hide
+either. We window the wrist acceleration, extract the standard 36-feature
+descriptor, train a k-nearest-neighbours classifier, and test **leave-one-subject-out**
+— train on two people, test on the third, rotate. `adlToICF()` maps washing to
+ICF d510.
+
+## Data
+
+The **HTAD** wrist-accelerometer home-task dataset (Garcia-Ceja et al. 2021,
+figshare 6667532) — ~31 Hz, 3 subjects, seven home tasks. The exact activities
+used are in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Cross-subject recall per home task under leave-one-subject-out; washing (red)
+clears the 0.14 chance line (dashed).](artifacts/figure.png)
+
+*How to read this:* washing sits at **0.53**, well above the seven-task chance
+line — a real above-chance signal — while some tasks (watching TV, typing) are
+easier and others (grooming) harder. The whole picture rests on three subjects,
+so read the *direction* (washing is detectable), not a precise number.
+
+| quantity | value |
+|---|---|
+| washing (d510) recall (leave-one-subject-out) | **0.53** |
+| chance level (1 / 7 tasks) | 0.14 |
+| ratio to chance | ~3.7× |
+| 7-task accuracy | 0.63 |
+| **subjects** | **3** |
+
+## Conclusion
+
+Washing hands leaves a wrist-detectable signature — a recogniser finds it well
+above chance — so ICF d510 can move from *pipeline-ready* to *validated*, with
+the honest caveat that this rests on three subjects and covers hand-washing, not
+bathing. The transferable takeaway: **a small-N above-chance result is a genuine
+result if you report it as small-N and carry the caveat wherever the claim
+travels.**
+
+## Open questions
+
+- Three subjects is too few for a definitive washing validation; a larger
+  labelled wrist-IMU set with bathing/hand-washing would confirm it, and no
+  public wrist dataset yet labels dressing (d540) or toileting (d530).
+  *Documented, not escalated.*
+
+## Using this in your own analysis
+
+The recipe is identical to the sibling wearable cases:
+
+| step | function | package |
+|---|---|---|
+| window + extract HAR features | `adlFeatures()` | PhysioWearable |
+| train / apply an activity recogniser | `trainADL()` / `recognizeADL()` | PhysioWearable |
+| map activities to ICF performance codes | `adlToICF()` | PhysioWearable |
+
+**Choosing the parameters:** with small N, use the strictest split you can
+(leave-one-subject-out), report the ratio to chance rather than raw accuracy, and
+propagate the sample size into every downstream claim. See `adl-selfcare-hmp` for
+the same pipeline at larger N, and `adl-rasch-verbagg` for the capacity side.
+
+```r
+library(PhysioWearable)
+feats <- adlFeatures(accel, sampling_rate = 31)
+model <- trainADL(train_feats, train_labels)
+recog <- recognizeADL(model, accel, sampling_rate = 31)
+adlToICF(recog)                                     # washing -> d510
+```
+
+One line for the technical reader: every number traces to
+[`artifacts/summary.csv`](artifacts/summary.csv) and
+[`artifacts/per_class_recall.csv`](artifacts/per_class_recall.csv), re-checked by
+[`audit.py`](audit.py) and `tools/validate_case.py`.

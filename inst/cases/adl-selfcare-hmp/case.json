@@ -1,0 +1,36 @@
+{
+  "id": "adl-selfcare-hmp",
+  "title": "Recognising self-care ADLs from a wrist accelerometer: grooming and drinking as ICF performance, and where it breaks",
+  "modality": ["adl", "wearable", "har", "self-care", "icf"],
+  "packages": ["PhysioWearable"],
+  "dataset": {
+    "name": "Dataset for ADL Recognition with Wrist-worn Accelerometer (HMP)",
+    "version": "UCI ML Repository #283 (Bruno et al. 2014)",
+    "record": "single tri-axial wrist accelerometer @ 32 Hz, 14 activities of daily living, 13 subjects; self-care activities include brushing teeth, combing hair, eating meat/soup, drinking from a glass",
+    "url": "https://archive.ics.uci.edu/dataset/283",
+    "public": true,
+    "citation": "Bruno B, Mastrogiovanni F, Sgorbissa A, Vercelli T, Zaccaria R. Analysis of human behavior recognition algorithms based on acceleration data. IEEE ICRA 2013; dataset doi:10.24432/C5CS3C (CC-BY 4.0)."
+  },
+  "proposition": "A clinical scale records THAT a person can groom or eat; a wrist accelerometer can record whether they actually DO it -- the ICF performance qualifier. On real single-wrist accelerometer data, under a strict leave-one-subject-out protocol, the ecosystem's dependency-free HAR pipeline separates self-care from locomotion well (self-care-as-self-care 0.94) and recognises grooming (d520, recall 0.77) and drinking (d560, 0.81) cross-subject -- but eating (d550) is NOT distinguished (recall 0.00): its windows collapse into the other hand-to-face gestures. This is the honest boundary of wrist-only self-care recognition.",
+  "opdag": ["adlFeatures", "trainADL", "recognizeADL", "adlToICF"],
+  "claims": [
+    { "id": "selfcare_detection", "statement": "self-care windows recognised as SOME self-care activity (leave-one-subject-out)", "value": 0.938, "artifact": "artifacts/summary.csv", "status": "PASS" },
+    { "id": "overall_accuracy",   "statement": "5-class leave-one-subject-out accuracy",                          "value": 0.603, "artifact": "artifacts/summary.csv", "status": "PASS" },
+    { "id": "grooming_recall",    "statement": "grooming (d520) recall (chance 0.20)",                             "value": 0.767, "artifact": "artifacts/per_class_recall.csv", "status": "PASS" },
+    { "id": "drinking_recall",    "statement": "drinking (d560) recall",                                          "value": 0.809, "artifact": "artifacts/per_class_recall.csv", "status": "PASS" },
+    { "id": "eating_recall",      "statement": "eating (d550) recall -- NOT distinguished (collapses into other hand-to-face gestures)", "value": 0.0, "artifact": "artifacts/per_class_recall.csv", "status": "PASS" },
+    { "id": "n_subjects",         "statement": "subjects (all used as a test fold once)",                         "value": 13,    "artifact": "artifacts/summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The dataset's own per-trial activity labels (ground truth), scored with a strict leave-one-subject-out protocol (every subject is a held-out test fold once)",
+    "data": "REAL -- UCI HMP wrist-worn accelerometer (Bruno et al. 2014), 13 subjects, 32 Hz",
+    "artifacts": ["artifacts/per_class_recall.csv", "artifacts/icf_profile.csv", "artifacts/summary.csv"],
+    "all_pass": true,
+    "note": "What reproduces: self-care is separable from locomotion on a real wrist (self-care-as-self-care 0.94), and GROOMING (d520) and DRINKING (d560) are recognised cross-subject well above the 0.20 chance level. What does NOT: EATING (d550) is not distinguished (recall 0.00) -- eating-from-a-plate and hand-to-mouth motions collapse into grooming/drinking, so d550 is honestly only self-care-CATEGORY-level here, not task-level. Stair-climbing (contrast) is also weak (0.26). A dependency-free k-NN on 36 features is deliberately simple; a stronger classifier (PhysioML ROCKET) or a wrist+finger sensor would be needed to split the hand-to-face gestures. Washing, dressing and toileting are not in this dataset."
+  },
+  "open_questions": [
+    { "q": "Eating collapses into the other hand-to-face self-care gestures under a wrist-only sensor (recall 0.00); whether a richer feature set, a stronger model, or an added finger/utensil sensor separates eating from grooming/drinking -- and whether dressing/toileting are recognisable from the wrist at all -- is open. Documented, not escalated.", "artifact": "artifacts/per_class_recall.csv", "escalate": null }
+  ],
+  "reference_tools": [],
+  "status": "validated"
+}

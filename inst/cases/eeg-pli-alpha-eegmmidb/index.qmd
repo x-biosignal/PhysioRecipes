@@ -1,0 +1,133 @@
+---
+title: "Is it real coupling or volume conduction? The phase-lag index vs PLV"
+subtitle: "A worked volume-conduction-robust connectivity case on real EEG, checked against scipy"
+categories: [eeg, connectivity, phase-synchronization, pli, volume-conduction, validated]
+author: "Yusuke Matsui"
+date: "2026-09-04"
+---
+
+> **What this case shows** — the [sibling case](../eeg-plv-alpha-eegmmidb/index.qmd) found a
+> high occipital alpha **PLV** (O1-Oz = 0.92). But is that genuine neural coupling, or just
+> **volume conduction** — one source seen by two nearby electrodes, plus the common reference?
+> PLV can't tell: it counts zero-lag coupling as real. The **phase-lag index** (Stam 2007) can —
+> **PLI = |mean(sign(sin(φₓ − φᵧ)))|** counts only a *consistent non-zero* phase lag, so it is
+> ~0 for zero-lag coupling. On the same O1-Oz pair, the alpha **PLI is just 0.016** — the strong
+> PLV collapses, revealing the "synchronization" is dominated by near-zero-lag coupling. And the
+> measure is trustworthy: on constructed signals it recovers the contrast exactly (zero-lag →
+> PLV 0.99 but **PLI 0.01**; genuine lagged coupling → **PLI 1.0**; independent → both 0),
+> reproduces an independent `scipy` Hilbert-band PLI, and its sign formula is exact.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for volume-conduction-robust phase coupling: `phaseLagIndex(x, y, sr, freq_band)`
+→ read `pli`; compare it to the PLV to see how much coupling is zero-lag.
+**Way of thinking** — a *high PLV with a low PLI* is the signature of volume conduction:
+strong phase consistency, but at ~zero lag. PLI keeps only lead/lag-consistent coupling.
+**Ecosystem usage** — `PhysioCrossModal::phaseLagIndex()`; `weightedPLI()` for the debiased,
+less-noisy variant (Vinck 2011).
+:::
+
+## Proposition
+
+On the real O1-Oz pair whose alpha PLV is 0.92, the PLI is only 0.016 — the coupling is mostly
+volume conduction. `phaseLagIndex` reproduces an independent scipy PLI, has an exact sign
+formula, and recovers the volume-conduction contrast (zero-lag → PLI 0.01 while PLV 0.99;
+lagged → PLI 1.0).
+
+## Question & goal
+
+**The question is whether a high PLV means real coupling — and PLI is how you check.** Volume
+conduction inflates PLV (and coherence) but not PLI. The goal is to validate `phaseLagIndex`
+(against scipy, an exact formula, and known signals) and use it to reinterpret the O1-Oz alpha.
+
+## Challenge & approach
+
+PLI band-passes and Hilbert-phases each signal, then takes the consistency of the *sign* of the
+phase difference. We compute it with `phaseLagIndex`, re-compute it with scipy, and run it on
+constructed signals with a known coupling type (zero-lag / lagged / independent).
+
+```
+O1, Oz EEG → phaseLagIndex(alpha) → PLI = 0.016   (vs PLV 0.92)
+                    vs scipy (butter+filtfilt+hilbert)        → agreement (~4e-3)
+                    vs constructed zero-lag / lagged / indep   → PLI 0.01 / 1.0 / 0.03
+```
+
+## Data
+
+**eegmmidb (PhysioNet)**: subject **S002**, run **R02 (eyes-closed)**, occipital **O1** and
+**Oz**, 10 s at 160 Hz — the same git-tracked pair the sibling PLV case uses. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: PLV (blue) vs PLI (orange) across four conditions. For the real O1-Oz pair and for constructed zero-lag (volume-conduction) coupling, PLV is high (0.92, 0.99) but PLI is ~0 (0.02, 0.01) — PLI discounts the zero-lag component. For genuinely lagged coupling both are high (PLI 1.0); for independent signals both are ~0. Right: the real O1-Oz alpha phase-difference clusters tightly at ~0 rad — a near-zero lag, which gives a high PLV but a near-zero PLI.](artifacts/figure.png)
+
+*How to read this:* the left panel is the whole story — **high PLV + low PLI = volume
+conduction**; the right panel shows why (the O1-Oz phase difference sits at ~0).
+
+| Condition | PLV | PLI |
+|---|--:|--:|
+| **real O1-Oz alpha** | **0.92** | **0.016** |
+| constructed zero-lag (volume conduction) | 0.99 | 0.01 |
+| constructed lagged (π/4) | 0.99 | 1.00 |
+| constructed independent | 0.02 | 0.03 |
+
+| Validation | Value | Reference |
+|---|--:|---|
+| PLI vs scipy Hilbert-band (max \|diff\|) | 4e-3 | 0 (agreement) |
+| PLI sign-formula residual | 0 | 0 (exact) |
+
+The op recovers the contrast, matches scipy, and reinterprets the O1-Oz alpha as mostly volume
+conduction. Values trace to [`artifacts/pli_summary.csv`](artifacts/pli_summary.csv).
+
+## Conclusion
+
+The phase-lag index does what PLV cannot: it discounts zero-lag coupling, and on real occipital
+EEG it reveals that a headline alpha PLV of 0.92 is almost entirely volume conduction (PLI 0.016).
+The transferable takeaway: **never read a high PLV/coherence as connectivity without checking
+PLI/wPLI — a high PLV with a low PLI is the fingerprint of volume conduction — and remember PLI
+is conservative (it also discounts genuine zero-lag coupling), so treat it as a lower bound on
+lagged interaction, not a verdict.**
+
+## Open questions
+
+- PLI is binary in the sign and can be noisy; the **weighted PLI** (`weightedPLI`, debiased,
+  Vinck 2011 — also implemented) weights each phase difference by |sin| and removes the
+  sample-size bias for a less noisy VC-robust estimate. A full channel × channel wPLI matrix
+  would map the genuinely-*lagged* posterior alpha network (vs the volume-conduction-inflated
+  PLV network), and eyes-closed vs eyes-open would test whether that lagged component tracks the
+  rhythm. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| phase-lag index (VC-robust) | `phaseLagIndex()` | PhysioCrossModal |
+| weighted PLI (debiased, less noisy) | `weightedPLI()` | PhysioCrossModal |
+| phase-locking value (compare — VC-sensitive) | `phaseLockingValue()` | PhysioCrossModal |
+| magnitude-squared coherence (also VC-sensitive) | `coherence()` | PhysioCrossModal |
+
+**Choosing the parameters.**
+
+- **freq_band** — the band to test (here `c(8, 13)`, alpha).
+- **compare with PLV** — always: a high PLV + low PLI flags volume conduction; similar PLV and
+  PLI suggests genuinely lagged coupling.
+- **caveat** — PLI is conservative (discounts *all* near-zero-lag coupling); use `weightedPLI()`
+  for a debiased estimate and treat a low PLI as a lower bound on lagged interaction.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioCrossModal)
+
+pli <- phaseLagIndex(o1, oz, sr = 160, freq_band = c(8, 13))$pli   # 0.016
+plv <- phaseLockingValue(o1, oz, sr = 160, freq_band = c(8, 13))$plv  # 0.92
+# high PLV + low PLI  ->  the alpha coupling is mostly volume conduction
+
+# reproduces an independent scipy Hilbert-band PLI (~4e-3); the sign formula is exact.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/`](artifacts/) — the summary in
+[`pli_summary.csv`](artifacts/pli_summary.csv) — and [`audit.py`](audit.py) re-checks each
+number, the scipy agreement, the exact sign formula, the volume-conduction contrast, and the
+honestly-noted conservativeness of PLI.

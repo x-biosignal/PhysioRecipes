@@ -1,0 +1,116 @@
+---
+title: "Where the ACF decays, the PACF cuts off: partial autocorrelation, a newly-authored op, vs statsmodels"
+subtitle: "A worked time-series case study on real EEG, introducing and certifying partialAutocorrelation"
+categories: [eeg, time-series, partial-autocorrelation, cross-tool-validation, validated]
+author: "Yusuke Matsui"
+date: "2026-09-07"
+---
+
+> **What this case shows** — the **partial autocorrelation function (PACF)** is the ACF's companion:
+> it strips out the intervening lags, so where the ACF *decays* the PACF *cuts off* after the
+> autoregressive order — the standard way to choose AR model order. Having just added the ACF, this
+> case adds the PACF (**`partialAutocorrelation`**, Durbin-Levinson on the biased ACF). On a real
+> eyes-closed EEG channel it reproduces **`statsmodels.tsa.pacf(method="ldb")`** **bit-for-bit** (max
+> |diff| ~**6e-15**), and it reads the signal's structure: lag-1 = the ACF's lag-1, and **lag-2
+> strongly negative (−0.63)** — the fingerprint of an oscillatory **alpha rhythm**.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `partialAutocorrelation(x, lag_max)` → the PACF at lags 0…lag_max.
+**Way of thinking** — ACF and PACF are read together. A slowly-decaying ACF with a sharp PACF cut-off
+says "autoregressive of this order"; a positive-then-negative PACF (lag1 > 0, lag2 < 0) says
+"resonant oscillation". The PACF is where you see the *order* of the memory, not just its length.
+**Ecosystem usage** — `PhysioAnalysis::partialAutocorrelation()` with `autocorrelation()`.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, `partialAutocorrelation` reproduces `statsmodels.tsa.pacf(method="ldb")`
+bit-for-bit (max |diff| ~6e-15) across lags 0..20; the lag-1 PACF equals the lag-1 ACF (0.856, the
+identity), and the lag-2 PACF is strongly negative (−0.627), an oscillatory AR(2)-like structure.
+
+## Question & goal
+
+**The question is a gap and an interpretation: having added the ACF, can we author its companion PACF,
+reproduce the field-standard statsmodels exactly, and read the AR structure of eyes-closed EEG?** The
+goal is to introduce `partialAutocorrelation`, certify it bit-for-bit, and interpret the alpha signature.
+
+## Challenge & approach
+
+The PACF is computed by the Durbin-Levinson recursion on the biased demeaned ACF (from
+`autocorrelation`), the same definition as `stats::pacf` and `statsmodels.tsa.pacf(method="ldb")`. We
+compute it at lags 0..20 and check against statsmodels on the identical signal.
+
+```
+EEG POz (eegmmidb) → ACF → Durbin-Levinson → PACF at lags 0..20 (lag-0 ≡ 1, lag-1 ≡ ACF lag-1)
+                    vs statsmodels.tsa.pacf(method="ldb") → bit-exact (~6e-15) at every lag
+                    lag-1 = +0.86, lag-2 = -0.63 → resonant (alpha) AR(2)-like structure
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz**, 10 s at 160 Hz — the same git-tracked vector the
+[autocorrelation](../autocorrelation-eegmmidb/index.qmd) and EEG complexity cases use. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the ACF (grey) and PACF (blue) of the POz signal with the ±2/√N significance band (red dashed). The ACF decays smoothly; the PACF is large-positive at lag 1 (green) and strongly negative at lag 2 (red) — the classic resonant-oscillation signature — before shrinking toward the band. Right: the newly-authored op (blue line) overlaid with statsmodels.tsa.pacf(ldb) (red rings), coinciding at every lag to machine precision.](artifacts/figure.png)
+
+*How to read this:* the left panel contrasts the ACF (length of memory) with the PACF (order of
+memory) and shows the alpha signature; the right panel is the certification against statsmodels.
+
+| Quantity | Value |
+|---|--:|
+| **PACF at lag 1** (= ACF lag 1) | **0.856** |
+| **PACF at lag 2** (oscillatory) | **−0.627** |
+| **PACF at lag 0** (convention) | **1** |
+| op vs `statsmodels.tsa.pacf(ldb)` (max \|diff\|) | **6e-15** (bit-exact) |
+| \|PACF lag 1 − ACF lag 1\| (identity) | **0** |
+| PACF values returned (lags 0..20) | **21** |
+
+The newly-authored op equals statsmodels at every lag, honors the lag-1 = ACF-lag-1 identity, and
+exposes the positive-then-negative alpha signature. Values trace to
+[`artifacts/pacf_summary.csv`](artifacts/pacf_summary.csv).
+
+## Conclusion
+
+`partialAutocorrelation` completes the ACF/PACF pair — the foundations of AR analysis — and it is exact:
+bit-for-bit against statsmodels. The transferable takeaway: **read ACF and PACF together. The ACF tells
+you how long the memory is; the PACF tells you its order and shape — and a lag-1-positive, lag-2-negative
+PACF is the calling card of a resonant oscillation like the posterior alpha rhythm.**
+
+## Open questions
+
+- The PACF's cut-off lag is the classic AR-order estimate; feeding it and the ACF into an explicit
+  AR-model fit (Yule-Walker / Burg) with information-criterion order selection would give a parametric
+  (AR) spectrum, complementing the Welch PSD already folded. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Partial autocorrelation (AR order) | `partialAutocorrelation()` | PhysioAnalysis |
+| Autocorrelation (memory length) | `autocorrelation()` | PhysioAnalysis |
+
+**Choosing the parameters.**
+
+- **lag_max** — how many lags to resolve (default 20); enough to see the PACF fall inside the ±2/√N
+  band after the AR order.
+- **method** — Durbin-Levinson on the biased ACF (matching `stats::pacf` / `statsmodels ldb`); the
+  unbiased Yule-Walker and OLS variants differ by construction.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis)
+
+pacf_vec <- partialAutocorrelation(x, lag_max = 20)   # PACF at lags 0..20
+# lag-1 equals autocorrelation(x, 1)[2]; reproduces statsmodels.tsa.pacf(method = "ldb").
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/pacf_summary.csv`](artifacts/pacf_summary.csv), and [`audit.py`](audit.py) re-checks the
+PACF at lags 0, 1, 2, the bit-exact statsmodels(ldb) match over lags, the lag-1 = ACF-lag-1 identity,
+the negative lag-2 (oscillatory signature), and the honestly-noted scope (newly-authored op building on
+autocorrelation; machine-precision; biased ldb convention).

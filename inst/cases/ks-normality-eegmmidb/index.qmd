@@ -1,0 +1,119 @@
+---
+title: "Two normality tests, one signal, opposite verdicts: Kolmogorov-Smirnov (a new op) vs Jarque-Bera"
+subtitle: "A worked normality-test case on real EEG, introducing ksNormalityTest and certifying it against scipy and base R"
+categories: [eeg, statistics, normality-test, cross-tool-validation, validated]
+author: "Yusuke Matsui"
+date: "2026-09-07"
+---
+
+> **What this case shows** — Jarque-Bera called the eyes-closed EEG amplitude distribution *non-normal*.
+> The **Kolmogorov-Smirnov** test asks the same question through the CDF, not the moments — and answers
+> the opposite. This case adds the test (**`ksNormalityTest`**). On the same EEG channel its `D` statistic
+> reproduces **scipy.stats.kstest** *and* base R **`ks.test`** **bit-for-bit**, and it **does not reject**
+> normality (p = 0.24) where Jarque-Bera does (p = 4.3e-4). Same data, opposite verdicts.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `ksNormalityTest(x)` → the KS distance `D`, its p-value, and `n`.
+**Way of thinking** — "is it normal?" has no single answer. A CDF-based test (KS) sees the *overall shape*;
+a moment-based test (Jarque-Bera) sees the *skew and kurtosis*, and at large N it has the power to flag a
+tiny departure. Report both — the disagreement tells you *which* kind of departure is present.
+**Ecosystem usage** — `PhysioAnalysis::ksNormalityTest()`, alongside `jarqueBeraTest()` and `signalMoments()`.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, the new `ksNormalityTest` reproduces both `scipy.stats.kstest` and base R
+`ks.test` bit-for-bit (D = 0.026, `|diff|` = 0 against each); KS does not reject normality (p = 0.24)
+while `jarqueBeraTest` does (JB = 15.5, p = 4.3e-4) — the two tests disagree.
+
+## Question & goal
+
+**The question is a gap and a contrast: does a newly-authored CDF-based normality test reproduce the
+reference, and does it agree with the moment-based Jarque-Bera on the same signal?** The goal is to
+introduce `ksNormalityTest`, certify its `D` statistic bit-for-bit, and interpret the disagreement.
+
+## Challenge & approach
+
+The KS statistic is `D = sup_x |F_n(x) − Φ((x−μ)/σ)|`, the largest vertical gap between the empirical CDF
+and a normal fitted to the sample — a max over the sorted sample, so it matches any correct
+implementation exactly. We check it against `scipy.stats.kstest` and base R `ks.test`, and compute
+Jarque-Bera on the same signal.
+
+```
+EEG POz (eegmmidb) → ksNormalityTest → D = 0.026, p = 0.24  (does NOT reject normality)
+                    vs scipy.stats.kstest → |diff| = 0   ·   vs base R ks.test → |diff| = 0
+                    Jarque-Bera on the SAME signal → JB = 15.5, p = 4.3e-4  (DOES reject)   ← disagreement
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz**, 10 s at 160 Hz — the same git-tracked vector the
+[jarque-bera](../jarque-bera-eegmmidb/index.qmd) and [signal-moments](../signal-moments-eegmmidb/index.qmd)
+cases use. Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the empirical CDF of the POz amplitudes (blue) against the fitted normal CDF (red) — they nearly overlap, and the largest gap D = 0.026 (orange) is small, so KS sees an acceptable normal shape. Right: the two tests' evidence against normality as −log₁₀(p); Jarque-Bera clears the p = 0.05 line (reject), KS does not (accept) — opposite verdicts on the same EEG.](artifacts/figure.png)
+
+*How to read this:* left — the two CDFs track each other, so the maximum gap (the KS statistic) is small.
+Right — Jarque-Bera's moment-based power pushes it over the rejection line while KS's shape-based statistic
+stays under it.
+
+| Quantity | Value |
+|---|--:|
+| **KS statistic D** | **0.026** |
+| KS p-value | 0.24 (**accept** normality) |
+| vs `scipy.stats.kstest` / base R `ks.test` (\|diff\|) | **0** (bit-for-bit) |
+| Jarque-Bera statistic / p | 15.5 / 4.3e-4 (**reject**) |
+| the two tests disagree | **yes** |
+
+The new op equals both references exactly, and the KS-vs-Jarque-Bera disagreement is the lesson. Values
+trace to [`artifacts/ks_summary.csv`](artifacts/ks_summary.csv).
+
+## Conclusion
+
+`ksNormalityTest` is the empirical-CDF counterpart of `jarqueBeraTest`, and it is exact against two
+references. The transferable takeaway: **"normal" is test-dependent. On this EEG the overall distribution
+shape is close to normal (KS accepts), but the mild skew and kurtosis are formally significant at N = 1600
+(Jarque-Bera rejects). Report both tests and the moments — the one that rejects tells you whether it is
+the shape or the tails that departs.**
+
+## Open questions
+
+- The estimated-parameter KS p-value is anti-conservative; a Lilliefors (simulation-calibrated) critical
+  value makes the KS verdict exact. Reporting KS alongside Jarque-Bera and the skewness/kurtosis makes the
+  "is it normal?" answer explicit about which departure — overall shape or tails — is or is not
+  significant. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| KS normality test (CDF-based) | `ksNormalityTest()` | PhysioAnalysis |
+| Jarque-Bera normality test (moment-based) | `jarqueBeraTest()` | PhysioAnalysis |
+| Skewness / kurtosis (the effect size) | `signalMoments()` | PhysioAnalysis |
+
+**Reading the result.**
+
+- **D and its p-value** — a small D (overall CDF close to normal) → KS does not reject; but on long signals
+  this is only half the story.
+- **read with Jarque-Bera** — if KS accepts but Jarque-Bera rejects, the departure is in the moments
+  (skew/kurtosis), not the overall shape; pair both with `signalMoments()` for the effect size.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis)
+
+ks <- ksNormalityTest(x)
+c(ks$statistic, ks$p_value)          # KS: overall-shape verdict
+jarqueBeraTest(x)$p_value            # ... vs the moment-based verdict
+# the KS D statistic reproduces scipy.stats.kstest and base R ks.test bit-for-bit.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/ks_summary.csv`](artifacts/ks_summary.csv), and [`audit.py`](audit.py) re-checks the D
+statistic, the bit-exact match against scipy and base R, the KS-vs-Jarque-Bera disagreement, and the
+honestly noted scope (new empirical-CDF normality test; double-reference machine precision; the
+test-dependent-normality lesson; the Lilliefors / anti-conservative p-value caveat).

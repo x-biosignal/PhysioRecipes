@@ -1,0 +1,133 @@
+---
+title: "The entropy family, completed: Tsallis entropy, a newly-authored op, and where it parts from Renyi"
+subtitle: "A worked information-theory case study on real EEG, introducing and certifying tsallisEntropy"
+categories: [eeg, complexity, tsallis-entropy, information-theory, validated]
+author: "Yusuke Matsui"
+date: "2026-09-06"
+---
+
+> **What this case shows** — the previous case added the **Renyi** entropy, the *additive*
+> generalization of Shannon. The **Tsallis entropy** is the other canonical one: *non-additive*,
+> straight out of non-extensive statistical mechanics. This case introduces a **newly-authored op**,
+> `tsallisEntropy`, completing the pair. On a real eyes-closed EEG channel it reproduces
+> `NeuroKit2.entropy_tsallis` **bit-for-bit** (max |diff| ~**9e-16**) across **q = {0.5, 1, 2, 3}**.
+> The punchline is *where the two families meet*: at **q = 1** the Tsallis entropy exactly recovers
+> **Shannon** (2.325 nats) **and coincides with Renyi** — but at **q = 2** Tsallis (**0.885**) parts
+> sharply from Renyi (**2.167**). Two roads through the same point.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — for the non-additive entropy: `tsallisEntropy(x, q, bins)` → the order-q Tsallis entropy
+of the signal's amplitude distribution (nats).
+**Way of thinking** — "generalized entropy" is not one thing. Renyi keeps *additivity* and rescales;
+Tsallis keeps a *power-law* form and gives up additivity. They agree only at q = 1 (both are Shannon);
+pick the one whose axiom you want.
+**Ecosystem usage** — `PhysioEEG::tsallisEntropy()` (non-additive) alongside `renyiEntropy()` (additive);
+both take `q`/`alpha = 1` to recover Shannon.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, `tsallisEntropy` reproduces `NeuroKit2.entropy_tsallis` bit-for-bit (max
+|diff| ~9e-16) across q = {0.5, 1, 2, 3}; at q = 1 it recovers Shannon (2.325 nats) and coincides with
+Renyi, but at q = 2 it diverges from Renyi by 1.281 (0.885 vs 2.167); S_q is non-increasing in q.
+
+## Question & goal
+
+**The question is a gap and a structural fact: the ecosystem had Shannon entropies and the additive
+Renyi family — can we author the *non-additive* Tsallis family, reproduce the reference across q, and
+show exactly where the two generalizations agree and where they part?** The goal is to introduce
+`tsallisEntropy`, certify it bit-for-bit, and make the Renyi/Tsallis relationship concrete.
+
+## Challenge & approach
+
+Tsallis entropy is S_q = (1 − Σ p_i^q)/(q − 1), where p is the signal's amplitude histogram (the q → 1
+limit is the Shannon entropy). We implement that closed form and check it against
+`NeuroKit2.entropy_tsallis` on the identical histogram across a range of q — and, on the same axes,
+overlay the Renyi entropy to expose the coincidence at q = 1 and the divergence elsewhere.
+
+```
+EEG POz (eegmmidb) → tsallisEntropy(q, bins = 16) → S_q
+                    vs NeuroKit2.entropy_tsallis (same histogram) → bit-exact (~9e-16) for every q
+                    q=1 → Shannon (2.325) = Renyi;  q=2 → Tsallis 0.885 ≠ Renyi 2.167 (non-additive)
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz**, 10 s at 160 Hz — the same git-tracked vector the
+[SVD-entropy](../svd-entropy-eegmmidb/index.qmd), [Petrosian](../petrosian-fd-eegmmidb/index.qmd) and
+[Renyi](../renyi-entropy-eegmmidb/index.qmd) cases use. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: two generalizations of Shannon as functions of their order — the Tsallis entropy S_q (red, op points; NeuroKit2 shown as black rings that sit exactly on them) and the Renyi entropy H_alpha (blue). The two curves cross at q = 1 (green point), where both equal the Shannon entropy; everywhere else they diverge — at q = 2 Tsallis is 0.885 while Renyi is 2.167 — because Tsallis is non-additive. Right: the POz amplitude histogram (16 bins), the distribution whose generalized entropy is computed.](artifacts/figure.png)
+
+*How to read this:* the left panel is the whole story — two families of generalized entropy that share
+exactly one point (Shannon, at order 1) and part ways elsewhere; the op (red) sits on NeuroKit2 (rings)
+at every q. The right panel is the distribution the entropy summarizes.
+
+| Quantity | Value |
+|---|--:|
+| **Tsallis entropy, q = 1 (Shannon)** | **2.325 nats** |
+| **Tsallis entropy, q = 2 (collision)** | **0.885 nats** |
+| op vs `NeuroKit2.entropy_tsallis` (max \|diff\| over the family) | **9e-16** (bit-exact) |
+| Tsallis vs Renyi at q = 1 (\|diff\|) | **0** (coincide — both Shannon) |
+| Tsallis vs Renyi at q = 2 (\|diff\|) | **1.281** (diverge — non-additive vs additive) |
+| non-increasing in q | **yes** |
+
+The newly-authored op equals NeuroKit2 at every q, recovers Shannon at q = 1 (where it meets Renyi), and
+diverges from Renyi elsewhere — the families' defining structure. Values trace to
+[`artifacts/tsallis_summary.csv`](artifacts/tsallis_summary.csv).
+
+## Conclusion
+
+`tsallisEntropy` completes the generalized-entropy pair — the ecosystem now has both the additive
+(Renyi) and non-additive (Tsallis) families — and it is exact: bit-for-bit against NeuroKit2 across q,
+with Shannon recovered at q = 1. The transferable takeaway: **"generalized entropy" is a fork, not a
+single road. Renyi and Tsallis both pass through Shannon at order 1, but they answer different axioms
+(additivity vs a power-law form) and give different numbers everywhere else — choose by the property you
+need, not by habit.**
+
+## Open questions
+
+- The Tsallis index q, in non-extensive statistical mechanics, reflects long-range correlations /
+  multifractality; estimating the q that best linearizes an EEG's generalized dimensions (a "q-triplet"
+  analysis) and comparing it across brain states would turn the single fixed-q value into a
+  physics-grounded descriptor. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Tsallis entropy (non-additive, order q) | `tsallisEntropy()` | PhysioEEG |
+| Renyi entropy (additive, order α) | `renyiEntropy()` | PhysioEEG |
+| SVD entropy / Petrosian FD | `svdEntropy()`, `petrosianFD()` | PhysioEEG |
+| multi-measure complexity (Shannon-based) | `eegComplexity()` | PhysioEEG |
+
+**Choosing the parameters.**
+
+- **q** — `1` is Shannon; `2` the (non-additive) collision-order entropy; larger q weights the most
+  frequent amplitudes more strongly. Because S_q is non-additive, it is *not* interchangeable with the
+  Renyi entropy of the same order — they agree only at q = 1.
+- **bins** — the amplitude-histogram resolution (here 16); more bins resolve finer structure but need
+  more data, and the absolute value is bin-dependent.
+- **units** — nats (natural log), as in `NeuroKit2.entropy_tsallis`.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioEEG)
+
+tsallisEntropy(x, q = 2)   # non-additive collision-order entropy (nats)
+tsallisEntropy(x, q = 1)   # = Shannon entropy (= renyiEntropy(x, alpha = 1))
+
+# reproduces NeuroKit2.entropy_tsallis bit-for-bit across q (max |diff| ~9e-16);
+# differs from renyiEntropy at every order except q = 1.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/tsallis_summary.csv`](artifacts/tsallis_summary.csv), and [`audit.py`](audit.py) re-checks
+the collision and Shannon entropies, the bit-exact NeuroKit2 match over the q family, the coincidence
+with Renyi at q = 1 and the divergence at q = 2, the monotonicity, and the honestly-noted scope
+(newly-authored op; histogram-dependent; structure not absolute value).

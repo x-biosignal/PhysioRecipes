@@ -1,0 +1,34 @@
+{
+  "id": "pacf-eegmmidb",
+  "title": "Where the ACF decays, the PACF cuts off: partial autocorrelation (a newly-authored op) vs statsmodels",
+  "modality": ["eeg", "time-series", "partial-autocorrelation", "cross-tool-validation", "signal-analysis"],
+  "packages": ["PhysioAnalysis"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "The partial autocorrelation function (PACF) is the companion of the ACF: where the ACF decays, the PACF cuts off after the autoregressive order, making it the standard tool for AR model selection. Having just added the ACF, this case introduces a NEWLY-AUTHORED PACF op (Durbin-Levinson on the biased ACF). On a real eyes-closed posterior EEG channel it reproduces the field-standard statsmodels.tsa.pacf(method='ldb') BIT-FOR-BIT (max |diff| ~6e-15) across lags; the lag-1 PACF exactly equals the lag-1 ACF (0.856, the definitional identity), and the lag-2 PACF is strongly negative (-0.627) -- the signature of an oscillatory AR(2)-like process, exactly what eyes-closed posterior alpha (a resonant ~10 Hz rhythm) looks like.",
+  "opdag": ["partialAutocorrelation"],
+  "claims": [
+    { "id": "pacf_lag1", "statement": "partial autocorrelation at lag 1 -- equals the lag-1 autocorrelation", "value": 0.85646134, "artifact": "artifacts/pacf_summary.csv", "status": "PASS" },
+    { "id": "pacf_lag2", "statement": "partial autocorrelation at lag 2 -- strongly negative (oscillatory AR(2)-like alpha structure)", "value": -0.62661714, "artifact": "artifacts/pacf_summary.csv", "status": "PASS" },
+    { "id": "pacf_lag0", "statement": "partial autocorrelation at lag 0 -- 1 by convention", "value": 1, "artifact": "artifacts/pacf_summary.csv", "status": "PASS" },
+    { "id": "max_diff_statsmodels", "statement": "max |partialAutocorrelation - statsmodels.tsa.pacf(ldb)| over lags (bit-exact)", "value": 5.682954e-15, "artifact": "artifacts/pacf_summary.csv", "status": "PASS" },
+    { "id": "pacf_acf_lag1_identity", "statement": "|PACF(lag 1) - ACF(lag 1)| -- the definitional identity (~0)", "value": 0, "artifact": "artifacts/pacf_summary.csv", "status": "PASS" },
+    { "id": "n_lags", "statement": "number of PACF values returned (lags 0..lag_max)", "value": 21, "artifact": "artifacts/pacf_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored partialAutocorrelation op is validated against the field-standard statsmodels.tsa.pacf(method='ldb') on the identical signal. Both run the Durbin-Levinson recursion on the biased demeaned ACF; the agreement is BIT-FOR-BIT (max |diff| ~6e-15) across lags. The lag-1 PACF equals the lag-1 ACF (the identity) and the lag-2 PACF is strongly negative (an oscillatory AR(2)-like structure).",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), channel POz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/pacf_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the newly-authored partialAutocorrelation reproduces statsmodels.tsa.pacf(method='ldb') bit-for-bit (max |diff| ~6e-15) across lags; (2) the lag-1 PACF equals the lag-1 ACF (the identity) and the lag-2 PACF is strongly negative. HONEST scope: (1) this op is NEWLY AUTHORED, building on the just-added autocorrelation, to complete the ACF/PACF pair -- the ecosystem had neither the single-series ACF nor the PACF; (2) this is a genuine MACHINE-PRECISION match -- the op and statsmodels run the IDENTICAL Levinson-Durbin recursion on the biased ACF, so the ~6e-15 residual is the floating-point floor, not a convention agreement (this matches the 'ldb'/'ywm' biased conventions; statsmodels' unbiased 'yw'/'ld' and 'ols' differ by construction and are NOT the target); (3) the finding is the AR structure: the lag-1 PACF exactly equals the lag-1 ACF (the definitional identity), and the lag-2 PACF is strongly NEGATIVE, the signature of an oscillatory AR(2)-like process -- exactly what eyes-closed posterior alpha looks like (a resonant ~10 Hz rhythm); (4) the value is a signal property (dimensionless); the reproducible content is the bit-exact PACF and the AR structure, not an absolute physiological constant; (5) run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "The PACF's cut-off lag is the classic AR order estimate; feeding it (and the ACF) into an explicit AR-model fit (Yule-Walker / Burg) with an information-criterion order selection would turn this pair into a parametric-spectrum layer (an AR spectral estimate complementing the Welch PSD already folded). Documented, not escalated.", "artifact": "artifacts/pacf_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["statsmodels.tsa.pacf (Python)"],
+  "status": "validated"
+}

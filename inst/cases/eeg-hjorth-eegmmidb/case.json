@@ -1,0 +1,36 @@
+{
+  "id": "eeg-hjorth-eegmmidb",
+  "title": "Mobility maps the alpha: the Hjorth parameters across a 64-channel EEG, checked against antropy",
+  "modality": ["eeg", "complexity", "hjorth", "time-domain", "topography"],
+  "packages": ["PhysioEEG"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)",
+    "version": "PhysioNet 1.0.0",
+    "record": "subject S002, baseline run R02 (eyes-closed rest), all 64 EEG channels, first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+    "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "Before spectra, there were the Hjorth parameters (1970): describe a signal by the variance ratios of its derivatives -- mobility = sqrt(var(x')/var(x)), a proxy for the mean frequency, and complexity = mobility(x')/mobility(x), a proxy for the bandwidth. Cheap, O(N), and still used. Computed across a real 64-channel eyes-closed montage, mobility draws a map: it is lowest over the parieto-occipital region (POz, 0.53) and highest over temporal cortex (T7, 1.45) -- the eyes-closed alpha rhythm, a slow posterior oscillation, shows up as a low mean frequency. And the computation is exact: eegComplexity reproduces an independent numpy implementation of the Hjorth formula bit-for-bit (~9e-16 across all 64 channels), and the canonical antropy.hjorth_params to ~3e-7, the residual being purely a variance-estimator (ddof) convention.",
+  "opdag": ["eegComplexity"],
+  "claims": [
+    { "id": "mean_mobility", "statement": "mean Hjorth mobility across the 64-channel montage (mean-frequency proxy)", "value": 0.70961007, "artifact": "artifacts/hjorth_summary.csv", "status": "PASS" },
+    { "id": "mean_complexity", "statement": "mean Hjorth complexity across the montage (bandwidth proxy)", "value": 1.95129854, "artifact": "artifacts/hjorth_summary.csv", "status": "PASS" },
+    { "id": "min_mobility", "statement": "minimum Hjorth mobility -- the posterior alpha channel (POz), the slowest mean frequency", "value": 0.53195199, "artifact": "artifacts/hjorth_summary.csv", "status": "PASS" },
+    { "id": "max_diff_numpy", "statement": "max |eegComplexity Hjorth - independent numpy (unbiased variance)| over all 64 channels (bit-exact)", "value": 8.882e-16, "artifact": "artifacts/hjorth_summary.csv", "status": "PASS" },
+    { "id": "max_diff_antropy", "statement": "max |eegComplexity Hjorth - antropy.hjorth_params| over all 64 channels (up to the ddof convention)", "value": 2.845e-07, "artifact": "artifacts/hjorth_summary.csv", "status": "PASS" },
+    { "id": "n_channels", "statement": "EEG channels validated (full eegmmidb montage)", "value": 64, "artifact": "artifacts/hjorth_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "Two references. (1) An independent numpy implementation of the exact Hjorth formula (mobility = sqrt(var(x')/var(x)), complexity = mobility(x')/mobility(x)), matched to R's unbiased (n-1) variance: eegComplexity reproduces it BIT-FOR-BIT (max |diff| ~ 9e-16 across all 64 channels), confirming the formula is exactly correct. (2) The canonical antropy.hjorth_params (Vallat), which uses the biased (n) variance: eegComplexity agrees to ~3e-7, the residual being purely the variance ddof convention (on the derivative series, one sample shorter, the n-1-vs-n correction does not fully cancel for mobility but nearly does for complexity's double ratio). The finding: mobility is lowest over parieto-occipital (POz) -- the eyes-closed posterior alpha topography.",
+    "data": "REAL -- eegmmidb (PhysioNet), S002 eyes-closed baseline R02, 64 channels, 10 s at 160 Hz",
+    "artifacts": ["artifacts/hjorth_summary.csv", "artifacts/hjorth_per_channel.csv"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) eegComplexity's Hjorth mobility + complexity reproduce an independent numpy implementation bit-for-bit (~9e-16) and antropy.hjorth_params to ~3e-7 across all 64 channels; (2) mobility is lowest over parieto-occipital (POz, 0.53) and highest over temporal cortex (T7, 1.45), mean 0.71 -- the eyes-closed posterior alpha topography. HONEST scope: (1) the op reproduces the INDEPENDENT numpy implementation of the exact formula (matched unbiased n-1 variance) BIT-FOR-BIT (~9e-16) -- the formula is exactly correct; (2) the agreement with antropy.hjorth_params is machine precision UP TO the variance ddof CONVENTION (antropy uses the biased n-denominator variance, the op/numpy the unbiased n-1); the ~3e-7 residual is that documented estimator choice, NOT a methodological difference -- complexity's double ratio cancels it to ~1e-10, mobility's does not fully; (3) the mobility topography is a DESCRIPTIVE spatial pattern on a single subject/segment (posterior alpha = low mean frequency = low mobility), not a clinical claim; (4) the Hjorth parameters are a coarse spectral proxy -- mobility approximates the mean frequency, not a specific band; (5) single subject, 10 s, 64 channels; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "Hjorth mobility is a coarse mean-frequency proxy; the finding (low mobility posteriorly) is the eyes-closed alpha topography seen bluntly. Contrasting the mobility map eyes-closed vs eyes-open (R01 vs R02) would show alpha blocking as a mobility SHIFT, and relating mobility per channel to the true spectral centroid (from the multitaper PSD, the sibling case) would calibrate the proxy. Extending the montage to a cohort and a proper topographic plot would turn this descriptor into a screening map. Documented, not escalated.", "artifact": "artifacts/hjorth_per_channel.csv", "escalate": null }
+  ],
+  "reference_tools": ["antropy.hjorth_params (Python, antropy)", "independent numpy Hjorth implementation (Python)"],
+  "status": "validated"
+}

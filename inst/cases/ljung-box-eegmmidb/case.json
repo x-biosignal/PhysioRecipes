@@ -1,0 +1,34 @@
+{
+  "id": "ljung-box-eegmmidb",
+  "title": "Is it white noise? The Ljung-Box test (a newly-authored op), bit-for-bit against statsmodels",
+  "modality": ["eeg", "time-series", "hypothesis-test", "cross-tool-validation", "signal-analysis"],
+  "packages": ["PhysioAnalysis"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "The ACF/PACF/AR folds all say the EEG has strong temporal structure. The Ljung-Box test turns that into a formal hypothesis test: is the signal distinguishable from white noise? The ecosystem had no portmanteau test; this case introduces a NEWLY-AUTHORED op, ljungBoxTest (built on autocorrelation). On a real eyes-closed posterior EEG channel it reproduces statsmodels.stats.diagnostic.acorr_ljungbox BIT-FOR-BIT for both the Q statistic and the p-value; at lag h=10, Q=4165 is ~228x the 95% chi-square critical value (18.31), so the EEG rejects the white-noise null overwhelmingly -- the formal, quantitative counterpart of the strong ACF/PACF/AR structure.",
+  "opdag": ["ljungBoxTest"],
+  "claims": [
+    { "id": "lb_statistic", "statement": "Ljung-Box Q statistic at lag h=10 of the POz signal", "value": 4165.456393, "artifact": "artifacts/ljungbox_summary.csv", "status": "PASS" },
+    { "id": "lb_stat_diff_sm", "statement": "|Ljung-Box Q - statsmodels acorr_ljungbox| (bit-exact)", "value": 0, "artifact": "artifacts/ljungbox_summary.csv", "status": "PASS" },
+    { "id": "lb_pvalue_diff_sm", "statement": "|Ljung-Box p-value - statsmodels p-value| (bit-exact)", "value": 0, "artifact": "artifacts/ljungbox_summary.csv", "status": "PASS" },
+    { "id": "critical_value_95", "statement": "95% chi-square critical value at 10 df (the rejection threshold)", "value": 18.307038, "artifact": "artifacts/ljungbox_summary.csv", "status": "PASS" },
+    { "id": "reject_white_noise", "statement": "the white-noise null is rejected (Q > critical; 1 = rejected)", "value": 1, "artifact": "artifacts/ljungbox_summary.csv", "status": "PASS" },
+    { "id": "q_over_critical", "statement": "Q as a multiple of the 95% critical value -- how decisively white noise is rejected", "value": 227.5331, "artifact": "artifacts/ljungbox_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored ljungBoxTest op is validated against the field-standard statsmodels.stats.diagnostic.acorr_ljungbox on the identical signal. Both compute Q = N(N+2) sum_{k=1}^{h} rho_k^2/(N-k) and the chi-square(h) upper-tail p-value; the agreement is BIT-FOR-BIT for both (|diff| 0), and it matches stats::Box.test(type='Ljung-Box') to ~5e-12. At h=10 the statistic Q=4165 is ~228x the 95% critical value (18.31), decisively rejecting white noise.",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), channel POz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/ljungbox_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the newly-authored ljungBoxTest reproduces statsmodels acorr_ljungbox bit-for-bit for both the Q statistic and the p-value; (2) at h=10 Q=4165 is ~228x the 95% critical value, decisively rejecting white noise. HONEST scope: (1) this op is NEWLY AUTHORED, building on the just-added autocorrelation, to add a formal autocorrelation test the ecosystem lacked; (2) this is a genuine MACHINE-PRECISION match -- the op and statsmodels use the IDENTICAL closed-form Q statistic and chi-square p-value, so the residual is the floating-point floor, not a convention agreement (it also matches stats::Box.test to ~5e-12); (3) the finding is decisive and expected: the eyes-closed EEG overwhelmingly rejects the white-noise null (p underflows to 0), which is the formal, quantitative counterpart of the strong ACF decay, the AR(2)-like PACF, and the stationary AR(4) fit of the companion folds -- the value of the test here is the certified implementation and the ~228x margin, not a surprising verdict; (4) applied to model residuals (rather than the raw signal), this same op is the standard test of model adequacy; the value is a signal property; (5) run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "The Ljung-Box test is most useful on AR/ARMA residuals: running it on the residuals of the folded arYuleWalker fit (rather than the raw signal) would test whether the AR(4) model has whitened the EEG -- a residual Q below the critical value would confirm model adequacy. Documented, not escalated.", "artifact": "artifacts/ljungbox_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["statsmodels.stats.diagnostic.acorr_ljungbox (Python)"],
+  "status": "validated"
+}

@@ -1,0 +1,36 @@
+{
+  "id": "posturography-foam-firm-bds",
+  "title": "Sensory reweighting, certified: foam-surface sway is ~2.8x firm across 50 subjects, via a paired t-test bit-for-bit vs scipy and base R",
+  "modality": ["posturography", "balance", "cohort", "clinical-statistics", "cross-tool-validation"],
+  "packages": ["PhysioAnalysis", "PhysioMoCap"],
+  "dataset": {
+    "name": "A public data set of human balance evaluations (BDS)", "version": "figshare 2016",
+    "record": "50 subjects, eyes-open firm vs eyes-open foam quiet standing (60 s, force-plate COP at 100 Hz)",
+    "url": "https://doi.org/10.6084/m9.figshare.3394432", "public": true,
+    "citation": "Santos DA, Duarte M. A public data set of human balance evaluations. PeerJ 2016;4:e2648. doi:10.7717/peerj.2648."
+  },
+  "proposition": "Standing on a compliant foam surface degrades ankle proprioception, so the balance system reweights toward vision and vestibular input and the body sways more. This case demonstrates and certifies that sensory-reweighting effect across a real cohort. Per subject, COP path length on foam and on firm ground is computed by the certified swayMetrics; a newly-authored pairedTTest compares them, reproducing BOTH scipy.stats.ttest_rel AND base R t.test(paired=TRUE) BIT-FOR-BIT. Foam-surface sway (mean 167 cm) is ~2.76x firm-surface sway (mean 61 cm; ratio of group means), the difference is overwhelmingly significant (t=17.3, p~1.6e-22), and foam exceeds firm in ALL 50 of 50 subjects.",
+  "opdag": ["pairedTTest"],
+  "claims": [
+    { "id": "t_statistic", "statement": "paired t-statistic of foam vs firm COP path length (positive = foam sways more)", "value": 17.3168722493, "artifact": "artifacts/pairedt_summary.csv", "status": "PASS" },
+    { "id": "neg_log10_p", "statement": "-log10(two-sided p): the effect is overwhelmingly significant", "value": 21.799469, "artifact": "artifacts/pairedt_summary.csv", "status": "PASS" },
+    { "id": "df", "statement": "degrees of freedom (n - 1)", "value": 49, "artifact": "artifacts/pairedt_summary.csv", "status": "PASS" },
+    { "id": "max_diff_scipy", "statement": "|pairedTTest t - scipy.stats.ttest_rel t| (bit-exact)", "value": 0, "artifact": "artifacts/pairedt_summary.csv", "status": "PASS" },
+    { "id": "max_diff_baser", "statement": "|pairedTTest t - base R t.test(paired=TRUE) t| (bit-exact)", "value": 0, "artifact": "artifacts/pairedt_summary.csv", "status": "PASS" },
+    { "id": "foam_firm_ratio", "statement": "mean foam sway / mean firm sway (the sensory-reweighting effect size)", "value": 2.7576590003, "artifact": "artifacts/pairedt_summary.csv", "status": "PASS" },
+    { "id": "n_foam_gt_firm", "statement": "subjects with foam sway > firm sway (out of 50)", "value": 50, "artifact": "artifacts/pairedt_summary.csv", "status": "PASS" },
+    { "id": "n_subjects", "statement": "paired subjects in the cohort", "value": 50, "artifact": "artifacts/pairedt_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The new pairedTTest op is validated against BOTH scipy.stats.ttest_rel AND base R t.test(paired=TRUE) on the identical paired data -- a double reference. All three compute the paired t of foam-minus-firm COP path length and agree BIT-FOR-BIT (statistic and p, |diff| 0 vs each). The per-subject path lengths come from PhysioMoCap::swayMetrics (certified against the Prieto reference in the sibling case). The foam/firm ratio and the per-subject direction are reported.",
+    "data": "REAL -- Santos & Duarte (2016) balance dataset (figshare), 50 subjects, eyes-open firm vs foam quiet-standing COP",
+    "artifacts": ["artifacts/pairedt_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) pairedTTest reproduces scipy and base R bit-for-bit; (2) the sensory-reweighting effect (foam >> firm sway) is universal and highly significant. HONEST scope: (1) the pairedTTest op is NEWLY AUTHORED (a standard clinical before/after or condition-A/B PAIRED test the ecosystem lacked); (2) it reproduces BOTH scipy.stats.ttest_rel AND base R t.test(paired=TRUE) BIT-FOR-BIT (statistic and p, |diff| = 0 vs each) -- the identical closed-form paired t, so the residual is the floating-point floor, NOT A CONVENTION AGREEMENT; (3) the per-subject COP path lengths that feed the test are computed by SWAYMETRICS, itself CERTIFIED bit-for-bit against the Prieto reference in the sibling sway-posturography-bds case, so the test's input is validated end to end; (4) the finding is the SENSORY-REWEIGHTING effect: FOAM-surface quiet-standing sway (mean path 167 cm) is about 2.76x FIRM-surface sway (mean 61 cm; this 2.76 is the ratio of group means, while the mean of the per-subject ratios is ~2.9), the difference is overwhelmingly significant (t = 17.3 on 49 df, p ~ 1.6e-22), and foam exceeds firm in ALL 50 of 50 subjects -- because standing on foam degrades ankle PROPRIOCEPTION, the balance system reweights toward vision and vestibular input and sways more; a textbook, rock-solid posturographic result and a core balance / fall-risk concept; (5) a real cohort of 50 subjects, one eyes-open trial per surface each; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "This uses one eyes-open trial per surface per subject and the path-length metric; the BDS also has eyes-closed trials, three trials per condition, and the full Prieto metric set, supporting a two-way (vision x surface) repeated-measures analysis and metric-by-metric effect sizes. The paired foam-vs-firm contrast shown here is the largest and most reliable single effect. Documented, not escalated.", "artifact": "artifacts/pairedt_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.stats.ttest_rel (Python)", "base R stats::t.test(paired=TRUE)"],
+  "status": "validated"
+}

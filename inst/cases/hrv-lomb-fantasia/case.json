@@ -1,0 +1,36 @@
+{
+  "id": "hrv-lomb-fantasia",
+  "title": "The right spectrum for an uneven heartbeat: Lomb-Scargle HRV, checked against scipy",
+  "modality": ["hrv", "spectral", "lomb-scargle", "autonomic", "ecg"],
+  "packages": ["PhysioECG"],
+  "dataset": {
+    "name": "Fantasia Database",
+    "version": "PhysioNet 1.0.0",
+    "record": "young subject f1y01, RR-interval tachogram (8708 beats over ~2 h)",
+    "url": "https://physionet.org/content/fantasia/1.0.0/",
+    "public": true,
+    "citation": "Iyengar N, Peng CK, Morin R, Goldberger AL, Lipsitz LA. Age-related alterations in the fractal scaling of cardiac interbeat interval dynamics. Am J Physiol 1996;271(4):R1078-R1084. Fantasia Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "You cannot FFT a heartbeat series: the RR tachogram is sampled once per beat, so its samples are unevenly spaced in time, and an FFT would need you to interpolate onto a regular grid first -- inventing data. The Lomb-Scargle periodogram is the honest alternative: a least-squares fit of sinusoids to the irregular samples, no interpolation. On a real 2-hour tachogram the ecosystem's ecgHRVfreq(method='lomb') computes it and reads the autonomic balance -- HF-dominant at rest (LF/HF ~ 0.48, HF 67% of the LF+HF power; the HF peak at ~0.30 Hz is the respiratory rhythm). And the estimate is exact: ecgHRVfreq reproduces the canonical scipy.signal.lombscargle to machine precision -- the raw periodogram to a relative ~1e-10 (the floating-point summation floor over 8708 beats), and the integrated VLF/LF/HF band powers to ~7e-11. Same formula, same numbers.",
+  "opdag": ["ecgHRVfreq"],
+  "claims": [
+    { "id": "lf", "statement": "Lomb-Scargle LF-band power (0.04-0.15 Hz) of the real RR tachogram (ms^2)", "value": 908.510093, "artifact": "artifacts/lomb_summary.csv", "status": "PASS" },
+    { "id": "hf", "statement": "Lomb-Scargle HF-band power (0.15-0.4 Hz) -- respiratory/vagal (ms^2)", "value": 1885.641955, "artifact": "artifacts/lomb_summary.csv", "status": "PASS" },
+    { "id": "lf_hf_ratio", "statement": "LF/HF ratio -- the sympatho-vagal balance (HF-dominant when < 1)", "value": 0.481804, "artifact": "artifacts/lomb_summary.csv", "status": "PASS" },
+    { "id": "hf_nu", "statement": "HF power in normalized units (100*HF/(LF+HF)) -- vagal fraction (%)", "value": 67.4853, "artifact": "artifacts/lomb_summary.csv", "status": "PASS" },
+    { "id": "max_diff_periodogram", "statement": "max |ecgHRVfreq Lomb periodogram - scipy.signal.lombscargle| (machine precision, rel ~1e-10)", "value": 3.024e-08, "artifact": "artifacts/lomb_summary.csv", "status": "PASS" },
+    { "id": "max_diff_bandpower", "statement": "max |op band power - scipy-integrated band power| over VLF/LF/HF (machine precision)", "value": 6.935e-11, "artifact": "artifacts/lomb_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "scipy.signal.lombscargle (Virtanen et al. 2020) is the canonical Lomb-Scargle periodogram. ecgHRVfreq(method='lomb') implements the identical formula -- P(w) = [ (sum x cos)^2/sum cos^2 + (sum x sin)^2/sum sin^2 ] / 2 with the standard time-shift tau -- so on the same 512 frequencies and the same mean-detrended RR series it reproduces scipy to machine precision: the raw periodogram to max |diff| ~ 3e-8 on power values ~1e2 (relative ~1e-10, the floating-point summation-order floor over 8708 beats), and the integrated VLF/LF/HF band powers to ~7e-11. The finding: an HF-dominant resting autonomic balance (LF/HF ~ 0.48) recovered on the real tachogram.",
+    "data": "REAL -- Fantasia Database (PhysioNet), young subject f1y01, RR tachogram (8708 beats, ~2 h)",
+    "artifacts": ["artifacts/lomb_summary.csv", "artifacts/lomb_periodogram.csv"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) ecgHRVfreq(method='lomb') reproduces scipy.signal.lombscargle on the real uneven RR tachogram -- periodogram max |diff| ~ 3e-8 (relative ~1e-10) and band-power max |diff| ~ 7e-11; (2) the resting autonomic balance is HF-dominant (LF/HF ~ 0.48, HF 67% of LF+HF, HF peak ~0.30 Hz). HONEST scope: (1) this is a genuine MACHINE-PRECISION cross-tool match, NOT an agreement/convention case -- the op and scipy implement the IDENTICAL Lomb-Scargle formula, so the residual ~3e-8 (periodogram) / ~7e-11 (band powers) is the floating-point summation-order floor over 8708 beats, not a methodological difference; the periodogram's larger absolute residual reflects its larger power values (~1e2), a relative ~1e-10; (2) the Lomb-Scargle periodogram is the CORRECT spectral estimate for the unevenly-sampled tachogram (no interpolation), which is the methodological point of the case; (3) LF/HF and the normalized units are DESCRIPTIVE autonomic-balance indices on a single resting subject -- HF-dominance is the expected healthy-young vagal/respiratory pattern, not a clinical claim; (4) the Task-Force VLF/LF/HF bands and the 512-point 0.003-0.4 Hz grid are the op's fixed settings; (5) single subject, whole-record; run_simulation = FALSE (both periodograms deterministic)."
+  },
+  "open_questions": [
+    { "q": "ecgHRVfreq also offers method='welch' (FFT on an interpolated grid) and method='ar' (Burg autoregressive). Comparing the three spectral estimators on the SAME uneven tachogram -- and quantifying the interpolation bias that Welch introduces but Lomb-Scargle avoids -- would turn this single-method validation into a spectral-estimator study, and extending LF/HF across the Fantasia young-vs-elderly cohort (as the sibling hrv-dfa case does for the fractal exponent) would test the autonomic-aging hypothesis in the frequency domain. Documented, not escalated.", "artifact": "artifacts/lomb_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.signal.lombscargle (Python, SciPy)"],
+  "status": "validated"
+}

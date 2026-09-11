@@ -1,0 +1,8 @@
+"metric","value"
+"dominant_freq_hz",10
+"alpha_power_fraction",0.66434176
+"tfr_corr_vs_mne",0.99976175
+"marginal_corr_vs_mne",0.99990225
+"norm_scale_op_over_mne",0.494067
+"n_freqs",14
+"n_times",1600

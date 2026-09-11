@@ -1,0 +1,36 @@
+{
+  "id": "gait-grf-dynrange-pathology-gaitrec",
+  "title": "Pathological gait flattens the GRF, certified: controls have ~1.9x the vertical-GRF dynamic range of patients (Welch t bit-for-bit vs scipy and base R)",
+  "modality": ["gait", "ground-reaction-force", "pathology", "cohort", "cross-tool-validation"],
+  "packages": ["PhysioAnalysis", "PhysioMoCap"],
+  "dataset": {
+    "name": "GaitRec -- large-scale ground reaction force dataset of healthy and impaired gait", "version": "2020",
+    "record": "vertical GRF (processed, BW- and time-normalised), healthy controls (n=208) vs knee-pathology patients (n=499), shod, standardised speed",
+    "url": "https://doi.org/10.1038/s41597-020-0481-z", "public": true,
+    "citation": "Horsak B, Slijepcevic D, Raberger AM, Schwab C, Worisch M, Zeppelzauer M. GaitRec, a large-scale ground reaction force dataset of healthy and impaired gait. Scientific Data 2020;7:143. doi:10.1038/s41597-020-0481-z."
+  },
+  "proposition": "Healthy walking produces a double-humped vertical ground-reaction force (a loading peak, a mid-stance trough, a push-off peak); pathological gait flattens it. This case certifies that as a group difference on a large real cohort. Each trial's vGRF dynamic range (loading peak minus mid-stance trough) is computed via the certified grfLandmarks; the certified twoSampleTTest compares controls (n=208) and knee-pathology patients (n=499), reproducing BOTH scipy.stats.ttest_ind(equal_var=FALSE) AND base R t.test BIT-FOR-BIT. Controls have a much larger dynamic range (mean 0.367 vs 0.196 BW, ratio ~1.87, t=17.3 on 337 Welch df, p~2.8e-48) -- the flattened GRF of impaired gait, certified inferentially.",
+  "opdag": ["twoSampleTTest"],
+  "claims": [
+    { "id": "t_statistic", "statement": "Welch two-sample t-statistic of control vs patient vGRF dynamic range (positive = control larger)", "value": 17.2622957822, "artifact": "artifacts/grf_summary.csv", "status": "PASS" },
+    { "id": "neg_log10_p", "statement": "-log10(two-sided p): the group difference is overwhelmingly significant", "value": 47.555557, "artifact": "artifacts/grf_summary.csv", "status": "PASS" },
+    { "id": "df", "statement": "Welch-Satterthwaite degrees of freedom", "value": 336.888444, "artifact": "artifacts/grf_summary.csv", "status": "PASS" },
+    { "id": "max_diff_scipy", "statement": "|twoSampleTTest t - scipy.stats.ttest_ind(equal_var=FALSE) t| (bit-exact)", "value": 0, "artifact": "artifacts/grf_summary.csv", "status": "PASS" },
+    { "id": "max_diff_baser", "statement": "|twoSampleTTest t - base R t.test t| (bit-exact)", "value": 0, "artifact": "artifacts/grf_summary.csv", "status": "PASS" },
+    { "id": "control_patient_ratio", "statement": "mean control dynamic range / mean patient dynamic range (the effect size)", "value": 1.8672451045, "artifact": "artifacts/grf_summary.csv", "status": "PASS" },
+    { "id": "control_gt_patient", "statement": "controls have a larger vGRF dynamic range than patients (group means)", "value": 1, "artifact": "artifacts/grf_summary.csv", "status": "PASS" },
+    { "id": "n_total", "statement": "total trials across the two groups", "value": 707, "artifact": "artifacts/grf_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The certified twoSampleTTest op (Welch) is validated against BOTH scipy.stats.ttest_ind(equal_var=FALSE) AND base R t.test on the identical groups -- a double reference. All three compute the Welch t of control minus patient vGRF dynamic range and agree BIT-FOR-BIT (statistic and p, |diff| 0 vs each). The per-trial dynamic ranges come from PhysioMoCap::grfLandmarks (certified in the sibling gait-grf-gaitrec case). The control/patient ratio is reported.",
+    "data": "REAL -- GaitRec (Horsak et al. 2020), processed vertical GRF, healthy controls (n=208) vs knee-pathology patients (n=499)",
+    "artifacts": ["artifacts/grf_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) twoSampleTTest reproduces scipy and base R bit-for-bit on the GRF cohort; (2) pathological gait flattens the vGRF double-hump, a very large group effect. HONEST scope: (1) this REUSES the certified twoSampleTTest op (validated bit-for-bit against scipy.stats.ttest_ind and base R in the sibling age-group-sway-bds case) and the certified grfLandmarks op (validated in the sibling gait-grf-gaitrec case) -- it is a NEW FINDING (an inferential certification), NOT A NEW OP; (2) the Welch t reproduces BOTH scipy.stats.ttest_ind(equal_var=FALSE) AND base R t.test BIT-FOR-BIT (statistic and p, |diff| = 0 vs each); (3) the dynamic range = loading peak minus mid-stance trough, per trial, from the certified GRFLANDMARKS on the body-weight- and time-normalised vertical GRF; (4) the finding: healthy controls (n=208) have a much larger vGRF DYNAMIC RANGE than knee-pathology patients (n=499) -- mean 0.367 vs 0.196 BW, a ratio of about 1.87, t = 17.3 on 337 (Welch) df, p ~ 2.8e-48 -- pathological gait FLATTENs the GRF DOUBLE-HUMP (lower loading and push-off peaks, a raised mid-stance trough), the less dynamic loading of cautious, impaired gait; this turns the sibling case's descriptive landmark means into a certified INFERENTIAL group difference; (5) a real cross-sectional cohort (ASSOCIATION, NOT CAUSATION), one processed vGRF per trial, knee-pathology class only; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "This pools the knee-pathology class vs healthy controls with one processed vGRF per trial; GaitRec spans multiple pathology classes and sessions, supporting per-class effect sizes and a classifier, and the dynamic range is one of several GRF features (peaks, impulses, loading rates). The double-hump dynamic range shown here is the single most interpretable summary of the flattening. Documented, not escalated.", "artifact": "artifacts/grf_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.stats.ttest_ind (Python)", "base R stats::t.test"],
+  "status": "validated"
+}

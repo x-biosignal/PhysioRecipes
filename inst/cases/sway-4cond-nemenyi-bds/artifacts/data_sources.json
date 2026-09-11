@@ -1,0 +1,6 @@
+{
+  "dataset": "BDS -- a public data set of human balance evaluations (Santos & Duarte 2016)",
+  "citation": "Santos DA, Duarte M. A public data set of human balance evaluations. PeerJ 2016;4:e2648. doi:10.7717/peerj.2648.",
+  "doi": "10.7717/peerj.2648", "figshare_article": "3394432", "license": "CC-BY 4.0",
+  "record": "158 x 4 per-subject COP path length (PhysioMoCap::swayMetrics), vision x surface conditions",
+  "reference_packages": ["PMCMRplus::frdAllPairsNemenyiTest", "scikit_posthocs.posthoc_nemenyi_friedman"], "public": true }

@@ -1,0 +1,38 @@
+{
+  "id": "gait-grf-variance-levene-gaitrec",
+  "title": "Pathology flattens AND constrains the GRF, certified: gait-class dynamic-range variances differ (robust Levene p=0.009) though the classical Bartlett test misses it (p=0.079)",
+  "modality": ["gait", "ground-reaction-force", "pathology", "variance", "cross-tool-validation"],
+  "packages": ["PhysioAnalysis", "PhysioMoCap"],
+  "dataset": {
+    "name": "GaitRec -- large-scale ground reaction force dataset of healthy and impaired gait", "version": "2020",
+    "record": "vertical-GRF dynamic range (grfLandmarks); five gait classes: healthy control (n=208), ankle (n=483), knee (n=499), hip (n=364), calcaneus (n=290)",
+    "url": "https://doi.org/10.1038/s41597-020-0481-z", "public": true,
+    "citation": "Horsak B, Slijepcevic D, Raberger AM, Schwab C, Worisch M, Zeppelzauer M. GaitRec, a large-scale ground reaction force dataset of healthy and impaired gait. Scientific Data 2020;7:143. doi:10.1038/s41597-020-0481-z."
+  },
+  "proposition": "The ANOVA/Tukey siblings compared gait-class MEANS of the vertical-GRF dynamic range; this case compares their VARIANCES. The NEWLY-AUTHORED leveneTest (robust Brown-Forsythe) finds the class variances differ (F(4,1839)=3.42, p=0.0086), with healthy controls the most variable (SD 0.128 vs pathology ~0.11), while the classical normality-sensitive Bartlett test does not reach significance (p=0.079). leveneTest reproduces scipy.stats.levene(center='median') and car::leveneTest(center=median) to machine precision. Pathology both flattens the GRF dynamic range (lower mean) and constrains it (lower variance); the two variance tests disagree, showing why the robust Levene is preferred when normality is in doubt.",
+  "opdag": ["leveneTest"],
+  "claims": [
+    { "id": "f_statistic", "statement": "Levene (Brown-Forsythe) F-statistic for variance homogeneity across the five classes", "value": 3.4157175076, "artifact": "artifacts/levene_summary.csv", "status": "PASS" },
+    { "id": "neg_log10_p", "statement": "-log10(Levene p): the class variances differ significantly", "value": 2.064849, "artifact": "artifacts/levene_summary.csv", "status": "PASS" },
+    { "id": "df1", "statement": "between-groups degrees of freedom (k - 1)", "value": 4, "artifact": "artifacts/levene_summary.csv", "status": "PASS" },
+    { "id": "df2", "statement": "within-groups degrees of freedom (N - k)", "value": 1839, "artifact": "artifacts/levene_summary.csv", "status": "PASS" },
+    { "id": "max_diff_scipy", "statement": "|leveneTest F - scipy.stats.levene F| (machine precision, < 1e-9)", "value": 0, "artifact": "artifacts/levene_summary.csv", "status": "PASS" },
+    { "id": "max_diff_car", "statement": "|leveneTest F - car::leveneTest F| (machine precision, < 1e-9)", "value": 0, "artifact": "artifacts/levene_summary.csv", "status": "PASS" },
+    { "id": "bartlett_p", "statement": "classical Bartlett-test p (normality-sensitive): non-significant, for contrast", "value": 0.0790715, "artifact": "artifacts/levene_summary.csv", "status": "PASS" },
+    { "id": "variances_differ", "statement": "the robust Levene test finds the class variances differ (p < 0.05)", "value": 1, "artifact": "artifacts/levene_summary.csv", "status": "PASS" },
+    { "id": "bartlett_disagrees", "statement": "Levene and Bartlett disagree (Bartlett ns while Levene significant)", "value": 1, "artifact": "artifacts/levene_summary.csv", "status": "PASS" },
+    { "id": "n", "statement": "total subjects across the five classes", "value": 1844, "artifact": "artifacts/levene_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored leveneTest op (Levene's test for homogeneity of variance as a one-way ANOVA on absolute deviations from the group median -- the robust Brown-Forsythe variant) is validated against BOTH scipy.stats.levene(center='median') AND car::leveneTest(center=median) on the identical five groups -- a double reference. The F-statistic matches both to machine precision (|diff| ~ 1e-14 / ~1e-15). The classical Bartlett p is reported from base R bartlett.test for contrast. The dynamic ranges come from PhysioMoCap::grfLandmarks (certified in the sibling gait-grf-gaitrec case).",
+    "data": "REAL -- GaitRec (Horsak et al. 2020), vertical-GRF dynamic range, five gait classes (n=1844)",
+    "artifacts": ["artifacts/levene_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) leveneTest reproduces scipy.stats.levene and car::leveneTest to machine precision; (2) the gait-class dynamic-range variances differ, healthy most variable. HONEST scope: (1) this AUTHORS A NEW OP, leveneTest (Levene's test for homogeneity of variance as a one-way ANOVA on absolute deviations from the group median, the robust Brown-Forsythe variant), and reuses the certified grfLandmarks-derived dynamic range from the sibling gait-grf-anova-pathology-gaitrec case; (2) the F-statistic reproduces scipy.stats.levene(center='median') AND car::leveneTest(center=median) to MACHINE PRECISION (|diff| ~ 1e-14 / ~1e-15; both compute the ANOVA on absolute deviations, differing only in floating-point associativity); (3) the finding: the robust Levene test finds the class variances DIFFER -- F(4,1839) = 3.42, p = 0.0086 -- with healthy controls the MOST variable (SD 0.128 vs the pathology classes ~0.11), whereas the classical, normality-sensitive BARTLETT test does NOT reach significance (p = 0.079); the two variance tests DISAGREE, which is exactly why the robust Levene is preferred when normality is in doubt; interpretation: pathology both FLATTENS the GRF dynamic range (lower mean, shown in the sibling folds) and CONSTRAINS it (lower variance), a floor effect on an already-flattened force profile; the ANOVA's equal-variance assumption is thus mildly violated, though its very large omnibus F is robust to that and the Kruskal-based analyses are unaffected; (4) a cross-sectional cohort (ASSOCIATION, NOT causation); Bartlett is reported only for contrast, not as a competing claim; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "Levene (Brown-Forsythe) and Bartlett disagree here because the dynamic range is non-normal and Bartlett is sensitive to that; a fuller treatment would report the distributions' skew and perhaps a permutation variance test. The lower variance in the pathology classes may be a floor effect (a flattened GRF has less room to vary); modelling mean and variance jointly (e.g. a location-scale model) would separate the two. The single robust Levene test shown here is the standard first-line variance-homogeneity check. Documented, not escalated.", "artifact": "artifacts/levene_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.stats.levene(center=median) (Python)", "car::leveneTest(center=median) (R)"],
+  "status": "validated"
+}

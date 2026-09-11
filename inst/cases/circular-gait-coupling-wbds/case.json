@@ -1,0 +1,35 @@
+{
+  "id": "circular-gait-coupling-wbds",
+  "title": "Angles need their own statistics: directional analysis of gait coordination, validated against `circular`",
+  "modality": ["biomechanics", "gait", "coordination", "circular-statistics", "directional"],
+  "packages": ["PhysioCore"],
+  "dataset": {
+    "name": "WBDS -- a public data set of overground and treadmill walking (Fukuchi et al. 2018)",
+    "version": "figshare 5722711",
+    "record": "five subjects (WBDS01-05), treadmill walking; the knee-ankle vector-coding coupling angles (degrees) over one gait cycle (WBDS01: 449 angles)",
+    "url": "https://doi.org/10.6084/m9.figshare.5722711",
+    "public": true,
+    "citation": "Fukuchi CA, Fukuchi RK, Duarte M. A public dataset of overground and treadmill walking kinematics and kinetics in healthy individuals. PeerJ 2018;6:e4640. Data: figshare doi:10.6084/m9.figshare.5722711 (CC-BY 4.0). Vector coding: Needham RA, Naemi R, Chockalingam N. J Biomech 2014."
+  },
+  "proposition": "An angle is not an ordinary number: 0 and 360 degrees are the same point, so the ordinary mean and standard deviation give nonsense, and directional data need their own statistics. In biomechanics this matters directly -- the vector-coding coupling angle describes how two joints co-vary through a movement, and its circular statistics quantify inter-joint coordination: the mean resultant length R-bar (0-1) is the coordination consistency, and the mean direction is the dominant coordination pattern (in-phase, anti-phase, or one joint dominating). On real WBDS walking, the knee-ankle coupling angles over a gait cycle have mean direction 254 degrees and R-bar = 0.195 (weak but significantly non-uniform, Rayleigh p = 3e-8), and the coordination consistency varies across subjects (R-bar 0.06-0.29). The ecosystem's circularSummary reproduces the canonical R `circular` package to machine precision: the mean resultant length matches exactly (|difference| = 0) and the mean direction to 6x10^-14. The directional statistics the ecosystem reports are, to the bit, the field-standard ones.",
+  "opdag": ["circularSummary"],
+  "claims": [
+    { "id": "mean_direction",   "statement": "mean coordination direction of the knee-ankle coupling angles (degrees), WBDS01", "value": 254.32456823, "artifact": "artifacts/circular_summary.csv", "status": "PASS" },
+    { "id": "resultant_length", "statement": "mean resultant length R-bar (coordination consistency, 0-1), the Rayleigh statistic", "value": 0.1952812475, "artifact": "artifacts/circular_summary.csv", "status": "PASS" },
+    { "id": "mean_abs_diff",    "statement": "|circularSummary mean - circular::mean.circular| (machine precision)", "value": 5.68e-14, "artifact": "artifacts/circular_summary.csv", "status": "PASS" },
+    { "id": "rbar_abs_diff",    "statement": "|circularSummary R-bar - circular::rho.circular| (exact)", "value": 0.0, "artifact": "artifacts/circular_summary.csv", "status": "PASS" },
+    { "id": "rbar_mean5",       "statement": "mean resultant length across all five WBDS subjects (robustness)", "value": 0.2093033478, "artifact": "artifacts/circular_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The R `circular` package (Agostinelli & Lund) is the canonical implementation of directional statistics. A correct implementation must reproduce its mean direction and mean resultant length. On the real knee-ankle gait coupling angles, circularSummary matches circular::mean.circular and circular::rho.circular to machine precision (R-bar |diff| = 0, mean direction |diff| = 5.7e-14). The Rayleigh test agrees on strong significance (both p ~ 3e-8); its p-value is an asymptotic approximation whose higher-order series differ slightly between the two libraries.",
+    "data": "REAL -- WBDS (Fukuchi et al. 2018, PeerJ; figshare 5722711, CC-BY 4.0), five subjects of treadmill walking; knee-ankle vector-coding coupling angles",
+    "artifacts": ["artifacts/circular_summary.csv", "artifacts/circular_by_subject.csv"],
+    "all_pass": true,
+    "note": "The reproducible finding is the machine-precision agreement on the definitional circular statistics: mean direction |diff| = 5.7e-14, R-bar |diff| = 0. HONEST scope: (1) the mean direction and R-bar are exactly-defined, so they match the `circular` package to the bit; (2) the Rayleigh test p-value is an ASYMPTOTIC APPROXIMATION -- PhysioCore::rayleighTest and circular::rayleigh.test use slightly different higher-order series, so they agree on strong significance (op p = 3.16e-8 vs circular 3.66e-8) but are NOT bit-identical, and this is reported, not claimed as an exact match; (3) the coupling angles over a full gait cycle are broadly distributed (R-bar ~ 0.20, a weak but significant directional bias), and the coordination consistency genuinely varies across subjects (R-bar 0.06-0.29) -- a real between-subject spread, not noise; (4) run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "R-bar and the mean coupling direction are the raw material of coordination analysis: comparing them between limbs, between groups (via the Watson-Williams test, watsonWilliamsTest), or across the gait cycle (phase-binned coupling-angle distributions, the standard coordination-variability analysis) would turn these validated directional statistics into a coordination study. The between-subject R-bar spread (0.06-0.29) already hints at individual coordination signatures worth testing. Documented, not escalated.", "artifact": "artifacts/circular_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["circular (R, CRAN)"],
+  "status": "validated"
+}

@@ -1,0 +1,128 @@
+---
+title: "Complexity of shape: slope entropy, a newly-authored op, completes the discrete-symbolic trio"
+subtitle: "A worked symbolic-dynamics case study on real EEG, introducing and certifying slopeEntropy"
+categories: [eeg, complexity, slope-entropy, symbolic-dynamics, validated]
+author: "Yusuke Matsui"
+date: "2026-09-07"
+---
+
+> **What this case shows** — the ecosystem's discrete-symbolic entropies read *amplitude patterns*
+> (dispersion) or *increment magnitudes* (increment entropy). **Slope entropy** (Cuesta-Frau 2019) reads
+> the *shape of local trends*: it turns each step into a **slope angle** and sorts it into five classes
+> — steep-up, gentle-up, flat, gentle-down, steep-down — then takes the entropy of the slope patterns.
+> This case introduces a **newly-authored op**, `slopeEntropy`, completing the discrete-symbolic trio.
+> On a real eyes-closed EEG channel it reproduces `NeuroKit2.entropy_slope` **bit-for-bit** (max |diff|
+> ~**9e-16**). It is the ecosystem's **100th registered analysis tool**.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `slopeEntropy(x, dimension, thresholds)` → the slope entropy (bits).
+**Way of thinking** — a slope carries two things at once: a *direction* and a *steepness*. Slope entropy
+keeps both by using a fine threshold (to isolate the flat class) and a coarse one (to split gentle from
+steep), so it reads trend shape where amplitude entropies read level.
+**Ecosystem usage** — `PhysioEEG::slopeEntropy()` with `dispersionEntropy()` and `incrementEntropy()`
+— three complementary discrete-symbolic complexity mechanisms.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, `slopeEntropy` reproduces `NeuroKit2.entropy_slope` bit-for-bit (max
+|diff| ~9e-16) across the embedding dimension; unlike the normalized entropies it INCREASES with
+dimension (1.26 → 2.43 → 3.57), and the signal realizes 18 of the 25 = 5^(m-1) possible slope patterns
+at m = 3.
+
+## Question & goal
+
+**The question is a gap and a domain: the ecosystem's symbolic entropies read amplitude or increment
+magnitude — can we author the slope-angle entropy, reproduce the reference, and characterize the slope
+patterns?** The goal is to introduce `slopeEntropy`, certify it bit-for-bit, and read off the trend
+structure.
+
+## Challenge & approach
+
+Slope entropy maps each first difference to the angle atan(Δx) (degrees), sorts it into five symbols by
+two thresholds (flat within ±0.1°, gentle up to ±45°, steep beyond), embeds into length-(m−1) slope
+patterns, and takes their Shannon entropy. We implement that exactly and check it against
+`NeuroKit2.entropy_slope` across the embedding dimension.
+
+```
+EEG POz (eegmmidb) → Δx → angle atan(Δx)° → {steep±, gentle±, flat} → length-(m-1) patterns → Shannon
+                    vs NeuroKit2.entropy_slope (same pipeline) → bit-exact (~9e-16) for every m
+                    increases with m (1.26 → 2.43 → 3.57);  18 / 25 slope patterns realized (m=3)
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz**, 10 s at 160 Hz — the same git-tracked vector the
+[SVD-entropy](../svd-entropy-eegmmidb/index.qmd), [dispersion](../dispersion-entropy-eegmmidb/index.qmd),
+[fuzzy](../fuzzy-entropy-eegmmidb/index.qmd) and [increment](../increment-entropy-eegmmidb/index.qmd)
+entropy cases use. Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the five slope-angle symbols and their proportions on the POz signal — the flat class dominates (small steps near zero angle), with symmetric gentle- and steep-up/down tails. Right: slope entropy across the embedding dimension — an increasing curve, because SlopEn is an unnormalized Shannon over length-(m-1) patterns, so longer patterns carry more entropy (op equals NeuroKit2 at every m).](artifacts/figure.png)
+
+*How to read this:* the left panel is the alphabet (five slope classes and how often each occurs); the
+right panel is the family across dimension, increasing — the signature of an unnormalized pattern
+entropy.
+
+| Quantity | Value |
+|---|--:|
+| **SlopEn, m = 2** (thresholds 0.1/45°) | **1.26 bits** |
+| **SlopEn, m = 3** | **2.43 bits** |
+| **SlopEn, m = 4** | **3.57 bits** |
+| op vs `NeuroKit2.entropy_slope` (max \|diff\|) | **9e-16** (bit-exact) |
+| slope patterns realized (of 5^(m-1) = 25) | **18** |
+| increasing in dimension | **yes** |
+
+The newly-authored op equals NeuroKit2 at every dimension, and the slope alphabet + increasing family
+characterize the trend structure. Values trace to
+[`artifacts/slope_summary.csv`](artifacts/slope_summary.csv).
+
+## Conclusion
+
+`slopeEntropy` completes the discrete-symbolic complexity trio — amplitude patterns (dispersion),
+increment magnitudes (increment), and now slope shapes — and it is exact: bit-for-bit against NeuroKit2.
+The transferable takeaway: **symbolic complexity is a family of alphabets. Dispersion asks "which
+amplitude bin", increment asks "how big a step", slope asks "how steep a trend" — choose the alphabet
+that matches the structure you care about, and read the pattern entropy over it.**
+
+## Open questions
+
+- Slope entropy's angular thresholds are its knobs (the flat threshold separates plateaus from
+  micro-drift, the steep threshold the fast transitions); sweeping them into a slope-entropy profile and
+  comparing across EEG states would turn the single value into a shape-sensitive fingerprint.
+  *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Slope entropy (trend shape) | `slopeEntropy()` | PhysioEEG |
+| Increment entropy (change magnitude) | `incrementEntropy()` | PhysioEEG |
+| Dispersion entropy (amplitude patterns) | `dispersionEntropy()` | PhysioEEG |
+| Fuzzy entropy (soft template matching) | `fuzzyEntropy()` | PhysioEEG |
+
+**Choosing the parameters.**
+
+- **dimension** — slope patterns have length `dimension - 1` (default m = 3 → 2-symbol patterns); larger
+  m reads longer trend motifs (there are 5^(m-1) possible patterns).
+- **thresholds** — the two positive angle thresholds (default `c(0.1, 45)` degrees): the first isolates
+  the flat class, the second splits gentle from steep; tune them for class separability.
+- **units** — bits (base-2 Shannon), as in `NeuroKit2.entropy_slope`.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioEEG)
+
+slopeEntropy(x, dimension = 3)                    # slope-angle pattern entropy (bits)
+slopeEntropy(x, dimension = 3, thresholds = c(0.5, 30))  # tune the angular alphabet
+# reproduces NeuroKit2.entropy_slope bit-for-bit across the embedding dimension.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/slope_summary.csv`](artifacts/slope_summary.csv), and [`audit.py`](audit.py) re-checks
+SlopEn at m = 2, 3, 4, the bit-exact NeuroKit2 match over the dimension, the slope-pattern count
+(18 / 25), the increasing-in-dimension property, and the honestly-noted scope (newly-authored op;
+machine-precision; unnormalized so it grows with m; value depends on dimension/thresholds).

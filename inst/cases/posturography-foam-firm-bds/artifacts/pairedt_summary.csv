@@ -1,0 +1,11 @@
+"metric","value"
+"t_statistic",17.3168722493
+"neg_log10_p",21.799469
+"df",49
+"max_diff_scipy",0
+"max_diff_baser",0
+"foam_firm_ratio",2.7576590003
+"n_foam_gt_firm",50
+"mean_firm",60.697923
+"mean_foam",167.384174
+"n_subjects",50

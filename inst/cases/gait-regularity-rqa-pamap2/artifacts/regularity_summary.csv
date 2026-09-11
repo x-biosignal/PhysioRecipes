@@ -1,0 +1,8 @@
+"metric","value"
+"walking_DET",0.921
+"walking_ApEn",0.455
+"ironing_DET",0.382
+"ironing_ApEn",1.28
+"running_DET",0.983
+"det_gap_walk_minus_iron",0.539
+"apen_gap_iron_minus_walk",0.825

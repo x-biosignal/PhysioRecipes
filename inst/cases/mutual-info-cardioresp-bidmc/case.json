@@ -1,0 +1,34 @@
+{
+  "id": "mutual-info-cardioresp-bidmc",
+  "title": "The information two signals share: mutual information (a newly-authored op), bit-for-bit against sklearn",
+  "modality": ["cross-modal", "mutual-information", "information-theory", "coupling", "cardiorespiratory"],
+  "packages": ["PhysioCrossModal"],
+  "dataset": {
+    "name": "BIDMC PPG and Respiration Dataset", "version": "PhysioNet 1.0.0",
+    "record": "subject bidmc01, RESP + PLETH decimated 125->25 Hz, 200 s (5001 samples each)",
+    "url": "https://physionet.org/content/bidmc/1.0.0/", "public": true,
+    "citation": "Pimentel MAF et al. Toward a robust estimation of respiratory rate from pulse oximeters. IEEE Trans Biomed Eng 2017;64(8):1914-1923. BIDMC PPG and Respiration Dataset, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "Transfer entropy (the sibling case) measured the DIRECTED coupling of respiration and pulse; mutual information measures the UNDIRECTED, symmetric dependence -- how much information the two signals share, capturing any (nonlinear) statistical relationship. The ecosystem had directed TE, coherence, cross-correlation, and distance correlation, but no general mutual-information op; this case introduces a NEWLY-AUTHORED op, mutualInformation. On real cardiorespiratory signals it reproduces sklearn.metrics.mutual_info_score BIT-FOR-BIT (max |diff| ~5e-16) on the identical binning, and it detects the coupling: the real RESP-PLETH mutual information (0.077 nats) is ~3.2x the histogram estimator's shuffled finite-sample floor (0.024) -- a genuine undirected dependence, the respiratory modulation shared by the two signals.",
+  "opdag": ["mutualInformation"],
+  "claims": [
+    { "id": "mi", "statement": "mutual information of RESP and PLETH (histogram estimator, nats) -- the undirected shared information", "value": 0.07713332, "artifact": "artifacts/mi_summary.csv", "status": "PASS" },
+    { "id": "mi_sklearn", "statement": "sklearn.metrics.mutual_info_score on the identical binning -- matches the op", "value": 0.07713332, "artifact": "artifacts/mi_summary.csv", "status": "PASS" },
+    { "id": "max_diff_sklearn", "statement": "max |mutualInformation - sklearn.metrics.mutual_info_score| (bit-exact)", "value": 4.57967e-16, "artifact": "artifacts/mi_summary.csv", "status": "PASS" },
+    { "id": "mi_shuffled", "statement": "mutual information of RESP vs a SHUFFLED PLETH -- the histogram estimator's finite-sample bias floor", "value": 0.02402727, "artifact": "artifacts/mi_summary.csv", "status": "PASS" },
+    { "id": "ratio", "statement": "real / shuffled MI ratio -- the coupling detected above the finite-sample floor", "value": 3.2102, "artifact": "artifacts/mi_summary.csv", "status": "PASS" },
+    { "id": "n_samples", "statement": "samples per signal (200 s at 25 Hz)", "value": 5001, "artifact": "artifacts/mi_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored mutualInformation op is validated against sklearn.metrics.mutual_info_score. sklearn re-computes the mutual information from the contingency table of the identical equal-width bin labels; the agreement is BIT-FOR-BIT (max |diff| ~5e-16) because both compute I = sum p(x,y) log[p(x,y)/(p(x)p(y))] in nats on the same binning. A seeded shuffled-surrogate control quantifies the histogram estimator's finite-sample bias: the real MI (0.077 nats) is ~3.2x the shuffled floor (0.024).",
+    "data": "REAL -- BIDMC (PhysioNet), subject bidmc01, RESP + PLETH decimated to 25 Hz, 200 s",
+    "artifacts": ["artifacts/mi_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the newly-authored mutualInformation reproduces sklearn.metrics.mutual_info_score bit-for-bit (max |diff| ~5e-16); (2) the real RESP-PLETH MI (0.077 nats) is ~3.2x a shuffled-surrogate floor (0.024). HONEST scope: (1) this op is NEWLY AUTHORED to fill a gap -- the ecosystem had directed transfer entropy, coherence, cross-correlation, and distance correlation, but no general mutual-information op; (2) this is a genuine MACHINE-PRECISION match -- the op and sklearn compute the IDENTICAL contingency-table MI in nats on the same equal-width binning, so the ~5e-16 residual is the floating-point floor, not a convention agreement; (3) this is the HISTOGRAM estimator, which has a POSITIVE finite-sample bias -- the shuffled surrogate (0.024 nats, not 0) quantifies it, and the reproducible finding is that the real dependence (0.077) is ~3.2x ABOVE that floor, NOT the absolute MI value; the KSG/kNN estimator is a less-biased alternative; the MI is in nats (natural log); (4) MI is instantaneous and undirected -- the model-free UNDIRECTED complement of the transfer-entropy fold on the SAME pair; single subject, 200 s; run_simulation = FALSE (the shuffle control is seeded)."
+  },
+  "open_questions": [
+    { "q": "The histogram estimator is bin-count-dependent and positively biased; the KSG/kNN estimator (Kraskov 2004) is less biased and bin-free. Implementing a KSG mutualInformation -- and computing a bias-corrected effective MI (real minus shuffled) across a cohort -- would give an absolute, comparable dependence measure to pair with the directed transfer entropy. Documented, not escalated.", "artifact": "artifacts/mi_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["sklearn.metrics.mutual_info_score (Python)"],
+  "status": "validated"
+}

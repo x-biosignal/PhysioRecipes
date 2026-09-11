@@ -1,0 +1,35 @@
+{
+  "id": "adl-washing-htad",
+  "title": "Can a wrist tell washing from the other home tasks? A small-N recognition of ICF d510",
+  "modality": ["adl", "wearable", "har", "self-care", "icf"],
+  "packages": ["PhysioWearable"],
+  "dataset": {
+    "name": "HTAD: Home-Tasks Activities Dataset (wrist accelerometer + audio)",
+    "version": "figshare 6667532 (Garcia-Ceja et al. 2021)",
+    "record": "wrist accelerometer @ ~31 Hz, 3 subjects, seven home tasks including WASHING HANDS (ICF d510), brushing teeth, eating chips, sweeping, mopping, typing, watching TV",
+    "url": "https://datasets.simula.no/htad/",
+    "public": true,
+    "citation": "Garcia-Ceja E, Thambawita V, Hicks SA, Jha D, Jakobsen P, Hammer HL, Halvorsen P, Riegler MA. HTAD: A Home-Tasks Activities Dataset with Wrist-accelerometer and Audio Features. MMM 2021, LNCS 12573:196-205. doi:10.1007/978-3-030-67835-7_17."
+  },
+  "proposition": "Washing (ICF d510, washing oneself) is the self-care task with no data in the HMP wrist dataset. HTAD is the one public wrist-accelerometer set that labels WASHING HANDS. Under leave-one-subject-out, the ecosystem's HAR pipeline recognises washing at 0.53 recall -- about 3.7x the 0.14 chance level -- across a seven-task home-activity problem, cross-subject. This is a small-N (3 subjects) demonstration that washing is recognisable from a real wrist accelerometer, honestly not a definitive validation.",
+  "opdag": ["adlFeatures", "trainADL", "recognizeADL", "adlToICF"],
+  "claims": [
+    { "id": "washing_recall",   "statement": "washing (d510) leave-one-subject-out recall (chance 0.14)", "value": 0.534, "artifact": "artifacts/summary.csv", "status": "PASS" },
+    { "id": "overall_accuracy", "statement": "7-task leave-one-subject-out accuracy",                      "value": 0.625, "artifact": "artifacts/summary.csv", "status": "PASS" },
+    { "id": "chance_level",     "statement": "chance level (1 / 7 tasks)",                                 "value": 0.143, "artifact": "artifacts/summary.csv", "status": "PASS" },
+    { "id": "n_subjects",       "statement": "subjects in the dataset",                                    "value": 3,     "artifact": "artifacts/summary.csv", "status": "PASS" },
+    { "id": "washing_pcr",      "statement": "washing recall in the per-class table (cross-check)",        "value": 0.534, "artifact": "artifacts/per_class_recall.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The dataset's own per-trial activity labels (ground truth), scored with a strict leave-one-subject-out protocol over all seven home tasks",
+    "data": "REAL -- HTAD wrist accelerometer (Garcia-Ceja et al. 2021), 3 subjects, ~31 Hz",
+    "artifacts": ["artifacts/per_class_recall.csv", "artifacts/summary.csv"],
+    "all_pass": true,
+    "note": "HONEST scope, prominently: N = 3 subjects. Leave-one-subject-out means training on 2 people and testing on the third, so the estimate is noisy -- this is a DEMONSTRATION that washing hands carries a wrist-detectable signature above chance (0.53 vs 0.14, ~3.7x), not a definitive validation. Washing is confusable with the other hand-based tasks (brushing, eating). ICF d510 also covers bathing/showering, which HTAD does not contain; only hand-washing is tested. The coverage registry records this as `HTAD N=3, recall 0.53` so the weak evidence is visible wherever d510 appears."
+  },
+  "open_questions": [
+    { "q": "Three subjects is too few for a definitive washing (d510) validation; a larger labelled wrist-IMU set with bathing/hand-washing would confirm it, and no public wrist dataset yet labels dressing (d540) or toileting (d530). Documented, not escalated.", "artifact": "artifacts/summary.csv", "escalate": null }
+  ],
+  "reference_tools": [],
+  "status": "validated"
+}

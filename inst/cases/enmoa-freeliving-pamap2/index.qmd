@@ -1,0 +1,119 @@
+---
+title: "The accel triad, completed: ENMO-abs, a newly-authored op, bit-for-bit against GGIR"
+subtitle: "A worked accelerometer case study on real free-living data, introducing and certifying computeENMOa"
+categories: [accelerometer, wearable, physical-activity, free-living, validated]
+author: "Yusuke Matsui"
+date: "2026-09-07"
+---
+
+> **What this case shows** — **ENMO** truncates the vector-magnitude-minus-1g to zero, so any dip
+> *below* 1 g — deceleration, partial free-fall, or a persistent calibration offset — is thrown away.
+> **ENMOa** keeps it by taking the absolute value instead. The ecosystem had ENMO and MAD, both
+> GGIR-certified; this case adds the third, **`computeENMOa`**. On a real free-living recording it
+> reproduces `GGIR::g.applymetrics` ENMOa to **machine precision** (max |diff| ~**2e-14 g**), and it
+> shows the consequence: ENMOa exceeds ENMO by **~63 mg** — the sub-1 g movement ENMO discards.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `computeENMOa(accel, sampling_rate, epoch_sec)` → per-epoch mean |r − 1|.
+**Way of thinking** — ENMO's truncation is a deliberate choice: it assumes sub-1 g excursions are
+noise. ENMOa assumes they are movement. On perfectly calibrated data they nearly agree; where they
+diverge, you are seeing either real below-1g dynamics or a calibration offset — either way, worth
+knowing.
+**Ecosystem usage** — `PhysioWearable::computeENMOa()` with `computeENMO()` and `computeMAD()` — the
+three GGIR-certified accelerometer movement metrics.
+:::
+
+## Proposition
+
+On real PAMAP2 hand-accelerometer data (749 epochs of 5 s at 100 Hz), `computeENMOa` reproduces
+`GGIR::g.applymetrics` ENMOa to machine precision (max |diff| ~2e-14 g, r = 1.0); ENMOa ≥ ENMO at every
+epoch and exceeds it by ~63 mg on average (mean 224 vs 162 mg).
+
+## Question & goal
+
+**The question is a gap and its fidelity: the ecosystem had GGIR-certified ENMO and MAD but not ENMOa —
+can we author the always-positive companion and reproduce GGIR exactly, and quantify how much sub-1 g
+movement ENMO discards?** The goal is to introduce `computeENMOa`, certify it against GGIR, and read the
+ENMO/ENMOa gap.
+
+## Challenge & approach
+
+ENMOa per epoch is mean(|r − 1|), where r = √(x²+y²+z²); ENMO is mean(max(r − 1, 0)). They differ only
+where r < 1 g. We compute ENMOa per non-overlapping 5 s epoch, check it against
+`GGIR::g.applymetrics(..., do.enmoa)` on the identical signal, and contrast it with ENMO.
+
+```
+PAMAP2 hand accel (x,y,z @ 100 Hz) → r = √(x²+y²+z²) → per 5 s epoch: ENMOa = mean(|r − 1|)
+                    vs GGIR::g.applymetrics ENMOa (same signal) → machine precision (2e-14 g, r = 1.0)
+                    ENMOa (224 mg) ≥ ENMO (162 mg) everywhere; gap 63 mg = the sub-1 g movement
+```
+
+## Data
+
+**PAMAP2 Physical Activity Monitoring dataset (UCI/PhysioNet)**: subject **101**, hand-worn IMU
+accelerometer (x, y, z in g at 100 Hz), ~62 minutes free-living — the same git-tracked signal the
+[ENMO](../adl-freeliving-pamap2/index.qmd) and [MAD](../mad-freeliving-pamap2/index.qmd) cases use.
+Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: ENMOa (red) and ENMO (blue) per epoch across the recording — ENMOa sits at or above ENMO everywhere, and the band between them is the sub-1 g movement ENMO truncates (means 224 vs 162 mg). Right: computeENMOa versus GGIR g.applymetrics ENMOa, one point per epoch, all on the identity line — machine precision (max |diff| ~2e-14 g, r = 1.0).](artifacts/figure.png)
+
+*How to read this:* the left panel is what ENMOa adds over ENMO (the below-1g band); the right panel is
+the certification — the newly-authored op lies exactly on the field-standard GGIR.
+
+| Quantity | Value |
+|---|--:|
+| op vs `GGIR::g.applymetrics` ENMOa (max \|diff\|) | **2e-14 g** (bit-exact) |
+| correlation across epochs | **1.000** |
+| epochs certified | **749** |
+| **mean ENMOa** | **224 mg** |
+| ENMOa ≥ ENMO at every epoch | **yes** |
+| mean ENMOa − mean ENMO | **63 mg** (sub-1 g movement) |
+
+The newly-authored op matches GGIR at every epoch, and the ENMO/ENMOa gap quantifies the below-1g
+movement. Values trace to [`artifacts/enmoa_summary.csv`](artifacts/enmoa_summary.csv).
+
+## Conclusion
+
+`computeENMOa` completes the accel movement triad — ENMO, MAD and now ENMOa, each GGIR-certified — and
+it is exact: bit-for-bit against GGIR across a full free-living recording. The transferable takeaway:
+**ENMO's truncation is an assumption, not a law. Report ENMOa alongside ENMO when calibration is
+uncertain — the gap between them is exactly the sub-1 g movement ENMO chooses to ignore.**
+
+## Open questions
+
+- With ENMO, ENMOa and MAD all GGIR-certified, the natural next step is auto-calibration: an
+  ENMOa-vs-ENMO gap can flag a calibration offset on uncalibrated data, turning the pair into a
+  data-quality signal. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| ENMO-abs (retains sub-1g) | `computeENMOa()` | PhysioWearable |
+| Euclidean norm minus one | `computeENMO()` | PhysioWearable |
+| Mean amplitude deviation | `computeMAD()` | PhysioWearable |
+
+**Choosing the parameters.**
+
+- **epoch_sec** — aggregation window (here 5 s, the GGIR default).
+- **sampling_rate** — required when `epoch_sec` is set (here 100 Hz).
+- **unit** — `"g"` (default) or `"mg"`.
+- **when to prefer ENMOa** — uncalibrated data, or when sub-1 g dynamics matter; otherwise ENMO's
+  truncation suppresses gravity-residual noise.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioWearable)
+
+enmoa <- computeENMOa(accel, sampling_rate = 100, epoch_sec = 5)   # per-epoch |r-1| (g)
+# reproduces GGIR::g.applymetrics ENMOa to machine precision; ENMOa >= computeENMO().
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/enmoa_summary.csv`](artifacts/enmoa_summary.csv), and [`audit.py`](audit.py) re-checks the
+bit-exact GGIR agreement (max |diff|, correlation), the epoch count, the mean ENMOa, the ENMOa ≥ ENMO
+relationship and the sub-1g gap, and the honestly-noted scope (newly-authored op; machine-precision;
+ENMOa a physical quantity completing the ENMO+MAD+ENMOa triad).

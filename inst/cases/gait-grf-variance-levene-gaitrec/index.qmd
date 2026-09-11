@@ -1,0 +1,121 @@
+---
+title: "Pathology flattens and constrains the GRF, certified: gait-class variances differ (robust Levene), though the classical test misses it"
+subtitle: "A variance-homogeneity check — and a lesson in why the robust test is the one to trust"
+categories: [gait, ground-reaction-force, pathology, variance, validated]
+author: "Yusuke Matsui"
+date: "2026-09-11"
+---
+
+> **What this case shows** — the [ANOVA](../gait-grf-anova-pathology-gaitrec/index.qmd) and
+> [Tukey](../gait-grf-tukey-pathology-gaitrec/index.qmd) siblings compared gait-class *means* of the
+> vertical-GRF dynamic range. Do the classes also differ in *variance* — is gait more or less consistent
+> with pathology? The **newly-authored** `leveneTest` (robust Brown-Forsythe) says **yes** (F(4,1839)=3.42,
+> **p=0.009**), with healthy controls the **most variable** (SD 0.13 vs pathology ~0.11) — while the
+> classical, normality-sensitive **Bartlett** test **misses it** (p=0.079). `leveneTest` reproduces
+> **`scipy.stats.levene`** and **`car::leveneTest`** to machine precision. Pathology both flattens the GRF
+> **and** constrains its variability.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — the grouped feature → `leveneTest(center="median")` → read F and p.
+**Way of thinking** — equal-variance is an assumption, not a given; test it, and use the *robust* test
+(Brown-Forsythe, median-centred) when the data is skewed. When the robust and classical tests disagree,
+trust the robust one — the classical Bartlett is powerful but fragile to non-normality.
+**Ecosystem usage** — `PhysioMoCap::grfLandmarks()` (via the sibling), `PhysioAnalysis::leveneTest()`.
+:::
+
+## Proposition
+
+The five GaitRec gait classes differ in the variance of their vertical-GRF dynamic range: robust Levene
+F(4,1839)=3.42, p=0.0086 (healthy controls most variable), while Bartlett gives p=0.079; `leveneTest`
+reproduces `scipy.stats.levene(center='median')` and `car::leveneTest(center=median)` to machine precision.
+
+## Question & goal
+
+**The question is dispersion, and the right test for it: do the classes differ in how variable the dynamic
+range is?** The mean-comparison folds assumed equal variance; this fold checks that assumption and asks a new
+biological question about the consistency of gait.
+
+## Challenge & approach
+
+We take the same certified per-subject dynamic range for the five classes and run `leveneTest` (Brown-Forsythe,
+median-centred) — a one-way ANOVA on the absolute deviations from each class's median — checking F against
+`scipy.stats.levene` and `car::leveneTest`, and reporting the classical Bartlett p for contrast.
+
+```
+GaitRec dynamic range, 5 classes (n=1844) → leveneTest (center=median)
+  per-class SD:  HC 0.128 > K 0.115 ~ H 0.115 > C 0.110 ~ A 0.109
+  Levene (robust)    F(4,1839) = 3.42,  p = 0.0086   -> variances DIFFER
+  Bartlett (classical)             p = 0.079    -> not significant (disagrees!)
+     vs scipy.stats.levene(center=median)  → |diff| ~ 1e-14
+     vs car::leveneTest(center=median)     → |diff| ~ 1e-14
+```
+
+## Data
+
+**GaitRec (Horsak et al. 2020)**: the vertical-GRF dynamic range for the five gait classes — healthy control
+(n=208), ankle (n=483), knee (n=499), hip (n=364), calcaneus (n=290). Same cohort as the ANOVA/Tukey
+siblings. Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: per-class SD of the dynamic range — healthy controls are the most variable (0.13 BW), the four pathology classes tighter (~0.11). Right: the two variance tests — the robust Levene clears the p=0.05 line (p=0.009) while the classical Bartlett does not (p=0.079). They disagree.](artifacts/figure.png)
+
+*How to read this:* left — pathology not only lowers the mean dynamic range (earlier folds) but tightens its
+spread. Right — the choice of variance test matters: the robust Levene detects the heterogeneity the
+normality-sensitive Bartlett misses.
+
+| Quantity | Value |
+|---|--:|
+| **Levene F** (df 4, 1839) | **3.42** (p = 0.0086) |
+| Bartlett p (classical) | 0.079 (ns) |
+| healthy / pathology SD | 0.128 / ~0.11 |
+| n | 1844 |
+| vs `scipy.stats.levene` (\|diff\|) | **< 1e-9** (~1e-14) |
+| vs `car::leveneTest` (\|diff\|) | **< 1e-9** (~1e-14) |
+
+The F equals both references to machine precision. Values trace to
+[`artifacts/levene_summary.csv`](artifacts/levene_summary.csv).
+
+## Conclusion
+
+`leveneTest` reproduces the reference on the certified dynamic range. The transferable takeaway: **test
+equal-variance with the robust Levene, not just the classical Bartlett — here they disagree, and the robust
+test wins. Biologically, impaired gait is not only flatter but more stereotyped: the pathology classes vary
+less than healthy controls, a floor effect on an already-flattened force profile.**
+
+## Open questions
+
+- Levene and Bartlett disagree because the dynamic range is non-normal (Bartlett is sensitive to that); the
+  lower pathology variance may be a floor effect, which a joint location-scale model would separate from a
+  genuine consistency difference. The single robust Levene test is the standard first-line variance check.
+  *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| GRF landmarks (dynamic range) | `grfLandmarks()` | PhysioMoCap |
+| Homogeneity of variance (robust) | `leveneTest()` | PhysioAnalysis |
+| One-way ANOVA (means) | `oneWayAnova()` | PhysioAnalysis |
+
+**Reading the result.**
+
+- **center = "median"** — the Brown-Forsythe variant, robust to non-normality; prefer it over the
+  mean-centred classic Levene and over Bartlett when the data may be skewed.
+- **disagreement** — if Bartlett and Levene conflict, suspect non-normality and report the robust Levene.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis)
+
+leveneTest(list(HC = hc_dr, Ankle = a_dr, Knee = k_dr, Hip = h_dr, Calcaneus = c_dr), center = "median")
+# F, p, df -- machine precision vs scipy.stats.levene and car::leveneTest  (use PhysioAnalysis:: if car is attached)
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/levene_summary.csv`](artifacts/levene_summary.csv), and [`audit.py`](audit.py) re-checks the
+Levene F, its p and df, the machine-precision match against scipy and car, the robust-vs-classical
+disagreement with Bartlett, the healthy-most-variable pattern, the sample size, and the honestly noted scope
+(authors the new leveneTest op; dynamic range from the certified grfLandmarks; Bartlett for contrast only;
+cross-sectional association).

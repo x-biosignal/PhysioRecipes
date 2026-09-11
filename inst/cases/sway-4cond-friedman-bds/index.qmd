@@ -1,0 +1,132 @@
+---
+title: "The posturographic sensory hierarchy, certified: sway rises monotonically Open-Firm < Closed-Firm < Open-Foam < Closed-Foam"
+subtitle: "The 2×2 vision × surface balance design, tested correctly for repeated measures on 158 subjects"
+categories: [posturography, balance, vision, proprioception, validated]
+author: "Yusuke Matsui"
+date: "2026-09-10"
+---
+
+> **What this case shows** — standing balance leans on vision and on proprioception (the foot/ankle sense of
+> the surface). The BDS challenges both in a 2×2 design — eyes open/closed × firm/foam — measured on *every*
+> subject. Because the four conditions are repeated measures, the right omnibus test is the non-parametric
+> **Friedman** test. Each subject's mean COP path length per condition comes from the **certified**
+> `swayMetrics`; the **newly-authored** `friedmanTest` compares the four conditions across 158 subjects,
+> reproducing base R **`friedman.test`** **bit-for-bit** and **`scipy.stats.friedmanchisquare`** to machine
+> precision. The conditions differ overwhelmingly (**Q(3)=420, p~1e-90**) in a **monotone** order:
+> **Open-Firm < Closed-Firm < Open-Foam < Closed-Foam**.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — one `swayMetrics()` value per subject per condition → a subjects × conditions matrix → `friedmanTest()`.
+**Way of thinking** — when the same people are measured under every condition, the conditions are *paired*:
+use a repeated-measures test, not a between-groups one. Ranking within each subject removes between-subject
+scale differences and asks the sharper question — *within a person*, which condition sways more?
+**Ecosystem usage** — `PhysioMoCap::swayMetrics()`, `PhysioAnalysis::friedmanTest()`.
+:::
+
+## Proposition
+
+Across 158 subjects measured under all four conditions, COP path length differs (Friedman Q=420.1 on 3 df,
+p~9.7e-91) with a monotone mean-rank order Open-Firm (1.31) < Closed-Firm (1.69) < Open-Foam (3.08) <
+Closed-Foam (3.92); `friedmanTest` reproduces base R `friedman.test` bit-for-bit and
+`scipy.stats.friedmanchisquare` to machine precision.
+
+## Question & goal
+
+**The question is the sensory hierarchy and the right test for it: do the four vision × surface conditions
+differ, in what order, and does the certified test reproduce the reference?** The Romberg case
+([romberg-vision-sway-bds](../romberg-vision-sway-bds/index.qmd)) left open how the sensory contributions
+combine across the full 2×2 design; because the conditions are within-subject, this fold answers it with the
+correct repeated-measures omnibus.
+
+## Challenge & approach
+
+For every subject who completed all four conditions we take the mean COP path length per condition (from
+`swayMetrics`, certified against the Prieto reference in the
+[sway-posturography-bds](../sway-posturography-bds/index.qmd) case), assemble the 158 × 4 matrix, and test
+it with `friedmanTest`, checking the omnibus Q and p against `scipy.stats.friedmanchisquare` and base R.
+
+```
+158 subjects × 4 conditions (swayMetrics path length, certified)
+  mean path length (cm):  Open-Firm 60  ·  Closed-Firm 66  ·  Open-Foam 177  ·  Closed-Foam 222
+  mean rank:              1.31          <  1.69           <  3.08           <  3.92
+  friedmanTest → Q(3) = 420.1, p ~ 9.7e-91
+     vs base R friedman.test          → |diff| = 0 (bit-for-bit)
+     vs scipy.stats.friedmanchisquare → |diff| ~ 6e-14 (machine precision)
+```
+
+## Data
+
+**Santos & Duarte (2016) BDS balance dataset (figshare)**: force-plate COP at 100 Hz, 60 s quiet standing,
+2×2 vision (open/closed) × surface (firm/foam); the 158 subjects with all four conditions (complete blocks),
+one per-subject mean per condition. Details in [`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: COP path length by condition (log scale, n=158) — firm ground sits near 60 cm whether the eyes are open or closed, then foam roughly triples it (177–222 cm), eyes-closed foam worst. Right: the Friedman mean ranks — a clean monotone ladder Open-Firm (1.31) → Closed-Firm (1.69) → Open-Foam (3.08) → Closed-Foam (3.92), Q(3)=420, p~1e-90.](artifacts/figure.png)
+
+*How to read this:* left — the surface dominates: softening it (foam) dwarfs closing the eyes. Right — the
+rank ladder is monotone, and the steps are uneven: the firm→foam jump (~1.4 ranks) is far larger than the
+open→closed jump (~0.4), so proprioception carries more of quiet standing than vision does — until the
+surface is unreliable, when vision takes over (the Open-Foam → Closed-Foam step).
+
+| Condition | mean path length (cm) | mean rank |
+|---|--:|--:|
+| Open-Firm | 60 | 1.31 |
+| Closed-Firm | 66 | 1.69 |
+| Open-Foam | 177 | 3.08 |
+| Closed-Foam | 222 | 3.92 |
+| **Friedman Q** (df 3) | **420.1** | |
+| −log₁₀ p | 90.0 (p ~ 9.7e-91) | |
+| vs base R `friedman.test` (\|diff\|) | **0** (bit-for-bit) | |
+| vs `scipy.stats.friedmanchisquare` (\|diff\|) | **< 1e-9** (~6e-14) | |
+
+The omnibus test equals base R exactly and scipy to machine precision. Values trace to
+[`artifacts/sway_friedman_summary.csv`](artifacts/sway_friedman_summary.csv).
+
+## Conclusion
+
+`friedmanTest`, the within-subject counterpart of the certified `oneWayAnova`, reproduces the reference on
+the certified `swayMetrics`. The transferable takeaway: **when the same people are measured under every
+condition, rank within subject and test with Friedman. Doing so here reveals a clean sensory hierarchy —
+firm ground needs little vision, foam roughly triples sway, and eyes-closed foam is worst — quantifying how
+standing balance re-weights proprioception and vision as each is challenged.**
+
+## Open questions
+
+- The omnibus certifies the four conditions differ, in a monotone order; post-hoc pairwise tests (Nemenyi /
+  Conover) would establish which specific pairs differ, and a two-way vision × surface analysis with an
+  interaction term would test directly whether vision matters more on foam than on firm ground (the pattern
+  the ranks suggest). The Friedman omnibus is the correct first-line repeated-measures test. *Documented,
+  not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Posturography sway metrics | `swayMetrics()` | PhysioMoCap |
+| Friedman repeated-measures omnibus | `friedmanTest()` | PhysioAnalysis |
+| One-way ANOVA / t-tests (between-subjects) | `oneWayAnova()`, `twoSampleTTest()` | PhysioAnalysis |
+
+**Reading the result.**
+
+- **mean rank** — the average within-subject rank of a condition (1 = least sway for that person); the
+  ladder gives the sensory hierarchy directly.
+- **repeated measures** — because every subject sees every condition, use Friedman (or repeated-measures
+  ANOVA), not a between-groups test; ranking within subject cancels between-subject scale differences.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioMoCap); library(PhysioAnalysis)
+
+# one swayMetrics path length per subject per condition -> subjects x conditions matrix M
+M <- sapply(conditions, function(cnd) sapply(subjects, function(s) swayMetrics(cop[[s]][[cnd]], 100)$path_length))
+friedmanTest(M)   # tie-corrected chi-square, p, df -- bit-for-bit vs base R, machine-precision vs scipy
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/sway_friedman_summary.csv`](artifacts/sway_friedman_summary.csv), and [`audit.py`](audit.py)
+re-checks the omnibus Q, p and df, the bit-exact match against base R and the machine-precision match against
+scipy, the per-condition mean ranks and the monotone ordering, the design sizes, and the honestly noted scope
+(authors the new friedmanTest op; path length from the certified swayMetrics; repeated-measures design;
+cross-sectional association).

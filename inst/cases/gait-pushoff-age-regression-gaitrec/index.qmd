@@ -1,0 +1,124 @@
+---
+title: "Healthy-aging propulsion decline, certified: the vertical-GRF push-off peak falls ~0.012 BW per decade"
+subtitle: "From correlation to a rate — a simple OLS slope on 208 healthy adults"
+categories: [gait, ground-reaction-force, aging, cohort, validated]
+author: "Yusuke Matsui"
+date: "2026-09-11"
+---
+
+> **What this case shows** — push-off (the propulsive second hump of the vertical GRF, driven chiefly by the
+> ankle plantarflexors) weakens with age. The [Kruskal-Wallis
+> sibling](../gait-grf-pushoff-kruskal-gaitrec/index.qmd) showed push-off separates gait pathologies; here
+> we ask, within *healthy* adults, how fast it declines with age. Each subject's push-off peak comes from
+> the **certified** `grfLandmarks`; the **newly-authored** `linearRegression` regresses it on age,
+> reproducing **`scipy.stats.linregress`** **bit-for-bit** and base R **`lm`** to machine precision. The
+> slope is **−0.012 BW per decade** (t(206)=−4.6, **p~7e-6**, R²=0.094) — a modest but highly significant
+> healthy-aging propulsion decline.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `grfLandmarks()` per subject → push-off peak → `linearRegression(age, push_off)`.
+**Way of thinking** — a correlation says *whether* two things move together; a regression slope says *how
+fast*. Reporting the slope in interpretable units (BW per decade) turns an association into an actionable
+rate — and the R² keeps you honest about how much it explains.
+**Ecosystem usage** — `PhysioMoCap::grfLandmarks()`, `PhysioAnalysis::linearRegression()`.
+:::
+
+## Proposition
+
+In GaitRec healthy controls (n=208, ages 15-78), the vertical-GRF push-off peak declines with age at slope
+−0.00120 BW/year (−0.012 BW/decade; intercept 1.144 BW), t(206)=−4.61, p~7.0e-6, R²=0.094;
+`linearRegression` reproduces `scipy.stats.linregress` bit-for-bit and base R `lm` to machine precision.
+
+## Question & goal
+
+**The question is a rate and the op that measures it: within healthy adults, how fast does push-off
+propulsion decline with age, and does a simple OLS regression reproduce the reference?** The sibling folds
+compared groups; this one fits a line and reads off its slope.
+
+## Challenge & approach
+
+For each healthy control we take the push-off peak (the 3rd landmark of `grfLandmarks`, certified in the
+[gait-grf-gaitrec](../gait-grf-gaitrec/index.qmd) case) from the body-weight- and time-normalised vertical
+GRF, pair it with the subject's age, and fit `linearRegression` — checking the slope, R² and slope p-value
+against `scipy.stats.linregress` and base R `lm`.
+
+```
+GaitRec healthy controls (n=208, ages 15-78): grfLandmarks push-off peak vs age
+  OLS: push_off = 1.144 - 0.00120 * age   (BW)      →  -0.012 BW / decade
+  t(206) = -4.61,  p ~ 7.0e-6,  R2 = 0.094
+     vs scipy.stats.linregress → |diff| = 0 (bit-for-bit)
+     vs base R lm              → |diff| ~ 1e-18 (machine precision)
+```
+
+## Data
+
+**GaitRec (Horsak et al. 2020)**: vertical-GRF push-off peak and age for the healthy controls (n=208, ages
+15-78), shod, standardised speed, baseline sessions (one per-subject mean curve). Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Push-off peak vs age for 208 healthy controls, with the OLS fit (red) and its 95% confidence band. The line slopes gently down — −0.012 BW per decade — and the scatter is wide (R²=0.094): age shifts the average push-off but explains under a tenth of the between-person variance. The fit equals scipy.stats.linregress and base R lm.](artifacts/figure.png)
+
+*How to read this:* the downward slope is the healthy-aging propulsion decline, small per year but highly
+significant across the cohort; the wide scatter (low R²) is the honest caveat — age is one modest
+contributor among many to how hard a given person pushes off.
+
+| Quantity | Value |
+|---|--:|
+| **slope** | **−0.00120 BW/year** (−0.012 /decade) |
+| intercept | 1.144 BW |
+| **R²** | **0.094** |
+| t (df 206) | −4.61 |
+| −log₁₀ p | 5.2 (p ~ 7.0e-6) |
+| n (healthy controls) | 208 |
+| vs `scipy.stats.linregress` (\|diff\|) | **0** (bit-for-bit) |
+| vs base R `lm` (\|diff\|) | **< 1e-9** (~1e-18) |
+
+The fit equals scipy exactly and base R to machine precision. Values trace to
+[`artifacts/pushoff_age_regression_summary.csv`](artifacts/pushoff_age_regression_summary.csv).
+
+## Conclusion
+
+`linearRegression` reproduces the reference on the certified `grfLandmarks`. The transferable takeaway:
+**report the slope, not just the correlation — "push-off falls ~0.012 BW per decade" is a rate a clinician
+can use, while the R² (0.094) keeps the claim honest about scatter. Reducing a force curve to a certified
+landmark and fitting one line turns healthy aging into a measured propulsion trajectory.**
+
+## Open questions
+
+- The healthy-control age distribution is young-skewed (only 2 subjects over 70), so a single linear slope
+  may understate the decline at older ages where ankle push-off power drops more steeply; denser older
+  sampling or a spline fit would refine the trajectory. The analysis is cross-sectional, not longitudinal.
+  The linear slope is the most interpretable first-order rate. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| GRF landmarks (peaks, trough) | `grfLandmarks()` | PhysioMoCap |
+| Simple OLS regression | `linearRegression()` | PhysioAnalysis |
+| Correlation (r) | `correlationTest()` | PhysioAnalysis |
+
+**Reading the result.**
+
+- **slope** — the change in the outcome per unit predictor; report it in interpretable units (here BW per
+  decade) with its p-value.
+- **R²** — the fraction of variance explained; a significant slope with a small R² (as here) means a real
+  but modest effect against wide individual variation — say so.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioMoCap); library(PhysioAnalysis)
+
+push_off <- apply(hc_vGRF, 1, function(v) grfLandmarks(v)[3])   # 3rd landmark = push-off peak
+linearRegression(age, push_off)   # slope, intercept, R2, t, p -- bit-for-bit vs scipy.stats.linregress and base R lm
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/pushoff_age_regression_summary.csv`](artifacts/pushoff_age_regression_summary.csv), and
+[`audit.py`](audit.py) re-checks the slope, intercept, R², the slope t and p, the bit-exact match against
+scipy and the machine-precision match against base R lm, the negative-slope direction, the sample size, and
+the honestly noted scope (authors the new linearRegression op; push-off from the certified grfLandmarks;
+young-skewed ages; cross-sectional association, not longitudinal change).

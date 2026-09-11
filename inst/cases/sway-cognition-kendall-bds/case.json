@@ -1,0 +1,37 @@
+{
+  "id": "sway-cognition-kendall-bds",
+  "title": "The cognitive-motor link, certified: slower processing speed tracks more postural sway (Kendall's tau-b bit-for-bit vs scipy.stats.kendalltau and base R)",
+  "modality": ["posturography", "balance", "cognition", "cohort", "cross-tool-validation"],
+  "packages": ["PhysioAnalysis", "PhysioMoCap"],
+  "dataset": {
+    "name": "BDS -- a public data set of human balance evaluations (Santos & Duarte 2016)", "version": "2016",
+    "record": "per subject: Trail Making Test part A time (s) + eyes-closed-foam COP path length (cm); n=158",
+    "url": "https://doi.org/10.7717/peerj.2648", "public": true,
+    "citation": "Santos DA, Duarte M. A public data set of human balance evaluations. PeerJ 2016;4:e2648. doi:10.7717/peerj.2648."
+  },
+  "proposition": "Postural control draws on attention and executive function -- the cognitive-motor link. In the BDS cohort (n=158), slower Trail Making Test A time (worse processing speed) is associated with more eyes-closed-foam sway. Each subject's sway comes from the certified swayMetrics; the NEWLY-AUTHORED kendallTau -- Kendall's tau-b, the concordance-based rank correlation (the third method after Pearson's r and Spearman's rho) -- measures the association, reproducing base R stats::cor.test(method='kendall') AND scipy.stats.kendalltau BIT-FOR-BIT. tau-b = 0.368, z = 6.85, p ~ 7.2e-12; on the same data Pearson r = 0.335 and Spearman rho = 0.532, so the relation is more monotonic than linear -- which is why a rank correlation is preferred.",
+  "opdag": ["kendallTau"],
+  "claims": [
+    { "id": "tau_statistic", "statement": "Kendall's tau-b of eyes-closed-foam sway vs TMT-A processing speed", "value": 0.3676316474, "artifact": "artifacts/sway_cognition_kendall_summary.csv", "status": "PASS" },
+    { "id": "neg_log10_p", "statement": "-log10(two-sided p): the cognitive-motor association is highly significant", "value": 11.14537, "artifact": "artifacts/sway_cognition_kendall_summary.csv", "status": "PASS" },
+    { "id": "z_statistic", "statement": "normal-approximation z-statistic of the tau-b test", "value": 6.854518, "artifact": "artifacts/sway_cognition_kendall_summary.csv", "status": "PASS" },
+    { "id": "max_diff_scipy", "statement": "|kendallTau tau-b - scipy.stats.kendalltau tau-b| (bit-for-bit)", "value": 0, "artifact": "artifacts/sway_cognition_kendall_summary.csv", "status": "PASS" },
+    { "id": "max_diff_baser", "statement": "|kendallTau tau-b - base R cor.test(kendall) tau-b| (bit-for-bit)", "value": 0, "artifact": "artifacts/sway_cognition_kendall_summary.csv", "status": "PASS" },
+    { "id": "tau_positive", "statement": "the association is positive (slower TMT-A -> more sway)", "value": 1, "artifact": "artifacts/sway_cognition_kendall_summary.csv", "status": "PASS" },
+    { "id": "pearson_r", "statement": "Pearson r on the same data (context: linear correlation)", "value": 0.335287, "artifact": "artifacts/sway_cognition_kendall_summary.csv", "status": "PASS" },
+    { "id": "spearman_rho", "statement": "Spearman rho on the same data (the rank-correlation trio agrees, monotonic > linear)", "value": 0.531679, "artifact": "artifacts/sway_cognition_kendall_summary.csv", "status": "PASS" },
+    { "id": "n", "statement": "subjects with both sway and TMT-A (complete pairs)", "value": 158, "artifact": "artifacts/sway_cognition_kendall_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored kendallTau op (Kendall's tau-b, concordance-based, tie-corrected, with the normal-approximation p-value) is validated against BOTH scipy.stats.kendalltau AND base R stats::cor.test(method='kendall') on the identical (TMT-A, sway) pairs -- a double reference. All three compute the same tie-corrected tau-b and the same normal-approximation p, and they agree BIT-FOR-BIT (|diff| = 0 vs each). The per-subject eyes-closed-foam sway comes from PhysioMoCap::swayMetrics (path_length, certified against Prieto in the sibling sway-posturography-bds case). Pearson r and Spearman rho are reported on the same data for context.",
+    "data": "REAL -- Santos & Duarte (2016) BDS; Trail Making Test A time vs eyes-closed-foam COP path length, n=158",
+    "artifacts": ["artifacts/sway_cognition_kendall_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) kendallTau reproduces scipy.stats.kendalltau and base R cor.test(method='kendall') bit-for-bit; (2) slower cognitive processing speed tracks more postural sway. HONEST scope: (1) this AUTHORS A NEW OP, kendallTau (Kendall's tau-b, the third rank-correlation method after Pearson's r and Spearman's rho in correlationTest), and reuses the certified swayMetrics op (path_length, validated against Prieto in the sibling sway-posturography-bds case) for the eyes-closed-foam sway; (2) the tau-b statistic AND the normal-approximation p reproduce base R stats::cor.test(method='kendall') AND scipy.stats.kendalltau BIT-FOR-BIT (|diff| = 0 vs each; the same concordance + tie-corrected variance formula in all three); (3) the finding: slower Trail Making Test A time (worse visual attention / processing speed) is associated with MORE eyes-closed-foam sway -- tau-b = 0.368, z = 6.85, p ~ 7.2e-12 (n=158) -- a moderate, highly significant cognitive-motor association; on the same data Pearson r = 0.335 and Spearman rho = 0.532, so the association is more MONOTONIC than linear (both variables are right-skewed), which is exactly why a rank correlation is preferred here; (4) HONEST LIMITS: this is a MARGINAL (unadjusted) association -- age is a shared correlate (older subjects tend to have both slower TMT and more sway), so a partial / age-adjusted analysis is the natural next step to separate a direct cognitive-motor link from age confounding; a cross-sectional ASSOCIATION, NOT causation; one per-subject value; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "The association is marginal (unadjusted); age is a shared correlate of both slower TMT and more sway, so a partial correlation or multiple regression adjusting for age would separate a direct cognitive-motor link from age confounding. TMT-B (set-shifting) and dual-task paradigms would probe executive control specifically. The single tau-b shown here is the robust first-line rank correlation. Documented, not escalated.", "artifact": "artifacts/sway_cognition_kendall_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.stats.kendalltau (Python)", "base R stats::cor.test(method='kendall')"],
+  "status": "validated"
+}

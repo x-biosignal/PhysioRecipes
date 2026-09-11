@@ -1,0 +1,10 @@
+{
+  "dataset": "EEG Motor Movement/Imagery Database (eegmmidb)",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples) -- the SAME git-tracked vector the Jarque-Bera, signal-moments and Katz cases use.",
+  "pipeline": "readRDS(eeg_poz_s002r02) -> PhysioAnalysis::ksNormalityTest: the Kolmogorov-Smirnov D = sup|ECDF - fitted normal CDF|, with the two-sided asymptotic p-value. The reference re-computes the D statistic with BOTH scipy.stats.kstest and base R ks.test (normal fitted to the sample), and computes jarqueBeraTest on the same signal. Deterministic.",
+  "note": "ksNormalityTest is a NEW empirical-CDF (distribution-shape) normality test, complementary to the moment-based jarqueBeraTest. Its D statistic reproduces BOTH scipy.stats.kstest AND base R ks.test BIT-FOR-BIT (max |diff| ~4e-17 vs each) -- D is an unambiguous order statistic (a max over the sorted sample). Finding: on the SAME POz EEG, KS does NOT reject normality (D=0.026, p=0.24) even though jarqueBeraTest DOES (JB=15.5, p=4.3e-4); the two normality tests disagree because they measure different things -- KS responds to the largest deviation of the overall CDF shape (small here), while Jarque-Bera responds to the skewness (-0.23) and kurtosis (+0.16) with the high power a large N confers. The lesson is that 'normal' is test-dependent. Caveat: because the normal parameters are estimated from the sample, the naive KS p-value is anti-conservative (a Lilliefors correction gives an exact test); the D statistic is exact and is what this case certifies."
+}

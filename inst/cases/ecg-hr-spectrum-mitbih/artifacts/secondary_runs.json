@@ -1,0 +1,50 @@
+{
+  "r117": {
+    "record": "117",
+    "zone": "bradycardia",
+    "prereg_hash": "82ea061269652fc7383645d2e51dcffc2b5853aca18034f19b8964474d4f2f85",
+    "terminal_hash": "5b826fe22fb23715",
+    "replay_byte_identical": true,
+    "prereg_adheres": true,
+    "n_grounded": 2,
+    "n_claims": 2,
+    "mean_hr": 51.02,
+    "mean_rr": 1176
+  },
+  "r115": {
+    "record": "115",
+    "zone": "normal-low",
+    "prereg_hash": "923086fa0ce88b96710ec990fbf5eec81cd8440c7aaf94aeec4d5030c3ffdd9a",
+    "terminal_hash": "33f7d07a73cec52b",
+    "replay_byte_identical": true,
+    "prereg_adheres": true,
+    "n_grounded": 2,
+    "n_claims": 2,
+    "mean_hr": 64.91,
+    "mean_rr": 924.3
+  },
+  "r103": {
+    "record": "103",
+    "zone": "normal",
+    "prereg_hash": "873c3866ac2f5dca7fa456e394fd60f77289974a44c8c0329eded5439ee4bc3c",
+    "terminal_hash": "6380a9f0fc4e609b",
+    "replay_byte_identical": true,
+    "prereg_adheres": true,
+    "n_grounded": 2,
+    "n_claims": 2,
+    "mean_hr": 69.07,
+    "mean_rr": 868.6
+  },
+  "r234": {
+    "record": "234",
+    "zone": "upper-normal (fast)",
+    "prereg_hash": "39a7bb8216ac64570c1ecd9cc0558bca1e36a6bc9deabd2c9d075108f79d1fee",
+    "terminal_hash": "e1fc3ebff2a1d0a4",
+    "replay_byte_identical": true,
+    "prereg_adheres": true,
+    "n_grounded": 2,
+    "n_claims": 2,
+    "mean_hr": 91.37,
+    "mean_rr": 656.7
+  }
+}

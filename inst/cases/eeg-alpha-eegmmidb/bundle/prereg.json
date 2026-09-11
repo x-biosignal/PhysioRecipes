@@ -1,0 +1,45 @@
+{
+  "registered_at": "2026-08-10T00:00:00Z",
+  "hypothesis": {
+    "statement": "Alpha dominance replicates at a second occipital electrode (O1).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "eyes_closed_alpha_dominance_O1.."
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery, S001R02 (eyes-closed baseline, 64ch, 160 Hz)",
+    "seed": 3,
+    "ops": [
+      {
+        "activity": "readEDF",
+        "params": {
+          "channels": "O1.."
+        }
+      },
+      {
+        "activity": "butterworthFilter",
+        "params": {
+          "low": 1,
+          "high": 45
+        }
+      },
+      {
+        "activity": "bandPower",
+        "params": {
+          "relative": true
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "alpha_dominance",
+      "estimand": "eyes_closed_alpha_dominance_O1..",
+      "threshold": "relative alpha power > every other band"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "2622d4d58c16779f89d953da4e88d45143fb9aa43e478ec99ed0a0b7ddc847fc",
+    "registered_at": "2026-08-10T00:00:00Z"
+  }
+}

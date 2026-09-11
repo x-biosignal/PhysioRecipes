@@ -1,0 +1,34 @@
+{
+  "id": "adf-eegmmidb",
+  "title": "Checking the assumption: the Augmented Dickey-Fuller test (a newly-authored op), bit-for-bit against statsmodels",
+  "modality": ["eeg", "time-series", "stationarity", "cross-tool-validation", "signal-analysis"],
+  "packages": ["PhysioAnalysis"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "The ACF/PACF/AR folds assumed a stationary signal; the Augmented Dickey-Fuller (ADF) test checks that assumption -- is there a unit root (a random-walk drift) in the EEG, or is it stationary? The ecosystem had no unit-root test; this case introduces a NEWLY-AUTHORED op, adfTest. On a real eyes-closed posterior EEG channel its statistic reproduces statsmodels.tsa.stattools.adfuller(autolag=None) BIT-FOR-BIT (|diff| ~7e-15); the statistic (-22.36) lies ~19.5 below the 5% Dickey-Fuller critical value (-2.86), decisively rejecting the unit-root null -- the segment is stationary (no drift over 10 s), retroactively justifying the stationarity assumption of the companion folds.",
+  "opdag": ["adfTest"],
+  "claims": [
+    { "id": "adf_statistic", "statement": "Augmented Dickey-Fuller statistic (lag 1, constant) of the POz signal", "value": -22.36064585, "artifact": "artifacts/adf_summary.csv", "status": "PASS" },
+    { "id": "adf_stat_diff_sm", "statement": "|ADF statistic - statsmodels adfuller| (bit-exact)", "value": 7.105427e-15, "artifact": "artifacts/adf_summary.csv", "status": "PASS" },
+    { "id": "sm_critical_5pct", "statement": "statsmodels 5% Dickey-Fuller critical value (MacKinnon table)", "value": -2.863350, "artifact": "artifacts/adf_summary.csv", "status": "PASS" },
+    { "id": "reject_unit_root", "statement": "the unit-root null is rejected -- the segment is stationary (1 = rejected)", "value": 1, "artifact": "artifacts/adf_summary.csv", "status": "PASS" },
+    { "id": "margin_below_critical", "statement": "how far the statistic lies below the 5% critical value (decisive rejection)", "value": -19.4973, "artifact": "artifacts/adf_summary.csv", "status": "PASS" },
+    { "id": "n_obs", "statement": "ADF regression sample size (N - 1 - lag)", "value": 1598, "artifact": "artifacts/adf_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored adfTest op is validated against the field-standard statsmodels.tsa.stattools.adfuller(autolag=None) on the identical signal. Both compute the ADF regression t-statistic on the lagged level; the STATISTIC agrees BIT-FOR-BIT (|diff| ~7e-15). The statistic (-22.36) lies ~19.5 below statsmodels' 5% critical value (-2.86), decisively rejecting the unit-root null.",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), channel POz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/adf_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the newly-authored adfTest statistic reproduces statsmodels adfuller bit-for-bit; (2) the statistic is ~19.5 below the 5% critical value, decisively rejecting the unit-root null (the segment is stationary). HONEST scope: (1) this op is NEWLY AUTHORED, adding a formal stationarity test the ecosystem lacked (and which the ACF/PACF/AR folds implicitly assumed); (2) the STATISTIC is a genuine MACHINE-PRECISION match -- it is an exact OLS regression quantity, so the ~7e-15 residual is the floating-point floor, not a convention agreement; (3) IMPORTANT honest caveat: only the statistic is bit-exact -- the ADF critical values and p-value require the Dickey-Fuller / MacKinnon response-surface reference tables (an approximation), so this op does NOT compute them, and the decision here compares the statistic against statsmodels' tabulated 5% critical value; (4) the finding: the eyes-closed EEG segment is stationary (no random-walk drift over these 10 s), which retroactively justifies the stationarity assumption of the ACF/PACF/AR/Ljung-Box folds -- a decisive-but-expected verdict whose value is the certified statistic and the ~19.5 margin; (5) the value is a signal property; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "ADF and KPSS are complementary stationarity tests (ADF's null is a unit root; KPSS's null is stationarity); adding a KPSS op and reporting both would give the standard confirmatory pair, and running ADF on longer recordings (where slow drift / electrode movement is common) is where a non-rejection would actually appear. Documented, not escalated.", "artifact": "artifacts/adf_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["statsmodels.tsa.stattools.adfuller (Python)"],
+  "status": "validated"
+}

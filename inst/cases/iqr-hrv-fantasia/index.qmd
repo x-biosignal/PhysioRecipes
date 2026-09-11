@@ -1,0 +1,121 @@
+---
+title: "Robust HRV dispersion: the interquartile range (a new op) matches scipy and base R bit-for-bit -- and flags a skewed RR distribution"
+subtitle: "A worked robust-statistics case on real RR intervals, introducing interquartileRange and reading distribution shape"
+categories: [ecg, hrv, statistics, robust-dispersion, validated]
+author: "Yusuke Matsui"
+date: "2026-09-07"
+---
+
+> **What this case shows** — SDNN, the standard deviation of the RR intervals, is the classical HRV
+> spread, but it is inflated by the ectopic beats and big respiratory swings that make the RR distribution
+> non-Gaussian. The **interquartile range** is the robust alternative. This case adds one
+> (**`interquartileRange`**). On real Fantasia RR intervals it reproduces **two** references —
+> **`scipy.stats.iqr`** *and* base R **`IQR`** — **bit-for-bit**. And it tells us something SDNN hides:
+> the RR distribution is right-skewed, so the robust spread (56.3 ms) sits well below SDNN (69.3 ms).
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `interquartileRange(x)` → the robust spread of the middle 50%.
+**Way of thinking** — compare a robust spread with SDNN. When they agree, the RR distribution is roughly
+Gaussian; when the robust spread runs *below* SDNN, a heavy tail (ectopy, large RSA) is inflating SDNN.
+The ratio is a free non-normality flag.
+**Ecosystem usage** — `PhysioAnalysis::interquartileRange()`, alongside `medianAbsDev()` and `signalMoments()`.
+:::
+
+## Proposition
+
+On real Fantasia RR intervals, the new `interquartileRange` reproduces both `scipy.stats.iqr` and base R
+`IQR` bit-for-bit (IQR = 76 ms, `|diff|` = 0 against each); and because the RR distribution is
+right-skewed (skewness 1.01), the robust IQR-based SD estimate (56.3 ms) sits below SDNN (69.3 ms; ratio
+0.81) — the opposite of the near-Gaussian EEG, where the robust scale matched the SD.
+
+## Question & goal
+
+**The question is a gap and a shape: the ecosystem had SDNN and a deviation-based robust scale but no
+quantile-based robust spread — can a new op reproduce the two references exactly, and what does the
+robust-vs-classical comparison say about the RR distribution?** The goal is to introduce
+`interquartileRange`, certify it against both, and use the ratio as a shape diagnostic.
+
+## Challenge & approach
+
+The IQR is `Q3 − Q1`, with quartiles from R's default type-7 quantile (the same linear interpolation as
+`scipy.stats.iqr` and `numpy.percentile`) — an order statistic, so it matches any correct implementation
+exactly. We check it against both references on the identical RR vector, and compare the normal-consistent
+IQR scale `IQR/(2·Φ⁻¹(0.75))` with SDNN.
+
+```
+Fantasia RR (391 intervals) → interquartileRange (Q3-Q1, type 7) → IQR = 76 ms
+                             vs scipy.stats.iqr → |diff| = 0   ·   vs base R IQR → |diff| = 0
+                             robust IQR-scale = 56.3 ms   <   SDNN = 69.3 ms   (ratio 0.81)
+                             RR is right-skewed (skew 1.01, exkurt 2.91) → SDNN inflated by the tail
+```
+
+## Data
+
+**Fantasia (PhysioNet)**: subject **f1y01** (young healthy adult), first **5-minute RR window** (391
+intervals) — the same RR the [poincare-hrv](../poincare-hrv-fantasia/index.qmd) and
+[hrv-dfa](../hrv-dfa-aging-fantasia/index.qmd) cases use. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the RR-interval histogram — right-skewed (a long tail of longer intervals), with the IQR band (724–800 ms) shaded, the median (blue) below the mean (red dashed), and the mean ± SDNN band. Right: the robust-scale/SDNN ratio as a distribution-shape diagnostic — for the skewed RR it is 0.81 (SDNN inflated by the tail), versus 1.002 for the near-Gaussian eyes-closed EEG of the median-abs-dev case.](artifacts/figure.png)
+
+*How to read this:* left — median below mean and a long right tail are the marks of positive skew; the
+IQR spans only the dense middle. Right — a ratio at 1 means Gaussian (EEG); a ratio below 1 means a heavy
+tail is inflating SDNN (RR).
+
+| Quantity | Value |
+|---|--:|
+| **IQR** (`interquartileRange`) | **76 ms** |
+| quartiles Q1 / Q3 | 724 / 800 ms |
+| vs `scipy.stats.iqr` / base R `IQR` (\|diff\|) | **0** (bit-for-bit) |
+| SDNN (classical) | 69.3 ms |
+| robust IQR-scale / SDNN | **0.81** |
+| RR skewness | 1.01 |
+
+The new op equals both references exactly, and the ratio flags the skew. Values trace to
+[`artifacts/iqr_summary.csv`](artifacts/iqr_summary.csv).
+
+## Conclusion
+
+`interquartileRange` completes the robust-dispersion toolkit (`signalMoments`, `medianAbsDev`), and it is
+exact against two references. The transferable takeaway: **pair a robust spread with SDNN. On this RR
+series they disagree — the robust IQR-scale is 19% below SDNN — because the RR distribution is skewed and
+SDNN is pulled up by the tail. That divergence is the opposite of the near-Gaussian EEG, where the robust
+scale and the SD agreed; the ratio itself tells you the distribution's shape.**
+
+## Open questions
+
+- The robust/classical ratio drops below 1 exactly when the RR distribution departs from Gaussian, so it
+  is a cheap non-normality / artifact flag for HRV: a ratio well below 1 says SDNN is being driven by a
+  heavy tail (ectopy, large respiratory excursions), not uniform beat-to-beat variability. Pairing IQR
+  with SDNN, or robust-cleaning the RR series first, separates the two. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Interquartile range (robust spread) | `interquartileRange()` | PhysioAnalysis |
+| Deviation-based robust scale | `medianAbsDev()` | PhysioAnalysis |
+| Classical SD / SDNN, skewness | `signalMoments()` | PhysioAnalysis |
+
+**Reading the result.**
+
+- **IQR** — a robust HRV spread in ms; a handful of ectopic beats barely moves it (unlike SDNN).
+- **robust-scale vs SDNN** — agreement ⇒ near-Gaussian RR; robust ≪ SDNN ⇒ a heavy tail is inflating SDNN.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis)
+
+interquartileRange(rr)                      # robust HRV spread (ms)
+interquartileRange(rr) / (2 * qnorm(0.75))  # robust SD estimate; compare to sd(rr) = SDNN
+# reproduces scipy.stats.iqr and base R IQR bit-for-bit.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/iqr_summary.csv`](artifacts/iqr_summary.csv), and [`audit.py`](audit.py) re-checks the IQR,
+the quartiles, the bit-exact match against scipy and base R, the robust-vs-SDNN ratio, and the honestly
+noted scope (new quantile-based robust op; double-reference machine precision; the distribution-shape
+diagnostic; the contrast with the near-Gaussian median-abs-dev case).

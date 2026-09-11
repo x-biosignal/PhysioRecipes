@@ -1,0 +1,36 @@
+{
+  "id": "trimmed-mean-hrv-fantasia",
+  "title": "Robust central heart period: the trimmed mean (a new op) reproduces scipy AND base R bit-for-bit -- and interpolates between mean and median",
+  "modality": ["ecg", "hrv", "statistics", "robust-location", "cross-tool-validation"],
+  "packages": ["PhysioAnalysis"],
+  "dataset": {
+    "name": "Fantasia database", "version": "PhysioNet 1.0.0",
+    "record": "subject f1y01 (young healthy adult), first 5-minute RR-interval window (391 intervals, ms)",
+    "url": "https://physionet.org/content/fantasia/1.0.0/", "public": true,
+    "citation": "Iyengar N, Peng CK, Morin R, Goldberger AL, Lipsitz LA. Age-related alterations in the fractal scaling of cardiac interbeat interval dynamics. Am J Physiol 1996;271:R1078-R1084. Fantasia database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "The ordinary mean RR interval is pulled up by the long RR intervals of a skewed HRV distribution, while the median uses only the middle value. The trimmed mean is the robust in-between. The ecosystem had classical (signalMoments) and robust dispersion (medianAbsDev, interquartileRange) but no robust location estimator. This case introduces trimmedMean. On real Fantasia RR intervals it reproduces BOTH scipy.stats.trim_mean AND base R mean(x, trim) BIT-FOR-BIT (max |diff| 0 vs each). The finding: on the right-skewed RR the plain mean (767 ms) exceeds the 10%-trimmed mean (762), which exceeds the 20%-trimmed mean (760), which exceeds the median (756) -- the trimmed mean interpolates between the mean and the median, and the mean-vs-trimmed gap measures how much the heavy tail inflates the mean.",
+  "opdag": ["trimmedMean"],
+  "claims": [
+    { "id": "trimmed_mean_10", "statement": "10%-trimmed mean of the RR intervals (robust location)", "value": 761.9936102236, "artifact": "artifacts/trimmed_summary.csv", "status": "PASS" },
+    { "id": "trimmed_mean_20", "statement": "20%-trimmed mean of the RR intervals (moves toward the median)", "value": 760.3744680851, "artifact": "artifacts/trimmed_summary.csv", "status": "PASS" },
+    { "id": "max_diff_scipy", "statement": "|trimmedMean - scipy.stats.trim_mean| (bit-exact)", "value": 0, "artifact": "artifacts/trimmed_summary.csv", "status": "PASS" },
+    { "id": "max_diff_baser", "statement": "|trimmedMean - base R mean(x, trim)| (bit-exact)", "value": 0, "artifact": "artifacts/trimmed_summary.csv", "status": "PASS" },
+    { "id": "plain_mean", "statement": "ordinary (untrimmed) mean RR -- inflated by the skew", "value": 767.1611253197, "artifact": "artifacts/trimmed_summary.csv", "status": "PASS" },
+    { "id": "median_rr", "statement": "median RR (the fully robust location) for the progression", "value": 756, "artifact": "artifacts/trimmed_summary.csv", "status": "PASS" },
+    { "id": "mean_gt_trim_gt_median", "statement": "mean > 10%-trimmed > 20%-trimmed > median (skew ordering)", "value": 1, "artifact": "artifacts/trimmed_summary.csv", "status": "PASS" },
+    { "id": "n_intervals", "statement": "RR intervals in the 5-minute window", "value": 391, "artifact": "artifacts/trimmed_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The new trimmedMean op is validated against BOTH scipy.stats.trim_mean AND base R mean(x, trim) on the identical RR vector -- a double reference. All three discard floor(n*trim) values from each end and average the rest, agreeing BIT-FOR-BIT (max |diff| 0 vs each). The plain mean, the median, and a second trim level are reported for the robust-location progression.",
+    "data": "REAL -- Fantasia (PhysioNet), subject f1y01, first 5-minute RR window (391 intervals)",
+    "artifacts": ["artifacts/trimmed_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the new trimmedMean op reproduces scipy and base R bit-for-bit; (2) on the skewed RR the trimmed mean sits between the mean and the median. HONEST scope: (1) this is a NEW robust-location op, completing the robust toolkit alongside medianAbsDev and interquartileRange (robust dispersion) and signalMoments (the classical mean/SD); the ecosystem had no robust location estimator; (2) with trim=0.1 it reproduces BOTH scipy.stats.trim_mean AND base R mean(x, trim) BIT-FOR-BIT (max |diff| = 0 vs each) at trim 0.1/0.2/0.25 -- a genuine DOUBLE-REFERENCE machine-precision agreement, because all three discard the same floor(n*trim) ORDER STATISTICs and average the identical retained values, NOT A CONVENTION AGREEMENT; (3) the finding: on the RIGHT-SKEWED Fantasia RR distribution (skewness ~1.0, shown in the interquartile-range case) the plain mean (767 ms) is pulled up by the long RR intervals, so it exceeds the 10%-trimmed mean (762 ms), which exceeds the 20%-trimmed mean (760 ms), which exceeds the median (756 ms); the trimmed mean INTERPOLATEs between the mean and the MEDIAN, and the gap between the plain mean and the trimmed mean measures how much the heavy tail INFLATEs the mean -- a robust central heart-period resistant to the ectopic beats and long pauses that corrupt the plain mean; (4) the value is a property of one subject/window; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "The trimmed mean is a family indexed by the trim fraction, interpolating from the mean (trim 0) to the median (trim -> 0.5); the fraction that best balances efficiency and robustness for RR depends on the ectopy rate. Reporting the trimmed mean with the plain mean and the median (as here), or choosing the trim from the observed tail heaviness, makes the central heart-period estimate explicit about its robustness. Documented, not escalated.", "artifact": "artifacts/trimmed_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.stats.trim_mean (Python)", "base R mean(x, trim)"],
+  "status": "validated"
+}

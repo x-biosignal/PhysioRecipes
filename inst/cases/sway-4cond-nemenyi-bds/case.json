@@ -1,0 +1,37 @@
+{
+  "id": "sway-4cond-nemenyi-bds",
+  "title": "Vision matters far more on foam, certified: the Nemenyi post-hoc shows the eyes-open/closed effect is borderline on firm ground (p=0.044) but strong on foam (p=3e-8) -- bit-for-bit vs PMCMRplus, machine precision vs scikit_posthocs",
+  "modality": ["posturography", "balance", "vision", "proprioception", "cohort", "cross-tool-validation"],
+  "packages": ["PhysioAnalysis", "PhysioMoCap"],
+  "dataset": {
+    "name": "BDS -- a public data set of human balance evaluations (Santos & Duarte 2016)", "version": "2016",
+    "record": "158 x 4 per-subject COP path length across vision x surface quiet-standing conditions (Open-Firm, Closed-Firm, Open-Foam, Closed-Foam)",
+    "url": "https://doi.org/10.7717/peerj.2648", "public": true,
+    "citation": "Santos DA, Duarte M. A public data set of human balance evaluations. PeerJ 2016;4:e2648. doi:10.7717/peerj.2648."
+  },
+  "proposition": "The Friedman sibling found the four vision x surface conditions differ in COP sway (monotone rank order); its open question asked which pairs differ and whether vision matters more on foam. The NEWLY-AUTHORED nemenyiTest runs all 6 pairwise Nemenyi comparisons, reproducing PMCMRplus::frdAllPairsNemenyiTest bit-for-bit and scikit_posthocs.posthoc_nemenyi_friedman to machine precision. All six condition pairs differ, but the vision effect depends on the surface: eyes-open vs eyes-closed is only borderline on firm ground (p=0.044) yet strong on foam (p=3.1e-8) -- when proprioception is degraded, the balance system leans much more on vision (sensory reweighting).",
+  "opdag": ["nemenyiTest"],
+  "claims": [
+    { "id": "p_firm_vision", "statement": "Nemenyi p of eyes-open vs eyes-closed on FIRM ground (the firm-surface vision effect, borderline)", "value": 0.0442669796, "artifact": "artifacts/nemenyi_summary.csv", "status": "PASS" },
+    { "id": "p_foam_vision", "statement": "Nemenyi p of eyes-open vs eyes-closed on FOAM (the foam-surface vision effect, strong)", "value": 3.14783e-08, "artifact": "artifacts/nemenyi_summary.csv", "status": "PASS" },
+    { "id": "stat_extreme", "statement": "largest Nemenyi statistic (Open-Firm vs Closed-Foam, the extreme pair)", "value": 17.9962548847, "artifact": "artifacts/nemenyi_summary.csv", "status": "PASS" },
+    { "id": "max_diff_pmcmr", "statement": "max |nemenyiTest p - PMCMRplus p| across all 6 pairs (bit-for-bit)", "value": 0, "artifact": "artifacts/nemenyi_summary.csv", "status": "PASS" },
+    { "id": "max_diff_scipy", "statement": "max |nemenyiTest p - scikit_posthocs p| across all 6 pairs (machine precision)", "value": 0, "artifact": "artifacts/nemenyi_summary.csv", "status": "PASS" },
+    { "id": "foam_vision_stronger", "statement": "the vision effect is stronger on foam than on firm ground (p_foam < p_firm)", "value": 1, "artifact": "artifacts/nemenyi_summary.csv", "status": "PASS" },
+    { "id": "n_sig", "statement": "number of the six condition pairs that differ significantly (all 6)", "value": 6, "artifact": "artifacts/nemenyi_summary.csv", "status": "PASS" },
+    { "id": "n_pairs", "statement": "total pairwise comparisons (4 choose 2)", "value": 6, "artifact": "artifacts/nemenyi_summary.csv", "status": "PASS" },
+    { "id": "n_subjects", "statement": "subjects with all four conditions (complete blocks)", "value": 158, "artifact": "artifacts/nemenyi_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored nemenyiTest op (all pairwise comparisons after a Friedman test, within-block mean ranks, studentized-range distribution, single-step family-wise control) is validated against BOTH the PMCMRplus package (frdAllPairsNemenyiTest) AND scikit_posthocs.posthoc_nemenyi_friedman on the identical 158 x 4 matrix -- a triple check with the independent op formula. Across all 6 pairwise comparisons the p-values match PMCMRplus BIT-FOR-BIT (max |diff| = 0) and scikit_posthocs to ~5e-13 (machine precision). The per-condition sway comes from PhysioMoCap::swayMetrics (path_length, certified against Prieto in the sibling sway-posturography-bds case).",
+    "data": "REAL -- Santos & Duarte (2016) BDS; COP path length across four vision x surface conditions, n=158",
+    "artifacts": ["artifacts/nemenyi_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) nemenyiTest reproduces PMCMRplus::frdAllPairsNemenyiTest bit-for-bit and scikit_posthocs.posthoc_nemenyi_friedman to machine precision on all 6 pairwise comparisons; (2) the vision effect depends on the support surface. HONEST scope: (1) this AUTHORS A NEW OP, nemenyiTest (all pairwise comparisons after a Friedman test, within-block mean ranks, studentized-range distribution, single-step family-wise control; the repeated-measures counterpart of tukeyHSD/dunnTest), and reuses the certified swayMetrics-derived per-condition sway from the sibling sway-4cond-friedman-bds case; (2) the statistics and p-values reproduce base R's Nemenyi formula, the PMCMRplus package (frdAllPairsNemenyiTest, BIT-FOR-BIT, max |p| = 0) AND scikit_posthocs.posthoc_nemenyi_friedman (max |p| ~ 5e-13) to MACHINE PRECISION; (3) the finding: all six condition pairs differ (p < 0.05), but the VISION effect depends on the surface -- eyes-open vs eyes-closed is only BORDERLINE on FIRM ground (Open-Firm vs Closed-Firm, p = 0.044) yet STRONG on FOAM (Open-Foam vs Closed-Foam, p = 3.1e-8), a roughly six-order-of-magnitude difference; this is sensory reweighting -- when proprioception is degraded (foam), the balance system leans much more on vision, so removing it matters far more; it resolves the Friedman case's open question about how the sensory contributions combine; (4) a cross-sectional cohort (ASSOCIATION, NOT causation); one per-subject mean per condition; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "The Nemenyi post-hoc quantifies the surface-dependent vision effect via pairwise comparisons; a formal two-way (vision x surface) model with an explicit interaction term, or a repeated-measures ANOVA on ranks, would test the interaction directly and give an effect size for the reweighting. The distribution-free Nemenyi post-hoc shown here is the honest first-line answer after Friedman. Documented, not escalated.", "artifact": "artifacts/nemenyi_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["PMCMRplus::frdAllPairsNemenyiTest (R)", "scikit_posthocs.posthoc_nemenyi_friedman (Python)"],
+  "status": "validated"
+}

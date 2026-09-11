@@ -1,0 +1,35 @@
+{
+  "id": "emg-synergy-grabmyo",
+  "title": "Muscle-synergy extraction on GRABMyo: high-VAF and reproducible across data halves",
+  "modality": ["emg", "synergy"],
+  "packages": ["PhysioEMG", "PhysioAnalysis", "PhysioIO"],
+  "dataset": {
+    "name": "GRABMyo",
+    "version": "v1.1.0 (PhysioNet)",
+    "record": "session1_participant1_gesture10_trial1, 12 forearm channels @ 2048 Hz",
+    "url": "https://physionet.org/content/grabmyo/1.1.0/",
+    "public": true,
+    "citation": "Pradhan A, He J, Jiang N. Multi-day dataset of forearm and wrist electromyogram for hand gesture recognition and biometrics. Sci Data. 2022;9:733. Goldberger AL, et al. PhysioNet. Circulation. 2000;101(23):e215-20."
+  },
+  "proposition": "Non-negative matrix factorisation of real GRABMyo forearm EMG yields high-quality muscle synergies (4-synergy VAF = 0.982; a 2-synergy solution already clears VAF >= 0.90) whose weights reproduce across independent data halves - all four synergies with best-matched correlations 0.85-0.98 and a pooled ICC(A,1) of 0.89 (95% CI 0.82-0.94) under a robust best-of-restarts NMF.",
+  "opdag": ["readWFDB", "emgEnvelope", "muscleSynergyOrder", "muscleSynergy", "synergyCompare"],
+  "claims": [
+    { "id": "vaf_4syn",       "statement": "NMF variance accounted for, 4 synergies", "value": 0.9815, "artifact": "artifacts/vaf_analysis.csv", "status": "PASS" },
+    { "id": "optimal_n",      "statement": "optimal number of synergies (VAF >= 0.90 knee)", "value": 2, "artifact": "artifacts/pipeline_summary.csv", "status": "PASS" },
+    { "id": "pooled_icc",     "statement": "pooled split-half reliability, ICC(A,1) over the synergy weights", "value": 0.8935, "artifact": "artifacts/synergy_split_half_icc_pooled.csv", "status": "PASS" },
+    { "id": "icc_ci_lo",      "statement": "lower 95% CI bound of the pooled ICC", "value": 0.8175, "artifact": "artifacts/synergy_split_half_icc_pooled.csv", "status": "PASS" },
+    { "id": "splithalf_min_r","statement": "weakest best-matched split-half correlation (all four synergies reproduce)", "value": 0.8481, "artifact": "artifacts/synergy_split_half_stability.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "split-half reproducibility of the synergy weight vectors on the real signal, quantified by best-matched correlation and by the intraclass correlation coefficient ICC(A,1) (two-way random, absolute agreement; McGraw & Wong 1996)",
+    "data": "REAL - GRABMyo v1.1.0 forearm EMG",
+    "artifacts": ["artifacts/pipeline_summary.csv", "artifacts/vaf_analysis.csv", "artifacts/synergy_split_half_stability.csv", "artifacts/synergy_split_half_icc.csv", "artifacts/synergy_split_half_icc_pooled.csv"],
+    "all_pass": true,
+    "note": "NMF is the appropriate non-negative model for surface-EMG synergies. Reliability is estimated with a robust best-of-restarts NMF (20 restarts, fixed seed): all four synergies reproduce across the halves (best-matched r 0.85-0.98) with a pooled ICC(A,1) of 0.89 (95% CI 0.82-0.94), good-to-excellent agreement. A single-run NMF instead gives unstable split-half correlations (a weak-looking fourth synergy is an initialisation artifact of non-convex optimisation, not real over-extraction); parsimony - the two-synergy VAF>=0.90 knee - is the basis for preferring fewer synergies."
+  },
+  "open_questions": [
+    { "q": "Fitting four synergies over-extracts past the two-synergy VAF>=0.90 optimum (parsimony), but the four-synergy weights are still reproducible across halves with a robust best-of-restarts NMF (pooled ICC 0.89). The 'weak fourth synergy' seen with a single-run NMF is an initialisation artifact, not an instability of the structure. Documented, not escalated.", "artifact": "artifacts/synergy_split_half_icc_pooled.csv", "escalate": null }
+  ],
+  "reference_tools": ["irr 0.84 (ICC)"],
+  "status": "validated"
+}

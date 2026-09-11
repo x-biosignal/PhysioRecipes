@@ -1,0 +1,35 @@
+{
+  "id": "adl-freeliving-pamap2",
+  "title": "Free-living physical-behaviour metrics on real accelerometry, with ENMO validated against GGIR to machine precision",
+  "modality": ["adl", "wearable", "free-living", "physical-behaviour", "enmo"],
+  "packages": ["PhysioWearable"],
+  "dataset": {
+    "name": "PAMAP2 Physical Activity Monitoring",
+    "version": "UCI ML Repository #231 (Reiss & Stricker 2012)",
+    "record": "subject101 (Protocol), hand IMU +/-16g tri-axial acceleration @ 100 Hz; ~1 h of gap-free samples from a scripted activity protocol (lie/sit/stand/walk/run/cycle/iron/vacuum)",
+    "url": "https://archive.ics.uci.edu/dataset/231",
+    "public": true,
+    "citation": "Reiss A, Stricker D. Introducing a New Benchmarked Dataset for Activity Monitoring. IEEE ISWC 2012, pp. 108-109; dataset doi:10.24432/C5NW2H (CC-BY 4.0)."
+  },
+  "proposition": "Free-living physical-behaviour analysis rests on one metric -- ENMO, the Euclidean-norm-minus-one acceleration. On real continuous accelerometer data the ecosystem's computeENMO() reproduces the field-standard GGIR implementation to MACHINE PRECISION (max absolute difference 1.35e-14 g, correlation 1.000000 across 749 five-second epochs). On that exact foundation the free-living summary runs end to end -- intensity time-use, the Rowlands intensity gradient (-1.19) and activity fragmentation (active-to-sedentary transition probability 0.11) -- turning a raw recording into the ICF performance picture of what a person actually does.",
+  "opdag": ["computeENMO", "summarizeFreeLiving", "intensityGradient"],
+  "claims": [
+    { "id": "enmo_max_diff",   "statement": "max absolute ENMO difference vs GGIR (g) -- machine precision", "value": 1.35e-14, "artifact": "artifacts/enmo_agreement.csv", "status": "PASS" },
+    { "id": "enmo_correlation","statement": "ENMO correlation vs GGIR across 749 epochs",                    "value": 1.0,      "artifact": "artifacts/enmo_agreement.csv", "status": "PASS" },
+    { "id": "intensity_gradient","statement": "Rowlands intensity gradient (log-log slope of time vs intensity)", "value": -1.19, "artifact": "artifacts/freeliving_summary.csv", "status": "PASS" },
+    { "id": "mvpa_min",        "statement": "moderate-to-vigorous minutes over the recording",               "value": 28.6,     "artifact": "artifacts/freeliving_summary.csv", "status": "PASS" },
+    { "id": "astp",            "statement": "activity-to-sedentary transition probability (fragmentation)",   "value": 0.113,    "artifact": "artifacts/freeliving_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "GGIR (van Hees et al.) -- the field-standard free-living accelerometry package; computeENMO is checked against GGIR::g.applymetrics ENMO on the identical raw signal",
+    "data": "REAL -- PAMAP2 subject101 hand IMU (Reiss & Stricker 2012), ~1 h continuous @ 100 Hz",
+    "artifacts": ["artifacts/enmo_agreement.csv", "artifacts/freeliving_summary.csv"],
+    "all_pass": true,
+    "note": "The RIGOROUS, transferable result is the ENMO reproduction: two independent implementations agree to 1e-14 g on real data, so the physical-activity foundation is exact. The summary metrics (intensity gradient, MVPA, fragmentation) are DEMONSTRATED on a real continuous recording, but PAMAP2 is a scripted activity PROTOCOL, not a free-living day -- the absolute values reflect the protocol, and the ~1 h length makes the MX metrics (e.g. M60) degenerate, so those are not claimed. The pipeline and the ENMO exactness transfer; a specific person's free-living numbers do not."
+  },
+  "open_questions": [
+    { "q": "PAMAP2 is a lab protocol, so the intensity time-use is not a real-world day; validating the full free-living summary needs a genuinely free-living public recording (e.g. a wrist dataset with a worn day). Documented, not escalated.", "artifact": "artifacts/freeliving_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["GGIR (CRAN)"],
+  "status": "validated"
+}

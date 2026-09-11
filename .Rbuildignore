@@ -1,0 +1,11 @@
+^_quarto\.yml$
+^_site$
+^index\.qmd$
+^coverage\.qmd$
+^TEMPLATE\.qmd$
+^SCHEMA\.md$
+^tools$
+^\.github$
+^.*\.Rproj$
+^CONTRIBUTING\.md$
+^CODE_OF_CONDUCT\.md$

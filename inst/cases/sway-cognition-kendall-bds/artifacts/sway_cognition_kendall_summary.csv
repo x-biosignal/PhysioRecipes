@@ -1,0 +1,13 @@
+"metric","value"
+"tau_statistic",0.3676316474
+"p_value",7.15533529920425e-12
+"neg_log10_p",11.14537
+"z_statistic",6.854518
+"max_diff_scipy",0
+"max_diff_baser",0
+"tau_positive",1
+"pearson_r",0.335287
+"spearman_rho",0.531679
+"n",158
+"tmt_median_s",26.59
+"sway_median_cm",212.04

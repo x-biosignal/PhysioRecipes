@@ -1,0 +1,10 @@
+{
+  "dataset": "EEG Motor Movement/Imagery Database (eegmmidb)",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples) -- the SAME git-tracked vector the SVD-entropy, Petrosian, and Renyi cases use.",
+  "pipeline": "readRDS(eeg_poz_s002r02) -> PhysioEEG::tsallisEntropy(q, bins=16): discretize the signal into 16 equal-width bins to form a probability distribution p, then S_q = (1 - sum p^q)/(q-1) (nats; q=1 limit = Shannon). The reference re-computes it with NeuroKit2 entropy_tsallis (freq=p) across q = {0.5, 1, 2, 3}, and contrasts it with PhysioEEG::renyiEntropy on the same histogram. Deterministic.",
+  "note": "The root is the POz channel numeric vector (shared with the SVD-entropy, Petrosian, and Renyi cases). The Tsallis entropy (Tsallis 1988) is the NON-ADDITIVE one-parameter generalization of the Shannon entropy: S_q = (1 - sum p^q)/(q-1). At q=1 it recovers Shannon; unlike the additive Renyi entropy, S_q(A+B) != S_q(A)+S_q(B) for independent A,B. tsallisEntropy is a NEW op completing the generalized-entropy pair (the ecosystem had Shannon-based entropies and the just-added Renyi, but not the non-additive Tsallis). It reproduces NeuroKit2 entropy_tsallis BIT-FOR-BIT (max |diff| ~9e-16) across q = {0.5, 1, 2, 3} on the identical amplitude histogram. The q=1 value (2.325 nats) exactly equals the Shannon entropy AND coincides with the Renyi entropy there, but at q=2 the Tsallis entropy (0.885) diverges sharply from the Renyi entropy (2.167) -- the two generalizations agree ONLY at q=1 because Tsallis is non-additive while Renyi is additive. The Tsallis family is non-increasing in q (4.954 at 0.5 -> 2.325 at 1 -> 0.885 at 2 -> 0.492 at 3)."
+}

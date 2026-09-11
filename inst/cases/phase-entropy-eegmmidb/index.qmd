@@ -1,0 +1,122 @@
+---
+title: "Complexity of the phase plane: phase entropy, a newly-authored op, from the SODP"
+subtitle: "A worked phase-plane case study on real EEG, introducing and certifying phaseEntropy"
+categories: [eeg, complexity, phase-entropy, sodp, validated]
+author: "Yusuke Matsui"
+date: "2026-09-07"
+---
+
+> **What this case shows** — the ecosystem's complexity measures read *amplitudes*, *template matches*,
+> or *1-D symbol sequences*. **Phase entropy** (Rohila & Sharma 2019) reads the signal's *phase-plane
+> geometry*: it plots each first difference against the following second difference — the **Second-Order
+> Difference Plot (SODP)** — and takes the entropy of the polar-angle distribution over *k* sectors.
+> This case introduces a **newly-authored op**, `phaseEntropy`. On a real eyes-closed EEG channel it
+> reproduces `NeuroKit2.entropy_phase` **bit-for-bit** (max |diff| ~**4e-16**).
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `phaseEntropy(x, delay, k)` → the phase entropy of the SODP.
+**Way of thinking** — velocity and acceleration together define a phase plane. Where a point lands in
+that plane (its angle) says whether the signal is speeding up, slowing, reversing; the entropy of those
+angles is a compact measure of how varied the local dynamics are.
+**Ecosystem usage** — `PhysioEEG::phaseEntropy()` alongside the amplitude, template and symbolic
+complexity ops — a phase-plane-geometry mechanism they don't have.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, `phaseEntropy` reproduces `NeuroKit2.entropy_phase` bit-for-bit (max |diff|
+~4e-16) across the sector count k; PhasEn increases with k (1.238 → 1.287 → 1.299) and sits below the
+1/ln(2) = 1.443 normalization ceiling.
+
+## Question & goal
+
+**The question is a gap and a domain: the ecosystem's complexity measures read amplitude or symbol
+sequences — can we author the phase-plane (SODP) entropy, reproduce the reference, and characterize the
+angular structure?** The goal is to introduce `phaseEntropy`, certify it bit-for-bit, and read the SODP.
+
+## Challenge & approach
+
+Phase entropy forms the SODP (first difference x(n+τ)−x(n) against second difference
+x(n+2τ)−x(n+τ)), takes each point's quadrant-corrected polar angle, bins it into k equal sectors of
+[0, 2π), and takes the normalized Shannon entropy of the angle-weighted sector distribution. We
+implement that exactly and check it against `NeuroKit2.entropy_phase` across k.
+
+```
+EEG POz (eegmmidb) → SODP (Δx vs Δ²x) → polar angle → k sectors → normalized Shannon(sector mass)
+                    vs NeuroKit2.entropy_phase (same pipeline) → bit-exact (~4e-16) for every k
+                    increases with k (1.24 → 1.29 → 1.30);  below the 1/ln2 = 1.443 ceiling
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz**, 10 s at 160 Hz — the same git-tracked vector the
+[dispersion](../dispersion-entropy-eegmmidb/index.qmd), [increment](../increment-entropy-eegmmidb/index.qmd)
+and [slope](../slope-entropy-eegmmidb/index.qmd) entropy cases use. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the Second-Order Difference Plot of the POz signal — each point is (first difference, second difference), and the red rays mark the k=4 angular sectors whose mass phase entropy summarizes. Right: phase entropy across the sector count k — an increasing curve approaching (but staying below) the 1/ln2 = 1.443 ceiling; the op equals NeuroKit2 at every k.](artifacts/figure.png)
+
+*How to read this:* the left panel is the object phase entropy scores — the SODP and its angular sectors;
+the right panel is the family across resolution, increasing and bounded by the normalization ceiling.
+
+| Quantity | Value |
+|---|--:|
+| **PhasEn, k = 4** (delay 1) | **1.238** |
+| **PhasEn, k = 6** | **1.287** |
+| **PhasEn, k = 8** | **1.299** |
+| op vs `NeuroKit2.entropy_phase` (max \|diff\| over k) | **4e-16** (bit-exact) |
+| increasing in k | **yes** |
+| below ceiling 1/ln(2) = 1.443 | **yes** |
+
+The newly-authored op equals NeuroKit2 at every k, and the SODP + increasing family characterize the
+phase-plane structure. Values trace to
+[`artifacts/phase_summary.csv`](artifacts/phase_summary.csv).
+
+## Conclusion
+
+`phaseEntropy` adds a mechanism the ecosystem's entropies did not have — phase-plane geometry via the
+SODP — and it is exact: bit-for-bit against NeuroKit2 across k. The transferable takeaway: **the SODP
+turns a time series into a velocity–acceleration cloud; its angular entropy is a compact, geometry-aware
+complexity that complements the amplitude and symbolic measures — reach for it when the dynamics, not
+the levels, carry the information.**
+
+## Open questions
+
+- Phase entropy was introduced for HRV; applying it to the RR-interval SODP (not EEG) across autonomic
+  states, and sweeping k as a resolution knob, would connect this op to its original clinical use.
+  *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Phase entropy (SODP geometry) | `phaseEntropy()` | PhysioEEG |
+| Slope entropy (trend shape) | `slopeEntropy()` | PhysioEEG |
+| Increment entropy (change magnitude) | `incrementEntropy()` | PhysioEEG |
+| Dispersion entropy (amplitude patterns) | `dispersionEntropy()` | PhysioEEG |
+
+**Choosing the parameters.**
+
+- **delay** — lag for both differences (default 1); larger delays probe slower dynamics on the SODP.
+- **k** — number of angular sectors (default 4); more sectors resolve finer angular structure and raise
+  PhasEn toward its ceiling.
+- **units** — dimensionless; the NeuroKit2 normalization (base-2 Shannon / ln k) bounds PhasEn in
+  [0, 1/ln2 = 1.443].
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioEEG)
+
+phaseEntropy(x, delay = 1, k = 4)   # SODP phase entropy
+# reproduces NeuroKit2.entropy_phase bit-for-bit across the sector count k.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/phase_summary.csv`](artifacts/phase_summary.csv), and [`audit.py`](audit.py) re-checks
+PhasEn at k = 4, 6, 8, the bit-exact NeuroKit2 match over k, the increase with k, the normalization
+ceiling, and the honestly-noted scope (newly-authored op; machine-precision; NeuroKit2 normalization
+reproduced; value depends on delay/k).

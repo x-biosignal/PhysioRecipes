@@ -1,0 +1,10 @@
+{
+  "dataset": "BIDMC PPG and Respiration Dataset",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/bidmc/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Pimentel MAF et al. Toward a robust estimation of respiratory rate from pulse oximeters. IEEE Trans Biomed Eng 2017;64(8):1914-1923. BIDMC PPG and Respiration Dataset, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "subject bidmc01: RESP (respiration) + PLETH (PPG), decimated 125->25 Hz, 200 s (5001 samples each) -- the SAME git-tracked pair the sibling Granger case uses.",
+  "pipeline": "readRDS(resp) + readRDS(pleth) -> PhysioCrossModal::transferEntropy(sr=25, estimator='histogram', k=1, l=1, delay=1, bins=8): the model-free directed information flow in both directions (Schreiber 2000, histogram estimator with equal-width binning). The reference reproduces it with an independent from-scratch numpy transfer entropy (matched embedding + binning + Schreiber formula) and verifies the directed recovery on a constructed x->y coupling (via reticulate). Deterministic.",
+  "note": "The tracked inputs are eval/data/granger-cardioresp/{resp,pleth}_bidmc01.rds. Transfer entropy is the information-theoretic, MODEL-FREE measure of directed coupling -- unlike Granger (linear) it captures nonlinear directed coupling. transferEntropy (histogram estimator) reproduces an independent from-scratch numpy transfer entropy (a different language) BIT-FOR-BIT (max |diff| ~6e-17), and recovers ground truth on a constructed x->y coupling (TE 0.67 in the driving direction vs 0.06 reverse). The finding: on the real pair, respiration->pulse TE (0.036) exceeds pulse->respiration (0.024), net +0.012 -- a weak model-free directed info flow consistent with the Granger result. The histogram estimator has a positive finite-sample bias, so small absolute TE values are upper-ish estimates, not significance tests; the estimator is one of two (KSG/kNN is also available), so this validates THIS estimator's TE exactly."
+}

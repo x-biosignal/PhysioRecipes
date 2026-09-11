@@ -1,0 +1,36 @@
+{
+  "id": "eeg-plv-alpha-eegmmidb",
+  "title": "Phase synchrony: the alpha phase-locking value between occipital channels, checked against scipy",
+  "modality": ["eeg", "connectivity", "phase-synchronization", "plv", "alpha"],
+  "packages": ["PhysioCrossModal"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)",
+    "version": "PhysioNet 1.0.0",
+    "record": "subject S002, baseline run R02 (eyes-closed rest), occipital channels O1 and Oz, first 10 s at 160 Hz (1600 samples each)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+    "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "Coherence mixes amplitude and phase; sometimes you want phase ALONE. The phase-locking value (Lachaux 1999) is the phase-only measure of synchronization: band-pass two signals, take their Hilbert phases, and ask how consistent the phase difference is -- PLV = |mean(exp(i*(phi_x - phi_y)))|, from 0 (random) to 1 (locked). On real eyes-closed occipital EEG the two neighbouring channels O1 and Oz are strongly alpha-synchronized (PLV = 0.92, mean phase lag ~0.08 rad -- nearly in phase). And the measure is trustworthy: phaseLockingValue recovers ground truth (constructed phase-locked signals -> PLV 0.995, independent -> PLV 0.009), reproduces an independent scipy Hilbert-band PLV to ~8e-5 (phase-robust despite filter-implementation differences), and its summation formula is exact.",
+  "opdag": ["phaseLockingValue"],
+  "claims": [
+    { "id": "plv", "statement": "alpha-band (8-13 Hz) phase-locking value between occipital O1 and Oz -- posterior alpha phase synchronization", "value": 0.9215049424, "artifact": "artifacts/plv_summary.csv", "status": "PASS" },
+    { "id": "plv_scipy", "statement": "the same PLV re-computed by an independent scipy Hilbert-band pipeline", "value": 0.9215835739, "artifact": "artifacts/plv_summary.csv", "status": "PASS" },
+    { "id": "max_diff_scipy", "statement": "max |phaseLockingValue - scipy Hilbert-band PLV| (phase-robust agreement, up to the filtfilt convention)", "value": 7.863e-05, "artifact": "artifacts/plv_summary.csv", "status": "PASS" },
+    { "id": "formula_diff", "statement": "|op PLV - |mean(exp(i*phase_diff))|| -- the PLV summation formula, exact given the phases", "value": 0, "artifact": "artifacts/plv_summary.csv", "status": "PASS" },
+    { "id": "plv_locked", "statement": "PLV of constructed phase-locked signals (fixed offset) -- ground-truth recovery, near 1", "value": 0.99507, "artifact": "artifacts/plv_summary.csv", "status": "PASS" },
+    { "id": "plv_unlocked", "statement": "PLV of constructed independent (drifting-phase) signals -- ground-truth recovery, near 0", "value": 0.009201, "artifact": "artifacts/plv_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "PLV (Lachaux et al. 1999) is validated three ways. (1) Ground-truth recovery: on constructed signals, phase-locked (fixed offset + noise) gives PLV 0.995 and independent (drifting-phase) gives PLV 0.009 -- the measure separates synchronized from unsynchronized. (2) Cross-tool: an independent scipy Hilbert-band pipeline (scipy.signal.butter order-4 + filtfilt + hilbert) gives the same PLV to max |diff| ~ 8e-5. (3) The summation formula |mean(exp(i*phase_diff))| is exact given the op's returned phases. The finding: a high posterior alpha PLV (0.92) -- eyes-closed occipital alpha is phase-synchronized across O1 and Oz.",
+    "data": "REAL -- eegmmidb (PhysioNet), S002 eyes-closed baseline R02, occipital O1 + Oz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/plv_summary.csv", "artifacts/plv_phasediff_hist.csv"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) phaseLockingValue recovers ground truth (locked 0.995, independent 0.009), reproduces an independent scipy Hilbert-band PLV to ~8e-5, and its formula is exact; (2) the real O1-Oz alpha PLV is high (0.92, mean phase lag ~0.08 rad). HONEST scope: (1) the scipy agreement is an AGREEMENT, NOT machine precision -- R's signal::filtfilt and scipy's filtfilt use different edge-padding, so the band-passed signals differ substantially, but PLV depends on PHASE and is robust, so for the strongly-locked O1-Oz alpha the agreement is tight (~8e-5; weakly-coupled channel pairs agree to ~2e-3); the strongest anchors are the exact formula and the ground-truth recovery; (2) the high posterior alpha PLV is the expected eyes-closed occipital synchronization -- a descriptive connectivity value on a single subject/pair/band, not a clinical claim; (3) IMPORTANT caveat -- PLV is amplitude-blind but NOT volume-conduction-robust: PLV between nearby EEG channels can be inflated by shared sources / the common reference (near-zero-lag coupling), so the high O1-Oz value partly reflects proximity; the phase-lag index (PLI) / weighted PLI (wPLI, also implemented) discount zero-lag coupling for that reason; (4) single subject, 10 s, one channel pair, one band; run_simulation = FALSE (the real-data PLV is deterministic; the ground-truth recovery is seeded)."
+  },
+  "open_questions": [
+    { "q": "PLV counts zero-lag (volume-conduction) coupling as genuine synchronization. The phase-lag index (phaseLagIndex) and weighted PLI (wPLI, both implemented) discount near-zero-lag phase differences and would show how much of the O1-Oz alpha coupling survives that correction; and a full channel x channel PLV/wPLI matrix would map the posterior alpha network rather than a single pair. Contrasting eyes-closed vs eyes-open would show alpha-network synchronization collapsing with the rhythm. Documented, not escalated.", "artifact": "artifacts/plv_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.signal butter+filtfilt+hilbert (Python, SciPy)"],
+  "status": "validated"
+}

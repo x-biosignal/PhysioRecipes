@@ -1,0 +1,10 @@
+{
+  "dataset": "Fantasia Database",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/fantasia/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Iyengar N, Peng CK, Morin R, Goldberger AL, Lipsitz LA. Age-related alterations in the fractal scaling of cardiac interbeat interval dynamics. Am J Physiol 1996;271(4):R1078-R1084. Fantasia Database, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "record f1y01 (young healthy subject), a 5-minute RR-interval series (391 intervals, ms) -- the SAME git-tracked RR series the Poincare, HRA and CSI cases use.",
+  "pipeline": "readRDS(rr5min_f1y01) -> PhysioECG::ecgHRVtime(): Task-Force time-domain HRV (MeanNN, SDNN, RMSSD, pNN50). The reference feeds the identical RR series to NeuroKit2 hrv_time as R-peak samples at 1000 Hz (peaks = cumsum with a leading 0, so both tools see exactly the same 391 intervals) and compares. Deterministic.",
+  "note": "The root is the 5-minute Fantasia RR data.frame (shared with the Poincare/HRA/CSI cases). This is a CROSS-TOOL certification of the shipped ecgHRVtime op against the field-standard NeuroKit2 hrv_time. The three core Task-Force metrics -- MeanNN, SDNN, RMSSD -- reproduce NeuroKit2 BIT-FOR-BIT (max |diff| 0) because both implement the identical formulas. The sole divergence is pNN50: ecgHRVtime divides the nn50 count (145 successive |differences| > 50 ms) by the number of successive differences (N-1 = 390), while NeuroKit2 divides by the number of intervals (N = 391), giving 37.18% vs 37.08% -- a ~0.095-point gap that is PURELY a documented denominator convention (the nn50 count itself is identical), not a beat-detection or threshold difference. ecgHRVtime also reports mean_hr = 60000/mean(RR) (heart rate of the mean interval), which NeuroKit2 hrv_time does not return, so it is not cross-validated here."
+}

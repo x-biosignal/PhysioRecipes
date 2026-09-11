@@ -1,0 +1,118 @@
+---
+title: "Descriptive vs formal: the Jarque-Bera normality test, a newly-authored op, rejects — vs scipy.stats"
+subtitle: "A worked normality-test case study on real EEG, introducing and certifying jarqueBeraTest"
+categories: [eeg, statistics, normality-test, cross-tool-validation, validated]
+author: "Yusuke Matsui"
+date: "2026-09-07"
+---
+
+> **What this case shows** — `signalMoments` said the EEG amplitude distribution was *descriptively*
+> near-Gaussian (mild skew and kurtosis). The **Jarque-Bera test** asks it *formally* — and answers with
+> a twist. This case adds the test (**`jarqueBeraTest`**, built on `signalMoments`). On a real
+> eyes-closed EEG channel it reproduces **`scipy.stats.jarque_bera`** **bit-for-bit** — statistic *and*
+> p-value — and it **rejects normality** (JB = 15.5, p = 4.3e-4) **even though** the distribution looks
+> near-Gaussian. The reason is the honest lesson of the fold: at N = 1600, the test is powerful enough to
+> flag even mild deviations.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `jarqueBeraTest(x)` → the JB statistic, p-value and df.
+**Way of thinking** — "is it Gaussian?" has two answers. The descriptive one (skew/kurtosis near zero →
+close enough) and the formal one (a test → reject or not). On long signals they diverge: any real
+deviation becomes significant. Report the *effect size* (moments), not just the verdict.
+**Ecosystem usage** — `PhysioAnalysis::jarqueBeraTest()`, built on `signalMoments()`.
+:::
+
+## Proposition
+
+On real eyes-closed POz EEG, `jarqueBeraTest` reproduces `scipy.stats.jarque_bera` bit-for-bit
+(statistic and p-value); JB = 15.5 exceeds the 5.99 critical value, rejecting normality (p = 4.3e-4),
+while `signalMoments` finds the distribution descriptively near-Gaussian.
+
+## Question & goal
+
+**The question is a gap and a nuance: `signalMoments` suggested near-normality — does the formal
+Jarque-Bera test agree, and can we author it to reproduce scipy.stats exactly?** The goal is to introduce
+`jarqueBeraTest`, certify it bit-for-bit, and interpret the descriptive-vs-formal tension.
+
+## Challenge & approach
+
+The Jarque-Bera statistic is JB = N/6·(S² + K²/4), from the skewness S and excess kurtosis K (via
+`signalMoments`), compared to a chi-square(2) under the normality null. We compute it and check the
+statistic and p-value against `scipy.stats.jarque_bera` on the identical signal.
+
+```
+EEG POz (eegmmidb) → signalMoments (skew, kurtosis) → JB = N/6 (S^2 + K^2/4) → p = chi^2(2) upper tail
+                    vs scipy.stats.jarque_bera (same signal) → bit-exact (|diff| ~2e-14) for JB and p
+                    JB = 15.5 > crit 5.99 -> reject normality (p = 4.3e-4)  |  yet descriptively ~Gaussian
+```
+
+## Data
+
+**EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet)**: subject **S002**, run **R02
+(eyes-closed)**, channel **POz**, 10 s at 160 Hz — the same git-tracked vector the
+[signal-moments](../signal-moments-eegmmidb/index.qmd) and other cases use. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the normal QQ-plot of the POz amplitudes — the points hug the reference line through the body of the distribution (descriptively near-Gaussian) but curl mildly at the tails, the deviation JB detects. Right: the JB statistic (15.5) against the 95% chi-square(2) critical value (5.99) on a log scale — JB is well above, so normality is rejected (p = 4.3e-4).](artifacts/figure.png)
+
+*How to read this:* the left panel shows *why* it looks Gaussian (near-line QQ) and *why* the test still
+rejects (tail curvature); the right panel is the formal verdict.
+
+| Quantity | Value |
+|---|--:|
+| **Jarque-Bera statistic** | **15.5** |
+| statistic vs `scipy.stats` (\|diff\|) | **2e-14** (bit-exact) |
+| p-value vs `scipy.stats` (\|diff\|) | **4e-18** (bit-exact) |
+| 95% chi-square(2) critical value | **5.99** |
+| normality rejected | **yes** (p = 4.3e-4) |
+| descriptively near-Gaussian (signalMoments) | **yes** |
+
+The newly-authored op equals scipy.stats for both the statistic and the p-value, and surfaces the
+descriptive-vs-formal tension. Values trace to
+[`artifacts/jb_summary.csv`](artifacts/jb_summary.csv).
+
+## Conclusion
+
+`jarqueBeraTest` is the formal counterpart of `signalMoments`, and it is exact: bit-for-bit against
+scipy.stats. The transferable takeaway: **on a long signal, a normality test almost always rejects — so
+read the moments, not the verdict. Skewness −0.23 and excess kurtosis +0.16 mean "close to Gaussian for
+practical purposes", even when the p-value says "significantly not". Report the effect size.**
+
+## Open questions
+
+- Because JB rejects at large N, the useful question is effect size, not significance: reporting the
+  moments alongside JB, or subsampling to a fixed N, separates "meaningfully non-Gaussian" from "trivially
+  significant"; a per-epoch JB is also an artifact-screening layer. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Jarque-Bera normality test | `jarqueBeraTest()` | PhysioAnalysis |
+| Distribution moments (effect size) | `signalMoments()` | PhysioAnalysis |
+
+**Reading the result.**
+
+- **statistic / p-value** — JB > chi-square(2) critical (5.99 at 5%) → reject normality; but on long
+  signals this rejects even for near-Gaussian data.
+- **read with the moments** — pair JB with `signalMoments()`: skewness and excess kurtosis near zero mean
+  the deviation is small in *magnitude*, whatever the p-value says.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioAnalysis)
+
+jb <- jarqueBeraTest(x)
+jb$statistic > qchisq(0.95, 2)   # reject normality at 5%?
+signalMoments(x)[c("skewness", "kurtosis")]   # ... but read the effect size
+# the JB statistic and p-value reproduce scipy.stats.jarque_bera bit-for-bit.
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/jb_summary.csv`](artifacts/jb_summary.csv), and [`audit.py`](audit.py) re-checks the JB
+statistic, the bit-exact scipy.stats match for both statistic and p-value, the critical value, the
+rejection, and the descriptive-near-Gaussian nuance, plus the honestly-noted scope (newly-authored op
+built on signalMoments; machine-precision; large-N power lesson).

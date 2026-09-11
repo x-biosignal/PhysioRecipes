@@ -1,0 +1,11 @@
+{
+  "dataset": "GaitRec -- large-scale ground reaction force dataset of healthy and impaired gait",
+  "citation": "Horsak B, Slijepcevic D, Raberger AM, Schwab C, Worisch M, Zeppelzauer M. GaitRec, a large-scale ground reaction force dataset of healthy and impaired gait. Scientific Data 2020;7:143. doi:10.1038/s41597-020-0481-z.",
+  "doi": "10.1038/s41597-020-0481-z",
+  "figshare_collection": "4788012",
+  "license": "CC-BY 4.0",
+  "files_used": ["GRF_F_V_PRO_left.csv (processed, BW- and time-normalised vertical GRF)", "GRF_metadata.csv (CLASS_LABEL, SHOD_CONDITION, SESSION_TYPE, SPEED)"],
+  "selection": "CLASS_LABEL in {HC,A,K,H,C}; SHOD_CONDITION==1 (standardised footwear); SESSION_TYPE==1 (initial-presentation baseline); SPEED==2 (self-selected -- the only speed at which the pathology classes were recorded). One per-subject mean curve.",
+  "groups": {"HC (healthy control)": 208, "A (ankle)": 483, "K (knee)": 499, "H (hip)": 364, "C (calcaneus)": 290, "total": 1844},
+  "public": true
+}

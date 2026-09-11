@@ -1,0 +1,34 @@
+{
+  "id": "tsallis-entropy-eegmmidb",
+  "title": "The entropy family, completed: Tsallis entropy (a newly-authored op) vs Renyi -- they meet only at Shannon",
+  "modality": ["eeg", "complexity", "tsallis-entropy", "information-theory", "generalized-entropy"],
+  "packages": ["PhysioEEG"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "The Tsallis entropy is the OTHER canonical one-parameter generalization of the Shannon entropy -- NON-ADDITIVE (from non-extensive statistical mechanics), the counterpart of the (additive) Renyi entropy the previous case added. At q=1 both recover Shannon, but they diverge otherwise. This case introduces a NEWLY-AUTHORED op, tsallisEntropy, completing the generalized-entropy pair. On a real eyes-closed posterior EEG channel it reproduces NeuroKit2 entropy_tsallis BIT-FOR-BIT (max |diff| ~9e-16) across q = {0.5, 1, 2, 3}; at q=1 it exactly recovers the Shannon entropy (2.325 nats) AND coincides with the Renyi entropy, but at q=2 the Tsallis entropy (0.885) diverges sharply from the Renyi entropy (2.167) -- the two families meet ONLY at q=1 because Tsallis is non-additive; and it is non-increasing in q.",
+  "opdag": ["tsallisEntropy"],
+  "claims": [
+    { "id": "tsallis_collision", "statement": "Tsallis entropy at q=2 (collision-order) of the POz amplitude distribution (nats)", "value": 0.8854257813, "artifact": "artifacts/tsallis_summary.csv", "status": "PASS" },
+    { "id": "tsallis_shannon", "statement": "Tsallis entropy at q=1 -- exactly the Shannon entropy (the family's special case)", "value": 2.3247657693, "artifact": "artifacts/tsallis_summary.csv", "status": "PASS" },
+    { "id": "max_diff_nk", "statement": "max |tsallisEntropy - NeuroKit2 entropy_tsallis| over q = {0.5, 1, 2, 3} (bit-exact family)", "value": 8.881784e-16, "artifact": "artifacts/tsallis_summary.csv", "status": "PASS" },
+    { "id": "diverge_from_renyi_q2", "statement": "|Tsallis(q=2) - Renyi(alpha=2)| -- the two generalizations diverge (non-additive vs additive)", "value": 1.281107, "artifact": "artifacts/tsallis_summary.csv", "status": "PASS" },
+    { "id": "agree_at_1", "statement": "|Tsallis(q=1) - Renyi(alpha=1)| -- both recover Shannon, so they coincide at 1 (~0)", "value": 0, "artifact": "artifacts/tsallis_summary.csv", "status": "PASS" },
+    { "id": "monotonic", "statement": "Tsallis S_q is non-increasing in q (1 = the defining property holds)", "value": 1, "artifact": "artifacts/tsallis_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The newly-authored tsallisEntropy op is validated against NeuroKit2 entropy_tsallis across q = {0.5, 1, 2, 3}. NeuroKit2 re-computes the Tsallis entropy from the identical amplitude histogram (freq = p); the agreement is BIT-FOR-BIT (max |diff| ~9e-16) because both compute S_q = (1 - sum p^q)/(q-1) in nats. The q=1 value (2.325 nats) exactly recovers the Shannon entropy and coincides with the Renyi entropy there (|diff| = 0), but at q=2 the Tsallis entropy (0.885) diverges from the Renyi entropy (2.167) by 1.281 -- the two generalizations agree ONLY at q=1 because Tsallis is non-additive while Renyi is additive. The Tsallis family is monotonically decreasing in q (4.954 -> 2.325 -> 0.885 -> 0.492).",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), channel POz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/tsallis_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the newly-authored tsallisEntropy reproduces NeuroKit2 entropy_tsallis bit-for-bit (max |diff| ~9e-16) across q = {0.5, 1, 2, 3}; (2) at q=1 it exactly recovers the Shannon entropy and coincides with the Renyi entropy, but at q=2 it diverges from the Renyi entropy by 1.281 -- the two generalizations meet ONLY at q=1; the family is monotonically decreasing in q. HONEST scope: (1) this op is NEWLY AUTHORED to complete the generalized-entropy pair -- the ecosystem had Shannon-based entropies and the just-added (additive) Renyi family, but not the non-additive Tsallis family; (2) this is a genuine MACHINE-PRECISION match -- the op and NeuroKit2 compute the IDENTICAL formula in nats on the same histogram, so the ~9e-16 residual is the floating-point floor, not a convention agreement; the q=1 = Shannon, the coincidence-with-Renyi-at-1, and the divergence-elsewhere (non-additive vs additive) are the families' defining mathematical structure, verified here; (3) the value is a histogram-based amplitude-distribution entropy (16 equal-width bins), so it is bin-count-dependent -- the reproducible content is the bit-exact family and the Renyi/Tsallis divergence structure, not an absolute physiological quantity; (4) run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "The Tsallis entropy's non-additivity is governed by the entropic index q, which in non-extensive statistical mechanics reflects long-range correlations / multifractality. Estimating the q that best linearizes an EEG's generalized dimensions (a 'q-triplet' analysis), and comparing it across brain states, would turn the single fixed-q value into a physics-grounded descriptor of the signal's correlation structure. Documented, not escalated.", "artifact": "artifacts/tsallis_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["NeuroKit2 entropy_tsallis (Python)"],
+  "status": "validated"
+}

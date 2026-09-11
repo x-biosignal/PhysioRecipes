@@ -1,0 +1,35 @@
+{
+  "id": "median-abs-dev-eegmmidb",
+  "title": "Robust dispersion: the median absolute deviation (a new op) reproduces scipy AND base R bit-for-bit -- and agrees with the SD",
+  "modality": ["eeg", "statistics", "robust-dispersion", "cross-tool-validation", "signal-analysis"],
+  "packages": ["PhysioAnalysis"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)", "version": "PhysioNet 1.0.0",
+    "record": "subject S002, run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "url": "https://physionet.org/content/eegmmidb/1.0.0/", "public": true,
+    "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000)."
+  },
+  "proposition": "The standard deviation is inflated by the spikes and artifacts common in physiological signals; the median absolute deviation (MAD) is the robust alternative. signalMoments provided the classical SD but the ecosystem had no robust dispersion op. This case introduces medianAbsDev (the robust companion of signalMoments). On a real eyes-closed posterior EEG channel, with the raw MAD (constant=1), it reproduces BOTH scipy.stats.median_abs_deviation AND base R stats::mad(constant=1) BIT-FOR-BIT (max |diff| 0 vs each) -- a double-reference agreement. The finding: the normal-consistent MAD-scale (48.93) matches the population SD (48.83) to within 0.2% (ratio 1.002); because MAD is robust and SD is not, this agreement is positive evidence that the eyes-closed POz amplitude distribution is near-Gaussian and artifact-free, cross-consistent with the signalMoments and Jarque-Bera folds on the same channel.",
+  "opdag": ["medianAbsDev"],
+  "claims": [
+    { "id": "median_abs_dev", "statement": "median absolute deviation (raw, constant=1) of the POz channel -- robust dispersion", "value": 33, "artifact": "artifacts/mad_summary.csv", "status": "PASS" },
+    { "id": "max_diff_scipy", "statement": "|medianAbsDev - scipy.stats.median_abs_deviation| (bit-exact)", "value": 0, "artifact": "artifacts/mad_summary.csv", "status": "PASS" },
+    { "id": "max_diff_baser", "statement": "|medianAbsDev - base R mad(constant=1)| (bit-exact)", "value": 0, "artifact": "artifacts/mad_summary.csv", "status": "PASS" },
+    { "id": "mad_scale_normal", "statement": "normal-consistent robust SD estimate (MAD x 1/qnorm(0.75))", "value": 48.9258732107, "artifact": "artifacts/mad_summary.csv", "status": "PASS" },
+    { "id": "sd_population", "statement": "classical population standard deviation (from signalMoments)", "value": 48.8326312161, "artifact": "artifacts/mad_summary.csv", "status": "PASS" },
+    { "id": "mad_sd_ratio", "statement": "robust MAD-scale / classical SD -- near 1 for clean near-Gaussian data", "value": 1.0019094198, "artifact": "artifacts/mad_summary.csv", "status": "PASS" },
+    { "id": "n_samples", "statement": "samples in the analyzed channel (10 s at 160 Hz)", "value": 1600, "artifact": "artifacts/mad_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The new medianAbsDev op is validated against BOTH scipy.stats.median_abs_deviation AND base R stats::mad on the identical signal (both scale/constant = 1) -- a double reference. All three compute the raw MAD = median(|x - median(x)|) and agree BIT-FOR-BIT (max |diff| 0 vs each). The normal-consistent robust SD estimate and the population SD are reported for the robust-vs-classical comparison.",
+    "data": "REAL -- eegmmidb (PhysioNet), subject S002 run R02 (eyes-closed), channel POz, 10 s at 160 Hz",
+    "artifacts": ["artifacts/mad_summary.csv", "artifacts/figure.png"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) the NEW robust-dispersion op medianAbsDev reproduces BOTH scipy and base R bit-for-bit; (2) the robust MAD-scale agrees with the classical SD on this clean channel. HONEST scope: (1) this is a NEW op, the robust dispersion companion of signalMoments (whose SD is the classical, non-robust dispersion); the ecosystem had no median-based robust scale; (2) with the default constant=1 (the raw MAD) it reproduces BOTH scipy.stats.median_abs_deviation (scale=1) AND base R stats::mad(constant=1) BIT-FOR-BIT (max |diff| = 0 vs each) -- a genuine DOUBLE-REFERENCE machine-precision agreement, because the raw MAD is an unambiguous order statistic (the median is identical across tools for the same data); (3) CONVENTION note: the normal-consistent scaling that makes MAD estimate the SD of Gaussian data uses the constant 1/qnorm(0.75) ~ 1.4826; base R mad() defaults to a rounded 1.4826, while scipy median_abs_deviation(scale='normal') uses the full-precision 1/0.67448975..., so the two differ at ~1e-6 relative in the SCALED form -- this case therefore validates the RAW MAD (constant=1), exact across all tools, and reports the normal-consistent value using the full-precision constant; (4) the finding: the normal-consistent MAD-scale (48.93) matches the population SD (48.83) to within 0.2% (ratio 1.002), which -- because MAD is robust and SD is not -- is positive evidence that the eyes-closed POz amplitude distribution is near-Gaussian and free of heavy-tailed artifacts, cross-consistent with the signalMoments (skew -0.23, excess kurtosis +0.16) and Jarque-Bera folds on the SAME channel; a robust/classical scale divergence (MAD-scale below SD) would instead flag artifact contamination; (5) the value is a signal property on one subject/segment; run_simulation = FALSE (deterministic)."
+  },
+  "open_questions": [
+    { "q": "Because the MAD-scale/SD ratio distinguishes clean from artifact-contaminated segments, sweeping it per-epoch (or per-channel) is a lightweight artifact-screening layer: epochs where the SD greatly exceeds the robust MAD-scale contain the heavy-tailed transients the SD is sensitive to and MAD is not. Documented, not escalated.", "artifact": "artifacts/mad_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["scipy.stats.median_abs_deviation (Python)", "base R stats::mad"],
+  "status": "validated"
+}

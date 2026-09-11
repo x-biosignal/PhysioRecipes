@@ -1,0 +1,145 @@
+---
+title: "Complexity, exactly: EEG permutation entropy reproduced to machine precision"
+subtitle: "A worked signal-complexity case study validating eegComplexity against antropy across 64 channels"
+categories: [eeg, complexity, nonlinear-dynamics, permutation-entropy, validated]
+author: "Yusuke Matsui"
+date: "2026-09-03"
+---
+
+> **What this case shows** — the complexity of a brain signal — how unpredictable its
+> moment-to-moment fluctuations are — is a workhorse biomarker: **permutation entropy**
+> tracks cortical state, depth of anaesthesia, consciousness, and neurological disease.
+> But complexity measures are notorious for implementation-dependent definitions.
+> Permutation entropy (Bandt & Pompe 2002) is the exception: it counts the signal's
+> **ordinal (rank) patterns** and takes the normalized Shannon entropy of their
+> distribution — an *exactly-defined* algorithm. Running `eegComplexity` on all **64
+> channels** of a real eyes-closed resting EEG and comparing, channel by channel,
+> against the canonical Python **antropy** shows they agree not approximately but to
+> **machine precision**: the per-channel entropies correlate **1.0** with a maximum
+> absolute difference of **2×10⁻¹⁶**, and the values are physiologically plausible
+> (mean 0.91). **The complexity biomarker the ecosystem reports is, to the last bit,
+> the field-standard one.**
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — to quantify signal complexity: take the EEG → call
+`eegComplexity(pe, measures="permutation_entropy", perm_order, tau)` → read the
+per-channel entropy → map it as a complexity biomarker (topography, state contrast).
+**Way of thinking** — not all complexity measures are equal: permutation entropy is
+*exactly defined* (ordinal patterns), so it is reproducible to the bit; sample entropy
+(a tolerance `r`) and spectral entropy (a PSD estimate) carry implementation choices,
+so cross-tool numbers differ — always know which kind you are reporting.
+**Ecosystem usage** — `PhysioEEG::eegComplexity()` offers permutation / sample /
+approximate / multiscale entropy, Lempel-Ziv, Higuchi FD, DFA, Hjorth, and spectral
+entropy.
+:::
+
+## Proposition
+
+On all 64 channels of a real eyes-closed resting EEG (eegmmidb S001R02),
+`eegComplexity`'s permutation entropy reproduces the canonical Python `antropy` to
+machine precision: correlation 1.0, max |diff| = 2×10⁻¹⁶, mean entropy 0.91.
+
+## Question & goal
+
+**The question is whether the ecosystem's complexity number is the field-standard
+number.** A biomarker is only comparable across studies if the computation is the
+same. The goal is a channel-by-channel head-to-head against `antropy`, choosing a
+measure — permutation entropy — that is exactly defined so that any difference would
+be a genuine implementation bug, not a convention.
+
+## Challenge & approach
+
+Complexity measures hide implementation choices. We sidestep them by validating the
+one measure with no free tolerance: permutation entropy of order 3, delay 1. We
+compute it per channel with `eegComplexity` and with `antropy.perm_entropy`, matched
+settings, and compare.
+
+```
+readEDF → eegComplexity (permutation entropy, per channel) ┐
+                                                           ├─ compare → r, max|diff|
+same signal → antropy.perm_entropy (order 3, delay 1)      ┘
+```
+
+## Data
+
+**eegmmidb — EEG Motor Movement/Imagery Database (PhysioNet)**: subject S001, baseline
+run **R02 (eyes-closed rest)**, all 64 channels, 160 Hz. The same EDF the sibling
+`eeg-aperiodic` / `eeg-berger` cases read. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: the permutation entropy of each of the 64 channels — eegComplexity versus the canonical antropy, on the dashed identity line (r = 1.0, max |diff| = 2×10⁻¹⁶: the points are indistinguishable from the line). Right: the per-channel complexity across the scalp (mean 0.91, range 0.74–0.98) — a plausible resting-EEG complexity topography.](artifacts/figure.png)
+
+*How to read this:* if the two tools disagreed at all, the left panel would show
+scatter off the diagonal. Instead every point lies exactly on it — the two
+implementations of permutation entropy are numerically identical.
+
+| Quantity | This reproduction | Reference |
+|---|---|---|
+| Entropy correlation (64 ch) | **1.0** | `antropy` |
+| Max \|entropy diff\| | **2×10⁻¹⁶** | 0 (identical algorithm) |
+| Mean permutation entropy | **0.908** | **0.908** (antropy) |
+| Channels | **64** | — |
+
+The two engines are numerically identical across the head. Values trace to
+[`artifacts/perm_entropy_summary.csv`](artifacts/perm_entropy_summary.csv) and the
+per-channel table
+[`artifacts/perm_entropy_by_channel.csv`](artifacts/perm_entropy_by_channel.csv).
+
+## Conclusion
+
+The ecosystem's permutation entropy is exactly the field-standard `antropy` computation
+— so the complexity biomarker it reports is bit-for-bit comparable to the literature.
+The transferable takeaway: **prefer an exactly-defined complexity measure (permutation
+entropy) when you need cross-study comparability, and validate it against the canonical
+tool — tolerance-dependent measures like sample entropy will not match to the bit.**
+
+## Open questions
+
+- Permutation entropy is a per-channel scalar; its power as a biomarker comes from
+  **contrasts** — eyes-open vs eyes-closed, across sleep stages, across the scalp as a
+  complexity topography, or against a clinical group. Extending this validated
+  estimator to a within-subject **state contrast** (does complexity drop when the eyes
+  close?) or a **multiscale** version (Costa's MSE across time scales) would turn a
+  validated number into a complexity study. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| signal complexity (permutation / sample / …) | `eegComplexity()` | PhysioEEG |
+| the aperiodic 1/f background (context) | `eegAperiodic()` | PhysioEEG |
+| band power (oscillatory context) | `bandPower()` | PhysioEEG |
+
+**Choosing the parameters.**
+
+- **measure** — for cross-study comparability prefer `permutation_entropy` (exactly
+  defined); reach for `sample_entropy` / `dfa` only when you fix and report their
+  parameters, because they differ between tools.
+- **perm_order / tau** — order 3–5 and delay 1 are standard; higher order needs more
+  data (there are `order!` patterns to populate).
+- **normalization** — keep it normalized (÷ log(order!)) so entropies are comparable
+  across settings and channels.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioEEG)
+
+pe <- readEDF("S001R02.edf")                            # 64-ch eyes-closed rest
+cx <- eegComplexity(pe, measures = "permutation_entropy",
+                    perm_order = 3, tau = 1)
+cx$permutation_entropy                                   # per-channel complexity
+mean(cx$permutation_entropy)                             # 0.908
+
+# exact by construction: matches the canonical antropy.perm_entropy to machine precision
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/`](artifacts/) — the summary in
+[`perm_entropy_summary.csv`](artifacts/perm_entropy_summary.csv) and the per-channel
+entropies in
+[`perm_entropy_by_channel.csv`](artifacts/perm_entropy_by_channel.csv) — and
+[`audit.py`](audit.py) re-checks each reported number, the machine-precision `antropy`
+agreement, and the honestly-noted contrast with the tolerance-dependent entropies.

@@ -1,0 +1,9 @@
+{
+  "dataset": "WBDS -- Fukuchi, Fukuchi & Duarte (2018), a public data set of overground and treadmill walking",
+  "source": "figshare",
+  "url": "https://doi.org/10.6084/m9.figshare.5722711",
+  "license": "CC-BY 4.0",
+  "record_used": "five subjects (WBDS01-05), treadmill walking. For each, two time-aligned blocks were formed: KINEMATICS = sagittal knee + ankle flexion angles derived from the sagittal markers (translation-invariant; the treadmill markers oscillate about fixed positions, so there is no forward drift), and KINETICS = the antero-posterior + vertical ground reaction force. Both blocks were down-sampled by a factor of 10 to 450 time-aligned samples.",
+  "pipeline": "markers -> sagittal knee + ankle flexion angles (offline, deterministic) alongside the AP+vertical GRF -> PhysioCrossModal::distanceCorrelation(kinematics, kinetics, permutations = 999, seed = 1) -> the distance correlation dCor (Szekely, Rizzo & Bakirov 2007) + its permutation p-value. The reference recomputes the SAME statistic with the canonical energy::dcor. Deterministic (the only randomness is the permutation null, fixed by seed = 1).",
+  "note": "The distance correlation is zero if and only if the two blocks are independent and -- unlike Pearson correlation or linear canonical correlation -- is sensitive to ANY dependence, linear or non-linear. The tracked inputs are eval/data/crossmodal-dcor/ (kinematics_wbds01.rds + kinetics_wbds01.rds for the terminal proof; blocks_5subj.rds for the 5-subject robustness). That gait kinematics and kinetics are coupled is expected biomechanically; the contribution here is a VALIDATED, general cross-modal dependence op (distanceCorrelation == energy::dcor to machine precision) demonstrated on real data with permutation significance and 5-subject robustness."
+}

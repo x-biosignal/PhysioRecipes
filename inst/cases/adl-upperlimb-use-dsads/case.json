@@ -1,0 +1,35 @@
+{
+  "id": "adl-upperlimb-use-dsads",
+  "title": "Real-world upper-limb use: the use ratio and magnitude ratio as a capacity-performance gap, on real dual-arm accelerometry",
+  "modality": ["imu", "accelerometry", "upper-limb", "adl"],
+  "packages": ["PhysioWearable"],
+  "dataset": {
+    "name": "Daily and Sports Activities Data Set (DSADS)",
+    "version": "UCI ML Repository #256 (Barshan & Altun)",
+    "record": "subject p1, 19 daily/sports activities x 60 five-second segments; right-arm and left-arm accelerometer units @ 25 Hz (acc in m/s^2 -> g)",
+    "url": "https://archive.ics.uci.edu/dataset/256",
+    "public": true,
+    "citation": "Barshan B, Altun K. Daily and Sports Activities Data Set. UCI Machine Learning Repository. doi:10.24432/C5C59F (CC-BY 4.0)."
+  },
+  "proposition": "Capacity (what an arm CAN do, measured in the clinic) and performance (what it ACTUALLY does in daily life) are different things; the wearable use ratio and magnitude ratio quantify the gap. On real dual-arm accelerometry from a healthy person the ecosystem recovers the SYMMETRIC reference: during activity both arms are used with near-equal magnitude -- every one of the 14 dynamic activities has |magnitude ratio| < 0.5 (max 0.34, mean 0.12) and use ratio 1.0, overall magnitude ratio -0.05 (0 = symmetric). This symmetry is the healthy baseline against which the stroke affected/unaffected asymmetry (use ratio << 1, magnitude ratio strongly negative) is read.",
+  "opdag": ["upperLimbUse"],
+  "claims": [
+    { "id": "use_ratio",        "statement": "overall use ratio across all 19 activities (1 = symmetric arm use)",                  "value": 0.864, "artifact": "artifacts/overall_use.csv", "status": "PASS" },
+    { "id": "magnitude_ratio",  "statement": "overall magnitude ratio (log right/left activity; 0 = symmetric)",                   "value": -0.052, "artifact": "artifacts/overall_use.csv", "status": "PASS" },
+    { "id": "n_dynamic",        "statement": "activities in which both arms are actively used (use ratio == 1)",                    "value": 14,    "artifact": "artifacts/overall_use.csv", "status": "PASS" },
+    { "id": "max_abs_mag",      "statement": "largest per-activity |magnitude ratio| among dynamic activities (all < 0.5 = symmetric)", "value": 0.343, "artifact": "artifacts/overall_use.csv", "status": "PASS" },
+    { "id": "mean_abs_mag",     "statement": "mean per-activity |magnitude ratio| among dynamic activities",                       "value": 0.119, "artifact": "artifacts/overall_use.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "Healthy bilateral symmetry (Bailey/Lang/Uswatte accelerometry framework): in the absence of impairment the two arms are used with near-equal magnitude, so the use ratio is ~1 and the magnitude ratio ~0 -- the symmetric baseline against which the affected/unaffected asymmetry of stroke (use ratio << 1, magnitude ratio strongly negative) is measured",
+    "data": "REAL -- DSADS (UCI #256), one healthy subject, dual right-arm/left-arm accelerometers @ 25 Hz across 19 activities",
+    "artifacts": ["artifacts/overall_use.csv", "artifacts/per_activity_use.csv"],
+    "all_pass": true,
+    "note": "The reproducible result is the SYMMETRY: on real dual-arm data from a healthy person, whenever the arms are actually in use both are used near-equally -- every one of the 14 dynamic activities has |magnitude ratio| < 0.5 (max 0.34 basketball, mean 0.12) and use ratio 1.0, and the overall magnitude ratio is -0.05. This recovers the healthy reference the metric is built on. Two honest-scope caveats: (1) the static activities (sitting/standing/lying, use ratio ~0) have essentially motionless arms, where the magnitude ratio is noise-dominated and the use ratio is undefined-by-inactivity, not asymmetry -- correctly excluded from the symmetry claim; (2) the canonical use ratio is a whole-DAY free-living measure -- our 19-activity lab set is not a free-living day, so the overall 0.864 is a lab-activity number pulled down only by the static activities, not a free-living use ratio. The CLINICAL application -- the affected/unaffected use ratio and the capacity-performance gap in stroke -- needs bilateral-WRIST clinical recordings (e.g. NICHD DASH), which are DUA-gated, not freely public; this case demonstrates the METHOD recovers the symmetric reference on the freely public dual-arm data available."
+  },
+  "open_questions": [
+    { "q": "The clinical capacity-performance gap -- affected-arm use ratio well below 1 and a strongly negative magnitude ratio in stroke/CP -- needs bilateral-WRIST recordings from an impaired cohort (e.g. NICHD DASH); those datasets are data-use-agreement gated, not freely public, so this case validates the method against the healthy SYMMETRIC reference and documents the clinical asymmetry as the target application. Documented, not escalated.", "artifact": "artifacts/per_activity_use.csv", "escalate": null }
+  ],
+  "reference_tools": [],
+  "status": "validated"
+}

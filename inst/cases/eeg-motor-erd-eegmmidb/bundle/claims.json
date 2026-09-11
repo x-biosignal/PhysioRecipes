@@ -1,0 +1,84 @@
+{
+  "paper": "rest_S001",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "claims": [
+    {
+      "id": "delta",
+      "statement": "absolute delta power (C3, S001, rest)",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "channel",
+        "key": "C3..",
+        "val_col": "delta"
+      },
+      "expect": 3160.55,
+      "tol": 0.05,
+      "render": [
+        "3160.55"
+      ]
+    },
+    {
+      "id": "theta",
+      "statement": "absolute theta power (C3, S001, rest)",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "channel",
+        "key": "C3..",
+        "val_col": "theta"
+      },
+      "expect": 412.82,
+      "tol": 0.05,
+      "render": [
+        "412.82"
+      ]
+    },
+    {
+      "id": "alpha",
+      "statement": "absolute alpha power (C3, S001, rest)",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "channel",
+        "key": "C3..",
+        "val_col": "alpha"
+      },
+      "expect": 323.88,
+      "tol": 0.05,
+      "render": [
+        "323.88"
+      ]
+    },
+    {
+      "id": "beta",
+      "statement": "absolute beta power (C3, S001, rest)",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "channel",
+        "key": "C3..",
+        "val_col": "beta"
+      },
+      "expect": 347.2,
+      "tol": 0.05,
+      "render": [
+        "347.20"
+      ]
+    },
+    {
+      "id": "gamma",
+      "statement": "absolute gamma power (C3, S001, rest)",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "channel",
+        "key": "C3..",
+        "val_col": "gamma"
+      },
+      "expect": 125.67,
+      "tol": 0.05,
+      "render": [
+        "125.67"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "id": "eeg-lz-sleep-consciousness-sleepedf",
+  "title": "Complexity fades in deep sleep: the Lempel-Ziv consciousness gradient, validated against antropy",
+  "modality": ["eeg", "sleep", "complexity", "consciousness", "lempel-ziv"],
+  "packages": ["PhysioEEG"],
+  "dataset": {
+    "name": "Sleep-EDF Expanded (sleep-edfx)",
+    "version": "PhysioNet 1.0.0",
+    "record": "subject SC4001, overnight PSG; EEG Fpz-Cz at 100 Hz; 60-s fixed-length concatenated EEG per stage (Wake / N2 / N3 / REM) from the expert hypnogram",
+    "url": "https://physionet.org/content/sleep-edfx/1.0.0/",
+    "public": true,
+    "citation": "Kemp B, Zwinderman AH, Tuk B, Kamphuisen HAC, Oberye JJL. Analysis of a sleep-dependent neuronal feedback loop. IEEE Trans Biomed Eng 2000;47(9):1185-1194. Sleep-EDF Expanded, PhysioNet (Goldberger et al. 2000). LZ/consciousness: Schartner et al. PLoS ONE 2017."
+  },
+  "proposition": "How conscious you are leaves a fingerprint in how COMPLEX your cortex's activity is. Lempel-Ziv complexity -- how compressible a signal is, its information content -- is the basis of the Perturbational Complexity Index, a validated index of the level of consciousness. It should therefore fall as consciousness fades into deep sleep and recover in dreaming. On a real overnight EEG it does exactly that: the Lempel-Ziv complexity of the cortex is 0.464 in wake, dips to 0.420 in N2, reaches its MINIMUM of 0.364 in deep (N3) sleep, and climbs back to 0.464 in REM -- the dreaming stage, as complex as wake. The wake-to-deep-sleep drop is 0.100. And because Lempel-Ziv is an exactly-defined algorithm, the ecosystem's eegComplexity reproduces the canonical Python antropy.lziv_complexity to MACHINE PRECISION across all four stages (max |difference| = 5.6x10^-17). The complexity signature of consciousness the ecosystem reports is, to the last bit, the field-standard one.",
+  "opdag": ["eegComplexity"],
+  "claims": [
+    { "id": "abs_diff",      "statement": "|eegComplexity LZ - antropy.lziv_complexity| on the deep-sleep EEG (machine precision)", "value": 0.0, "artifact": "artifacts/lz_summary.csv", "status": "PASS" },
+    { "id": "lz_n3_op",      "statement": "Lempel-Ziv complexity of the deep-sleep (N3) EEG -- the complexity minimum", "value": 0.3639716568, "artifact": "artifacts/lz_summary.csv", "status": "PASS" },
+    { "id": "lz_wake",       "statement": "Lempel-Ziv complexity of the wake EEG", "value": 0.4643776311, "artifact": "artifacts/lz_summary.csv", "status": "PASS" },
+    { "id": "lz_rem",        "statement": "Lempel-Ziv complexity of the REM (dream) EEG -- recovers toward wake", "value": 0.4643776311, "artifact": "artifacts/lz_summary.csv", "status": "PASS" },
+    { "id": "wake_minus_n3", "statement": "the wake-minus-deep-sleep LZ drop -- the consciousness/complexity gradient", "value": 0.1004059743, "artifact": "artifacts/lz_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "antropy (Python; Vallat) is a canonical implementation of signal-complexity measures, and Lempel-Ziv complexity (Lempel & Ziv 1976) is an exactly-defined algorithm. A correct implementation must reproduce it. Computed on the real deep-sleep EEG, eegComplexity's Lempel-Ziv matches antropy.lziv_complexity to machine precision (max |diff| = 5.6e-17 across all four stages). The finding -- LZ lowest in deep sleep (N3 0.364), highest in wake and REM (0.464) -- reproduces the established consciousness/complexity gradient.",
+    "data": "REAL -- Sleep-EDF Expanded (sleep-edfx, PhysioNet), subject SC4001 overnight PSG, EEG Fpz-Cz, 60 s per stage (Wake/N2/N3/REM)",
+    "artifacts": ["artifacts/lz_summary.csv", "artifacts/lz_by_stage.csv"],
+    "all_pass": true,
+    "note": "The reproducible findings are (1) eegComplexity's Lempel-Ziv == antropy.lziv_complexity to machine precision (max |diff| = 5.6e-17), and (2) the consciousness gradient: LZ is lowest in deep sleep (N3 0.364), highest in wake and REM (0.464), N2 intermediate (0.420). HONEST scope: (1) Lempel-Ziv is chosen because it is EXACTLY defined (median-binarize, count distinct substrings, normalize) -- so this is a true machine-precision validation, extending the earlier permutation-entropy validation to a SECOND exactly-defined complexity measure with a distinct meaning (information content / consciousness, vs the predictability that permutation entropy captures); (2) the consciousness gradient is shown on a SINGLE subject and a 60-s fixed-length signal per stage -- a demonstration of the established finding, not a norm; the stage signals are fixed-length so the length-dependent LZ normalization is comparable; (3) wake and REM come out equal here (0.464), consistent with REM being a conscious-like (dreaming) state; (4) run_simulation = FALSE (deterministic on both sides, so the values replay byte-identically)."
+  },
+  "open_questions": [
+    { "q": "The gradient is the signature: tracking LZ complexity continuously across a whole night (does it dip with each deep-sleep cycle?), across subjects, or against an anaesthesia depth would turn this validated estimator into a consciousness-monitoring study -- the Perturbational Complexity Index applies the same idea to TMS-evoked responses to score consciousness in coma and disorders of consciousness. A multi-channel spatial LZ (spatiotemporal complexity) would extend it further. Documented, not escalated.", "artifact": "artifacts/lz_summary.csv", "escalate": null }
+  ],
+  "reference_tools": ["antropy (Python, PyPI)"],
+  "status": "validated"
+}
