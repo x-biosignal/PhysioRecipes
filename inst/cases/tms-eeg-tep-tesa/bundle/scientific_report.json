@@ -1,0 +1,101 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "2/2 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:tms_tep",
+      "status": "PASS",
+      "detail": "5/5 agree [n_components=6 vs ref 6; n100_latency=115 vs ref 115; p180_latency=188 vs ref 188; canonical_order=1 vs ref 1; polarity_match=92.1 vs ref 92.1]",
+      "citation": "TESA example TMS-EEG data (Rogasch et al., NeuroImage 2017;147:934; figshare 3188800, GPL 2.0+). 150 TMS pulses, 59-channel EEG; the canonical TMS-evoked-potential component sequence."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "n_components": 6,
+    "n100_latency": 115,
+    "p180_latency": 188,
+    "canonical_order": 1,
+    "polarity_match": 92.1
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "tms_tep",
+    "citation": "TESA example TMS-EEG data (Rogasch et al., NeuroImage 2017;147:934; figshare 3188800, GPL 2.0+). 150 TMS pulses, 59-channel EEG; the canonical TMS-evoked-potential component sequence.",
+    "description": "tepAverage on the real TESA TMS-EEG average recovers the canonical TEP: 6 components in monotonic temporal order, N100 median 115 ms, P180 median 188 ms, mean across-channel polarity match 92.1%",
+    "from_step": {},
+    "scores": {
+      "n_components": 6,
+      "n100_latency": 115,
+      "p180_latency": 188,
+      "canonical_order": 1,
+      "polarity_match": 92.1
+    },
+    "checks": [
+      {
+        "metric": "n_components",
+        "expect": 6,
+        "tol": 0.5,
+        "ref_value": 6,
+        "term_value": 6
+      },
+      {
+        "metric": "n100_latency",
+        "expect": 115,
+        "tol": 1,
+        "ref_value": 115,
+        "term_value": 115
+      },
+      {
+        "metric": "p180_latency",
+        "expect": 188,
+        "tol": 1,
+        "ref_value": 188,
+        "term_value": 188
+      },
+      {
+        "metric": "canonical_order",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "polarity_match",
+        "expect": 92.1,
+        "tol": 0.5,
+        "ref_value": 92.1,
+        "term_value": 92.1
+      }
+    ]
+  }
+}

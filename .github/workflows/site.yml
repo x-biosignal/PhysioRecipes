@@ -1,0 +1,67 @@
+name: validate-and-render
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Integrity gate: every case must satisfy the SCHEMA invariants and its own
+  # number-tracing audit before anything is published.
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Validate every case
+        run: |
+          set -e
+          fail=0
+          for d in inst/cases/*/ ; do
+            id=$(basename "$d")
+            echo "::group::$id"
+            python3 tools/validate_case.py "inst/cases/$id" || fail=1
+            if [ -f "inst/cases/$id/audit.py" ]; then
+              python3 "inst/cases/$id/audit.py" || fail=1
+            fi
+            echo "::endgroup::"
+          done
+          if [ "$fail" -ne 0 ]; then
+            echo "::error::one or more cases failed validation"; exit 1
+          fi
+
+  # Render the Quarto gallery. The case pages are plain markdown (numbers are
+  # pre-computed in each bundle), so rendering needs only Quarto — no ecosystem
+  # packages or data downloads.
+  render:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: quarto-dev/quarto-actions/setup@v2
+      - name: Render gallery
+        run: quarto render
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: render
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

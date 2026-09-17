@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-05T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real 5-minute RR window (Fantasia f1y01, a young healthy adult), ecgHRVpoincare's SD1/SD2/ratio reproduce an independent from-scratch numpy implementation of the analytical closed-form (Brennan 2001, unbiased n-1 variance) BIT-FOR-BIT, and NeuroKit2 hrv_nonlinear: SD1 bit-for-bit (the universal SDSD/sqrt(2)); SD2 up to a documented ~0.2 ms convention (the op uses the analytical closed-form SD2^2 = 2*SDNN^2 - 0.5*SDSD^2; NeuroKit2 uses the geometric paired-projection std((RR_n+RR_n+1)/sqrt(2)), which an independent numpy paired projection reproduces bit-for-bit).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "poincare_sd1_sd2"
+  },
+  "analysis_plan": {
+    "dataset": "Fantasia Database (PhysioNet), subject f1y01 (young healthy adult), the first 5-minute RR window (time <= 300 s, 392 RR intervals), RR in integer ms derived at 250 Hz",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "ecgHRVpoincare",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "poincare_sd1_sd2",
+      "threshold": "descriptive: SD1/SD2/ratio equal an independent numpy analytical closed-form to machine precision (max |diff| < 1e-10); SD1 equals NeuroKit2's SD1 to < 1e-9; the numpy paired-projection equals NeuroKit2's SD2 to < 1e-9 (identifying the SD2 convention); the op-vs-NeuroKit2 SD2 gap is a documented ~0.2 ms convention"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "fb76a4dbf43b444805fa81e4b130731a7b43505aa35208f65835789f0b0daa71",
+    "registered_at": "2026-09-05T00:00:00Z"
+  }
+}

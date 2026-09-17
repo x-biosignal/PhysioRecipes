@@ -1,0 +1,62 @@
+{
+  "paper": "cohort-longitudinal-parkinsons-updrs",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "n_subjects",
+      "statement": "Parkinson's patients in the longitudinal telemonitoring cohort",
+      "expect": 42,
+      "artifact": 42,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_recordings",
+      "statement": "voice recordings analysed (repeated measures over ~6 months)",
+      "expect": 5875,
+      "artifact": 5875,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "fixef_agreement",
+      "statement": "max absolute fixed-effect difference, fitMixedModel vs lme4::lmer (machine precision)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "ranef_sd",
+      "statement": "subject random-intercept SD (baseline between-patient UPDRS spread, points)",
+      "expect": 10.0650168,
+      "artifact": 10.065017,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "beta_testtime",
+      "statement": "UPDRS progression slope: test_time fixed effect (UPDRS points/day, > 0 = progression)",
+      "expect": 0.0187505734,
+      "artifact": 0.018751,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "cohort_n",
+      "statement": "subjects in the PhysioCohort container built end-to-end",
+      "expect": 42,
+      "artifact": 42,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

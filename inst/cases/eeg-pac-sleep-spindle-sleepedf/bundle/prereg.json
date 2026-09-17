@@ -1,0 +1,41 @@
+{
+  "registered_at": "2026-09-03T00:00:00Z",
+  "hypothesis": {
+    "statement": "On the NREM (N2+N3) EEG of one real overnight polysomnogram (Sleep-EDF SC4001, Fpz-Cz), the amplitude of the sleep-spindle band (12-15 Hz) is coupled to the phase of the slow oscillation (0.5-1.25 Hz): the Tort modulation index is well above a circular-shift surrogate null, and phaseAmplitudeCoupling reproduces the canonical Python tensorpac to machine precision.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "so_spindle_phase_amplitude_coupling"
+  },
+  "analysis_plan": {
+    "dataset": "Sleep-EDF Expanded (PhysioNet sleep-edfx), subject SC4001, EEG Fpz-Cz at 100 Hz; the first 30 min of concatenated NREM (N2+N3) epochs (from the expert hypnogram)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "phaseAmplitudeCoupling",
+        "params": {
+          "sr": 100,
+          "phase_band": [
+            0.5,
+            1.25
+          ],
+          "amp_band": [
+            12,
+            15
+          ],
+          "method": "tort"
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "pac_mi",
+      "estimand": "so_spindle_phase_amplitude_coupling",
+      "threshold": "descriptive: the SO-spindle Tort MI is significant vs a circular-shift surrogate null (z >= 3, observed above every surrogate) AND the op equals tensorpac to machine precision (|diff| < 1e-9)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "d3d0b654765e39bc4b87cf1eeb3685f28c659bcce70458f33b19829e504dfc04",
+    "registered_at": "2026-09-03T00:00:00Z"
+  }
+}

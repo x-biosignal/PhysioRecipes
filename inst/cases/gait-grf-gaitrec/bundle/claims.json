@@ -1,0 +1,100 @@
+{
+  "paper": "gait-grf-gaitrec",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "control_peak1_bw",
+      "statement": "control first (loading) GRF peak, BW",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "control_peak1_bw",
+        "val_col": "value"
+      },
+      "expect": 1.1159,
+      "tol": 0.02,
+      "render": [
+        "1.1159"
+      ]
+    },
+    {
+      "id": "patient_peak1_bw",
+      "statement": "knee-pathology first (loading) GRF peak, BW (reduced)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "patient_peak1_bw",
+        "val_col": "value"
+      },
+      "expect": 1.0185,
+      "tol": 0.02,
+      "render": [
+        "1.0185"
+      ]
+    },
+    {
+      "id": "control_trough_bw",
+      "statement": "control mid-stance GRF trough, BW",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "control_trough_bw",
+        "val_col": "value"
+      },
+      "expect": 0.7437,
+      "tol": 0.02,
+      "render": [
+        "0.7437"
+      ]
+    },
+    {
+      "id": "patient_trough_bw",
+      "statement": "knee-pathology mid-stance GRF trough, BW (raised)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "patient_trough_bw",
+        "val_col": "value"
+      },
+      "expect": 0.8355,
+      "tol": 0.02,
+      "render": [
+        "0.8355"
+      ]
+    },
+    {
+      "id": "control_peak2_bw",
+      "statement": "control second (push-off) GRF peak, BW",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "control_peak2_bw",
+        "val_col": "value"
+      },
+      "expect": 1.0978,
+      "tol": 0.02,
+      "render": [
+        "1.0978"
+      ]
+    },
+    {
+      "id": "patient_peak2_bw",
+      "statement": "knee-pathology second (push-off) GRF peak, BW (reduced)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "patient_peak2_bw",
+        "val_col": "value"
+      },
+      "expect": 1.0381,
+      "tol": 0.02,
+      "render": [
+        "1.0381"
+      ]
+    }
+  ]
+}

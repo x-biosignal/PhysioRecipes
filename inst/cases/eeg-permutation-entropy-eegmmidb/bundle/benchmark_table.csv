@@ -1,0 +1,7 @@
+"metric","value"
+"max_abs_diff",2.22044604925031e-16
+"mean_abs_diff",7.45931094670027e-17
+"pe_corr",1
+"mean_pe_op",0.907983126
+"mean_pe_antropy",0.907983126
+"n_channels",64

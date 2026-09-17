@@ -1,0 +1,80 @@
+{
+  "paper": "trimmed-mean-hrv-fantasia",
+  "n_claims": 8,
+  "n_grounded": 8,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "trimmed_mean_10",
+      "statement": "10%-trimmed mean of the RR intervals (robust location)",
+      "expect": 761.7707006369,
+      "artifact": 761.770701,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "trimmed_mean_20",
+      "statement": "20%-trimmed mean of the RR intervals (moves toward the median)",
+      "expect": 760.186440678,
+      "artifact": 760.186441,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|trimmedMean - scipy.stats.trim_mean| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_baser",
+      "statement": "|trimmedMean - base R mean(x, trim)| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "plain_mean",
+      "statement": "ordinary (untrimmed) mean RR -- inflated by the skew",
+      "expect": 765.8775510204,
+      "artifact": 765.877551,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "median_rr",
+      "statement": "median RR (the fully robust location) for the progression",
+      "expect": 756,
+      "artifact": 756,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_gt_trim_gt_median",
+      "statement": "mean > 10%-trimmed > 20%-trimmed > median (skew ordering)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_intervals",
+      "statement": "RR intervals in the 5-minute window",
+      "expect": 392,
+      "artifact": 392,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

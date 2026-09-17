@@ -1,0 +1,80 @@
+{
+  "paper": "posturography-foam-firm-bds",
+  "n_claims": 8,
+  "n_grounded": 8,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "t_statistic",
+      "statement": "paired t-statistic of foam vs firm COP path length (positive = foam sways more)",
+      "expect": 17.3168722493,
+      "artifact": 17.316872,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "neg_log10_p",
+      "statement": "-log10(two-sided p): the effect is overwhelmingly significant",
+      "expect": 21.799469,
+      "artifact": 21.799469,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "df",
+      "statement": "degrees of freedom (n - 1)",
+      "expect": 49,
+      "artifact": 49,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|pairedTTest t - scipy.stats.ttest_rel t| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_baser",
+      "statement": "|pairedTTest t - base R t.test(paired=TRUE) t| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "foam_firm_ratio",
+      "statement": "mean foam sway / mean firm sway (the sensory-reweighting effect size)",
+      "expect": 2.7576590003,
+      "artifact": 2.757659,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_foam_gt_firm",
+      "statement": "subjects with foam sway > firm sway (out of 50)",
+      "expect": 50,
+      "artifact": 50,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_subjects",
+      "statement": "paired subjects in the cohort",
+      "expect": 50,
+      "artifact": 50,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

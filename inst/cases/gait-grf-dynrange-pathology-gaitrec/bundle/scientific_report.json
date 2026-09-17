@@ -1,0 +1,128 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:grf_dynrange_vs_scipy_baser",
+      "status": "PASS",
+      "detail": "8/8 agree [t_statistic=17.262 vs ref 17.262; neg_log10_p=47.556 vs ref 47.556; df=336.89 vs ref 336.89; max_diff_scipy=0 vs ref 0; max_diff_baser=0 vs ref 0; control_patient_ratio=1.8672 vs ref 1.8672; control_gt_patient=1 vs ref 1; n_total=707 vs ref 707]",
+      "citation": "Welch BL (1947) t-test. Reference impls: scipy.stats.ttest_ind(equal_var=False) and base R stats::t.test. Data: vertical-GRF dynamic range (PhysioMoCap::grfLandmarks) in healthy controls vs knee-pathology patients, GaitRec (Horsak et al. 2020)."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "t_statistic": 17.2622957822,
+    "neg_log10_p": 47.555557,
+    "df": 336.888444,
+    "max_diff_scipy": 0,
+    "max_diff_baser": 0,
+    "control_patient_ratio": 1.8672451045,
+    "control_gt_patient": 1,
+    "n_total": 707
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "grf_dynrange_vs_scipy_baser",
+    "citation": "Welch BL (1947) t-test. Reference impls: scipy.stats.ttest_ind(equal_var=False) and base R stats::t.test. Data: vertical-GRF dynamic range (PhysioMoCap::grfLandmarks) in healthy controls vs knee-pathology patients, GaitRec (Horsak et al. 2020).",
+    "description": "re-computes the Welch two-sample t-test of control vs patient vertical-GRF dynamic range with scipy.stats.ttest_ind(equal_var=FALSE) and base R t.test and confirms twoSampleTTest reproduces BOTH bit-for-bit; also reports the control/patient mean ratio and the group sizes",
+    "from_step": {},
+    "scores": {
+      "t_statistic": 17.2622957822,
+      "neg_log10_p": 47.555557,
+      "df": 336.888444,
+      "max_diff_scipy": 0,
+      "max_diff_baser": 0,
+      "control_patient_ratio": 1.8672451045,
+      "control_gt_patient": 1,
+      "n_total": 707
+    },
+    "checks": [
+      {
+        "metric": "t_statistic",
+        "expect": 17.2622957822,
+        "tol": 1e-06,
+        "ref_value": 17.2622957822,
+        "term_value": 17.2622957822
+      },
+      {
+        "metric": "neg_log10_p",
+        "expect": 47.555557,
+        "tol": 0.01,
+        "ref_value": 47.555557,
+        "term_value": 47.555557
+      },
+      {
+        "metric": "df",
+        "expect": 336.888444,
+        "tol": 0.01,
+        "ref_value": 336.888444,
+        "term_value": 336.888444
+      },
+      {
+        "metric": "max_diff_scipy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "max_diff_baser",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "control_patient_ratio",
+        "expect": 1.8672451045,
+        "tol": 0.0001,
+        "ref_value": 1.8672451045,
+        "term_value": 1.8672451045
+      },
+      {
+        "metric": "control_gt_patient",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "n_total",
+        "expect": 707,
+        "tol": 0.5,
+        "ref_value": 707,
+        "term_value": 707
+      }
+    ]
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:two_sample_ttest_vs_scipy_baser",
+      "status": "PASS",
+      "detail": "8/8 agree [t_statistic=3.8569 vs ref 3.8569; neg_log10_p=2.7845 vs ref 2.7845; df=14.501 vs ref 14.501; max_diff_scipy=1.3323e-15 vs ref 0; max_diff_baser=0 vs ref 0; old_young_ratio=1.5033 vs ref 1.5033; old_gt_young=1 vs ref 1; n_total=50 vs ref 50]",
+      "citation": "Welch BL (1947) t-test. Reference impls: scipy.stats.ttest_ind(equal_var=False) and base R stats::t.test. Data: older vs younger subjects' foam-surface COP path length (PhysioMoCap::swayMetrics), Santos & Duarte (2016) balance dataset."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "t_statistic": 3.8569450652,
+    "neg_log10_p": 2.784484,
+    "df": 14.500741,
+    "max_diff_scipy": 1.33226762955019e-15,
+    "max_diff_baser": 0,
+    "old_young_ratio": 1.5033252716,
+    "old_gt_young": 1,
+    "n_total": 50
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "two_sample_ttest_vs_scipy_baser",
+    "citation": "Welch BL (1947) t-test. Reference impls: scipy.stats.ttest_ind(equal_var=False) and base R stats::t.test. Data: older vs younger subjects' foam-surface COP path length (PhysioMoCap::swayMetrics), Santos & Duarte (2016) balance dataset.",
+    "description": "re-computes the Welch two-sample t-test with scipy.stats.ttest_ind(equal_var=FALSE) and base R t.test and confirms twoSampleTTest reproduces BOTH bit-for-bit; also reports the older/younger mean sway ratio and the total subject count",
+    "from_step": {},
+    "scores": {
+      "t_statistic": 3.8569450652,
+      "neg_log10_p": 2.784484,
+      "df": 14.500741,
+      "max_diff_scipy": 1.33226762955019e-15,
+      "max_diff_baser": 0,
+      "old_young_ratio": 1.5033252716,
+      "old_gt_young": 1,
+      "n_total": 50
+    },
+    "checks": [
+      {
+        "metric": "t_statistic",
+        "expect": 3.8569450652,
+        "tol": 1e-06,
+        "ref_value": 3.8569450652,
+        "term_value": 3.8569450652
+      },
+      {
+        "metric": "neg_log10_p",
+        "expect": 2.784484,
+        "tol": 0.001,
+        "ref_value": 2.784484,
+        "term_value": 2.784484
+      },
+      {
+        "metric": "df",
+        "expect": 14.500741,
+        "tol": 0.001,
+        "ref_value": 14.500741,
+        "term_value": 14.500741
+      },
+      {
+        "metric": "max_diff_scipy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 1.33226762955019e-15
+      },
+      {
+        "metric": "max_diff_baser",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "old_young_ratio",
+        "expect": 1.5033254,
+        "tol": 0.001,
+        "ref_value": 1.5033254,
+        "term_value": 1.5033252716
+      },
+      {
+        "metric": "old_gt_young",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "n_total",
+        "expect": 50,
+        "tol": 0.5,
+        "ref_value": 50,
+        "term_value": 50
+      }
+    ]
+  }
+}

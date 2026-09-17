@@ -1,0 +1,160 @@
+{
+  "paper": "sway-cognition-partial-bds",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "partial_spearman_r",
+      "statement": "rank (Spearman) partial correlation of sway and TMT-A controlling for age",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "partial_spearman_r",
+        "val_col": "value"
+      },
+      "expect": 0.2008706993,
+      "tol": 1e-06,
+      "render": [
+        "0.201"
+      ]
+    },
+    {
+      "id": "neg_log10_p",
+      "statement": "-log10(two-sided p) of the age-adjusted association: still significant",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "neg_log10_p",
+        "val_col": "value"
+      },
+      "expect": 1.933653,
+      "tol": 0.01,
+      "render": [
+        "1.93"
+      ]
+    },
+    {
+      "id": "df",
+      "statement": "degrees of freedom (n - 2 - k, one covariate)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "df",
+        "val_col": "value"
+      },
+      "expect": 155,
+      "tol": 0.5,
+      "render": [
+        "155"
+      ]
+    },
+    {
+      "id": "max_diff_ppcor",
+      "statement": "|partialCorrelation - ppcor::pcor.test| (machine precision, < 1e-9)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_ppcor",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "<1e-9"
+      ]
+    },
+    {
+      "id": "max_diff_formula",
+      "statement": "|partialCorrelation - closed-form recompute| (machine precision, < 1e-9)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_formula",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "<1e-9"
+      ]
+    },
+    {
+      "id": "partial_pearson_r",
+      "statement": "linear (Pearson) partial correlation controlling for age -- vanishes",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "partial_pearson_r",
+        "val_col": "value"
+      },
+      "expect": 0.047520292,
+      "tol": 1e-06,
+      "render": [
+        "0.048"
+      ]
+    },
+    {
+      "id": "partial_pearson_p",
+      "statement": "p of the linear partial correlation (non-significant)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "partial_pearson_p",
+        "val_col": "value"
+      },
+      "expect": 0.554518,
+      "tol": 0.001,
+      "render": [
+        "0.55"
+      ]
+    },
+    {
+      "id": "marginal_spearman",
+      "statement": "marginal (unadjusted) Spearman rho of sway and TMT-A",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "marginal_spearman",
+        "val_col": "value"
+      },
+      "expect": 0.5316791333,
+      "tol": 1e-06,
+      "render": [
+        "0.532"
+      ]
+    },
+    {
+      "id": "attenuated",
+      "statement": "the partial correlation is attenuated relative to the marginal (age accounts for much of the link)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "attenuated",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "n",
+      "statement": "subjects with sway, TMT-A and age (complete triples)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n",
+        "val_col": "value"
+      },
+      "expect": 158,
+      "tol": 0.5,
+      "render": [
+        "158"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "paper": "sway-cognition-mlr-bds",
+  "n_claims": 10,
+  "n_grounded": 10,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "coef_age",
+      "statement": "OLS coefficient of age (cm of sway per year, adjusted for TMT-A)",
+      "expect": 1.5877089223,
+      "artifact": 1.587709,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "neg_log10_p_age",
+      "statement": "-log10(p) of the age coefficient: highly significant",
+      "expect": 7.69184,
+      "artifact": 7.69184,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "coef_tmt",
+      "statement": "OLS coefficient of TMT-A (adjusted for age)",
+      "expect": 0.1217752621,
+      "artifact": 0.121775,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "p_tmt",
+      "statement": "p of the TMT-A coefficient (non-significant; equals the partial-correlation p)",
+      "expect": 0.5545181048,
+      "artifact": 0.554518,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "r_squared",
+      "statement": "model R-squared: fraction of sway variance explained by age + TMT-A",
+      "expect": 0.2759419328,
+      "artifact": 0.275942,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "neg_log10_fp",
+      "statement": "-log10 of the overall model F-test p-value",
+      "expect": 10.867562,
+      "artifact": 10.867562,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_coef_lm",
+      "statement": "max |multipleRegression coef - base R lm coef| (bit-for-bit)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_coef_statsmodels",
+      "statement": "max |multipleRegression coef - statsmodels OLS coef| (machine precision)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "age_dominant",
+      "statement": "age is significant (p<0.001) and TMT-A is not (p>0.05) in the joint model",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n",
+      "statement": "subjects in the regression (complete cases)",
+      "expect": 158,
+      "artifact": 158,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "registered_at": "2026-08-31T00:00:00Z",
+  "hypothesis": {
+    "statement": "On real overnight polysomnography (Sleep-EDF night SC4001), the per-epoch EEG spectra grouped by the expert AASM hypnogram recover the textbook per-stage fingerprints: N3 is the most delta-dominated stage (relative delta ~0.92), the spectrum slows monotonically N1<N2<N3, and N2 carries the sigma-band (spindle) peak.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "per_stage_relative_spectrum"
+  },
+  "analysis_plan": {
+    "dataset": "Sleep-EDF Expanded (PhysioNet), night SC4001, EEG Fpz-Cz + Pz-Oz @ 100 Hz, 30 s epochs, expert AASM hypnogram",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "eegSleepStage",
+        "params": {
+          "method": "spectral",
+          "epoch_sec": 30
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "n3_reldelta",
+      "estimand": "per_stage_relative_spectrum",
+      "threshold": "descriptive: per-stage relative band powers; N3 relative delta highest, monotone N1<N2<N3"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "b5187777230eed69b3cc35dd7760ac40d6b0838adae240bc3e2c306ea5d5007d",
+    "registered_at": "2026-08-31T00:00:00Z"
+  }
+}

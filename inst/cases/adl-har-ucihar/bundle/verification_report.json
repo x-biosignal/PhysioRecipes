@@ -1,0 +1,53 @@
+{
+  "paper": "adl-har-ucihar",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "overall_accuracy",
+      "statement": "6-class HAR accuracy on the UCI HAR subject-disjoint test split (chance 0.167)",
+      "expect": 0.834,
+      "artifact": 0.834069,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "walking_recall",
+      "statement": "walking (d450) recall",
+      "expect": 0.891,
+      "artifact": 0.895161,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "laying_recall",
+      "statement": "laying (d415) recall -- the most distinct posture, recovered perfectly",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "upstairs_recall",
+      "statement": "walking-upstairs recall -- the hardest class",
+      "expect": 0.601,
+      "artifact": 0.619958,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_test_windows",
+      "statement": "test windows in the provided subject-disjoint split",
+      "expect": 2947,
+      "artifact": 2947,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

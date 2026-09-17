@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-09-04T00:00:00Z",
+  "hypothesis": {
+    "statement": "On real eyes-closed occipital EEG (eegmmidb S001R02, O1), eegMultitaper's DPSS tapers reproduce scipy.signal.windows.dpss to machine precision and its full multitaper PSD reproduces an independent scipy+numpy reconstruction of the same non-adaptive algorithm to machine precision, and it agrees with MNE psd_array_multitaper in structure (up to a one-sided normalization); the PSD is dominated by the alpha rhythm (~10 Hz peak).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "multitaper_power_spectrum"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S001 baseline run R02 (eyes-closed), occipital channel O1, first 10 s at 160 Hz (1600 samples) -- the same git-tracked PhysioExperiment the sibling wavelet case uses",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "eegMultitaper",
+        "params": {
+          "bandwidth": 4
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "multitaper_power_spectrum",
+      "threshold": "descriptive: the DPSS tapers equal scipy.signal.windows.dpss to machine precision (max |diff| < 1e-10) AND the full PSD equals an independent scipy+numpy multitaper reconstruction to machine precision (max |diff| < 1e-6) AND it correlates with MNE psd_array_multitaper > 0.98 (structure, up to the one-sided factor-of-2) AND the PSD peaks in the alpha band (8-13 Hz)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "9e0a5293be3892939e7ac5e21bb10d156e58ee557e03872af8a4a91bfc96db2d",
+    "registered_at": "2026-09-04T00:00:00Z"
+  }
+}

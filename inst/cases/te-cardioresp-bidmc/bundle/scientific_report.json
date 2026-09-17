@@ -1,0 +1,110 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:te_vs_numpy",
+      "status": "PASS",
+      "detail": "6/6 agree [te_resp_pleth=0.035777 vs ref 0.035777; te_pleth_resp=0.023953 vs ref 0.023953; net=0.011824 vs ref 0.011824; max_diff_numpy=6.245e-17 vs ref 0; te_constructed_xy=0.66795 vs ref 0.66795; te_constructed_yx=0.064132 vs ref 0.064132]",
+      "citation": "Schreiber T (2000). Measuring information transfer. Phys Rev Lett 85(2):461-464. Reference impl: independent numpy histogram transfer entropy (Harris et al. 2020). Data: BIDMC PPG and Respiration Dataset (Pimentel et al. 2017), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "te_resp_pleth": 0.03577692,
+    "te_pleth_resp": 0.02395327,
+    "net": 0.01182365,
+    "max_diff_numpy": 6.24500451351651e-17,
+    "te_constructed_xy": 0.667948,
+    "te_constructed_yx": 0.064132
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "te_vs_numpy",
+    "citation": "Schreiber T (2000). Measuring information transfer. Phys Rev Lett 85(2):461-464. Reference impl: independent numpy histogram transfer entropy (Harris et al. 2020). Data: BIDMC PPG and Respiration Dataset (Pimentel et al. 2017), PhysioNet.",
+    "description": "reproduces transferEntropy (histogram) with an independent numpy transfer entropy (matched embedding + binning + Schreiber formula) bit-for-bit, and verifies the directed recovery on a constructed x->y coupling; reports the real directed info flow both ways + net, the numpy agreement, and the constructed-coupling TE",
+    "from_step": {},
+    "scores": {
+      "te_resp_pleth": 0.03577692,
+      "te_pleth_resp": 0.02395327,
+      "net": 0.01182365,
+      "max_diff_numpy": 6.24500451351651e-17,
+      "te_constructed_xy": 0.667948,
+      "te_constructed_yx": 0.064132
+    },
+    "checks": [
+      {
+        "metric": "te_resp_pleth",
+        "expect": 0.03577692,
+        "tol": 1e-06,
+        "ref_value": 0.03577692,
+        "term_value": 0.03577692
+      },
+      {
+        "metric": "te_pleth_resp",
+        "expect": 0.02395327,
+        "tol": 1e-06,
+        "ref_value": 0.02395327,
+        "term_value": 0.02395327
+      },
+      {
+        "metric": "net",
+        "expect": 0.01182365,
+        "tol": 1e-06,
+        "ref_value": 0.01182365,
+        "term_value": 0.01182365
+      },
+      {
+        "metric": "max_diff_numpy",
+        "expect": 0,
+        "tol": 1e-10,
+        "ref_value": 0,
+        "term_value": 6.24500451351651e-17
+      },
+      {
+        "metric": "te_constructed_xy",
+        "expect": 0.667948,
+        "tol": 0.0001,
+        "ref_value": 0.667948,
+        "term_value": 0.667948
+      },
+      {
+        "metric": "te_constructed_yx",
+        "expect": 0.064132,
+        "tol": 0.0001,
+        "ref_value": 0.064132,
+        "term_value": 0.064132
+      }
+    ]
+  }
+}

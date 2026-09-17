@@ -1,0 +1,10 @@
+{
+  "dataset": "EEG Motor Movement/Imagery Database (eegmmidb)",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples) -- the SAME git-tracked vector the SVD-entropy case uses. The spatial map uses all 64 channels.",
+  "pipeline": "readRDS(eeg_poz_s002r02) -> PhysioEEG::petrosianFD: the Petrosian fractal dimension = log10(N)/(log10(N)+log10(N/(N+0.4*Nd))), Nd = number of sign changes in the signal's first difference. The reference re-computes it with antropy.petrosian_fd, via reticulate. Deterministic.",
+  "note": "The root is the POz channel numeric vector (shared with the SVD-entropy case), subset from agent/eval/data/hjorth-eeg/eeg64_s002r02.rds. The Petrosian fractal dimension (Petrosian 1995) is a fast waveform-complexity measure based on the density of local extrema (sign changes in the derivative): a smooth oscillation scores near 1, a complex/noisy signal higher. petrosianFD is a NEW op (the complexity suite had permutation entropy, Lempel-Ziv, Hjorth, sample/approximate entropy, DFA, RQA, and SVD entropy -- but not the waveform-fractal-dimension view). It reproduces antropy.petrosian_fd BIT-FOR-BIT (max |diff| 0): the closed-form formula and the derivative-sign-change count (np.signbit convention) are identical. The finding: Petrosian FD is lower over the posterior (parieto-occipital) region (all 9 posterior channels below the frontal mean; posterior mean 1.020 vs frontal 1.027) -- the eyes-closed alpha rhythm is a smoother, more regular oscillation (fewer derivative sign changes), consistent with the SVD-entropy (low-dimensional), Welch (high alpha power), Hjorth (low mobility), and coherence (high synchrony) cases on the same data."
+}

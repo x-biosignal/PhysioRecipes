@@ -1,0 +1,34 @@
+{
+  "registered_at": "2026-08-31T00:00:00Z",
+  "hypothesis": {
+    "statement": "In the UCI Parkinson's Telemonitoring cohort (42 patients, ~5875 visits), a random-intercept mixed model total_UPDRS ~ test_time + age + sex + PPE + (1|subject) reproduces lme4::lmer to machine precision, with a positive test_time slope (progression over ~6 months).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "updrs_progression_slope"
+  },
+  "analysis_plan": {
+    "dataset": "UCI Parkinson's Telemonitoring (Tsanas et al. 2010), 42 early-stage PD patients, 5875 voice recordings over ~6 months",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "fitMixedModel",
+        "params": {
+          "formula": "total_UPDRS ~ test_time + age + sex + PPE",
+          "random": "~ (1 | subject.)",
+          "method": "REML"
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "beta_testtime",
+      "estimand": "updrs_progression_slope",
+      "threshold": "descriptive: test_time fixed-effect slope (UPDRS points/day); > 0 = progression"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "c5cc429dde725b5d10979ddd104116c4bf553ff48f96d51fa66bc54b27a41436",
+    "registered_at": "2026-08-31T00:00:00Z"
+  }
+}

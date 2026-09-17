@@ -1,0 +1,53 @@
+{
+  "paper": "msknet-hypergraph-murphy",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "n_bones",
+      "statement": "bones (vertices) in the muscle-bone hypergraph",
+      "expect": 173,
+      "artifact": 173,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_muscles",
+      "statement": "muscles (hyperedges) in the hypergraph",
+      "expect": 270,
+      "artifact": 270,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "homunc_r2",
+      "statement": "R-squared of the muscle-impact-vs-cortical-homunculus regression (paper: 0.52)",
+      "expect": 0.5173,
+      "artifact": 0.5173,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "homunc_f",
+      "statement": "F-statistic of the impact-homunculus regression (paper: 21.3)",
+      "expect": 20.36,
+      "artifact": 20.36,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "homunc_n",
+      "statement": "body regions in the homunculus correspondence",
+      "expect": 21,
+      "artifact": 21,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-09-03T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real 32-channel forearm surface-EMG gesture (GRABMyo), the Hilbert amplitude envelope computed by emgEnvelope(method='hilbert') reproduces the canonical scipy.signal.hilbert (the analytic-signal magnitude) to machine precision on every channel, and the envelope shows clear burst activity (peak/mean modulation > 1) -- the gesture's muscle activation.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "emg_hilbert_envelope_reproduction"
+  },
+  "analysis_plan": {
+    "dataset": "GRABMyo forearm surface EMG (Pradhan et al. 2022, PhysioNet), session1 participant1 gesture10 trial1; 32 channels x 10240 samples at 2048 Hz",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "emgEnvelope",
+        "params": {
+          "method": "hilbert"
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "emg_hilbert_envelope_reproduction",
+      "threshold": "descriptive: the Hilbert envelope equals scipy.signal.hilbert to machine precision (max |diff| < 1e-9) across all channels, and the envelope shows burst activity (mean peak/mean modulation > 1)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "363e2d2e9e214dfe93f05b37b2381a43ace8e912ebff0c3f3e46ae837382f4c1",
+    "registered_at": "2026-09-03T00:00:00Z"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "paper": "sparc-ldlj-smoothness-wbds",
+  "n_claims": 7,
+  "n_grounded": 7,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "sparc",
+      "statement": "Spectral Arc Length smoothness of the gait knee-speed cycle (more negative = less smooth)",
+      "expect": -1.6334547237,
+      "artifact": -1.633455,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "ldlj",
+      "statement": "log dimensionless jerk smoothness of the same cycle (time-domain companion)",
+      "expect": -8.2271385193,
+      "artifact": -8.227139,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_sparc",
+      "statement": "|sparc - Balasubramanian reference SPARC| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_ldlj",
+      "statement": "|ldlj - Balasubramanian reference LDLJ| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "sparc_noisy",
+      "statement": "SPARC of the noise-corrupted speed profile (more negative than the clean one)",
+      "expect": -1.6411685959,
+      "artifact": -1.641169,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "noise_reduces_smoothness",
+      "statement": "adding noise makes SPARC more negative (the metric detects reduced smoothness)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_samples",
+      "statement": "samples in the time-normalized knee-speed cycle",
+      "expect": 101,
+      "artifact": 101,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

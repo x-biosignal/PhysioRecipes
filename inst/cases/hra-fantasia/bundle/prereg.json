@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-05T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real 5-minute RR window (Fantasia f1y01), the newly-authored ecgHRVasymmetry reproduces NeuroKit2 hrv_nonlinear's heart-rate-asymmetry indices (GI/SI/PI + the deceleration/acceleration contributions C1d/C1a/C2d/C2a) BIT-FOR-BIT; and decelerations contribute MORE than accelerations to short-term variability (C1d > C1a), the established HRA signature.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "heart_rate_asymmetry"
+  },
+  "analysis_plan": {
+    "dataset": "Fantasia Database (PhysioNet), subject f1y01 (young healthy adult), the first 5-minute RR window (392 RR intervals, integer ms at 250 Hz)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "ecgHRVasymmetry",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "heart_rate_asymmetry",
+      "threshold": "descriptive: the HRA indices equal NeuroKit2 hrv_nonlinear to machine precision (max |diff| < 1e-9), AND C1d > C1a (decelerations dominate short-term variability)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "00b541fa25af0e763136eb1e586cf705a859a09717dcca8c18d41fbb3b00bffb",
+    "registered_at": "2026-09-05T00:00:00Z"
+  }
+}

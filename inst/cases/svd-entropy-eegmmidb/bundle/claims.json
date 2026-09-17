@@ -1,0 +1,100 @@
+{
+  "paper": "svd-entropy-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "svd_entropy_poz",
+      "statement": "SVD entropy of the posterior channel POz, in bits -- the signal's dimensionality index",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "svd_entropy",
+        "val_col": "value"
+      },
+      "expect": 1.20396869,
+      "tol": 0.02,
+      "render": [
+        "1.20396869"
+      ]
+    },
+    {
+      "id": "max_diff_antropy",
+      "statement": "max |svdEntropy - antropy.svd_entropy| (bit-exact; both via LAPACK SVD)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_antropy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "2e-16"
+      ]
+    },
+    {
+      "id": "n_samples",
+      "statement": "samples in the analyzed channel (10 s at 160 Hz)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_samples",
+        "val_col": "value"
+      },
+      "expect": 1600,
+      "tol": 0.5,
+      "render": [
+        "1600"
+      ]
+    },
+    {
+      "id": "posterior_mean",
+      "statement": "mean SVD entropy over the posterior (parieto-occipital) channels",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "posterior_mean",
+        "val_col": "value"
+      },
+      "expect": 1.239126,
+      "tol": 0.02,
+      "render": [
+        "1.239126"
+      ]
+    },
+    {
+      "id": "frontal_mean",
+      "statement": "mean SVD entropy over the frontal channels -- higher (more high-dimensional)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "frontal_mean",
+        "val_col": "value"
+      },
+      "expect": 1.287266,
+      "tol": 0.02,
+      "render": [
+        "1.287266"
+      ]
+    },
+    {
+      "id": "n_posterior_lt_frontmean",
+      "statement": "posterior channels (of 9) with SVD entropy below the frontal mean -- robustness of the low-dimensional-posterior finding",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_posterior_lt_frontmean",
+        "val_col": "value"
+      },
+      "expect": 9,
+      "tol": 0.02,
+      "render": [
+        "9"
+      ]
+    }
+  ]
+}

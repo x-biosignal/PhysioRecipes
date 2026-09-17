@@ -1,0 +1,42 @@
+{
+  "id": "eeg-alpha-eegmmidb",
+  "title": "Eyes-closed occipital alpha dominance, reproduced and replicated",
+  "modality": ["eeg", "spectral"],
+  "packages": ["PhysioIO", "PhysioPreprocess", "PhysioEEG"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)",
+    "record": "S001R02 — eyes-closed baseline, 64 ch, 160 Hz",
+    "url": "https://physionet.org/content/eegmmidb/",
+    "public": true,
+    "sha256_edf": "31a95e0a880e6c3d89960d9d62c144f24cc4e9f5d7e93c7f864ef61cd49e847e",
+    "citation": "Schalk G, et al. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng. 2004;51(6):1034-43. Goldberger AL, et al. PhysioNet. Circulation. 2000;101(23):e215-20."
+  },
+  "proposition": "On eyes-closed baseline EEG, relative alpha power dominates every other band at the occipital electrode O1 (0.628) and replicates at Oz (0.596) — the classic Berger alpha rhythm — reproduced by the ecosystem with all five band-power claims GROUNDED and a byte-identical replay.",
+  "opdag": ["readEDF", "butterworthFilter", "bandPower"],
+  "claims": [
+    { "id": "delta", "statement": "relative delta power, O1", "value": 0.2027, "artifact": "bundle/terminal_table.csv", "status": "GROUNDED" },
+    { "id": "theta", "statement": "relative theta power, O1", "value": 0.05,   "artifact": "bundle/terminal_table.csv", "status": "GROUNDED" },
+    { "id": "alpha", "statement": "relative alpha power, O1 (dominant)", "value": 0.6284, "artifact": "bundle/terminal_table.csv", "status": "GROUNDED" },
+    { "id": "beta",  "statement": "relative beta power, O1",  "value": 0.1129, "artifact": "bundle/terminal_table.csv", "status": "GROUNDED" },
+    { "id": "gamma", "statement": "relative gamma power, O1", "value": 0.006,  "artifact": "bundle/terminal_table.csv", "status": "GROUNDED" }
+  ],
+  "replication": {
+    "electrode": "Oz",
+    "artifact": "artifacts/oz_replication_terminal.csv",
+    "alpha": 0.5957,
+    "note": "Alpha again exceeds every other band at a second occipital electrode (H2 bundle, 5/5 GROUNDED)."
+  },
+  "verification": {
+    "n_claims": 5,
+    "n_grounded": 5,
+    "n_ungrounded": 0,
+    "prereg_hash": "8e497a57ffdab4de5d7fef53de162a8a20c461b31565e16065ce783c9e3caf46",
+    "replay_byte_identical": true
+  },
+  "open_questions": [
+    { "q": "None: this is an established textbook finding (Berger 1929) used here to demonstrate reproducible spectral analysis on public EEG. Escalation is reserved for genuinely unresolved questions.", "artifact": null, "escalate": null }
+  ],
+  "reference_tools": [],
+  "bundle": "bundle/",
+  "status": "verified"
+}

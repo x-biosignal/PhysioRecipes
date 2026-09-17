@@ -1,0 +1,9 @@
+"metric","value"
+"n_channels",28
+"mbll_hbo_r_mne",1
+"mbll_hbr_r_mne",1
+"n_sig_hbo_activation",18
+"n_hbr_decrease",25
+"hbo_block_peak_uM",0.2139
+"hbr_block_trough_uM",-0.0598
+"n_subjects",1

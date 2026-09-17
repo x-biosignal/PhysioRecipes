@@ -1,0 +1,62 @@
+{
+  "paper": "jarque-bera-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "jb_statistic",
+      "statement": "Jarque-Bera statistic of the POz amplitude distribution",
+      "expect": 15.49279,
+      "artifact": 15.49279,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "jb_stat_diff_scipy",
+      "statement": "|Jarque-Bera statistic - scipy.stats.jarque_bera| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "jb_pvalue_diff_scipy",
+      "statement": "|Jarque-Bera p-value - scipy p-value| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "critical_value_95",
+      "statement": "95% chi-square critical value at 2 df (the rejection threshold)",
+      "expect": 5.991465,
+      "artifact": 5.991465,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "reject_normality",
+      "statement": "the normality null is rejected (JB > critical; 1 = rejected)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "descriptive_near_gaussian",
+      "statement": "signalMoments finds it descriptively near-Gaussian -- yet JB rejects (the large-N nuance)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

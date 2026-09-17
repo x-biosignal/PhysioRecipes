@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-11T00:00:00Z",
+  "hypothesis": {
+    "statement": "The COP path length has good single-trial test-retest reliability across 3 repeated eyes-open-firm quiet-standing trials in the BDS cohort (ICC(2,1) > 0.75), and the 3-trial average is more reliable still; the newly-authored intraclassCorrelation reproduces psych::ICC(lmer=FALSE) and pingouin.intraclass_corr to machine precision.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "intraclass_correlation"
+  },
+  "analysis_plan": {
+    "dataset": "Santos & Duarte (2016) BDS; COP path length (PhysioMoCap::swayMetrics) across 3 repeated eyes-open-firm quiet-standing trials, 163 subjects",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "intraclassCorrelation",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "intraclass_correlation",
+      "threshold": "descriptive: intraclassCorrelation equals pingouin.intraclass_corr and psych::ICC(lmer=FALSE) to machine precision (|diff| < 1e-9); the single-trial ICC(2,1) exceeds 0.75 (good reliability) and the 3-trial-average ICC(2,k) exceeds 0.9"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "cb0e957e38451679c4dcde44488c232ff82ccbd55e3e3545a6084aa3a1727985",
+    "registered_at": "2026-09-11T00:00:00Z"
+  }
+}

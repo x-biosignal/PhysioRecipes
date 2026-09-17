@@ -1,0 +1,53 @@
+{
+  "paper": "eeg-permutation-entropy-eegmmidb",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "max_abs_diff",
+      "statement": "max per-channel |permutation entropy diff| between eegComplexity and antropy (machine precision)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "pe_corr",
+      "statement": "correlation of the per-channel permutation entropy (eegComplexity vs antropy) across the 64 channels",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_pe_op",
+      "statement": "mean permutation entropy across channels (eegComplexity)",
+      "expect": 0.907983126,
+      "artifact": 0.907983,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_pe_antropy",
+      "statement": "mean permutation entropy across channels (canonical antropy)",
+      "expect": 0.907983126,
+      "artifact": 0.907983,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_channels",
+      "statement": "EEG channels with a permutation entropy",
+      "expect": 64,
+      "artifact": 64,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

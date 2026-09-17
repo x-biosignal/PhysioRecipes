@@ -1,0 +1,62 @@
+{
+  "paper": "adf-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "adf_statistic",
+      "statement": "Augmented Dickey-Fuller statistic (lag 1, constant) of the POz signal",
+      "expect": -22.36064585,
+      "artifact": -22.360646,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "adf_stat_diff_sm",
+      "statement": "|ADF statistic - statsmodels adfuller| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "sm_critical_5pct",
+      "statement": "statsmodels 5% Dickey-Fuller critical value (MacKinnon table)",
+      "expect": -2.86335,
+      "artifact": -2.86335,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "reject_unit_root",
+      "statement": "the unit-root null is rejected -- the segment is stationary (1 = rejected)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "margin_below_critical",
+      "statement": "how far the statistic lies below the 5% critical value (decisive rejection)",
+      "expect": -19.4973,
+      "artifact": -19.4973,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_obs",
+      "statement": "ADF regression sample size (N - 1 - lag)",
+      "expect": 1598,
+      "artifact": 1598,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

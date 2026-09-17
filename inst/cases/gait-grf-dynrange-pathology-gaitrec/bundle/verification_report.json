@@ -1,0 +1,80 @@
+{
+  "paper": "gait-grf-dynrange-pathology-gaitrec",
+  "n_claims": 8,
+  "n_grounded": 8,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "t_statistic",
+      "statement": "Welch two-sample t-statistic of control vs patient vGRF dynamic range (positive = control larger)",
+      "expect": 17.2622957822,
+      "artifact": 17.262296,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "neg_log10_p",
+      "statement": "-log10(two-sided p): the group difference is overwhelmingly significant",
+      "expect": 47.555557,
+      "artifact": 47.555557,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "df",
+      "statement": "Welch-Satterthwaite degrees of freedom",
+      "expect": 336.888444,
+      "artifact": 336.888444,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|twoSampleTTest t - scipy.stats.ttest_ind(equal_var=FALSE) t| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_baser",
+      "statement": "|twoSampleTTest t - base R t.test t| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "control_patient_ratio",
+      "statement": "mean control dynamic range / mean patient dynamic range (the effect size)",
+      "expect": 1.8672451045,
+      "artifact": 1.867245,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "control_gt_patient",
+      "statement": "controls have a larger vGRF dynamic range than patients (group means)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_total",
+      "statement": "total trials across the two groups",
+      "expect": 707,
+      "artifact": 707,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

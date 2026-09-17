@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-08T00:00:00Z",
+  "hypothesis": {
+    "statement": "Across 50 subjects, center-of-pressure path length during quiet standing is greater on a foam surface than on a firm surface (paired difference > 0); the newly-authored pairedTTest reproduces scipy.stats.ttest_rel AND base R t.test(paired=TRUE) BIT-FOR-BIT.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "paired_mean_difference"
+  },
+  "analysis_plan": {
+    "dataset": "Santos & Duarte (2016) balance dataset (figshare); COP path length (PhysioMoCap::swayMetrics) on eyes-open foam vs eyes-open firm surface for 50 subjects",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "pairedTTest",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "paired_mean_difference",
+      "threshold": "descriptive: pairedTTest equals scipy.stats.ttest_rel and base R t.test to machine precision (|diff| < 1e-9); foam sway exceeds firm sway (t > 0, p < 0.001)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "ec1c133f71a6015d897aaa5684d73fe22b62e90aa4177aa2793627ffb76f9e8a",
+    "registered_at": "2026-09-08T00:00:00Z"
+  }
+}

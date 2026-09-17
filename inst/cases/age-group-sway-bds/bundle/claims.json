@@ -1,0 +1,130 @@
+{
+  "paper": "age-group-sway-bds",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "t_statistic",
+      "statement": "Welch two-sample t-statistic of older vs younger foam sway (positive = older sway more)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "t_statistic",
+        "val_col": "value"
+      },
+      "expect": 3.8569450652,
+      "tol": 1e-06,
+      "render": [
+        "3.86"
+      ]
+    },
+    {
+      "id": "neg_log10_p",
+      "statement": "-log10(two-sided p): the group difference is significant",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "neg_log10_p",
+        "val_col": "value"
+      },
+      "expect": 2.784484,
+      "tol": 0.001,
+      "render": [
+        "2.8"
+      ]
+    },
+    {
+      "id": "df",
+      "statement": "Welch-Satterthwaite degrees of freedom",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "df",
+        "val_col": "value"
+      },
+      "expect": 14.500741,
+      "tol": 0.001,
+      "render": [
+        "14.5"
+      ]
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|twoSampleTTest t - scipy.stats.ttest_ind(equal_var=FALSE) t| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "max_diff_baser",
+      "statement": "|twoSampleTTest t - base R t.test t| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_baser",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "old_young_ratio",
+      "statement": "mean older sway / mean younger sway (the group effect size)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "old_young_ratio",
+        "val_col": "value"
+      },
+      "expect": 1.5033254,
+      "tol": 0.001,
+      "render": [
+        "1.50"
+      ]
+    },
+    {
+      "id": "old_gt_young",
+      "statement": "older subjects sway more than younger subjects (group means)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "old_gt_young",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "n_total",
+      "statement": "total subjects across the two groups",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_total",
+        "val_col": "value"
+      },
+      "expect": 50,
+      "tol": 0.5,
+      "render": [
+        "50"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "dataset": "A public data set of human balance evaluations (BDS)",
+  "source": "figshare",
+  "url": "https://doi.org/10.6084/m9.figshare.3394432",
+  "license": "CC BY 4.0",
+  "citation": "Santos DA, Duarte M. A public data set of human balance evaluations. PeerJ 2016;4:e2648. doi:10.7717/peerj.2648.",
+  "record_used": "50 subjects (ages 18-75), with age and eyes-open quiet-standing COP path length on foam and firm surfaces (60 s each, force-plate COP at 100 Hz).",
+  "pipeline": "For each of 50 subjects, the eyes-open firm and eyes-open foam COP trials -> PhysioMoCap::swayMetrics (certified bit-for-bit against the Prieto reference in the sway-posturography-bds case) -> COP path length (cm); age from the BDS metadata. The 50x3 (age, foam, firm) matrix -> PhysioAnalysis::correlationTest. The benchmark reference re-computes the Pearson correlation with scipy.stats.pearsonr AND base R cor.test, and computes the age-vs-firm correlation for the foam-vs-firm contrast. Deterministic.",
+  "note": "The correlationTest op is NEWLY AUTHORED (Pearson/Spearman correlation with the two-sided t-based p, which the ecosystem lacked). It reproduces BOTH scipy.stats.pearsonr AND base R cor.test BIT-FOR-BIT (|diff| ~1e-16 vs each) -- the identical closed-form Pearson r and t-based p, not a convention agreement. The per-subject COP path lengths come from swayMetrics, itself certified against the Prieto reference, so the correlation's inputs are validated. Finding: quiet-standing COP path length increases with age -- on foam r=0.62 (p=1.5e-6, 48 df, ages 18-75) -- and the age-sway correlation is stronger on foam (0.62) than firm (0.39), i.e. challenging proprioception with a compliant surface unmasks the age-related balance decline, consistent with older adults' greater dependence on somatosensory postural control. This is a cross-sectional association, not causation; one trial per subject/surface."
+}

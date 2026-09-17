@@ -1,0 +1,115 @@
+{
+  "paper": "sparc-ldlj-smoothness-wbds",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "sparc",
+      "statement": "Spectral Arc Length smoothness of the gait knee-speed cycle (more negative = less smooth)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "sparc",
+        "val_col": "value"
+      },
+      "expect": -1.6334547237,
+      "tol": 1e-06,
+      "render": [
+        "-1.63"
+      ]
+    },
+    {
+      "id": "ldlj",
+      "statement": "log dimensionless jerk smoothness of the same cycle (time-domain companion)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "ldlj",
+        "val_col": "value"
+      },
+      "expect": -8.2271385193,
+      "tol": 1e-06,
+      "render": [
+        "-8.23"
+      ]
+    },
+    {
+      "id": "max_diff_sparc",
+      "statement": "|sparc - Balasubramanian reference SPARC| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_sparc",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "max_diff_ldlj",
+      "statement": "|ldlj - Balasubramanian reference LDLJ| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_ldlj",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "sparc_noisy",
+      "statement": "SPARC of the noise-corrupted speed profile (more negative than the clean one)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "sparc_noisy",
+        "val_col": "value"
+      },
+      "expect": -1.6411685959,
+      "tol": 0.0001,
+      "render": [
+        "-1.64"
+      ]
+    },
+    {
+      "id": "noise_reduces_smoothness",
+      "statement": "adding noise makes SPARC more negative (the metric detects reduced smoothness)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "noise_reduces_smoothness",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "n_samples",
+      "statement": "samples in the time-normalized knee-speed cycle",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_samples",
+        "val_col": "value"
+      },
+      "expect": 101,
+      "tol": 0.5,
+      "render": [
+        "101"
+      ]
+    }
+  ]
+}

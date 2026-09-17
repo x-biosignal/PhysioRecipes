@@ -1,0 +1,62 @@
+{
+  "paper": "pacf-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "pacf_lag1",
+      "statement": "partial autocorrelation at lag 1 -- equals the lag-1 autocorrelation",
+      "expect": 0.85646134,
+      "artifact": 0.856461,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "pacf_lag2",
+      "statement": "partial autocorrelation at lag 2 -- strongly negative (oscillatory AR(2)-like alpha structure)",
+      "expect": -0.62661714,
+      "artifact": -0.626617,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "pacf_lag0",
+      "statement": "partial autocorrelation at lag 0 -- 1 by convention",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_statsmodels",
+      "statement": "max |partialAutocorrelation - statsmodels.tsa.pacf(ldb)| over lags (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "pacf_acf_lag1_identity",
+      "statement": "|PACF(lag 1) - ACF(lag 1)| -- the definitional identity (~0)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_lags",
+      "statement": "number of PACF values returned (lags 0..lag_max)",
+      "expect": 21,
+      "artifact": 21,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

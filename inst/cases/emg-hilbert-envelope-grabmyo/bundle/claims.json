@@ -1,0 +1,85 @@
+{
+  "paper": "emg-hilbert-envelope-grabmyo",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "max_abs_diff",
+      "statement": "max |emgEnvelope(hilbert) - scipy.signal.hilbert| over all channels (machine precision)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_abs_diff",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "6e-16"
+      ]
+    },
+    {
+      "id": "n_channels",
+      "statement": "EMG channels with a Hilbert envelope",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_channels",
+        "val_col": "value"
+      },
+      "expect": 32,
+      "tol": 0.5,
+      "render": [
+        "32"
+      ]
+    },
+    {
+      "id": "mean_envelope",
+      "statement": "mean Hilbert-envelope amplitude across channels (activation amplitude)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mean_envelope",
+        "val_col": "value"
+      },
+      "expect": 0.058412,
+      "tol": 1e-05,
+      "render": [
+        "0.058"
+      ]
+    },
+    {
+      "id": "mean_modulation",
+      "statement": "mean peak/mean envelope modulation -- the gesture's burst activity",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mean_modulation",
+        "val_col": "value"
+      },
+      "expect": 6.4672,
+      "tol": 0.01,
+      "render": [
+        "6.5"
+      ]
+    },
+    {
+      "id": "most_active_channel",
+      "statement": "the most active EMG channel (highest mean envelope)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "most_active_channel",
+        "val_col": "value"
+      },
+      "expect": 14,
+      "tol": 0.5,
+      "render": [
+        "14"
+      ]
+    }
+  ]
+}

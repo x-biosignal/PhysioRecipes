@@ -1,0 +1,89 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:mixed_model_vs_lme4_cohort",
+      "status": "PASS",
+      "detail": "3/3 agree [max_abs_fixef_diff=0 vs ref 0; beta_testtime_lme4=0.018751 vs ref 0.018751; ranef_sd_lme4=10.065 vs ref 10.065]",
+      "citation": "Bates D, Machler M, Bolker B, Walker S (2015). Fitting Linear Mixed-Effects Models Using lme4. J Stat Softw 67(1):1-48. doi:10.18637/jss.v067.i01."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "max_abs_fixef_diff": 0,
+    "beta_testtime_lme4": 0.0187505733918033,
+    "ranef_sd_lme4": 10.0650167552574,
+    "n_subjects": 42,
+    "n_recordings": 5875,
+    "cohort_n": 42
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "mixed_model_vs_lme4_cohort",
+    "citation": "Bates D, Machler M, Bolker B, Walker S (2015). Fitting Linear Mixed-Effects Models Using lme4. J Stat Softw 67(1):1-48. doi:10.18637/jss.v067.i01.",
+    "description": "re-fit the same formula with lme4::lmer directly and compare every fixed effect to fitMixedModel's; reproduces the case's max|fixef diff|=0, the lme4 test_time slope, and the subject random-intercept SD",
+    "from_step": "dataset",
+    "scores": {
+      "max_abs_fixef_diff": 0,
+      "beta_testtime_lme4": 0.0187505733918033,
+      "ranef_sd_lme4": 10.0650167552574,
+      "n_subjects": 42,
+      "n_recordings": 5875,
+      "cohort_n": 42
+    },
+    "checks": [
+      {
+        "metric": "max_abs_fixef_diff",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "beta_testtime_lme4",
+        "expect": 0.0187505734,
+        "tol": 1e-06,
+        "ref_value": 0.0187505734,
+        "term_value": 0.0187505733918033
+      },
+      {
+        "metric": "ranef_sd_lme4",
+        "expect": 10.0650168,
+        "tol": 0.0001,
+        "ref_value": 10.0650168,
+        "term_value": 10.0650167552574
+      }
+    ]
+  }
+}

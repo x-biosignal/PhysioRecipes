@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-08-28T00:00:00Z",
+  "hypothesis": {
+    "statement": "On MIT-BIH record 100 the pan_tompkins detector matches the cardiologist .atr beat annotations at F1 >= 0.95 under the AAMI EC57 tolerance.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "rpeak_detection_f1_vs_annotations"
+  },
+  "analysis_plan": {
+    "dataset": "MIT-BIH Arrhythmia Database, record 100 (MLII, 360 Hz, full 30-min), with .atr cardiologist beat annotations",
+    "seed": 100,
+    "ops": [
+      {
+        "activity": "ecgDetectRpeaks",
+        "params": {
+          "method": "pan_tompkins"
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "F1",
+      "estimand": "rpeak_detection_f1_vs_annotations",
+      "threshold": "F1 >= 0.95 (AAMI EC57 acceptance)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "0bf8c0840e27510e99071f6d34ec7c19309f4e47377831e520a166978e59f6cf",
+    "registered_at": "2026-08-28T00:00:00Z"
+  }
+}

@@ -1,0 +1,8 @@
+"metric","value"
+"max_diff_scipy",6.82121026329696e-13
+"n_freqs",129
+"n_windows",11
+"median_peak_freq_hz",11.25
+"n_windows_alpha_peak",11
+"alpha_power_cv_pct",57.923
+"mean_alpha_power",2464.8094

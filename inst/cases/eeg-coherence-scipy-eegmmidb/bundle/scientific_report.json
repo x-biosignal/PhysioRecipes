@@ -1,0 +1,110 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:eeg_coherence_vs_scipy",
+      "status": "PASS",
+      "detail": "6/6 agree [max_diff_scipy=2.2204e-16 vs ref 0; mean_coherence=0.62799 vs ref 0.62799; max_coherence=0.89615 vs ref 0.89615; min_coherence=0.36322 vs ref 0.36322; n_channels=8 vs ref 8; n_pairs=28 vs ref 28]",
+      "citation": "Nunez PL et al. (1997). EEG coherency I: statistics, reference electrode, volume conduction. Electroenceph Clin Neurophysiol 103(5):499-515. Reference impl: scipy.signal.coherence (Virtanen et al. 2020). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "max_diff_scipy": 2.22044604925031e-16,
+    "mean_coherence": 0.627992,
+    "max_coherence": 0.896151,
+    "min_coherence": 0.363215,
+    "n_channels": 8,
+    "n_pairs": 28
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "eeg_coherence_vs_scipy",
+    "citation": "Nunez PL et al. (1997). EEG coherency I: statistics, reference electrode, volume conduction. Electroenceph Clin Neurophysiol 103(5):499-515. Reference impl: scipy.signal.coherence (Virtanen et al. 2020). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the pairwise magnitude-squared coherence matrix with scipy.signal.coherence (symmetric Hann, matched window length + overlap, detrend=False) band-averaged over 8-13 Hz, and reports the bit-exact scipy agreement over all 28 pairs, the mean/peak/minimum posterior alpha coherence, and the channel + pair counts",
+    "from_step": {},
+    "scores": {
+      "max_diff_scipy": 2.22044604925031e-16,
+      "mean_coherence": 0.627992,
+      "max_coherence": 0.896151,
+      "min_coherence": 0.363215,
+      "n_channels": 8,
+      "n_pairs": 28
+    },
+    "checks": [
+      {
+        "metric": "max_diff_scipy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 2.22044604925031e-16
+      },
+      {
+        "metric": "mean_coherence",
+        "expect": 0.627992,
+        "tol": 0.001,
+        "ref_value": 0.627992,
+        "term_value": 0.627992
+      },
+      {
+        "metric": "max_coherence",
+        "expect": 0.896151,
+        "tol": 0.001,
+        "ref_value": 0.896151,
+        "term_value": 0.896151
+      },
+      {
+        "metric": "min_coherence",
+        "expect": 0.363215,
+        "tol": 0.001,
+        "ref_value": 0.363215,
+        "term_value": 0.363215
+      },
+      {
+        "metric": "n_channels",
+        "expect": 8,
+        "tol": 0.5,
+        "ref_value": 8,
+        "term_value": 8
+      },
+      {
+        "metric": "n_pairs",
+        "expect": 28,
+        "tol": 0.5,
+        "ref_value": 28,
+        "term_value": 28
+      }
+    ]
+  }
+}

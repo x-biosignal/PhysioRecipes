@@ -1,0 +1,35 @@
+{
+  "id": "gait-promp-fukuchi",
+  "title": "A probability distribution over the gait cycle: Probabilistic Movement Primitives on real knee kinematics",
+  "modality": ["gait", "biomechanics", "kinematics", "movement-primitives"],
+  "packages": ["PhysioMoCap"],
+  "dataset": {
+    "name": "A public dataset of overground and treadmill walking kinematics and kinetics (WBDS)",
+    "version": "figshare 5722711 (Fukuchi et al. 2018)",
+    "record": "42 healthy adults, sagittal knee angle (RKneeAngleZ) at a comfortable treadmill speed (T04), time-normalised to the gait cycle (101 points)",
+    "url": "https://peerj.com/articles/4640/",
+    "public": true,
+    "citation": "Fukuchi CA, Fukuchi RK, Duarte M. A public dataset of overground and treadmill walking kinematics and kinetics in healthy individuals. PeerJ 2018;6:e4640; data figshare doi:10.6084/m9.figshare.5722711 (CC-BY 4.0)."
+  },
+  "proposition": "A movement primitive stores not a single trajectory but a DISTRIBUTION over trajectories. On 42 subjects' real knee-angle gait cycles, a Probabilistic Movement Primitive recovers the population exactly: its mean matches the ensemble average (r = 1.000) and its +/-2 SD band is calibrated (95.0% of observed points fall inside). Gaussian via-point conditioning -- pinning the swing-flexion peak to a target -- pulls the mean 25.8 deg toward the target and collapses the uncertainty there (SD ratio ~0), adjusting the whole trajectory through the learned correlation.",
+  "opdag": ["promFit", "promCondition"],
+  "claims": [
+    { "id": "cor_mean",     "statement": "correlation of the ProMP mean with the population ensemble mean",       "value": 1.0,   "artifact": "artifacts/promp_summary.csv", "status": "PASS" },
+    { "id": "band_cover",   "statement": "fraction of observed points inside the +/-2 SD band (Gaussian ~0.95)",   "value": 0.95,  "artifact": "artifacts/promp_summary.csv", "status": "PASS" },
+    { "id": "via_shrink",   "statement": "uncertainty ratio at the via-point after conditioning (< 1 = shrinks)",  "value": 0.0,   "artifact": "artifacts/promp_summary.csv", "status": "PASS" },
+    { "id": "via_pull",     "statement": "how far the mean is pulled toward the via-point (deg)",                   "value": 25.8,  "artifact": "artifacts/promp_summary.csv", "status": "PASS" },
+    { "id": "n_subjects",   "statement": "subjects (trajectories) in the distribution",                            "value": 42,    "artifact": "artifacts/promp_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "A Probabilistic Movement Primitive is a Gaussian distribution over trajectories: (1) its mean trajectory must equal the population ensemble average; (2) its +/-2 SD band must be calibrated (about 95% coverage for Gaussian data); (3) Gaussian conditioning on a via-point must pull the mean through that point AND shrink the uncertainty there, propagating to the rest of the trajectory via the learned covariance -- the defining ProMP properties (Paraschos et al. 2013).",
+    "data": "REAL -- Fukuchi et al. 2018 (figshare 5722711), 42 subjects, sagittal knee gait kinematics",
+    "artifacts": ["artifacts/promp_summary.csv", "artifacts/promp_curves.csv"],
+    "all_pass": true,
+    "note": "All three defining ProMP properties reproduce on real data: the mean recovers the ensemble average (r = 1.000), the +/-2 SD band covers 95.0% of the observed knee-angle points (calibrated Gaussian), and pinning the swing-flexion peak (65% cycle) pulls the conditioned mean 25.8 deg toward the target while its SD at the via-point collapses to ~0 (obs_sd = 1e-3) and the adjustment spreads smoothly along the cycle. Honest scope: this models the BETWEEN-subject distribution of the ensemble-average cycle (a population 'gait template'); a within-subject stride-to-stride ProMP would need continuous multi-stride data. The band is a 2nd-order (Gaussian) summary; genuinely multi-modal gait populations would need a mixture."
+  },
+  "open_questions": [
+    { "q": "A within-subject stride-to-stride ProMP (rather than the between-subject ensemble distribution) needs continuous multi-stride joint-angle streams; and a mixture-of-ProMPs would capture multi-modal populations (e.g. mixed pathologies). Documented, not escalated.", "artifact": "artifacts/promp_curves.csv", "escalate": null }
+  ],
+  "reference_tools": [],
+  "status": "validated"
+}

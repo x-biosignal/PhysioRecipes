@@ -1,0 +1,7 @@
+"component","polarity","median_latency_ms","median_abs_amp_uV","polarity_match_pct"
+"N15","negative",16,1.36,88.1
+"P30","positive",31,1.821,96.6
+"N45","negative",45,1.645,91.5
+"P60","positive",66,1.812,88.1
+"N100","negative",115,2.007,93.2
+"P180","positive",188,2.497,94.9

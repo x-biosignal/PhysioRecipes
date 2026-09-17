@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-10T00:00:00Z",
+  "hypothesis": {
+    "statement": "The four vision x surface quiet-standing conditions (Open-Firm, Closed-Firm, Open-Foam, Closed-Foam) differ in COP path length across the 158 subjects measured under all four; the newly-authored friedmanTest reproduces base R stats::friedman.test BIT-FOR-BIT and scipy.stats.friedmanchisquare to machine precision. The per-condition mean ranks increase monotonically Open-Firm < Closed-Firm < Open-Foam < Closed-Foam.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "repeated_measures_omnibus"
+  },
+  "analysis_plan": {
+    "dataset": "Santos & Duarte (2016) BDS; per-subject mean COP path length (PhysioMoCap::swayMetrics) in each of the four vision x surface quiet-standing conditions, complete blocks only",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "friedmanTest",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "repeated_measures_omnibus",
+      "threshold": "descriptive: friedmanTest equals base R friedman.test bit-for-bit (|diff| = 0) and scipy.stats.friedmanchisquare to machine precision (|diff| < 1e-9); the four conditions differ (chi-square, p < 0.001) with a monotone Open-Firm < Closed-Firm < Open-Foam < Closed-Foam mean-rank order"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "7d31dbaa2b458835132ab3fd4c88352469bc1f61bd2f4bf257bd55b53714f14c",
+    "registered_at": "2026-09-10T00:00:00Z"
+  }
+}

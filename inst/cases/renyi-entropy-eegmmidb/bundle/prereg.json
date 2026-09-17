@@ -1,0 +1,33 @@
+{
+  "registered_at": "2026-09-05T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real eyes-closed posterior EEG channel (eegmmidb S002R02, POz), the newly-authored renyiEntropy reproduces NeuroKit2 entropy_renyi BIT-FOR-BIT across alpha = {0.5, 1, 2, 3} on the identical amplitude histogram; the alpha=1 value equals the Shannon entropy, and the family is non-increasing in alpha.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "renyi_entropy_family"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "renyiEntropy",
+        "params": {
+          "alpha": 2,
+          "bins": 16
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "renyi_entropy_family",
+      "threshold": "descriptive: renyiEntropy equals NeuroKit2 entropy_renyi to machine precision (max |diff| < 1e-9) across the alpha family, AND H_alpha is non-increasing in alpha"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "ee436f5aecb5da54ec63bcb93aa33ca4d0a40395b6231a4e80c4e005e1b1d8bf",
+    "registered_at": "2026-09-05T00:00:00Z"
+  }
+}

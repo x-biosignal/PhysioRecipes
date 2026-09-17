@@ -1,0 +1,110 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:hjorth_vs_antropy",
+      "status": "PASS",
+      "detail": "6/6 agree [mean_mobility=0.70961 vs ref 0.70961; mean_complexity=1.9513 vs ref 1.9513; min_mobility=0.53195 vs ref 0.53195; max_diff_numpy=8.8818e-16 vs ref 0; max_diff_antropy=2.8447e-07 vs ref 0; n_channels=64 vs ref 64]",
+      "citation": "Hjorth B (1970). EEG analysis based on time domain properties. Electroenceph Clin Neurophysiol 29(3):306-310. Reference impls: antropy.hjorth_params (Vallat) + independent numpy (Harris et al. 2020). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "mean_mobility": 0.70961007,
+    "mean_complexity": 1.95129854,
+    "min_mobility": 0.53195199,
+    "max_diff_numpy": 8.88178419700125e-16,
+    "max_diff_antropy": 2.84472833067539e-07,
+    "n_channels": 64
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "hjorth_vs_antropy",
+    "citation": "Hjorth B (1970). EEG analysis based on time domain properties. Electroenceph Clin Neurophysiol 29(3):306-310. Reference impls: antropy.hjorth_params (Vallat) + independent numpy (Harris et al. 2020). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the Hjorth mobility + complexity per channel with an independent numpy implementation (unbiased n-1 variance, bit-exact) and antropy.hjorth_params (biased n variance), and reports the op's mean + minimum mobility, mean complexity, the bit-exact agreement vs numpy (~9e-16) and the near-match vs antropy (~3e-7, ddof convention), and the 64-channel count",
+    "from_step": {},
+    "scores": {
+      "mean_mobility": 0.70961007,
+      "mean_complexity": 1.95129854,
+      "min_mobility": 0.53195199,
+      "max_diff_numpy": 8.88178419700125e-16,
+      "max_diff_antropy": 2.84472833067539e-07,
+      "n_channels": 64
+    },
+    "checks": [
+      {
+        "metric": "mean_mobility",
+        "expect": 0.70960558,
+        "tol": 0.0001,
+        "ref_value": 0.70960558,
+        "term_value": 0.70961007
+      },
+      {
+        "metric": "mean_complexity",
+        "expect": 1.95130268,
+        "tol": 0.0001,
+        "ref_value": 1.95130268,
+        "term_value": 1.95129854
+      },
+      {
+        "metric": "min_mobility",
+        "expect": 0.53195,
+        "tol": 0.001,
+        "ref_value": 0.53195,
+        "term_value": 0.53195199
+      },
+      {
+        "metric": "max_diff_numpy",
+        "expect": 0,
+        "tol": 1e-10,
+        "ref_value": 0,
+        "term_value": 8.88178419700125e-16
+      },
+      {
+        "metric": "max_diff_antropy",
+        "expect": 0,
+        "tol": 1e-05,
+        "ref_value": 0,
+        "term_value": 2.84472833067539e-07
+      },
+      {
+        "metric": "n_channels",
+        "expect": 64,
+        "tol": 0.5,
+        "ref_value": 64,
+        "term_value": 64
+      }
+    ]
+  }
+}

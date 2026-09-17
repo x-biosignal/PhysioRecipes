@@ -1,0 +1,53 @@
+{
+  "paper": "hrv-dfa-aging-fantasia",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "alpha1",
+      "statement": "short-term DFA scaling exponent alpha1 of subject f1y01 (young)",
+      "expect": 0.7964557416,
+      "artifact": 0.796456,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "abs_diff",
+      "statement": "max |ecgDFA - independent standard-DFA| over alpha1/alpha2 (machine precision)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "young_mean_a1",
+      "statement": "mean DFA alpha1 in the young subjects (healthy fractal scaling ~1.0)",
+      "expect": 1.045212743,
+      "artifact": 1.045213,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "old_mean_a1",
+      "statement": "mean DFA alpha1 in the elderly subjects (elevated toward Brownian)",
+      "expect": 1.3868264795,
+      "artifact": 1.386826,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "aging_effect",
+      "statement": "the aging effect on alpha1 (elderly minus young) -- loss of fractal complexity",
+      "expect": 0.3416137365,
+      "artifact": 0.341614,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

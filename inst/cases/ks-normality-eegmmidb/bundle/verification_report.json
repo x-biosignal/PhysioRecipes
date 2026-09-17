@@ -1,0 +1,80 @@
+{
+  "paper": "ks-normality-eegmmidb",
+  "n_claims": 8,
+  "n_grounded": 8,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "ks_statistic",
+      "statement": "Kolmogorov-Smirnov normality D statistic of the POz amplitude distribution",
+      "expect": 0.0256387277,
+      "artifact": 0.025639,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "ks_pvalue",
+      "statement": "KS two-sided asymptotic p-value (does NOT reject normality)",
+      "expect": 0.2436132165,
+      "artifact": 0.243613,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|ksNormalityTest D - scipy.stats.kstest D| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_baser",
+      "statement": "|ksNormalityTest D - base R ks.test D| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "jb_statistic",
+      "statement": "Jarque-Bera statistic on the same signal (for the KS-vs-JB contrast)",
+      "expect": 15.4927900022,
+      "artifact": 15.49279,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "jb_pvalue",
+      "statement": "Jarque-Bera p-value on the same signal (DOES reject normality)",
+      "expect": 0.0004322982,
+      "artifact": 0.000432,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "tests_disagree",
+      "statement": "KS and Jarque-Bera reach opposite verdicts on the same data",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_samples",
+      "statement": "samples in the analyzed channel (10 s at 160 Hz)",
+      "expect": 1600,
+      "artifact": 1600,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

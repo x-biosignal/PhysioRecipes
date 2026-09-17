@@ -1,0 +1,10 @@
+{
+  "dataset": "PAMAP2 Physical Activity Monitoring Dataset",
+  "source": "UCI Machine Learning Repository / PhysioNet",
+  "url": "https://archive.ics.uci.edu/dataset/231/pamap2+physical+activity+monitoring",
+  "license": "CC BY 4.0",
+  "citation": "Reiss A, Stricker D. Introducing a new benchmarked dataset for activity monitoring. 2012 16th International Symposium on Wearable Computers, IEEE, 2012:108-109.",
+  "record_used": "subject 101 hand-worn IMU accelerometer (x, y, z in g at 100 Hz), a ~62-minute free-living recording (749 non-overlapping 5 s epochs) -- the SAME git-tracked signal the ENMO and MAD free-living cases use.",
+  "pipeline": "read.csv(hand_accel_g) -> PhysioWearable::computeENMOa(sampling_rate=100, epoch_sec=5): vector magnitude r = sqrt(x^2+y^2+z^2), then per 5 s epoch mean(|r - 1|). The reference re-computes the same per-epoch ENMOa with GGIR::g.applymetrics (do.enmoa=TRUE) and contrasts it with ENMO. Deterministic.",
+  "note": "The root is the PAMAP2 hand-accelerometer signal (shared with the ENMO and MAD cases). ENMOa (van Hees et al. 2013) is |r - 1|, the always-positive companion of ENMO = max(r - 1, 0): it keeps the sub-1 g dips (deceleration / partial free-fall) that ENMO truncates to zero, so it is used when the sensor calibration is imperfect (a persistent sub-1 g offset would be lost by ENMO). computeENMOa is a NEW op completing the ENMO+MAD+ENMOa GGIR accel triad. It reproduces GGIR::g.applymetrics ENMOa to MACHINE PRECISION (max |diff| ~2e-14 g, correlation 1.0) across all 749 epochs. On this real free-living recording ENMOa (mean 224 mg) exceeds ENMO (mean 162 mg) by ~63 mg at every epoch (ENMOa >= ENMO) -- that gap is the movement below 1 g that ENMO discards. HONEST: ENMOa is a physical quantity (g/mg), the mean is meaningful; the bit-exact GGIR agreement certifies the implementation."
+}

@@ -1,0 +1,13 @@
+"metric","value"
+"n_records_total",53
+"n_ecg_detection_failures",1
+"n_records_valid",52
+"mean_bias_bpm",-2.14
+"sd_diff_bpm",3.69
+"loa_lower_bpm",-9.36
+"loa_upper_bpm",5.09
+"mae_bpm",2.16
+"rmse_bpm",4.23
+"pearson_r",0.9598
+"pct_within_5bpm",90.4
+"pct_within_10bpm",96.2

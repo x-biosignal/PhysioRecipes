@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-10T00:00:00Z",
+  "hypothesis": {
+    "statement": "The vertical-GRF dynamic range (loading peak minus mid-stance trough) differs across the five GaitRec gait classes -- healthy control (n=208), ankle (n=483), knee (n=499), hip (n=364) and calcaneus (n=290) pathology; the newly-authored oneWayAnova reproduces base R stats::oneway.test(var.equal=TRUE) BIT-FOR-BIT and scipy.stats.f_oneway to machine precision. Healthy controls have a larger dynamic range than the pooled pathology classes.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "k_group_mean_difference"
+  },
+  "analysis_plan": {
+    "dataset": "GaitRec (Horsak et al. 2020); vertical-GRF dynamic range (peak1 - trough via PhysioMoCap::grfLandmarks) across the five gait classes, shod, standardised walking speed, initial-presentation baseline sessions",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "oneWayAnova",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "k_group_mean_difference",
+      "threshold": "descriptive: oneWayAnova equals base R oneway.test(var.equal=TRUE) bit-for-bit (|diff| = 0) and scipy.stats.f_oneway to machine precision (|diff| < 1e-9); the group means differ (omnibus F, p < 0.001) with the healthy-control dynamic range exceeding the pooled pathology dynamic range"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "ef6c28159d82a47c973a8e110ae5bf33086bb1ed2db1d095d1bddf9f1a052ba9",
+    "registered_at": "2026-09-10T00:00:00Z"
+  }
+}

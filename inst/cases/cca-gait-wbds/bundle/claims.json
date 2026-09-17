@@ -1,0 +1,85 @@
+{
+  "paper": "cca-gait-wbds",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "cca_r1",
+      "statement": "first canonical correlation between gait kinematics and kinetics, WBDS01",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "cca_r1",
+        "val_col": "value"
+      },
+      "expect": 0.7371211004,
+      "tol": 1e-06,
+      "render": [
+        "0.74"
+      ]
+    },
+    {
+      "id": "cca_r2",
+      "statement": "second canonical correlation",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "cca_r2",
+        "val_col": "value"
+      },
+      "expect": 0.2987900654,
+      "tol": 1e-06,
+      "render": [
+        "0.30"
+      ]
+    },
+    {
+      "id": "max_abs_diff",
+      "statement": "max |cca - stats::cancor| over the canonical correlations (machine precision)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_abs_diff",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "1e-16"
+      ]
+    },
+    {
+      "id": "r1_mean5",
+      "statement": "mean first canonical correlation across all five WBDS subjects",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "r1_mean5",
+        "val_col": "value"
+      },
+      "expect": 0.7949007814,
+      "tol": 1e-06,
+      "render": [
+        "0.79"
+      ]
+    },
+    {
+      "id": "r1_min5",
+      "statement": "minimum first canonical correlation across the five subjects (robustness floor)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "r1_min5",
+        "val_col": "value"
+      },
+      "expect": 0.7371211004,
+      "tol": 1e-06,
+      "render": [
+        "0.74"
+      ]
+    }
+  ]
+}

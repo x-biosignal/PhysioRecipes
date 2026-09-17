@@ -1,0 +1,33 @@
+{
+  "registered_at": "2026-08-31T00:00:00Z",
+  "hypothesis": {
+    "statement": "On real Empatica-E4 EDA (PhysioNet Non-EEG, Subject 1), PhysioEDA's highpass phasic/tonic split reproduces NeuroKit2's highpass split like-for-like (phasic r ~0.96, tonic r ~1.0).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "eda_decomposition_parity"
+  },
+  "analysis_plan": {
+    "dataset": "PhysioNet Non-EEG (Birjandtalab 2016), Subject 1 EDA channel, Empatica E4 @ 8 Hz, 18343 samples",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "edaDecompose",
+        "params": {
+          "method": "highpass",
+          "cutoff": 0.05
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "phasic_r",
+      "estimand": "eda_decomposition_parity",
+      "threshold": "descriptive: correlation of PhysioEDA vs NeuroKit2 phasic/tonic components (matched highpass method)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "d505b1a123c711ed2ebcc43b04fc91606bfcb49048e61396fde689b8a53b7276",
+    "registered_at": "2026-08-31T00:00:00Z"
+  }
+}

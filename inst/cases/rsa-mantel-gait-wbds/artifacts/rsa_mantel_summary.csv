@@ -1,0 +1,10 @@
+"metric","value"
+"rsa_similarity",0.3440491701
+"p_value",0.01
+"mantel_vegan",0.3440491701
+"abs_diff",0
+"rsa_mean5",0.3818447368
+"rsa_min5",0.3440491701
+"rsa_max5",0.4879678078
+"n",150
+"n_subjects",5

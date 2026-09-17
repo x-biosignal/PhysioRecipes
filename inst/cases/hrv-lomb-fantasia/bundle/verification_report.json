@@ -1,0 +1,62 @@
+{
+  "paper": "hrv-lomb-fantasia",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "lf",
+      "statement": "Lomb-Scargle LF-band power (0.04-0.15 Hz) of the real RR tachogram (ms^2)",
+      "expect": 919.67404,
+      "artifact": 919.67404,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "hf",
+      "statement": "Lomb-Scargle HF-band power (0.15-0.4 Hz) -- respiratory/vagal (ms^2)",
+      "expect": 1915.460049,
+      "artifact": 1915.460049,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "lf_hf_ratio",
+      "statement": "LF/HF ratio -- the sympatho-vagal balance (HF-dominant when < 1)",
+      "expect": 0.480132,
+      "artifact": 0.480132,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "hf_nu",
+      "statement": "HF power in normalized units (100*HF/(LF+HF)) -- vagal fraction (%)",
+      "expect": 67.5615,
+      "artifact": 67.5615,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_periodogram",
+      "statement": "max |ecgHRVfreq Lomb periodogram - scipy.signal.lombscargle| (machine precision, rel ~1e-10)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_bandpower",
+      "statement": "max |op band power - scipy-integrated band power| over VLF/LF/HF (machine precision)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

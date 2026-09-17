@@ -1,0 +1,11 @@
+"metric","value"
+"t_statistic",3.8569450652
+"neg_log10_p",2.784484
+"df",14.500741
+"max_diff_scipy",0
+"max_diff_baser",0
+"old_young_ratio",1.5033252716
+"old_gt_young",1
+"n_total",50
+"mean_old",226.54696
+"mean_young",150.697234

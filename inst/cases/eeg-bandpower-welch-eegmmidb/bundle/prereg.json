@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-09-05T00:00:00Z",
+  "hypothesis": {
+    "statement": "On real eyes-closed 64-channel EEG (eegmmidb S002R02), bandPower(method='welch') reproduces scipy.signal.welch (symmetric Hann, nperseg=256, noverlap=128, detrend=False, scaling='density') integrated over the identical EEG-band indices, BIT-FOR-BIT across all 64 channels x 5 bands; and relative alpha power is highest over the posterior (parieto-occipital) region where the eyes-closed alpha rhythm dominates.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "welch_bandpower_montage"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), all 64 EEG channels, first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "bandPower",
+        "params": {
+          "method": "welch"
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "welch_bandpower_montage",
+      "threshold": "descriptive: the Welch band powers equal scipy.signal.welch (matched conventions) to machine precision (max |diff| < 1e-9) across all 64 channels x 5 bands, AND relative alpha is highest posteriorly"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "fd7d2646a3b7af20e48287cb83d59c537dfa1ae2f1cb4fe3cf1d6bc13efd60ce",
+    "registered_at": "2026-09-05T00:00:00Z"
+  }
+}

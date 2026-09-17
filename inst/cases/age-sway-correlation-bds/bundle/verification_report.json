@@ -1,0 +1,80 @@
+{
+  "paper": "age-sway-correlation-bds",
+  "n_claims": 8,
+  "n_grounded": 8,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "correlation_foam",
+      "statement": "Pearson correlation of age vs foam-surface COP path length",
+      "expect": 0.62131426,
+      "artifact": 0.621314,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "neg_log10_p",
+      "statement": "-log10(two-sided p) of the age-foam correlation (significant)",
+      "expect": 5.831639,
+      "artifact": 5.831639,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "df",
+      "statement": "degrees of freedom (n - 2)",
+      "expect": 48,
+      "artifact": 48,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|correlationTest r - scipy.stats.pearsonr r| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_baser",
+      "statement": "|correlationTest r - base R cor.test r| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "correlation_firm",
+      "statement": "Pearson correlation of age vs firm-surface COP path length (weaker)",
+      "expect": 0.3921671237,
+      "artifact": 0.392167,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "foam_gt_firm_corr",
+      "statement": "the age-sway correlation is stronger on foam than firm (proprioceptive challenge unmasks the age decline)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_subjects",
+      "statement": "subjects in the cross-sectional cohort",
+      "expect": 50,
+      "artifact": 50,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

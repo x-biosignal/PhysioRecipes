@@ -1,0 +1,85 @@
+{
+  "paper": "netphys-sleep-network-sleepedf",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "n_states",
+      "statement": "sleep-stage networks compared (Wake / Light / Deep / REM)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_states",
+        "val_col": "value"
+      },
+      "expect": 4,
+      "tol": 0.5,
+      "render": [
+        "4"
+      ]
+    },
+    {
+      "id": "rem_n_links",
+      "statement": "surrogate-significant TDS links in REM (the most-integrated state)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "rem_n_links",
+        "val_col": "value"
+      },
+      "expect": 11,
+      "tol": 0.5,
+      "render": [
+        "11"
+      ]
+    },
+    {
+      "id": "rem_density",
+      "statement": "REM network density (fraction of the 15 possible links)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "rem_density",
+        "val_col": "value"
+      },
+      "expect": 0.7333,
+      "tol": 0.001,
+      "render": [
+        "0.73"
+      ]
+    },
+    {
+      "id": "wake_rem_reconfig",
+      "statement": "couplings that CHANGE between wake and REM (network reconfiguration, of 15)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "wake_rem_reconfig",
+        "val_col": "value"
+      },
+      "expect": 6,
+      "tol": 0.5,
+      "render": [
+        "6"
+      ]
+    },
+    {
+      "id": "hub_is_delta",
+      "statement": "the network hub (highest total degree) is the EEG delta rhythm (1=yes)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "hub_is_delta",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "1"
+      ]
+    }
+  ]
+}

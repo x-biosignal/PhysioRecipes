@@ -1,0 +1,37 @@
+{
+  "registered_at": "2026-09-05T00:00:00Z",
+  "hypothesis": {
+    "statement": "On real simultaneous respiration + PPG (BIDMC subject 01), the histogram transfer entropy shows directed information flow (respiration -> pulse slightly net-dominant, the model-free complement to the Granger result), transferEntropy reproduces an independent from-scratch numpy transfer entropy, and it recovers a constructed directed coupling (x -> y net TE strongly positive).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "cardiorespiratory_transfer_entropy"
+  },
+  "analysis_plan": {
+    "dataset": "BIDMC PPG and Respiration Dataset (Pimentel et al. 2017, PhysioNet), subject bidmc01; RESP + PLETH decimated 125->25 Hz, 200 s (5001 samples each)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "transferEntropy",
+        "params": {
+          "sr": 25,
+          "estimator": "histogram",
+          "k": 1,
+          "l": 1,
+          "delay": 1,
+          "bins": 8
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "cardiorespiratory_transfer_entropy",
+      "threshold": "descriptive: transferEntropy equals an independent numpy transfer entropy to machine precision (max |diff| < 1e-10), and recovers a constructed directed coupling (x -> y TE >> y -> x TE), on real cardiorespiratory signals"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "34d6a34db44613fa69aaa3daac5641f7301a13c11f87ede201ce1ea5cdadd7ef",
+    "registered_at": "2026-09-05T00:00:00Z"
+  }
+}

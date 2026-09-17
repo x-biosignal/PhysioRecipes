@@ -1,0 +1,6 @@
+{
+  "dataset": "GaitRec -- large-scale ground reaction force dataset of healthy and impaired gait",
+  "citation": "Horsak B, Slijepcevic D, Raberger AM, Schwab C, Worisch M, Zeppelzauer M. GaitRec, a large-scale ground reaction force dataset of healthy and impaired gait. Scientific Data 2020;7:143. doi:10.1038/s41597-020-0481-z.",
+  "doi": "10.1038/s41597-020-0481-z", "figshare_collection": "4788012", "license": "CC-BY 4.0",
+  "record": "vertical-GRF dynamic range (peak1 - trough via grfLandmarks); five gait classes",
+  "groups": {"HC": 208, "A": 483, "K": 499, "H": 364, "C": 290, "total": 1844}, "public": true }

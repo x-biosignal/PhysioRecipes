@@ -1,0 +1,53 @@
+{
+  "paper": "ppg-hr-bidmc",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "pearson_r",
+      "statement": "Pearson correlation of PPG pulse rate vs ECG heart rate across records",
+      "expect": 0.9598,
+      "artifact": 0.9598,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_bias",
+      "statement": "Bland-Altman mean bias (PPG - ECG), bpm",
+      "expect": -2.14,
+      "artifact": -2.14,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "loa_lower",
+      "statement": "Bland-Altman lower 95% limit of agreement, bpm",
+      "expect": -9.36,
+      "artifact": -9.36,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "loa_upper",
+      "statement": "Bland-Altman upper 95% limit of agreement, bpm",
+      "expect": 5.09,
+      "artifact": 5.09,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "within5",
+      "statement": "percent of records agreeing within +/-5 bpm",
+      "expect": 90.4,
+      "artifact": 90.4,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

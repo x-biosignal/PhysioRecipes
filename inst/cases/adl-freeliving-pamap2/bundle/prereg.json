@@ -1,0 +1,41 @@
+{
+  "registered_at": "2026-09-01T00:00:00Z",
+  "hypothesis": {
+    "statement": "PhysioWearable's computeENMO reproduces GGIR::g.applymetrics's ENMO on the identical hand-acceleration signal to MACHINE PRECISION (max absolute difference far below 1e-6 g, correlation 1.0 over the 749 five-second epochs); and the free-living summary built on that ENMO series yields a negative Rowlands intensity gradient (~-1.19), ~28.6 MVPA minutes, and an activity-to-sedentary fragmentation (ASTP ~0.113) on this ~1 h recording.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "enmo_ggir_agreement_and_free_living_summary"
+  },
+  "analysis_plan": {
+    "dataset": "PAMAP2 (UCI #231), subject 101, hand IMU +-16g acceleration @ 100 Hz; the first 374500 gap-free samples (749 five-second epochs, ~1.04 h), converted to g",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "computeENMO",
+        "params": {
+          "sampling_rate": 100,
+          "epoch_sec": 5,
+          "unit": "mg"
+        }
+      },
+      {
+        "activity": "summarizeFreeLiving",
+        "params": {
+          "epoch_sec": 5,
+          "valid_wear_hours": 1
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "enmo_max_abs_diff_g",
+      "estimand": "enmo_ggir_agreement_and_free_living_summary",
+      "threshold": "the FOUNDATION must match the reference: computeENMO vs GGIR max abs diff < 1e-6 g (machine precision) and correlation >= 0.9999; the free-living summary (intensity gradient, MVPA minutes, ASTP) then reproduces the case's per-recording numbers"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "7a3d1e55a7d746193dea19a79e7409cfe1d38cfc7ff8db7ffdb3d0b02c23ad8a",
+    "registered_at": "2026-09-01T00:00:00Z"
+  }
+}

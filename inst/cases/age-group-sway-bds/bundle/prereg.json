@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-10T00:00:00Z",
+  "hypothesis": {
+    "statement": "Older subjects (n=11) have greater foam-surface COP path length than younger subjects (n=39); the newly-authored twoSampleTTest (Welch) reproduces scipy.stats.ttest_ind(equal_var=FALSE) AND base R t.test BIT-FOR-BIT.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "two_group_mean_difference"
+  },
+  "analysis_plan": {
+    "dataset": "Santos & Duarte (2016) balance dataset (figshare); foam-surface COP path length (PhysioMoCap::swayMetrics) for older (n=11) vs younger (n=39) subjects",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "twoSampleTTest",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "two_group_mean_difference",
+      "threshold": "descriptive: twoSampleTTest equals scipy.stats.ttest_ind and base R t.test to machine precision (|diff| < 1e-9); older sway exceeds younger (t > 0, p < 0.05)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "65a9bb557c9e6046881aa80837dc89a96831a4959bbdb85a1da9d23c6ed3ce97",
+    "registered_at": "2026-09-10T00:00:00Z"
+  }
+}

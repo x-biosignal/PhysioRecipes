@@ -1,0 +1,111 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:hti_vs_neurokit",
+      "status": "PASS",
+      "detail": "6/6 agree [hti=11.2 vs ref 11.2; hti_diff_nk=0 vs ref 0; modal_count=35 vs ref 35; n_intervals=392 vs ref 392; tinn_op=164.06 vs ref 164.06; tinn_gap_nk=164.06 vs ref 164.06]",
+      "citation": "Task Force of the ESC and NASPE (1996). Heart rate variability: standards of measurement. Circulation 93(5):1043-1065. Reference impl: NeuroKit2 hrv_time (HRV_HTI, HRV_TINN; Makowski et al. 2021). Data: Fantasia (rr5min f1y01), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "n_rr": 392,
+    "hti": 11.2,
+    "hti_diff_nk": 0,
+    "modal_count": 35,
+    "n_intervals": 392,
+    "tinn_op": 164.0625,
+    "tinn_gap_nk": 164.0625
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "hti_vs_neurokit",
+    "citation": "Task Force of the ESC and NASPE (1996). Heart rate variability: standards of measurement. Circulation 93(5):1043-1065. Reference impl: NeuroKit2 hrv_time (HRV_HTI, HRV_TINN; Makowski et al. 2021). Data: Fantasia (rr5min f1y01), PhysioNet.",
+    "description": "re-computes the geometric HRV indices with NeuroKit2 hrv_time on the identical RR series; reports HTI (bit-exact), the HTI deviation, the modal histogram height and interval count behind HTI, and TINN from both tools with their interpolation-convention gap",
+    "from_step": {},
+    "scores": {
+      "hti": 11.2,
+      "hti_diff_nk": 0,
+      "modal_count": 35,
+      "n_intervals": 392,
+      "tinn_op": 164.0625,
+      "tinn_gap_nk": 164.0625
+    },
+    "checks": [
+      {
+        "metric": "hti",
+        "expect": 11.2,
+        "tol": 1e-06,
+        "ref_value": 11.2,
+        "term_value": 11.2
+      },
+      {
+        "metric": "hti_diff_nk",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "modal_count",
+        "expect": 35,
+        "tol": 0.5,
+        "ref_value": 35,
+        "term_value": 35
+      },
+      {
+        "metric": "n_intervals",
+        "expect": 392,
+        "tol": 0.5,
+        "ref_value": 392,
+        "term_value": 392
+      },
+      {
+        "metric": "tinn_op",
+        "expect": 164.0625,
+        "tol": 0.001,
+        "ref_value": 164.0625,
+        "term_value": 164.0625
+      },
+      {
+        "metric": "tinn_gap_nk",
+        "expect": 164.0625,
+        "tol": 0.01,
+        "ref_value": 164.0625,
+        "term_value": 164.0625
+      }
+    ]
+  }
+}

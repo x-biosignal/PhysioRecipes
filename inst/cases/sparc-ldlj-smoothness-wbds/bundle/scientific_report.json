@@ -1,0 +1,119 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "2/2 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:sparc_ldlj_vs_balasubramanian",
+      "status": "PASS",
+      "detail": "7/7 agree [sparc=-1.6335 vs ref -1.6335; ldlj=-8.2271 vs ref -8.2271; max_diff_sparc=0 vs ref 0; max_diff_ldlj=0 vs ref 0; sparc_noisy=-1.6412 vs ref -1.6412; noise_reduces_smoothness=1 vs ref 1; n_samples=101 vs ref 101]",
+      "citation": "Balasubramanian S, Melendez-Calderon A, Roby-Brami A, Burdet E (2015). On the analysis of movement smoothness. IEEE Trans Biomed Eng 62(8):2137-2147. Reference: the authors' smoothness toolbox (SPARC + log dimensionless jerk). Data: WBDS gait knee angular-speed cycle (figshare)."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "sparc": -1.6334547237,
+    "ldlj": -8.2271385193,
+    "max_diff_sparc": 0,
+    "max_diff_ldlj": 0,
+    "sparc_noisy": -1.6411685959,
+    "noise_reduces_smoothness": 1,
+    "n_samples": 101
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "sparc_ldlj_vs_balasubramanian",
+    "citation": "Balasubramanian S, Melendez-Calderon A, Roby-Brami A, Burdet E (2015). On the analysis of movement smoothness. IEEE Trans Biomed Eng 62(8):2137-2147. Reference: the authors' smoothness toolbox (SPARC + log dimensionless jerk). Data: WBDS gait knee angular-speed cycle (figshare).",
+    "description": "re-computes SPARC and the log dimensionless jerk with an independent Python reimplementation of the Balasubramanian reference algorithm and confirms the shipped ops reproduce BOTH bit-for-bit; also confirms SPARC becomes more negative (less smooth) under added noise, and reports the sample count",
+    "from_step": {},
+    "scores": {
+      "sparc": -1.6334547237,
+      "ldlj": -8.2271385193,
+      "max_diff_sparc": 0,
+      "max_diff_ldlj": 0,
+      "sparc_noisy": -1.6411685959,
+      "noise_reduces_smoothness": 1,
+      "n_samples": 101
+    },
+    "checks": [
+      {
+        "metric": "sparc",
+        "expect": -1.6334547237,
+        "tol": 1e-06,
+        "ref_value": -1.6334547237,
+        "term_value": -1.6334547237
+      },
+      {
+        "metric": "ldlj",
+        "expect": -8.2271385193,
+        "tol": 1e-06,
+        "ref_value": -8.2271385193,
+        "term_value": -8.2271385193
+      },
+      {
+        "metric": "max_diff_sparc",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "max_diff_ldlj",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "sparc_noisy",
+        "expect": -1.6411685959,
+        "tol": 0.0001,
+        "ref_value": -1.6411685959,
+        "term_value": -1.6411685959
+      },
+      {
+        "metric": "noise_reduces_smoothness",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "n_samples",
+        "expect": 101,
+        "tol": 0.5,
+        "ref_value": 101,
+        "term_value": 101
+      }
+    ]
+  }
+}

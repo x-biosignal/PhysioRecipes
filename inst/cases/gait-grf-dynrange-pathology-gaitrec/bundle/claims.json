@@ -1,0 +1,130 @@
+{
+  "paper": "gait-grf-dynrange-pathology-gaitrec",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "t_statistic",
+      "statement": "Welch two-sample t-statistic of control vs patient vGRF dynamic range (positive = control larger)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "t_statistic",
+        "val_col": "value"
+      },
+      "expect": 17.2622957822,
+      "tol": 1e-06,
+      "render": [
+        "17.3"
+      ]
+    },
+    {
+      "id": "neg_log10_p",
+      "statement": "-log10(two-sided p): the group difference is overwhelmingly significant",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "neg_log10_p",
+        "val_col": "value"
+      },
+      "expect": 47.555557,
+      "tol": 0.01,
+      "render": [
+        "47.6"
+      ]
+    },
+    {
+      "id": "df",
+      "statement": "Welch-Satterthwaite degrees of freedom",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "df",
+        "val_col": "value"
+      },
+      "expect": 336.888444,
+      "tol": 0.01,
+      "render": [
+        "337"
+      ]
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|twoSampleTTest t - scipy.stats.ttest_ind(equal_var=FALSE) t| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "max_diff_baser",
+      "statement": "|twoSampleTTest t - base R t.test t| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_baser",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "control_patient_ratio",
+      "statement": "mean control dynamic range / mean patient dynamic range (the effect size)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "control_patient_ratio",
+        "val_col": "value"
+      },
+      "expect": 1.8672451045,
+      "tol": 0.0001,
+      "render": [
+        "1.87"
+      ]
+    },
+    {
+      "id": "control_gt_patient",
+      "statement": "controls have a larger vGRF dynamic range than patients (group means)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "control_gt_patient",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "n_total",
+      "statement": "total trials across the two groups",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_total",
+        "val_col": "value"
+      },
+      "expect": 707,
+      "tol": 0.5,
+      "render": [
+        "707"
+      ]
+    }
+  ]
+}

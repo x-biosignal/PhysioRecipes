@@ -1,0 +1,100 @@
+{
+  "paper": "kpss-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "kpss_statistic",
+      "statement": "KPSS level-stationarity statistic (lag 10) of the POz signal",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "kpss_statistic",
+        "val_col": "value"
+      },
+      "expect": 0.20050789,
+      "tol": 1e-06,
+      "render": [
+        "0.20"
+      ]
+    },
+    {
+      "id": "kpss_stat_diff_sm",
+      "statement": "|KPSS statistic - statsmodels kpss| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "kpss_stat_diff_sm",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "7e-16"
+      ]
+    },
+    {
+      "id": "sm_critical_5pct",
+      "statement": "statsmodels 5% KPSS critical value (reference table)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "sm_critical_5pct",
+        "val_col": "value"
+      },
+      "expect": 0.463,
+      "tol": 0.0001,
+      "render": [
+        "0.463"
+      ]
+    },
+    {
+      "id": "kpss_stationary",
+      "statement": "KPSS fails to reject the stationarity null (statistic < critical; 1 = stationary)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "kpss_stationary",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "adf_stationary",
+      "statement": "ADF rejects the unit-root null (the complementary test also says stationary)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "adf_stationary",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "both_tests_agree",
+      "statement": "ADF and KPSS concur the segment is stationary (the confirmatory pair agrees)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "both_tests_agree",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    }
+  ]
+}

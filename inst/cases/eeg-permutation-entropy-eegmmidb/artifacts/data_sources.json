@@ -1,0 +1,9 @@
+{
+  "dataset": "EEG Motor Movement/Imagery Database (eegmmidb)",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "record_used": "subject S001, baseline run R02 (eyes-closed rest), all 64 EEG channels, 160 Hz, ~61 s. Git-tracked at agent/eval/data/S001R02.edf -- the same EDF the sibling eeg-aperiodic / eeg-alpha / eeg-berger cases read.",
+  "pipeline": "readEDF(S001R02.edf) -> PhysioEEG::eegComplexity(measures='permutation_entropy', perm_order=3, tau=1), which computes the Bandt-Pompe permutation entropy per channel (the normalized Shannon entropy of the length-3 ordinal-pattern distribution). The reference re-computes the SAME statistic per channel with the canonical Python antropy.perm_entropy (order 3, delay 1, via reticulate) and compares. Deterministic (permutation entropy is a fixed deterministic computation on both sides).",
+  "note": "Permutation entropy (Bandt & Pompe 2002) indexes signal complexity by the diversity of its ordinal (rank) patterns -- a robust, near-parameter-free marker of cortical state, depth of anaesthesia, consciousness, and neurological disease. Because it is an EXACTLY-defined algorithm (order patterns + normalized Shannon entropy), the ecosystem's implementation matches antropy to machine precision (max |diff| = 2.2e-16, correlation 1.0 across all 64 channels) -- unlike the tolerance-dependent sample entropy or the PSD-dependent spectral entropy, which differ between implementations. Every value traces to artifacts/perm_entropy_summary.csv + perm_entropy_by_channel.csv."
+}

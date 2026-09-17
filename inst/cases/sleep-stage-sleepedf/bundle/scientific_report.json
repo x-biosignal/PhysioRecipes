@@ -1,0 +1,91 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:sleep_spectra_twonight",
+      "status": "PASS",
+      "detail": "3/3 agree [n3_reldelta=0.92211 vs ref 0.9221; n2_relsigma=0.020439 vs ref 0.0204; deltarise=0.29337 vs ref 0.2934]",
+      "citation": "Kemp B et al. (2000), IEEE TBME 47(9):1185-1194 (Sleep-EDF); AASM manual sleep scoring. Per-epoch spectra grouped by the expert hypnogram."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "n3_reldelta": 0.922111740257227,
+    "n2_reldelta": 0.817797495990913,
+    "n1_reldelta": 0.628738703061463,
+    "n2_relsigma": 0.0204385316906599,
+    "deltarise": 0.293373037195764,
+    "n3_reldelta_s2": 0.911071,
+    "n2_relsigma_s2": 0.028243
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "sleep_spectra_twonight",
+    "citation": "Kemp B et al. (2000), IEEE TBME 47(9):1185-1194 (Sleep-EDF); AASM manual sleep scoring. Per-epoch spectra grouped by the expert hypnogram.",
+    "description": "group the per-epoch spectra by the expert Sleep-EDF hypnogram and reproduce the per-stage relative delta (N3), the N1->N3 delta rise, and the N2 relative sigma the case published",
+    "from_step": {},
+    "scores": {
+      "n3_reldelta": 0.922111740257227,
+      "n2_reldelta": 0.817797495990913,
+      "n1_reldelta": 0.628738703061463,
+      "n2_relsigma": 0.0204385316906599,
+      "deltarise": 0.293373037195764,
+      "n3_reldelta_s2": 0.911071,
+      "n2_relsigma_s2": 0.028243
+    },
+    "checks": [
+      {
+        "metric": "n3_reldelta",
+        "expect": 0.9221,
+        "tol": 0.001,
+        "ref_value": 0.9221,
+        "term_value": 0.922111740257227
+      },
+      {
+        "metric": "n2_relsigma",
+        "expect": 0.0204,
+        "tol": 0.001,
+        "ref_value": 0.0204,
+        "term_value": 0.0204385316906599
+      },
+      {
+        "metric": "deltarise",
+        "expect": 0.2934,
+        "tol": 0.002,
+        "ref_value": 0.2934,
+        "term_value": 0.293373037195764
+      }
+    ]
+  }
+}

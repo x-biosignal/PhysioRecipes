@@ -1,0 +1,160 @@
+{
+  "paper": "gait-grf-anova-pathology-gaitrec",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "F_statistic",
+      "statement": "one-way ANOVA omnibus F-statistic of the vertical-GRF dynamic range across the five gait classes",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "F_statistic",
+        "val_col": "value"
+      },
+      "expect": 73.4071188266,
+      "tol": 1e-06,
+      "render": [
+        "73.4"
+      ]
+    },
+    {
+      "id": "neg_log10_p",
+      "statement": "-log10(omnibus p): the group difference is overwhelmingly significant",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "neg_log10_p",
+        "val_col": "value"
+      },
+      "expect": 57.048778,
+      "tol": 0.01,
+      "render": [
+        "57.0"
+      ]
+    },
+    {
+      "id": "df1",
+      "statement": "between-groups degrees of freedom (k - 1)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "df1",
+        "val_col": "value"
+      },
+      "expect": 4,
+      "tol": 0.5,
+      "render": [
+        "4"
+      ]
+    },
+    {
+      "id": "df2",
+      "statement": "within-groups degrees of freedom (N - k)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "df2",
+        "val_col": "value"
+      },
+      "expect": 1839,
+      "tol": 0.5,
+      "render": [
+        "1839"
+      ]
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|oneWayAnova F - scipy.stats.f_oneway F| (machine precision; multi-group SS accumulation diverges at the last ULP)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "<1e-9"
+      ]
+    },
+    {
+      "id": "max_diff_baser",
+      "statement": "|oneWayAnova F - base R oneway.test(var.equal=TRUE) F| (bit-for-bit)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_baser",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-12,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "hc_pathology_ratio",
+      "statement": "mean healthy-control dynamic range / mean pooled-pathology dynamic range (the effect size)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "hc_pathology_ratio",
+        "val_col": "value"
+      },
+      "expect": 1.6466485511,
+      "tol": 0.0001,
+      "render": [
+        "1.65"
+      ]
+    },
+    {
+      "id": "hc_gt_pathology",
+      "statement": "healthy controls have a larger vGRF dynamic range than the pooled pathology classes (group means)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "hc_gt_pathology",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "n_total",
+      "statement": "total subjects across the five classes",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_total",
+        "val_col": "value"
+      },
+      "expect": 1844,
+      "tol": 0.5,
+      "render": [
+        "1844"
+      ]
+    },
+    {
+      "id": "k_groups",
+      "statement": "number of gait classes compared",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "k_groups",
+        "val_col": "value"
+      },
+      "expect": 5,
+      "tol": 0.5,
+      "render": [
+        "5"
+      ]
+    }
+  ]
+}

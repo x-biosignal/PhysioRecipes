@@ -1,0 +1,150 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:friedman_vs_scipy_baser",
+      "status": "PASS",
+      "detail": "10/10 agree [Q_statistic=420.13 vs ref 420.13; neg_log10_p=90.015 vs ref 90.015; df=3 vs ref 3; max_diff_scipy=5.6843e-14 vs ref 0; max_diff_baser=0 vs ref 0; rank_open_firm=1.3101 vs ref 1.3101; rank_closed_foam=3.9241 vs ref 3.9241; monotone_order=1 vs ref 1; n_subjects=158 vs ref 158; k_conditions=4 vs ref 4]",
+      "citation": "Friedman M (1937) rank-sum test. Reference impls: scipy.stats.friedmanchisquare and base R stats::friedman.test. Data: COP path length (PhysioMoCap::swayMetrics) across four vision x surface quiet-standing conditions, Santos & Duarte (2016) BDS balance dataset (figshare)."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "Q_statistic": 420.1291139241,
+    "neg_log10_p": 90.015216,
+    "df": 3,
+    "max_diff_scipy": 5.6843418860808e-14,
+    "max_diff_baser": 0,
+    "rank_open_firm": 1.310127,
+    "rank_closed_firm": 1.689873,
+    "rank_open_foam": 3.075949,
+    "rank_closed_foam": 3.924051,
+    "monotone_order": 1,
+    "n_subjects": 158,
+    "k_conditions": 4
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "friedman_vs_scipy_baser",
+    "citation": "Friedman M (1937) rank-sum test. Reference impls: scipy.stats.friedmanchisquare and base R stats::friedman.test. Data: COP path length (PhysioMoCap::swayMetrics) across four vision x surface quiet-standing conditions, Santos & Duarte (2016) BDS balance dataset (figshare).",
+    "description": "re-computes the tie-corrected Friedman chi-square of COP path length across the four conditions with scipy.stats.friedmanchisquare and base R friedman.test and confirms friedmanTest reproduces base R bit-for-bit and scipy to machine precision; also reports the per-condition mean ranks, the monotone ordering and the design sizes",
+    "from_step": {},
+    "scores": {
+      "Q_statistic": 420.1291139241,
+      "neg_log10_p": 90.015216,
+      "df": 3,
+      "max_diff_scipy": 5.6843418860808e-14,
+      "max_diff_baser": 0,
+      "rank_open_firm": 1.310127,
+      "rank_closed_firm": 1.689873,
+      "rank_open_foam": 3.075949,
+      "rank_closed_foam": 3.924051,
+      "monotone_order": 1,
+      "n_subjects": 158,
+      "k_conditions": 4
+    },
+    "checks": [
+      {
+        "metric": "Q_statistic",
+        "expect": 420.1291139241,
+        "tol": 1e-06,
+        "ref_value": 420.1291139241,
+        "term_value": 420.1291139241
+      },
+      {
+        "metric": "neg_log10_p",
+        "expect": 90.015216,
+        "tol": 0.01,
+        "ref_value": 90.015216,
+        "term_value": 90.015216
+      },
+      {
+        "metric": "df",
+        "expect": 3,
+        "tol": 0.5,
+        "ref_value": 3,
+        "term_value": 3
+      },
+      {
+        "metric": "max_diff_scipy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 5.6843418860808e-14
+      },
+      {
+        "metric": "max_diff_baser",
+        "expect": 0,
+        "tol": 1e-12,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "rank_open_firm",
+        "expect": 1.310127,
+        "tol": 0.0001,
+        "ref_value": 1.310127,
+        "term_value": 1.310127
+      },
+      {
+        "metric": "rank_closed_foam",
+        "expect": 3.924051,
+        "tol": 0.0001,
+        "ref_value": 3.924051,
+        "term_value": 3.924051
+      },
+      {
+        "metric": "monotone_order",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "n_subjects",
+        "expect": 158,
+        "tol": 0.5,
+        "ref_value": 158,
+        "term_value": 158
+      },
+      {
+        "metric": "k_conditions",
+        "expect": 4,
+        "tol": 0.5,
+        "ref_value": 4,
+        "term_value": 4
+      }
+    ]
+  }
+}

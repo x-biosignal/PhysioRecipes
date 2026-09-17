@@ -1,0 +1,115 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:gait_regularity_recompute",
+      "status": "PASS",
+      "detail": "5/5 agree [walking_DET=0.92117 vs ref 0.921; walking_ApEn=0.45534 vs ref 0.455; ironing_DET=0.38249 vs ref 0.382; ironing_ApEn=1.2804 vs ref 1.28; running_DET=0.98322 vs ref 0.983]",
+      "citation": "Reiss A, Stricker D (2012), 16th IEEE ISWC (PAMAP2, UCI #231, CC-BY 4.0); Webber & Zbilut recurrence quantification analysis; Pincus (1991) PNAS approximate entropy; Richman & Moorman (2000) AJP-Heart sample entropy."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "walking_DET": 0.921174116077385,
+    "walking_ApEn": 0.455336693357937,
+    "ironing_DET": 0.382494996664443,
+    "ironing_ApEn": 1.28035293499084,
+    "running_DET": 0.983224371803424,
+    "det_gap_walk_minus_iron": 0.538679119412942,
+    "apen_gap_iron_minus_walk": 0.825016241632903,
+    "vacuuming_DET": 0.7341783411163,
+    "walking_LAM": 0.946551800309256,
+    "ironing_LAM": 0.541201678815993,
+    "walking_SampEn": 0.127684589554913,
+    "ironing_SampEn": 1.17001149355757
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "gait_regularity_recompute",
+    "citation": "Reiss A, Stricker D (2012), 16th IEEE ISWC (PAMAP2, UCI #231, CC-BY 4.0); Webber & Zbilut recurrence quantification analysis; Pincus (1991) PNAS approximate entropy; Richman & Moorman (2000) AJP-Heart sample entropy.",
+    "description": "on the four PAMAP2 subject-101 ankle-acceleration activity signals, recurrenceQuantification (m=4, tau=8, target RR=0.1) + approximate/sample entropy reproduce the per-activity determinism + entropy table and its gaps; DET/LAM/ApEn land on the case's published numbers (an independent base-R ApEn matches the op to machine precision)",
+    "from_step": {},
+    "scores": {
+      "walking_DET": 0.921174116077385,
+      "walking_ApEn": 0.455336693357937,
+      "ironing_DET": 0.382494996664443,
+      "ironing_ApEn": 1.28035293499084,
+      "running_DET": 0.983224371803424,
+      "det_gap_walk_minus_iron": 0.538679119412942,
+      "apen_gap_iron_minus_walk": 0.825016241632903,
+      "vacuuming_DET": 0.7341783411163,
+      "walking_LAM": 0.946551800309256,
+      "ironing_LAM": 0.541201678815993,
+      "walking_SampEn": 0.127684589554913,
+      "ironing_SampEn": 1.17001149355757
+    },
+    "checks": [
+      {
+        "metric": "walking_DET",
+        "expect": 0.921,
+        "tol": 0.005,
+        "ref_value": 0.921,
+        "term_value": 0.921174116077385
+      },
+      {
+        "metric": "walking_ApEn",
+        "expect": 0.455,
+        "tol": 0.005,
+        "ref_value": 0.455,
+        "term_value": 0.455336693357937
+      },
+      {
+        "metric": "ironing_DET",
+        "expect": 0.382,
+        "tol": 0.005,
+        "ref_value": 0.382,
+        "term_value": 0.382494996664443
+      },
+      {
+        "metric": "ironing_ApEn",
+        "expect": 1.28,
+        "tol": 0.005,
+        "ref_value": 1.28,
+        "term_value": 1.28035293499084
+      },
+      {
+        "metric": "running_DET",
+        "expect": 0.983,
+        "tol": 0.005,
+        "ref_value": 0.983,
+        "term_value": 0.983224371803424
+      }
+    ]
+  }
+}

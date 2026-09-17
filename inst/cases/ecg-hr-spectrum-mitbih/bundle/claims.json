@@ -1,0 +1,39 @@
+{
+  "paper": "rec117",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "claims": [
+    {
+      "id": "mean_hr",
+      "statement": "mean heart rate (MLII), bpm -- record 117",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "channel",
+        "key": "1",
+        "val_col": "mean_hr"
+      },
+      "expect": 51.02,
+      "tol": 0.02,
+      "render": [
+        "51.02"
+      ]
+    },
+    {
+      "id": "mean_rr",
+      "statement": "mean RR interval (MLII), ms -- record 117",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "channel",
+        "key": "1",
+        "val_col": "mean_rr"
+      },
+      "expect": 1176.02,
+      "tol": 0.02,
+      "render": [
+        "1176.02"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-09-07T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real eyes-closed posterior EEG channel (eegmmidb S002R02, POz), the newly-authored kpssTest reproduces the statsmodels.tsa.stattools.kpss(regression='c') statistic BIT-FOR-BIT; the statistic lies below the 5% KPSS critical value (so it fails to reject the stationarity null); and this AGREES with the ADF test (which rejects the unit-root null), so the confirmatory pair concurs the segment is stationary.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "kpss_stationarity"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "kpssTest",
+        "params": {
+          "lag": 10
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "kpss_stationarity",
+      "threshold": "descriptive: kpssTest equals statsmodels kpss to machine precision (|diff| < 1e-9); the statistic is below the 5% critical value and agrees with ADF"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "c2029d9cdb5dd00da84cdc1d121aa85dee53bae5d9c32f25569a63224a4c9c9c",
+    "registered_at": "2026-09-07T00:00:00Z"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "dataset": "EEG Motor Movement/Imagery Database (eegmmidb)",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples) -- the SAME git-tracked vector the autocorrelation, PACF and AR cases use.",
+  "pipeline": "readRDS(eeg_poz_s002r02) -> PhysioAnalysis::ljungBoxTest(lag=10): Q = N(N+2) sum_{k=1}^{h} rho_k^2/(N-k) from the ACF (autocorrelation()), and p = upper-tail chi-square(h). The reference re-computes Q and p with statsmodels.stats.diagnostic.acorr_ljungbox on the identical signal, via reticulate. Deterministic.",
+  "note": "The root is the POz channel numeric vector (shared with the autocorrelation, PACF and AR cases). The Ljung-Box portmanteau test aggregates the first h squared autocorrelations into Q = N(N+2) sum rho_k^2/(N-k), chi-square(h) under the white-noise null; it is the standard formal test for autocorrelation (and, on model residuals, for model adequacy). ljungBoxTest is a NEW op (built on autocorrelation) adding the test the ecosystem lacked. It reproduces statsmodels.stats.diagnostic.acorr_ljungbox BIT-FOR-BIT for both the statistic and the p-value (|diff| 0), and matches stats::Box.test(type=Ljung-Box) to ~5e-12. Finding: at h=10, Q=4165 is ~228x the 95% chi-square critical value (18.31), so the eyes-closed EEG rejects the white-noise null overwhelmingly (p underflows to 0) -- the formal, quantitative counterpart of the strong ACF decay, the AR(2)-like PACF and the stationary AR(4) fit of the companion folds. HONEST: a signal property; applied to model residuals this same op tests model adequacy; the reproducible content is the bit-exact test."
+}

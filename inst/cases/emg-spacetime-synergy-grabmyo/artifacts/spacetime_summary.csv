@@ -1,0 +1,8 @@
+"metric","value"
+"n_trials",14
+"n_muscles",16
+"n_gestures",2
+"vaf_1x1",0.93
+"vaf_2x2",0.958
+"vaf_3x3",0.968
+"activation_gesture_LOO_accuracy",0.643

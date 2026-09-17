@@ -1,0 +1,10 @@
+"metric","value"
+"alpha1_f1y01",0.79645574
+"young_mean_alpha1",1.04521274
+"old_mean_alpha1",1.38682648
+"aging_effect",0.34161374
+"young_mean_alpha2",0.98236873
+"old_mean_alpha2",1.1121363
+"max_diff_vs_independent_dfa",1.821e-14
+"n_young",5
+"n_old",5

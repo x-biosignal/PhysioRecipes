@@ -1,0 +1,53 @@
+{
+  "paper": "tms-eeg-tep-tesa",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "n_components",
+      "statement": "canonical TEP components recovered (N15/P30/N45/P60/N100/P180)",
+      "expect": 6,
+      "artifact": 6,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n100_latency",
+      "statement": "median latency of the N100 component (the hallmark late TEP peak), ms",
+      "expect": 115,
+      "artifact": 115,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "p180_latency",
+      "statement": "median latency of the P180 component, ms",
+      "expect": 188,
+      "artifact": 188,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "canonical_order",
+      "statement": "the six components appear in canonical temporal order (latencies monotonically increasing; 1=yes)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "polarity_match",
+      "statement": "mean across-channel polarity-match rate (%): the peak sign matches the expected N/P",
+      "expect": 92.1,
+      "artifact": 92.1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

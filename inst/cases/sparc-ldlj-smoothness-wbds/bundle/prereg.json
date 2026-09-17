@@ -1,0 +1,38 @@
+{
+  "registered_at": "2026-09-08T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real WBDS gait knee angular-speed cycle, the shipped PhysioMoCap sparc and ldlj reproduce an independent Python reimplementation of the Balasubramanian et al. (2015) reference algorithm BIT-FOR-BIT; and SPARC becomes more negative (less smooth) when the movement is corrupted with noise.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "movement_smoothness"
+  },
+  "analysis_plan": {
+    "dataset": "WBDS (Fukuchi et al. 2018, figshare) gait knee angular-speed cycle, subject 01, time-normalized to 101 points; treated as a movement speed profile at a nominal 100 Hz",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "sparc",
+        "params": {
+          "fs": 100
+        }
+      },
+      {
+        "activity": "ldlj",
+        "params": {
+          "fs": 100
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "movement_smoothness",
+      "threshold": "descriptive: sparc and ldlj each equal the Balasubramanian reference to machine precision (max |diff| < 1e-9)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "ebc2ca4442e074ecc7b2304b08c84fdbfaaec734fc822692d320059b4bdce7e1",
+    "registered_at": "2026-09-08T00:00:00Z"
+  }
+}

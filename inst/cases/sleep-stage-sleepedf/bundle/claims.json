@@ -1,0 +1,85 @@
+{
+  "paper": "sleep-stage-sleepedf",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "n3_reldelta_s1",
+      "statement": "N3 relative delta power, night 1 (highest of all stages)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n3_reldelta",
+        "val_col": "value"
+      },
+      "expect": 0.9221,
+      "tol": 0.02,
+      "render": [
+        "0.9221"
+      ]
+    },
+    {
+      "id": "n3_reldelta_s2",
+      "statement": "N3 relative delta power, night 2 (reproduces the deep-sleep peak)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n3_reldelta_s2",
+        "val_col": "value"
+      },
+      "expect": 0.9111,
+      "tol": 0.02,
+      "render": [
+        "0.9111"
+      ]
+    },
+    {
+      "id": "deltarise_s1",
+      "statement": "relative delta increase from N1 to N3, night 1 (spectrum slows with depth)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "deltarise",
+        "val_col": "value"
+      },
+      "expect": 0.2934,
+      "tol": 0.02,
+      "render": [
+        "0.2934"
+      ]
+    },
+    {
+      "id": "n2_relsigma_s1",
+      "statement": "N2 relative sigma (spindle band) power, night 1 (peak among stages)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n2_relsigma",
+        "val_col": "value"
+      },
+      "expect": 0.0204,
+      "tol": 0.02,
+      "render": [
+        "0.0204"
+      ]
+    },
+    {
+      "id": "n2_relsigma_s2",
+      "statement": "N2 relative sigma (spindle band) power, night 2 (reproduces the spindle peak)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n2_relsigma_s2",
+        "val_col": "value"
+      },
+      "expect": 0.0282,
+      "tol": 0.02,
+      "render": [
+        "0.0282"
+      ]
+    }
+  ]
+}

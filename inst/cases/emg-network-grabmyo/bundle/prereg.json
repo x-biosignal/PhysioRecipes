@@ -1,0 +1,64 @@
+{
+  "registered_at": "2026-09-01T00:00:00Z",
+  "hypothesis": {
+    "statement": "On real GRABMyo forearm EMG (10-muscle set), the ecosystem's inter-muscle coordination network reproduces across two independent data halves: coherence edges and topology reproduce near-perfectly (edge r ~0.99, node-strength r ~0.997), and the partial-coherence, wPLI, and directed-Granger EDGES reproduce too (r >= 0.83) -- the connectivity structure is signal, not split-specific noise.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "coordination_network_split_half_reproducibility"
+  },
+  "analysis_plan": {
+    "dataset": "GRABMyo (PhysioNet v1.1.0), session1 participant1, forearm EMG channels 1-10 @ 2048 Hz; split-half reproducibility of four connectivity estimators",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "emgEnvelope",
+        "params": {
+          "method": "rms",
+          "window_ms": 50
+        }
+      },
+      {
+        "activity": "splitHalfStability",
+        "params": {
+          "methods": [
+            "coherence",
+            "partial_coherence",
+            "wpli",
+            "directed_gc"
+          ],
+          "freq_band": [
+            20,
+            250
+          ],
+          "channels": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "nperseg": 512,
+          "noverlap": 256,
+          "max_lag": 20,
+          "debiased": true
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "coherence_edge_r",
+      "estimand": "coordination_network_split_half_reproducibility",
+      "threshold": "descriptive: per-estimator split-half correlation of edge weights (upper triangle) and node strengths (row sums); a value near 1 means each half rebuilds the same network -- trust the estimators whose edges AND topology both reproduce"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "487a0ed5635939db9336fe14cd13b4bd5fe2c2720cd0ed057bcf778127db84e3",
+    "registered_at": "2026-09-01T00:00:00Z"
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "schema": "runtrace/1",
+  "seed": 1,
+  "env": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "platform": "x86_64-pc-linux-gnu",
+    "packages": {
+      "PhysioCore": "0.4.0",
+      "PhysioEMG": "0.4.1"
+    },
+    "renv_lock": "renv.lock",
+    "renv_lock_hash": "c110eee44b476fb2"
+  },
+  "op_dag": [
+    {
+      "op": 1,
+      "activity": "emgEnvelope",
+      "package": "PhysioEMG",
+      "version": "0.4.1",
+      "params": {
+        "method": "rms",
+        "window_ms": 50
+      }
+    },
+    {
+      "op": 2,
+      "activity": "splitHalfStability",
+      "package": "PhysioEMG",
+      "version": "0.4.1",
+      "params": {
+        "methods": [
+          "coherence",
+          "partial_coherence",
+          "wpli",
+          "directed_gc"
+        ],
+        "freq_band": [
+          20,
+          250
+        ],
+        "channels": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "nperseg": 512,
+        "noverlap": 256,
+        "max_lag": 20,
+        "debiased": true
+      }
+    }
+  ],
+  "prov_hash": "597a12a5a22c79e4",
+  "outputs": {
+    "terminal_table.csv": "7528cfb0de83f008"
+  },
+  "algo": "xxhash64",
+  "op_dag_source": "executor",
+  "provenance_op_dag": [
+    {
+      "op": 1,
+      "activity": "emgEnvelope",
+      "used": "raw",
+      "generated": "envelope",
+      "package": null,
+      "version": "0.4.1",
+      "params": "{\"method\":\"rms\",\"window_ms\":50,\"cutoff\":6,\"assay_name\":\"raw\",\"output_assay\":\"envelope\"}"
+    }
+  ],
+  "provenance_consistent": true
+}

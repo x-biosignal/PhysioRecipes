@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-09-01T00:00:00Z",
+  "hypothesis": {
+    "statement": "On the UCI HAR benchmark (Anguita 2013), adlFeatures descriptors + a kNN classifier (trainADL) reach ~0.83 six-class accuracy on the provided subject-disjoint test split, recovering posture (laying) perfectly and locomotion above chance.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "har_classification_accuracy"
+  },
+  "analysis_plan": {
+    "dataset": "UCI HAR smartphone accelerometer (Anguita 2013), 30 subjects @ 50 Hz, 6 activities, provided subject-disjoint train (7352) / test (2947) split",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "adlFeatures",
+        "params": {
+          "sampling_rate": 50
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "overall_accuracy",
+      "estimand": "har_classification_accuracy",
+      "threshold": "descriptive: 6-class accuracy on the provided subject-disjoint test split (chance 0.167)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "3687017987a5aa4d871502d514ed14fdfa8e074558139f59d35f18fb3418d66b",
+    "registered_at": "2026-09-01T00:00:00Z"
+  }
+}

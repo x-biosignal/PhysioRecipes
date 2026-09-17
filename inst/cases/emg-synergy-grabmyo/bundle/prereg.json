@@ -1,0 +1,53 @@
+{
+  "registered_at": "2026-08-30T00:00:00Z",
+  "hypothesis": {
+    "statement": "A small number of NMF muscle synergies (knee at VAF>=0.90) accounts for most of the GRABMyo forearm EMG variance.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "muscle_synergy_order_and_vaf"
+  },
+  "analysis_plan": {
+    "dataset": "GRABMyo v1.1.0, record session1_participant1_gesture10_trial1, first 12 forearm channels @ 2048 Hz",
+    "seed": 42,
+    "ops": [
+      {
+        "activity": "emgEnvelope",
+        "params": {
+          "method": "rms",
+          "window_ms": 50,
+          "assay_name": "raw",
+          "output_assay": "envelope_rms"
+        }
+      },
+      {
+        "activity": "emgAmplitudeNormalize",
+        "params": {
+          "method": "peak",
+          "assay_name": "envelope_rms",
+          "output_assay": "normalized"
+        }
+      },
+      {
+        "activity": "muscleSynergyOrder",
+        "params": {
+          "max_synergies": 4,
+          "vaf_threshold": 0.9,
+          "n_restarts": 10,
+          "seed": 42,
+          "assay_name": "normalized"
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "optimal_n",
+      "estimand": "muscle_synergy_order_and_vaf",
+      "threshold": "descriptive: knee = smallest n with NMF VAF >= 0.90"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "40fb27c45b9c7519b43582c05f3f5426599e840ff536e32dc9da777b9dd1e9a9",
+    "registered_at": "2026-08-30T00:00:00Z"
+  }
+}

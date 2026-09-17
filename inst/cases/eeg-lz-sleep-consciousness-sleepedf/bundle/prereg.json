@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-09-03T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real overnight EEG (Sleep-EDF SC4001, Fpz-Cz), the Lempel-Ziv complexity of the cortex is LOWEST in deep sleep (N3) and higher in wake and REM -- the consciousness/complexity gradient -- and eegComplexity's Lempel-Ziv measure reproduces the canonical Python antropy.lziv_complexity to machine precision.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "eeg_lz_sleep_consciousness_gradient"
+  },
+  "analysis_plan": {
+    "dataset": "Sleep-EDF Expanded (PhysioNet sleep-edfx), subject SC4001, EEG Fpz-Cz at 100 Hz; 60-s fixed-length concatenated EEG for each stage (Wake / N2 / N3 / REM) from the expert hypnogram",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "eegComplexity",
+        "params": {
+          "measures": "lempel_ziv"
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "wake_minus_n3",
+      "estimand": "eeg_lz_sleep_consciousness_gradient",
+      "threshold": "descriptive: LZ complexity is lowest in deep sleep N3 (wake - N3 > 0), and the op equals antropy.lziv_complexity to machine precision (|diff| < 1e-9)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "e58579f533b385bda4dce968bf81ea6597b5b82cef516cb6223deb8ec58cd686",
+    "registered_at": "2026-09-03T00:00:00Z"
+  }
+}

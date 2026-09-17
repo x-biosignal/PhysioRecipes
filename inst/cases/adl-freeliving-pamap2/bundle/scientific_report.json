@@ -1,0 +1,105 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "2/2 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:enmo_vs_ggir_freeliving",
+      "status": "PASS",
+      "detail": "5/5 agree [enmo_max_abs_diff_g=1.342e-14 vs ref 0; enmo_correlation=1 vs ref 1; intensity_gradient=-1.1932 vs ref -1.19; mvpa_min=28.583 vs ref 28.6; astp=0.11283 vs ref 0.113]",
+      "citation": "Reiss A, Stricker D (2012), IEEE ISWC (PAMAP2, UCI #231, CC-BY 4.0); van Hees et al. GGIR (CRAN) g.applymetrics ENMO; Hildebrand et al. (2014) cut-points; Rowlands et al. (2018) intensity gradient."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "enmo_max_abs_diff_g": 1.34198208101566e-14,
+    "enmo_correlation": 1,
+    "n_epochs": 749,
+    "intensity_gradient": -1.19318290973464,
+    "mvpa_min": 28.5833333333333,
+    "astp": 0.11283185840708,
+    "mean_enmo_mg": 161.682586476098
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "enmo_vs_ggir_freeliving",
+    "citation": "Reiss A, Stricker D (2012), IEEE ISWC (PAMAP2, UCI #231, CC-BY 4.0); van Hees et al. GGIR (CRAN) g.applymetrics ENMO; Hildebrand et al. (2014) cut-points; Rowlands et al. (2018) intensity gradient.",
+    "description": "computeENMO reproduces GGIR::g.applymetrics ENMO to machine precision on the identical PAMAP2 hand-acc signal (749 epochs), and summarizeFreeLiving reproduces the intensity gradient / MVPA minutes / ASTP fragmentation on that GGIR-validated ENMO series",
+    "from_step": {},
+    "scores": {
+      "enmo_max_abs_diff_g": 1.34198208101566e-14,
+      "enmo_correlation": 1,
+      "n_epochs": 749,
+      "intensity_gradient": -1.19318290973464,
+      "mvpa_min": 28.5833333333333,
+      "astp": 0.11283185840708,
+      "mean_enmo_mg": 161.682586476098
+    },
+    "checks": [
+      {
+        "metric": "enmo_max_abs_diff_g",
+        "expect": 0,
+        "tol": 1e-06,
+        "ref_value": 0,
+        "term_value": 1.34198208101566e-14
+      },
+      {
+        "metric": "enmo_correlation",
+        "expect": 1,
+        "tol": 0.0001,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "intensity_gradient",
+        "expect": -1.19,
+        "tol": 0.01,
+        "ref_value": -1.19,
+        "term_value": -1.19318290973464
+      },
+      {
+        "metric": "mvpa_min",
+        "expect": 28.6,
+        "tol": 0.1,
+        "ref_value": 28.6,
+        "term_value": 28.5833333333333
+      },
+      {
+        "metric": "astp",
+        "expect": 0.113,
+        "tol": 0.001,
+        "ref_value": 0.113,
+        "term_value": 0.11283185840708
+      }
+    ]
+  }
+}

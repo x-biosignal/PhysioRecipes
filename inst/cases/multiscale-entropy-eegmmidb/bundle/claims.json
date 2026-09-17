@@ -1,0 +1,130 @@
+{
+  "paper": "multiscale-entropy-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "mse_scale1",
+      "statement": "multiscale entropy at scale 1 (= single-scale sample entropy)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mse_scale1",
+        "val_col": "value"
+      },
+      "expect": 1.3272319919,
+      "tol": 1e-06,
+      "render": [
+        "1.327"
+      ]
+    },
+    {
+      "id": "mse_scale5",
+      "statement": "multiscale entropy at scale 5 (the peak of the curve)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mse_scale5",
+        "val_col": "value"
+      },
+      "expect": 1.8792187746,
+      "tol": 1e-06,
+      "render": [
+        "1.879"
+      ]
+    },
+    {
+      "id": "mse_scale8",
+      "statement": "multiscale entropy at scale 8 (coarsest scale here)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mse_scale8",
+        "val_col": "value"
+      },
+      "expect": 1.3826645931,
+      "tol": 1e-06,
+      "render": [
+        "1.383"
+      ]
+    },
+    {
+      "id": "mse_auc",
+      "statement": "mean MSE across scales 1-8 (the complexity index)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mse_auc",
+        "val_col": "value"
+      },
+      "expect": 1.5954237844,
+      "tol": 1e-06,
+      "render": [
+        "1.595"
+      ]
+    },
+    {
+      "id": "peak_scale",
+      "statement": "the scale at which MSE peaks",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "peak_scale",
+        "val_col": "value"
+      },
+      "expect": 5,
+      "tol": 0.5,
+      "render": [
+        "5"
+      ]
+    },
+    {
+      "id": "coarse_exceeds_fine",
+      "statement": "coarse-scale MSE exceeds scale 1 (structure, not white noise)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "coarse_exceeds_fine",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "max_diff_neurokit",
+      "statement": "max |multiscaleEntropy - NeuroKit2 entropy_multiscale| across scales (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_neurokit",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "n_samples",
+      "statement": "samples in the analyzed channel (10 s at 160 Hz)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_samples",
+        "val_col": "value"
+      },
+      "expect": 1600,
+      "tol": 0.5,
+      "render": [
+        "1600"
+      ]
+    }
+  ]
+}

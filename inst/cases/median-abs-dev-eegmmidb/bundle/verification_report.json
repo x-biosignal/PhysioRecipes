@@ -1,0 +1,71 @@
+{
+  "paper": "median-abs-dev-eegmmidb",
+  "n_claims": 7,
+  "n_grounded": 7,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "median_abs_dev",
+      "statement": "median absolute deviation (raw, constant=1) of the POz channel -- robust dispersion",
+      "expect": 33,
+      "artifact": 33,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|medianAbsDev - scipy.stats.median_abs_deviation| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_baser",
+      "statement": "|medianAbsDev - base R mad(constant=1)| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mad_scale_normal",
+      "statement": "normal-consistent robust SD estimate (MAD x 1/qnorm(0.75))",
+      "expect": 48.9258732107,
+      "artifact": 48.925873,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "sd_population",
+      "statement": "classical population standard deviation (from signalMoments)",
+      "expect": 48.8326312161,
+      "artifact": 48.832631,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mad_sd_ratio",
+      "statement": "robust MAD-scale / classical SD -- near 1 for clean near-Gaussian data",
+      "expect": 1.0019094198,
+      "artifact": 1.001909,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_samples",
+      "statement": "samples in the analyzed channel (10 s at 160 Hz)",
+      "expect": 1600,
+      "artifact": 1600,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

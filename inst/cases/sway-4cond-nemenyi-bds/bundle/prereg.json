@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-11T00:00:00Z",
+  "hypothesis": {
+    "statement": "In the Nemenyi post-hoc of COP path length across the four BDS conditions, all condition pairs differ, but the vision effect (eyes-open vs eyes-closed) is much weaker on firm ground than on foam; the newly-authored nemenyiTest reproduces PMCMRplus::frdAllPairsNemenyiTest and scikit_posthocs.posthoc_nemenyi_friedman to machine precision.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "pairwise_rank_comparisons"
+  },
+  "analysis_plan": {
+    "dataset": "Santos & Duarte (2016) BDS; Nemenyi post-hoc of per-subject COP path length (PhysioMoCap::swayMetrics) across the four vision x surface conditions, complete blocks (n=158)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "nemenyiTest",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "pairwise_rank_comparisons",
+      "threshold": "descriptive: nemenyiTest equals PMCMRplus::frdAllPairsNemenyiTest and scikit_posthocs.posthoc_nemenyi_friedman to machine precision (|diff| < 1e-9); the vision effect is weaker on firm ground (p ~ 0.044) than on foam (p ~ 3e-8)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "5cee2042d0c6fdfb98a842be45c3b7479b5d03e4f1a23ee33d810d5eb9b317c2",
+    "registered_at": "2026-09-11T00:00:00Z"
+  }
+}

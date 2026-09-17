@@ -1,0 +1,105 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:invdyn_wbds",
+      "status": "PASS",
+      "detail": "5/5 agree [ankle_r_mean=0.97301 vs ref 0.973; knee_r_mean=0.84656 vs ref 0.847; hip_r_mean=0.7741 vs ref 0.774; ankle_ref_peak_mean=1.6594 vs ref 1.6594; n_subjects=5 vs ref 5]",
+      "citation": "Fukuchi CA, Fukuchi RK, Duarte M (2018), PeerJ 6:e4640 (WBDS, figshare 5722711, CC-BY 4.0); 2-D sagittal Newton-Euler inverse dynamics validated against the dataset's own joint moments, 5 subjects x self-selected treadmill."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "ankle_r_mean": 0.973006469140416,
+    "knee_r_mean": 0.846558559463302,
+    "hip_r_mean": 0.774104381991592,
+    "ankle_ref_peak_mean": 1.65939,
+    "hip_id_peak_mean": 1.45982063383735,
+    "hip_ref_peak_mean": 0.9278316,
+    "n_subjects": 5
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "invdyn_wbds",
+    "citation": "Fukuchi CA, Fukuchi RK, Duarte M (2018), PeerJ 6:e4640 (WBDS, figshare 5722711, CC-BY 4.0); 2-D sagittal Newton-Euler inverse dynamics validated against the dataset's own joint moments, 5 subjects x self-selected treadmill.",
+    "description": "inverseDynamics2D on real WBDS markers + GRF, per-joint agreement of the recovered sagittal moment with the dataset's own moment over 5 subjects, reproduces the distal-to-proximal accuracy gradient: ankle r=0.973 (ref push-off peak 1.659 N*m/kg), knee r=0.847, hip r=0.774 (hip peak inflates to 1.46 vs 0.93)",
+    "from_step": {},
+    "scores": {
+      "ankle_r_mean": 0.973006469140416,
+      "knee_r_mean": 0.846558559463302,
+      "hip_r_mean": 0.774104381991592,
+      "ankle_ref_peak_mean": 1.65939,
+      "hip_id_peak_mean": 1.45982063383735,
+      "hip_ref_peak_mean": 0.9278316,
+      "n_subjects": 5
+    },
+    "checks": [
+      {
+        "metric": "ankle_r_mean",
+        "expect": 0.973,
+        "tol": 0.005,
+        "ref_value": 0.973,
+        "term_value": 0.973006469140416
+      },
+      {
+        "metric": "knee_r_mean",
+        "expect": 0.847,
+        "tol": 0.005,
+        "ref_value": 0.847,
+        "term_value": 0.846558559463302
+      },
+      {
+        "metric": "hip_r_mean",
+        "expect": 0.774,
+        "tol": 0.005,
+        "ref_value": 0.774,
+        "term_value": 0.774104381991592
+      },
+      {
+        "metric": "ankle_ref_peak_mean",
+        "expect": 1.6594,
+        "tol": 0.01,
+        "ref_value": 1.6594,
+        "term_value": 1.65939
+      },
+      {
+        "metric": "n_subjects",
+        "expect": 5,
+        "tol": 0.5,
+        "ref_value": 5,
+        "term_value": 5
+      }
+    ]
+  }
+}

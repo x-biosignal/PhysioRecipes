@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-09-01T00:00:00Z",
+  "hypothesis": {
+    "statement": "On real sagittal (Z-axis flexion) hip and knee gait kinematics (WBDS, 42 adults), the hip and knee move substantially OUT of phase (MARP ~84 deg), and two independent coordination methods agree: vector coding's modal pattern is distal (knee-led, ~0.36), in-phase is a minority (~0.29), not simple lockstep. Between-cycle deviation phase is similar on treadmill and overground (no condition difference claimed).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "hip_knee_gait_coordination"
+  },
+  "analysis_plan": {
+    "dataset": "WBDS (figshare 5722711), 42 adults, sagittal RHipAngleZ + RKneeAngleZ time-normalised to the gait cycle (101 pts); 328 treadmill + 123 overground trial-cycles",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "continuousRelativePhase",
+        "params": {
+          "normalize": true
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "marp_deg",
+      "estimand": "hip_knee_gait_coordination",
+      "threshold": "descriptive: mean absolute relative phase (MARP, deg) + vector-coding pattern proportions (in-phase/anti-phase/proximal/distal); the joints are out of phase (MARP 60-100), the modal pattern is distal (knee-led), and CRP and vector coding agree (high MARP with low in-phase)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "4262716dcafbcbfbe0e7ac95c1c932c75633826665f798067b48d6f32c4ce602",
+    "registered_at": "2026-09-01T00:00:00Z"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "registered_at": "2026-09-04T00:00:00Z",
+  "hypothesis": {
+    "statement": "On the real occipital O1-Oz pair, the debiased wPLI is low (consistent with the PLI case -- the alpha coupling is mostly volume conduction); weightedPLI reproduces an independent scipy imaginary-cross-spectrum wPLI; and the debiasing works -- for INDEPENDENT signals the biased wPLI is spuriously positive but the debiased wPLI is ~0, while genuine lagged coupling stays ~1.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "alpha_weighted_phase_lag_index"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002 baseline run R02 (eyes-closed), occipital channels O1 and Oz, first 10 s at 160 Hz (1600 samples each)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "weightedPLI",
+        "params": {
+          "sr": 160,
+          "freq_band": [
+            8,
+            13
+          ],
+          "debiased": true
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "alpha_weighted_phase_lag_index",
+      "threshold": "descriptive: weightedPLI equals an independent scipy wPLI to < 1e-2 (agreement), and the debiasing works -- for independent signals the biased wPLI > 0.01 (spurious) while the debiased wPLI < 0.01 (corrected), and lagged coupling keeps a debiased wPLI > 0.9; the real O1-Oz debiased wPLI is low"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "a9fd73b64818c9f0d7d30ccc0e8678781c465b54ee73f2f497b5c9cf3719dbf0",
+    "registered_at": "2026-09-04T00:00:00Z"
+  }
+}

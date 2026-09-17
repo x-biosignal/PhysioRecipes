@@ -1,0 +1,36 @@
+{
+  "schema": "runtrace/1",
+  "seed": 1,
+  "env": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "platform": "x86_64-pc-linux-gnu",
+    "packages": {
+      "PhysioCore": "0.4.0",
+      "PhysioCrossModal": "0.7.1"
+    },
+    "renv_lock": "renv.lock",
+    "renv_lock_hash": "c110eee44b476fb2"
+  },
+  "op_dag": [
+    {
+      "op": 1,
+      "activity": "representationalSimilarity",
+      "package": "PhysioCrossModal",
+      "version": "0.7.1",
+      "params": {
+        "method": "euclidean",
+        "compare": "spearman",
+        "permutations": 99,
+        "seed": 1
+      }
+    }
+  ],
+  "prov_hash": null,
+  "outputs": {
+    "terminal_table.csv": "ca7a25ccdac036c8"
+  },
+  "algo": "xxhash64",
+  "op_dag_source": "executor",
+  "provenance_op_dag": [],
+  "provenance_consistent": true
+}

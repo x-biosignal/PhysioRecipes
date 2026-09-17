@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-11T00:00:00Z",
+  "hypothesis": {
+    "statement": "In a multiple OLS regression of eyes-closed-foam sway on age and Trail Making Test A, age is a strong significant predictor while TMT-A's independent contribution is not significant; the newly-authored multipleRegression reproduces base R stats::lm and statsmodels OLS bit-for-bit / to machine precision.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "ols_coefficients"
+  },
+  "analysis_plan": {
+    "dataset": "Santos & Duarte (2016) BDS; multiple OLS of per-subject eyes-closed-foam COP path length (PhysioMoCap::swayMetrics) on age and TMT-A, n=158",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "multipleRegression",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "ols_coefficients",
+      "threshold": "descriptive: multipleRegression equals base R lm bit-for-bit (coefficients) and statsmodels OLS to machine precision (|diff| < 1e-9); age is significant (p < 0.001) and TMT-A is not (p > 0.05) in the joint model"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "f4dbae9d85374e931d6de784d6e42c98044ce95d1121d1e99c203894e8f2692d",
+    "registered_at": "2026-09-11T00:00:00Z"
+  }
+}

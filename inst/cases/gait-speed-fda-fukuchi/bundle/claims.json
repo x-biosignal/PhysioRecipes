@@ -1,0 +1,85 @@
+{
+  "paper": "gait-speed-fda-fukuchi",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "beta_peak_pct",
+      "statement": "gait-cycle location of the largest speed coefficient (swing-flexion peak)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "beta_peak_pct_cycle",
+        "val_col": "value"
+      },
+      "expect": 65,
+      "tol": 0.5,
+      "render": [
+        "65"
+      ]
+    },
+    {
+      "id": "beta_peak_value",
+      "statement": "speed coefficient at the peak (deg per speed level; > 0 = faster -> more flexion)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "beta_peak_value",
+        "val_col": "value"
+      },
+      "expect": 3.341,
+      "tol": 0.005,
+      "render": [
+        "3.341"
+      ]
+    },
+    {
+      "id": "global_p",
+      "statement": "curve-wide (family-wise) permutation p-value for the speed effect",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "speed_global_p",
+        "val_col": "value"
+      },
+      "expect": 0.0005,
+      "tol": 0.0001,
+      "render": [
+        "5e-4"
+      ]
+    },
+    {
+      "id": "cor_speed_peak",
+      "statement": "correlation of walking speed with peak knee flexion (pooled)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "cor_speed_peakflexion",
+        "val_col": "value"
+      },
+      "expect": 0.627,
+      "tol": 0.005,
+      "render": [
+        "0.627"
+      ]
+    },
+    {
+      "id": "n_curves",
+      "statement": "subject-speed knee-angle curves analysed",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_curves",
+        "val_col": "value"
+      },
+      "expect": 328,
+      "tol": 0.5,
+      "render": [
+        "328"
+      ]
+    }
+  ]
+}

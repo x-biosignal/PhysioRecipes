@@ -1,0 +1,9 @@
+"metric","value"
+"gc_resp_to_pleth",0.1031367696
+"gc_pleth_to_resp",0.101683848
+"net_gc",0.0014529216
+"max_diff_statsmodels",3.52048169657837e-07
+"max_diff_numpy",1.785223205375e-09
+"F_resp_to_pleth",53.9956
+"order",10
+"n_subjects_resp_dominant",15

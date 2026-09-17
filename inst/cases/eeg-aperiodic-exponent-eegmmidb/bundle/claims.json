@@ -1,0 +1,85 @@
+{
+  "paper": "eeg-aperiodic-exponent-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "exp_corr",
+      "statement": "spatial correlation of the aperiodic exponent between eegAperiodic and fooof across the 64 channels",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "exp_corr",
+        "val_col": "value"
+      },
+      "expect": 0.980294,
+      "tol": 0.005,
+      "render": [
+        "0.98"
+      ]
+    },
+    {
+      "id": "mean_abs_exp_diff",
+      "statement": "mean absolute difference in the per-channel aperiodic exponent (eegAperiodic vs fooof)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mean_abs_exp_diff",
+        "val_col": "value"
+      },
+      "expect": 0.069977,
+      "tol": 0.005,
+      "render": [
+        "0.07"
+      ]
+    },
+    {
+      "id": "mean_exp_specparam",
+      "statement": "mean aperiodic exponent across channels (eegAperiodic / specparam engine)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mean_exp_specparam",
+        "val_col": "value"
+      },
+      "expect": 1.384365,
+      "tol": 0.001,
+      "render": [
+        "1.38"
+      ]
+    },
+    {
+      "id": "mean_exp_fooof",
+      "statement": "mean aperiodic exponent across channels (canonical fooof)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mean_exp_fooof",
+        "val_col": "value"
+      },
+      "expect": 1.454238,
+      "tol": 0.005,
+      "render": [
+        "1.45"
+      ]
+    },
+    {
+      "id": "n_channels",
+      "statement": "EEG channels parameterized",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_channels",
+        "val_col": "value"
+      },
+      "expect": 64,
+      "tol": 0.5,
+      "render": [
+        "64"
+      ]
+    }
+  ]
+}

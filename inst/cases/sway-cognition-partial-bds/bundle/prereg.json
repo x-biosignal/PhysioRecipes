@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-09-11T00:00:00Z",
+  "hypothesis": {
+    "statement": "The rank (Spearman) partial correlation of eyes-closed-foam sway and Trail Making Test A time controlling for age is attenuated relative to the marginal Spearman rho (0.532); the newly-authored partialCorrelation reproduces ppcor::pcor.test AND an independent closed-form recompute to machine precision.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "partial_correlation"
+  },
+  "analysis_plan": {
+    "dataset": "Santos & Duarte (2016) BDS; per-subject eyes-closed-foam COP path length (PhysioMoCap::swayMetrics), Trail Making Test A time and age, complete triples",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "partialCorrelation",
+        "params": {
+          "method": "spearman"
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "partial_correlation",
+      "threshold": "descriptive: partialCorrelation equals ppcor::pcor.test and the closed-form recompute to machine precision (|diff| < 1e-9); the partial correlation is attenuated relative to the marginal (adjusting for age reduces the association)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "b2c9d9429dd19ad1325409fbe87c68b5f1d5c099750ea4a63ee747a0f796f8b9",
+    "registered_at": "2026-09-11T00:00:00Z"
+  }
+}

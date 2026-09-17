@@ -1,0 +1,73 @@
+{
+  "dataset": "MIT-BIH Arrhythmia Database",
+  "url": "https://physionet.org/content/mitdb/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Moody GB, Mark RG. The impact of the MIT-BIH Arrhythmia Database. IEEE Eng Med Biol Mag. 2001;20(3):45-50. Goldberger AL, et al. PhysioNet. Circulation. 2000;101(23):e215-20.",
+  "lead": "MLII @ 360 Hz",
+  "protocol": "reference beat locations from .atr (AAMI); PVC = symbol 'V'; ground truth via WFDB (Python)",
+  "records": {
+    "106": {
+      "dat_sha256": "c017bc18b95b1f970bca143a044ee5d54168648b541e47aa656f2737a59c1202",
+      "hea_sha256": "edda68c7de6d1101b23d4f71822dd5660f48db02e8184e048a617a2d60addfe0",
+      "atr_sha256": "585347e6d1bd3ad89cdb52cb80945878a5e51026d81f871a376bb6e13936f7fa",
+      "n_pvc": 520,
+      "n_beats": 2027
+    },
+    "119": {
+      "dat_sha256": "02a286a28e69b441568add915f16a2856b22bab893bf8729ee9654411ed3a5aa",
+      "hea_sha256": "587152d9e7767ef9854e5a923f3a8e7715aad738ca8ee7e29373ce394dd6843e",
+      "atr_sha256": "fd919c8ea20eed4a22fb37984977f30ce48d382eefd2d90934bf947a88e0fd7b",
+      "n_pvc": 444,
+      "n_beats": 1987
+    },
+    "200": {
+      "dat_sha256": "a9e203b3807b9fcd3647cde03444437cb8eec7f5128a8eb413edafb394272e0f",
+      "hea_sha256": "c113e6cba03818be0a2e2e4b87feaf868b00b9d499a0053cf8ecfe9c892b2ae3",
+      "atr_sha256": "f9624a11696760427d75314a78c31f89ca3c446af855890c8f8b66cddd8b3a3f",
+      "n_pvc": 826,
+      "n_beats": 2601
+    },
+    "203": {
+      "dat_sha256": "5ba7d2237fc838438efd8bb0a3baeffc5de2e70c76e3ab7e401e811ad82f43e0",
+      "hea_sha256": "5a1c8fead3de629bd15a64deeceab18c4f9b6a2ed480aa623094474792d2aba0",
+      "atr_sha256": "2573f948e54a538983a44bf946e3e61cdda60e898b4c65ca8559b57c4877c706",
+      "n_pvc": 444,
+      "n_beats": 2980
+    },
+    "208": {
+      "dat_sha256": "22873623623c44ee413a5b60cacb15d4af2723734836fb3ae45d9ff96bdb36e7",
+      "hea_sha256": "64c411f07144519ef0070e7aa7b292ffa2a2a0b63be44ca90bb1ac970cc23cf2",
+      "atr_sha256": "33878519ee34d00cb233fdb15b11c2b8da0b0aea2e643d31b07105cc3392edf4",
+      "n_pvc": 992,
+      "n_beats": 2955
+    },
+    "214": {
+      "dat_sha256": "a886b1ceb56e950858dedf5b56d3fdb5f26aef3667f8effcb880c1c000ee0cd3",
+      "hea_sha256": "19298a143cc419851585d276b09582f35a709a5173c2e12ee0cdf89a65ef28c2",
+      "atr_sha256": "09c588b0623f6dc6138928ce2006f294c4ef3da143eec2cdba6eddb9b1597214",
+      "n_pvc": 256,
+      "n_beats": 2262
+    },
+    "221": {
+      "dat_sha256": "274d17c6a35f7adcbb10a59ea34350e5ad299c2d69e4fa579d8863213e1fe9ae",
+      "hea_sha256": "41de26e853051c395fdb87d1d88aeae6b3aae257da42d1a7f5a87d42a62bf414",
+      "atr_sha256": "92549b966cc17bcf2edf00a97237d1e350a761d9ffe20065b5ed303848aad7ae",
+      "n_pvc": 396,
+      "n_beats": 2427
+    },
+    "223": {
+      "dat_sha256": "1d42aa9e13f7349287ae5f0f00b40078c01aadd39e2cad1001ab42d3b7484594",
+      "hea_sha256": "85bd13b12e47a7bbd6d0d128871625b92af860b87c323cbc13cc6da4bf70f0b4",
+      "atr_sha256": "beaa5cb3eb5fb64a5f9e1dfcac9297f9564b379c9c354cbf8f9f927d9b81ccf1",
+      "n_pvc": 473,
+      "n_beats": 2605
+    },
+    "233": {
+      "dat_sha256": "6ccd6b1fa0cafc052369e7ec0a99cc6c3b56b3c12afff26db800c55a826211b4",
+      "hea_sha256": "c8df80c49d0c12f2aedc6cc3b3c271c873d59d3d07f64a6cf77a6c389a56b4e2",
+      "atr_sha256": "c9ce42ecefa9a92e2ec69f9d237d8a53c67c60b31a25d579356ea8910bcc368a",
+      "n_pvc": 831,
+      "n_beats": 3079
+    }
+  }
+}

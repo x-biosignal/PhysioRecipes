@@ -1,0 +1,13 @@
+"metric","value"
+"walking_DET",0.921174116077385
+"walking_ApEn",0.455336693357937
+"ironing_DET",0.382494996664443
+"ironing_ApEn",1.28035293499084
+"running_DET",0.983224371803424
+"det_gap_walk_minus_iron",0.538679119412942
+"apen_gap_iron_minus_walk",0.825016241632903
+"vacuuming_DET",0.7341783411163
+"walking_LAM",0.946551800309256
+"ironing_LAM",0.541201678815993
+"walking_SampEn",0.127684589554913
+"ironing_SampEn",1.17001149355757

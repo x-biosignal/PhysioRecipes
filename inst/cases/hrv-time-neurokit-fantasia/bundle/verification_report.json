@@ -1,0 +1,62 @@
+{
+  "paper": "hrv-time-neurokit-fantasia",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "meannn",
+      "statement": "mean NN interval (MeanNN), reproducing NeuroKit2 hrv_time bit-for-bit",
+      "expect": 765.8775510204,
+      "artifact": 765.877551,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "sdnn",
+      "statement": "SDNN (sd of NN intervals) -- reproduces NeuroKit2 bit-for-bit",
+      "expect": 73.6963099023,
+      "artifact": 73.69631,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "rmssd",
+      "statement": "RMSSD (root-mean-square of successive differences) -- reproduces NeuroKit2 bit-for-bit",
+      "expect": 81.5396597524,
+      "artifact": 81.53966,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_nk_core",
+      "statement": "max |ecgHRVtime - NeuroKit2 hrv_time| over MeanNN, SDNN, RMSSD (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "pnn50_gap",
+      "statement": "pNN50 gap vs NeuroKit2 -- the ONLY divergence, a documented denominator convention (N-1 vs N)",
+      "expect": 0.0952554935,
+      "artifact": 0.095255,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "nn50_count",
+      "statement": "nn50 count (successive |diff| > 50 ms) -- IDENTICAL in both tools, proving the pNN50 gap is denominator-only",
+      "expect": 146,
+      "artifact": 146,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

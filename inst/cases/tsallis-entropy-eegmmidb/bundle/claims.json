@@ -1,0 +1,100 @@
+{
+  "paper": "tsallis-entropy-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "tsallis_collision",
+      "statement": "Tsallis entropy at q=2 (collision-order) of the POz amplitude distribution",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "tsallis_collision",
+        "val_col": "value"
+      },
+      "expect": 0.8854257813,
+      "tol": 1e-06,
+      "render": [
+        "0.89"
+      ]
+    },
+    {
+      "id": "tsallis_shannon",
+      "statement": "Tsallis entropy at q=1 -- exactly the Shannon entropy (the family's special case)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "tsallis_shannon",
+        "val_col": "value"
+      },
+      "expect": 2.3247657693,
+      "tol": 1e-06,
+      "render": [
+        "2.32"
+      ]
+    },
+    {
+      "id": "max_diff_nk",
+      "statement": "max |tsallisEntropy - NeuroKit2 entropy_tsallis| over q = {0.5, 1, 2, 3} (bit-exact family)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_nk",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "9e-16"
+      ]
+    },
+    {
+      "id": "diverge_from_renyi_q2",
+      "statement": "|Tsallis(q=2) - Renyi(alpha=2)| -- the two generalizations diverge (non-additive vs additive)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "diverge_from_renyi_q2",
+        "val_col": "value"
+      },
+      "expect": 1.281107,
+      "tol": 0.001,
+      "render": [
+        "1.28"
+      ]
+    },
+    {
+      "id": "agree_at_1",
+      "statement": "|Tsallis(q=1) - Renyi(alpha=1)| -- both recover Shannon, so they coincide at 1 (~0)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "agree_at_1",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "monotonic",
+      "statement": "Tsallis S_q is non-increasing in q (1 = holds)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "monotonic",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    }
+  ]
+}

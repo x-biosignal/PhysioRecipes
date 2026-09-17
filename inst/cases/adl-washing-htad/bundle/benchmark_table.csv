@@ -1,0 +1,9 @@
+"metric","value"
+"washing_recall",0.528358208955224
+"overall_accuracy",0.622292241039779
+"chance_level",0.142857142857143
+"n_subjects",3
+"n_activities",7
+"n_test_windows",2539
+"washing_pcr",0.528358208955224
+"d510_present",1

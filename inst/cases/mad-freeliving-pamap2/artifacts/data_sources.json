@@ -1,0 +1,10 @@
+{
+  "dataset": "PAMAP2 Physical Activity Monitoring Dataset",
+  "source": "UCI Machine Learning Repository / PhysioNet",
+  "url": "https://archive.ics.uci.edu/dataset/231/pamap2+physical+activity+monitoring",
+  "license": "CC BY 4.0",
+  "citation": "Reiss A, Stricker D. Introducing a new benchmarked dataset for activity monitoring. 2012 16th International Symposium on Wearable Computers, IEEE, 2012:108-109.",
+  "record_used": "subject 101 hand-worn IMU accelerometer (x, y, z in g at 100 Hz), a ~62-minute free-living recording (749 non-overlapping 5 s epochs) -- the SAME git-tracked signal the ENMO free-living case (adl-freeliving-pamap2) uses.",
+  "pipeline": "read.csv(hand_accel_g) -> PhysioWearable::computeMAD(sampling_rate=100, epoch_sec=5): vector magnitude r = sqrt(x^2+y^2+z^2), then per 5 s epoch MAD = mean(|r - mean(r)|). The reference re-computes the same per-epoch MAD with GGIR::g.applymetrics (do.mad=TRUE) on the identical signal. Deterministic.",
+  "note": "The root is the PAMAP2 hand-accelerometer signal (shared with the ENMO free-living case). MAD (mean amplitude deviation, Vaha-Ypya et al. 2015) is a gravity-robust movement-intensity metric complementary to ENMO: MAD measures the VARIATION of the acceleration vector magnitude within an epoch (insensitive to a static orientation offset), whereas ENMO measures its ELEVATION above 1 g. computeMAD is a NEW op completing the ENMO+MAD GGIR metric pair (the ecosystem had GGIR-certified ENMO but no MAD). It reproduces GGIR::g.applymetrics MAD to MACHINE PRECISION (max |diff| ~5e-14 g, correlation 1.0) across all 749 epochs -- both compute the identical per-epoch mean-absolute-deviation of the vector magnitude. On this real free-living recording the MAD ranges 5-1222 mg (mean 232 mg), a physical movement profile. HONEST: MAD is a genuine physical quantity (g/mg), so the mean/max/min are meaningful, not placeholders; the bit-exact GGIR agreement certifies the implementation."
+}

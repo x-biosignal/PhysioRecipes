@@ -1,0 +1,62 @@
+{
+  "paper": "adl-rasch-verbagg",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "item_spearman",
+      "statement": "item-difficulty rank agreement, pcm_measure (JMLE) vs eRm (CML)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "item_pearson",
+      "statement": "item-location agreement (Pearson) vs eRm's conditional-ML calibration",
+      "expect": 1,
+      "artifact": 0.999994,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "person_pearson",
+      "statement": "person-measure agreement (Pearson) vs eRm",
+      "expect": 1,
+      "artifact": 0.999994,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "person_reliability",
+      "statement": "person separation reliability",
+      "expect": 0.863,
+      "artifact": 0.86298,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_items",
+      "statement": "items calibrated on the interval logit scale",
+      "expect": 24,
+      "artifact": 24,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_persons",
+      "statement": "non-extreme persons calibrated (of 316; all-min/all-max are dropped)",
+      "expect": 310,
+      "artifact": 310,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

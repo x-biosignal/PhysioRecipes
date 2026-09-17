@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-09-07T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real eyes-closed posterior EEG channel (eegmmidb S002R02, POz), the newly-authored autocorrelation reproduces statsmodels.tsa.acf (adjusted=FALSE, the biased/demeaned estimator) BIT-FOR-BIT across lags; the lag-0 value is exactly 1; and the ACF decays to below 1/e within a few lags (a short decorrelation time for a broadband EEG segment).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "autocorrelation"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "autocorrelation",
+        "params": {
+          "lag_max": 30
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "autocorrelation",
+      "threshold": "descriptive: autocorrelation equals statsmodels.tsa.acf to machine precision (max |diff| < 1e-9) across lags"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "cfacd6792c67ae955e59be20e83ab9b5c022eb3effffe2a42b4969a24bc96b19",
+    "registered_at": "2026-09-07T00:00:00Z"
+  }
+}

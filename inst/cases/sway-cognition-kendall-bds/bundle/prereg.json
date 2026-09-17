@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-11T00:00:00Z",
+  "hypothesis": {
+    "statement": "In the BDS cohort (n=158), eyes-closed-foam COP path length is positively associated with Trail Making Test A time (slower processing speed -> more sway); the newly-authored kendallTau reproduces base R stats::cor.test(method='kendall') AND scipy.stats.kendalltau BIT-FOR-BIT for the tau-b statistic and the normal-approximation p-value.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "kendall_tau_b"
+  },
+  "analysis_plan": {
+    "dataset": "Santos & Duarte (2016) BDS; per-subject eyes-closed-foam COP path length (PhysioMoCap::swayMetrics) vs Trail Making Test part A time, complete pairs",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "kendallTau",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "kendall_tau_b",
+      "threshold": "descriptive: kendallTau equals base R cor.test(method='kendall') and scipy.stats.kendalltau bit-for-bit (|diff| = 0 for tau-b and p); the association is positive (tau > 0) and significant (p < 0.001)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "4d49931fa227e833c00177ddc8ec0a93868780387b36ba71d5920ff074170c05",
+    "registered_at": "2026-09-11T00:00:00Z"
+  }
+}

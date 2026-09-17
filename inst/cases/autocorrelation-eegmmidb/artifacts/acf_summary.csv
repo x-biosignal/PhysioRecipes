@@ -1,0 +1,7 @@
+"metric","value"
+"acf_lag1",0.85646134
+"acf_lag2",0.56654886
+"acf_lag0",1
+"max_diff_statsmodels",2.22044604925031e-16
+"decorrelation_time",3
+"n_lags",31

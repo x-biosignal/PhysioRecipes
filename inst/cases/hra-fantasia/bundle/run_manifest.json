@@ -1,0 +1,31 @@
+{
+  "schema": "runtrace/1",
+  "seed": 1,
+  "env": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "platform": "x86_64-pc-linux-gnu",
+    "packages": {
+      "PhysioCore": "0.4.0",
+      "PhysioECG": "0.4.1"
+    },
+    "renv_lock": null,
+    "renv_lock_hash": null
+  },
+  "op_dag": [
+    {
+      "op": 1,
+      "activity": "ecgHRVasymmetry",
+      "package": "PhysioECG",
+      "version": "0.4.1",
+      "params": []
+    }
+  ],
+  "prov_hash": null,
+  "outputs": {
+    "terminal_table.csv": "c8616af1eb506522"
+  },
+  "algo": "xxhash64",
+  "op_dag_source": "executor",
+  "provenance_op_dag": [],
+  "provenance_consistent": true
+}

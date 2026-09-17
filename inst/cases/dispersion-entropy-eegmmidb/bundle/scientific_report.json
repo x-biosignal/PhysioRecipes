@@ -1,0 +1,110 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:dispersion_vs_neurokit",
+      "status": "PASS",
+      "detail": "6/6 agree [dispen=1.1171 vs ref 1.1171; rden=0.016224 vs ref 0.016224; max_diff_nk_dispen=0 vs ref 0; max_diff_nk_rden=6.9389e-18 vs ref 0; n_patterns_observed=108 vs ref 108; dispen_below_ceiling=1 vs ref 1]",
+      "citation": "Rostaghi M, Azami H (2016). Dispersion entropy: A measure for time-series analysis. IEEE Signal Process Lett 23(5):610-614. Reference impl: NeuroKit2 entropy_dispersion (Makowski et al. 2021). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "dispen": 1.11708375,
+    "rden": 0.0162243,
+    "max_diff_nk_dispen": 0,
+    "max_diff_nk_rden": 6.93889390390723e-18,
+    "n_patterns_observed": 108,
+    "dispen_below_ceiling": 1
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "dispersion_vs_neurokit",
+    "citation": "Rostaghi M, Azami H (2016). Dispersion entropy: A measure for time-series analysis. IEEE Signal Process Lett 23(5):610-614. Reference impl: NeuroKit2 entropy_dispersion (Makowski et al. 2021). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes DispEn and RDEn with NeuroKit2 entropy_dispersion across (c, dimension, delay) settings; reports DispEn and RDEn at the default, the bit-exact NeuroKit2 agreement for both, the number of distinct dispersion patterns observed out of c^m, and that DispEn lies below the 1/ln(2) ceiling",
+    "from_step": {},
+    "scores": {
+      "dispen": 1.11708375,
+      "rden": 0.0162243,
+      "max_diff_nk_dispen": 0,
+      "max_diff_nk_rden": 6.93889390390723e-18,
+      "n_patterns_observed": 108,
+      "dispen_below_ceiling": 1
+    },
+    "checks": [
+      {
+        "metric": "dispen",
+        "expect": 1.1170837477,
+        "tol": 1e-06,
+        "ref_value": 1.1170837477,
+        "term_value": 1.11708375
+      },
+      {
+        "metric": "rden",
+        "expect": 0.0162243036,
+        "tol": 1e-06,
+        "ref_value": 0.0162243036,
+        "term_value": 0.0162243
+      },
+      {
+        "metric": "max_diff_nk_dispen",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "max_diff_nk_rden",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 6.93889390390723e-18
+      },
+      {
+        "metric": "n_patterns_observed",
+        "expect": 108,
+        "tol": 0.5,
+        "ref_value": 108,
+        "term_value": 108
+      },
+      {
+        "metric": "dispen_below_ceiling",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:katz_double_ref_euclid",
+      "status": "PASS",
+      "detail": "5/5 agree [katz_fd=3.4679 vs ref 3.4679; max_diff_antropy=0 vs ref 0; max_diff_neurokit=0 vs ref 0; euclidean_diff=1.7723 vs ref 1.7723; n_samples=1600 vs ref 1600]",
+      "citation": "Katz MJ (1988). Fractals and the analysis of waveforms. Comput Biol Med 18(3):145-156. Reference impls: antropy.katz_fd (Vallat) and NeuroKit2 fractal_katz (Makowski et al.). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "katz_fd": 3.4679139453,
+    "max_diff_antropy": 0,
+    "max_diff_neurokit": 0,
+    "euclidean_diff": 1.77231836689047,
+    "n_samples": 1600,
+    "euclidean_katz_fd": 1.6955955784
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "katz_double_ref_euclid",
+    "citation": "Katz MJ (1988). Fractals and the analysis of waveforms. Comput Biol Med 18(3):145-156. Reference impls: antropy.katz_fd (Vallat) and NeuroKit2 fractal_katz (Makowski et al.). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes Katz's fractal dimension with antropy.katz_fd AND NeuroKit2 fractal_katz on the identical signal and confirms katzFD reproduces BOTH bit-for-bit; also reports the difference from the earlier Euclidean-plane convention and the sample count",
+    "from_step": {},
+    "scores": {
+      "katz_fd": 3.4679139453,
+      "max_diff_antropy": 0,
+      "max_diff_neurokit": 0,
+      "euclidean_diff": 1.77231836689047,
+      "n_samples": 1600,
+      "euclidean_katz_fd": 1.6955955784
+    },
+    "checks": [
+      {
+        "metric": "katz_fd",
+        "expect": 3.4679139453,
+        "tol": 1e-06,
+        "ref_value": 3.4679139453,
+        "term_value": 3.4679139453
+      },
+      {
+        "metric": "max_diff_antropy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "max_diff_neurokit",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "euclidean_diff",
+        "expect": 1.7723183669,
+        "tol": 0.0001,
+        "ref_value": 1.7723183669,
+        "term_value": 1.77231836689047
+      },
+      {
+        "metric": "n_samples",
+        "expect": 1600,
+        "tol": 0.5,
+        "ref_value": 1600,
+        "term_value": 1600
+      }
+    ]
+  }
+}

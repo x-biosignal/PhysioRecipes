@@ -1,0 +1,9 @@
+"metric","value"
+"correlation_foam",0.62131426
+"neg_log10_p",5.831639
+"df",48
+"max_diff_scipy",0
+"max_diff_baser",0
+"correlation_firm",0.3921671237
+"foam_gt_firm_corr",1
+"n_subjects",50

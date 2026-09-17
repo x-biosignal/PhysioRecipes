@@ -1,0 +1,146 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:dunn_vs_pmcmr_scipy",
+      "status": "PASS",
+      "detail": "10/10 agree [max_abs_z=16.025 vs ref 16.025; p_adj_C_A=1.7246e-06 vs ref 1.7246e-06; p_adj_K_A=0.067489 vs ref 0.067489; p_adj_H_K=1 vs ref 1; max_diff_z_pmcmr=1.7764e-15 vs ref 0; max_diff_padj_scipy=4.1633e-17 vs ref 0; n_sig_hc_vs_pathology=4 vs ref 4; n_sig_pathology_pathology=4 vs ref 4; n_pairs=10 vs ref 10; n_total=1844 vs ref 1844]",
+      "citation": "Dunn OJ (1964) multiple comparisons using rank sums. Reference impls: PMCMRplus::kwAllPairsDunnTest and scikit_posthocs.posthoc_dunn. Data: vertical-GRF push-off peak (PhysioMoCap::grfLandmarks) across five gait classes, GaitRec (Horsak et al. 2020)."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "max_abs_z": 16.025387166,
+    "p_adj_C_A": 1.7246e-06,
+    "p_adj_K_A": 0.0674892556,
+    "p_adj_H_K": 1,
+    "max_diff_z_pmcmr": 1.77635683940025e-15,
+    "max_diff_padj_scipy": 4.16333634234434e-17,
+    "n_sig_hc_vs_pathology": 4,
+    "n_sig_pathology_pathology": 4,
+    "n_pairs": 10,
+    "n_total": 1844
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "dunn_vs_pmcmr_scipy",
+    "citation": "Dunn OJ (1964) multiple comparisons using rank sums. Reference impls: PMCMRplus::kwAllPairsDunnTest and scikit_posthocs.posthoc_dunn. Data: vertical-GRF push-off peak (PhysioMoCap::grfLandmarks) across five gait classes, GaitRec (Horsak et al. 2020).",
+    "description": "re-computes all pairwise Dunn comparisons (Bonferroni) of the vertical-GRF push-off peak across the five gait classes with PMCMRplus and scikit_posthocs and confirms dunnTest reproduces both to machine precision; also reports the healthy-vs-pathology / pathology-pathology significance split",
+    "from_step": {},
+    "scores": {
+      "max_abs_z": 16.025387166,
+      "p_adj_C_A": 1.7246e-06,
+      "p_adj_K_A": 0.0674892556,
+      "p_adj_H_K": 1,
+      "max_diff_z_pmcmr": 1.77635683940025e-15,
+      "max_diff_padj_scipy": 4.16333634234434e-17,
+      "n_sig_hc_vs_pathology": 4,
+      "n_sig_pathology_pathology": 4,
+      "n_pairs": 10,
+      "n_total": 1844
+    },
+    "checks": [
+      {
+        "metric": "max_abs_z",
+        "expect": 16.025387166,
+        "tol": 1e-06,
+        "ref_value": 16.025387166,
+        "term_value": 16.025387166
+      },
+      {
+        "metric": "p_adj_C_A",
+        "expect": 1.7246e-06,
+        "tol": 1e-08,
+        "ref_value": 1.7246e-06,
+        "term_value": 1.7246e-06
+      },
+      {
+        "metric": "p_adj_K_A",
+        "expect": 0.0674892556,
+        "tol": 0.0001,
+        "ref_value": 0.0674892556,
+        "term_value": 0.0674892556
+      },
+      {
+        "metric": "p_adj_H_K",
+        "expect": 1,
+        "tol": 0.0001,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "max_diff_z_pmcmr",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 1.77635683940025e-15
+      },
+      {
+        "metric": "max_diff_padj_scipy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 4.16333634234434e-17
+      },
+      {
+        "metric": "n_sig_hc_vs_pathology",
+        "expect": 4,
+        "tol": 0.5,
+        "ref_value": 4,
+        "term_value": 4
+      },
+      {
+        "metric": "n_sig_pathology_pathology",
+        "expect": 4,
+        "tol": 0.5,
+        "ref_value": 4,
+        "term_value": 4
+      },
+      {
+        "metric": "n_pairs",
+        "expect": 10,
+        "tol": 0.5,
+        "ref_value": 10,
+        "term_value": 10
+      },
+      {
+        "metric": "n_total",
+        "expect": 1844,
+        "tol": 0.5,
+        "ref_value": 1844,
+        "term_value": 1844
+      }
+    ]
+  }
+}

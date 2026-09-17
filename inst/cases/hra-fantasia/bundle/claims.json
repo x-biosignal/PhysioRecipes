@@ -1,0 +1,145 @@
+{
+  "paper": "hra-fantasia",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "gi",
+      "statement": "Guzik's Index (%) -- deceleration-point distance contribution (>50 = deceleration asymmetry)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "gi",
+        "val_col": "value"
+      },
+      "expect": 50.416983,
+      "tol": 0.001,
+      "render": [
+        "50.4"
+      ]
+    },
+    {
+      "id": "si",
+      "statement": "Slope Index (%) -- deceleration-point phase-angle contribution",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "si",
+        "val_col": "value"
+      },
+      "expect": 50.514533,
+      "tol": 0.001,
+      "render": [
+        "50.5"
+      ]
+    },
+    {
+      "id": "pi",
+      "statement": "Porta's Index (%) -- fraction of points below the line of identity (accelerations)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "pi",
+        "val_col": "value"
+      },
+      "expect": 53.968254,
+      "tol": 0.001,
+      "render": [
+        "54.0"
+      ]
+    },
+    {
+      "id": "c1d",
+      "statement": "contribution of DECELERATIONS to short-term HRV (C1d) -- the larger short-term component",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "c1d",
+        "val_col": "value"
+      },
+      "expect": 0.584288,
+      "tol": 0.0001,
+      "render": [
+        "0.58"
+      ]
+    },
+    {
+      "id": "c1a",
+      "statement": "contribution of ACCELERATIONS to short-term HRV (C1a) -- the smaller short-term component",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "c1a",
+        "val_col": "value"
+      },
+      "expect": 0.415712,
+      "tol": 0.0001,
+      "render": [
+        "0.42"
+      ]
+    },
+    {
+      "id": "c2d",
+      "statement": "contribution of decelerations to long-term HRV (C2d) -- the smaller long-term component",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "c2d",
+        "val_col": "value"
+      },
+      "expect": 0.411294,
+      "tol": 0.0001,
+      "render": [
+        "0.41"
+      ]
+    },
+    {
+      "id": "c2a",
+      "statement": "contribution of accelerations to long-term HRV (C2a) -- the larger long-term component (the complementary asymmetry)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "c2a",
+        "val_col": "value"
+      },
+      "expect": 0.588706,
+      "tol": 0.0001,
+      "render": [
+        "0.59"
+      ]
+    },
+    {
+      "id": "max_diff_nk",
+      "statement": "max |ecgHRVasymmetry - NeuroKit2 hrv_nonlinear| over all HRA indices (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_nk",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "1e-14"
+      ]
+    },
+    {
+      "id": "n_subj_c1d_gt_c1a",
+      "statement": "subjects (of 10) where C1d > C1a -- decelerations dominate short-term variability (HRA signature robustness)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_subj_c1d_gt_c1a",
+        "val_col": "value"
+      },
+      "expect": 8,
+      "tol": 0.02,
+      "render": [
+        "8"
+      ]
+    }
+  ]
+}

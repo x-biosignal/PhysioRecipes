@@ -1,0 +1,137 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:correlation_vs_scipy_baser",
+      "status": "PASS",
+      "detail": "9/9 agree [correlation_foam=0.62131 vs ref 0.62131; neg_log10_p=5.8316 vs ref 5.8316; df=48 vs ref 48; max_diff_scipy=1.1102e-16 vs ref 0; max_diff_baser=0 vs ref 0; max_diff_p_scipy=1.6305e-20 vs ref 0; correlation_firm=0.39217 vs ref 0.39217; foam_gt_firm_corr=1 vs ref 1; n_subjects=50 vs ref 50]",
+      "citation": "Pearson (1896) product-moment correlation. Reference impls: scipy.stats.pearsonr (Virtanen et al.) and base R stats::cor.test. Data: age vs COP path length (PhysioMoCap::swayMetrics) for 50 subjects of the Santos & Duarte (2016) balance dataset."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "correlation_foam": 0.62131426,
+    "neg_log10_p": 5.831639,
+    "df": 48,
+    "max_diff_scipy": 1.11022302462516e-16,
+    "max_diff_baser": 0,
+    "max_diff_p_scipy": 1.63053842346453e-20,
+    "correlation_firm": 0.3921671237,
+    "foam_gt_firm_corr": 1,
+    "n_subjects": 50
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "correlation_vs_scipy_baser",
+    "citation": "Pearson (1896) product-moment correlation. Reference impls: scipy.stats.pearsonr (Virtanen et al.) and base R stats::cor.test. Data: age vs COP path length (PhysioMoCap::swayMetrics) for 50 subjects of the Santos & Duarte (2016) balance dataset.",
+    "description": "re-computes the Pearson correlation and p-value with scipy.stats.pearsonr and base R cor.test and confirms correlationTest reproduces BOTH bit-for-bit; also reports the age-vs-firm correlation (to show the age effect is stronger on foam) and the subject count",
+    "from_step": {},
+    "scores": {
+      "correlation_foam": 0.62131426,
+      "neg_log10_p": 5.831639,
+      "df": 48,
+      "max_diff_scipy": 1.11022302462516e-16,
+      "max_diff_baser": 0,
+      "max_diff_p_scipy": 1.63053842346453e-20,
+      "correlation_firm": 0.3921671237,
+      "foam_gt_firm_corr": 1,
+      "n_subjects": 50
+    },
+    "checks": [
+      {
+        "metric": "correlation_foam",
+        "expect": 0.62131426,
+        "tol": 1e-06,
+        "ref_value": 0.62131426,
+        "term_value": 0.62131426
+      },
+      {
+        "metric": "neg_log10_p",
+        "expect": 5.831639,
+        "tol": 0.001,
+        "ref_value": 5.831639,
+        "term_value": 5.831639
+      },
+      {
+        "metric": "df",
+        "expect": 48,
+        "tol": 0.5,
+        "ref_value": 48,
+        "term_value": 48
+      },
+      {
+        "metric": "max_diff_scipy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 1.11022302462516e-16
+      },
+      {
+        "metric": "max_diff_baser",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "max_diff_p_scipy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 1.63053842346453e-20
+      },
+      {
+        "metric": "correlation_firm",
+        "expect": 0.3921671237,
+        "tol": 1e-06,
+        "ref_value": 0.3921671237,
+        "term_value": 0.3921671237
+      },
+      {
+        "metric": "foam_gt_firm_corr",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "n_subjects",
+        "expect": 50,
+        "tol": 0.5,
+        "ref_value": 50,
+        "term_value": 50
+      }
+    ]
+  }
+}

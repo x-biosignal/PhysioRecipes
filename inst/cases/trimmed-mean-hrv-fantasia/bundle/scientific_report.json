@@ -1,0 +1,128 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:trimmed_mean_vs_scipy_baser",
+      "status": "PASS",
+      "detail": "8/8 agree [trimmed_mean_10=761.77 vs ref 761.77; trimmed_mean_20=760.19 vs ref 760.19; max_diff_scipy=0 vs ref 0; max_diff_baser=0 vs ref 0; plain_mean=765.88 vs ref 765.88; median_rr=756 vs ref 756; mean_gt_trim_gt_median=1 vs ref 1; n_intervals=392 vs ref 392]",
+      "citation": "Trimmed mean (Tukey 1962). Reference impls: scipy.stats.trim_mean (Virtanen et al.) and base R mean(x, trim). Data: Fantasia RR intervals (PhysioNet)."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "trimmed_mean_10": 761.7707006369,
+    "trimmed_mean_20": 760.186440678,
+    "max_diff_scipy": 0,
+    "max_diff_baser": 0,
+    "plain_mean": 765.8775510204,
+    "median_rr": 756,
+    "mean_gt_trim_gt_median": 1,
+    "n_intervals": 392
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "trimmed_mean_vs_scipy_baser",
+    "citation": "Trimmed mean (Tukey 1962). Reference impls: scipy.stats.trim_mean (Virtanen et al.) and base R mean(x, trim). Data: Fantasia RR intervals (PhysioNet).",
+    "description": "re-computes the trimmed mean with scipy.stats.trim_mean and base R mean(x, trim) and confirms trimmedMean reproduces BOTH bit-for-bit; also reports a second trim level, the plain mean, the median, the mean>trim>median ordering, and the interval count",
+    "from_step": {},
+    "scores": {
+      "trimmed_mean_10": 761.7707006369,
+      "trimmed_mean_20": 760.186440678,
+      "max_diff_scipy": 0,
+      "max_diff_baser": 0,
+      "plain_mean": 765.8775510204,
+      "median_rr": 756,
+      "mean_gt_trim_gt_median": 1,
+      "n_intervals": 392
+    },
+    "checks": [
+      {
+        "metric": "trimmed_mean_10",
+        "expect": 761.7707006369,
+        "tol": 1e-06,
+        "ref_value": 761.7707006369,
+        "term_value": 761.7707006369
+      },
+      {
+        "metric": "trimmed_mean_20",
+        "expect": 760.186440678,
+        "tol": 1e-06,
+        "ref_value": 760.186440678,
+        "term_value": 760.186440678
+      },
+      {
+        "metric": "max_diff_scipy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "max_diff_baser",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "plain_mean",
+        "expect": 765.8775510204,
+        "tol": 1e-06,
+        "ref_value": 765.8775510204,
+        "term_value": 765.8775510204
+      },
+      {
+        "metric": "median_rr",
+        "expect": 756,
+        "tol": 1e-06,
+        "ref_value": 756,
+        "term_value": 756
+      },
+      {
+        "metric": "mean_gt_trim_gt_median",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "n_intervals",
+        "expect": 392,
+        "tol": 0.5,
+        "ref_value": 392,
+        "term_value": 392
+      }
+    ]
+  }
+}

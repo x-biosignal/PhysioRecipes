@@ -1,0 +1,160 @@
+{
+  "paper": "sway-cognition-mlr-bds",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "coef_age",
+      "statement": "OLS coefficient of age (cm of sway per year, adjusted for TMT-A)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "coef_age",
+        "val_col": "value"
+      },
+      "expect": 1.5877089223,
+      "tol": 1e-06,
+      "render": [
+        "1.59"
+      ]
+    },
+    {
+      "id": "neg_log10_p_age",
+      "statement": "-log10(p) of the age coefficient: highly significant",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "neg_log10_p_age",
+        "val_col": "value"
+      },
+      "expect": 7.69184,
+      "tol": 0.01,
+      "render": [
+        "7.7"
+      ]
+    },
+    {
+      "id": "coef_tmt",
+      "statement": "OLS coefficient of TMT-A (adjusted for age)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "coef_tmt",
+        "val_col": "value"
+      },
+      "expect": 0.1217752621,
+      "tol": 1e-06,
+      "render": [
+        "0.12"
+      ]
+    },
+    {
+      "id": "p_tmt",
+      "statement": "p of the TMT-A coefficient (non-significant; equals the partial-correlation p)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "p_tmt",
+        "val_col": "value"
+      },
+      "expect": 0.5545181048,
+      "tol": 0.0001,
+      "render": [
+        "0.55"
+      ]
+    },
+    {
+      "id": "r_squared",
+      "statement": "model R-squared: fraction of sway variance explained by age + TMT-A",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "r_squared",
+        "val_col": "value"
+      },
+      "expect": 0.2759419328,
+      "tol": 1e-06,
+      "render": [
+        "0.276"
+      ]
+    },
+    {
+      "id": "neg_log10_fp",
+      "statement": "-log10 of the overall model F-test p-value",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "neg_log10_fp",
+        "val_col": "value"
+      },
+      "expect": 10.867562,
+      "tol": 0.01,
+      "render": [
+        "10.9"
+      ]
+    },
+    {
+      "id": "max_diff_coef_lm",
+      "statement": "max |multipleRegression coef - base R lm coef| (bit-for-bit)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_coef_lm",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-12,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "max_diff_coef_statsmodels",
+      "statement": "max |multipleRegression coef - statsmodels OLS coef| (machine precision)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_coef_statsmodels",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "<1e-9"
+      ]
+    },
+    {
+      "id": "age_dominant",
+      "statement": "age is significant (p<0.001) and TMT-A is not (p>0.05) in the joint model",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "age_dominant",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "n",
+      "statement": "subjects in the regression (complete cases)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n",
+        "val_col": "value"
+      },
+      "expect": 158,
+      "tol": 0.5,
+      "render": [
+        "158"
+      ]
+    }
+  ]
+}

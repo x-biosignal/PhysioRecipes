@@ -1,0 +1,85 @@
+{
+  "paper": "rsa-mantel-gait-wbds",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "rsa_similarity",
+      "statement": "RSA / Mantel similarity between gait kinematics and kinetics RDMs, WBDS01",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "rsa_similarity",
+        "val_col": "value"
+      },
+      "expect": 0.3440491701,
+      "tol": 1e-06,
+      "render": [
+        "0.34"
+      ]
+    },
+    {
+      "id": "p_value",
+      "statement": "permutation p-value of the Mantel test (99 permutations, seed 1)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "p_value",
+        "val_col": "value"
+      },
+      "expect": 0.01,
+      "tol": 1e-06,
+      "render": [
+        "0.01"
+      ]
+    },
+    {
+      "id": "mantel_vegan",
+      "statement": "the same statistic recomputed by the canonical vegan::mantel (op == vegan to machine precision)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mantel_vegan",
+        "val_col": "value"
+      },
+      "expect": 0.3440491701,
+      "tol": 0.02,
+      "render": [
+        "0.3440491701"
+      ]
+    },
+    {
+      "id": "rsa_mean5",
+      "statement": "mean Mantel similarity across all five WBDS subjects",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "rsa_mean5",
+        "val_col": "value"
+      },
+      "expect": 0.3818447368,
+      "tol": 1e-06,
+      "render": [
+        "0.38"
+      ]
+    },
+    {
+      "id": "rsa_min5",
+      "statement": "minimum Mantel similarity across the five subjects (robustness floor)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "rsa_min5",
+        "val_col": "value"
+      },
+      "expect": 0.3440491701,
+      "tol": 1e-06,
+      "render": [
+        "0.34"
+      ]
+    }
+  ]
+}

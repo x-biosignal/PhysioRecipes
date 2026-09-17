@@ -1,0 +1,85 @@
+{
+  "paper": "adl-har-ucihar",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "overall_accuracy",
+      "statement": "6-class HAR accuracy on the UCI HAR subject-disjoint test split (chance 0.167)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "overall_accuracy",
+        "val_col": "value"
+      },
+      "expect": 0.834,
+      "tol": 0.002,
+      "render": [
+        "0.834"
+      ]
+    },
+    {
+      "id": "walking_recall",
+      "statement": "walking (d450) recall",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "walking_recall",
+        "val_col": "value"
+      },
+      "expect": 0.891,
+      "tol": 0.02,
+      "render": [
+        "0.891"
+      ]
+    },
+    {
+      "id": "laying_recall",
+      "statement": "laying (d415) recall -- the most distinct posture, recovered perfectly",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "laying_recall",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 1e-06,
+      "render": [
+        "1.0"
+      ]
+    },
+    {
+      "id": "upstairs_recall",
+      "statement": "walking-upstairs recall -- the hardest class",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "upstairs_recall",
+        "val_col": "value"
+      },
+      "expect": 0.601,
+      "tol": 0.02,
+      "render": [
+        "0.601"
+      ]
+    },
+    {
+      "id": "n_test_windows",
+      "statement": "test windows in the provided subject-disjoint split",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_test_windows",
+        "val_col": "value"
+      },
+      "expect": 2947,
+      "tol": 0.5,
+      "render": [
+        "2947"
+      ]
+    }
+  ]
+}

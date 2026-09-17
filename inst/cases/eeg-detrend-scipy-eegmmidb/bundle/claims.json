@@ -1,0 +1,100 @@
+{
+  "paper": "eeg-detrend-scipy-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "max_diff_scipy",
+      "statement": "max |detrendSignal - scipy.signal.detrend| over the linear and constant types (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "1e-12"
+      ]
+    },
+    {
+      "id": "slope_removed_uv_per_sample",
+      "statement": "the linear trend removed from Fpz (least-squares slope, uV/sample)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "slope_removed_uv_per_sample",
+        "val_col": "value"
+      },
+      "expect": 0.014031,
+      "tol": 0.0001,
+      "render": [
+        "0.014"
+      ]
+    },
+    {
+      "id": "lowfreq_power_raw",
+      "statement": "sub-1-Hz Welch power of the RAW Fpz signal (dominated by the drift)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "lowfreq_power_raw",
+        "val_col": "value"
+      },
+      "expect": 1283.7017,
+      "tol": 1,
+      "render": [
+        "1284"
+      ]
+    },
+    {
+      "id": "lowfreq_power_linear",
+      "statement": "sub-1-Hz power after LINEAR detrend -- the trend's low-frequency leakage removed",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "lowfreq_power_linear",
+        "val_col": "value"
+      },
+      "expect": 58.8515,
+      "tol": 0.5,
+      "render": [
+        "59"
+      ]
+    },
+    {
+      "id": "lowfreq_power_constant",
+      "statement": "sub-1-Hz power after CONSTANT (mean) detrend -- the trend's leakage remains",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "lowfreq_power_constant",
+        "val_col": "value"
+      },
+      "expect": 111.8781,
+      "tol": 0.5,
+      "render": [
+        "112"
+      ]
+    },
+    {
+      "id": "leakage_reduction_pct",
+      "statement": "extra sub-1-Hz power removed by LINEAR vs CONSTANT detrend -- why the type matters",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "leakage_reduction_pct",
+        "val_col": "value"
+      },
+      "expect": 47.3968,
+      "tol": 0.5,
+      "render": [
+        "47%"
+      ]
+    }
+  ]
+}

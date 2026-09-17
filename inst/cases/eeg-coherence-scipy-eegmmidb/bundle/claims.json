@@ -1,0 +1,100 @@
+{
+  "paper": "eeg-coherence-scipy-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "max_diff_scipy",
+      "statement": "max |eegCoherence - scipy.signal.coherence| over all 28 channel pairs (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "2e-16"
+      ]
+    },
+    {
+      "id": "mean_coherence",
+      "statement": "mean posterior alpha-band coherence across the 28 channel pairs -- the eyes-closed alpha synchrony",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mean_coherence",
+        "val_col": "value"
+      },
+      "expect": 0.627992,
+      "tol": 0.001,
+      "render": [
+        "0.63"
+      ]
+    },
+    {
+      "id": "max_coherence",
+      "statement": "peak alpha coherence -- the most synchronized posterior pair (adjacent occipital channels)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_coherence",
+        "val_col": "value"
+      },
+      "expect": 0.896151,
+      "tol": 0.001,
+      "render": [
+        "0.90"
+      ]
+    },
+    {
+      "id": "min_coherence",
+      "statement": "minimum alpha coherence -- the least synchronized posterior pair",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "min_coherence",
+        "val_col": "value"
+      },
+      "expect": 0.363215,
+      "tol": 0.001,
+      "render": [
+        "0.36"
+      ]
+    },
+    {
+      "id": "n_channels",
+      "statement": "posterior EEG channels (parieto-occipital)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_channels",
+        "val_col": "value"
+      },
+      "expect": 8,
+      "tol": 0.5,
+      "render": [
+        "8"
+      ]
+    },
+    {
+      "id": "n_pairs",
+      "statement": "channel pairs in the coherence matrix (8 choose 2)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_pairs",
+        "val_col": "value"
+      },
+      "expect": 28,
+      "tol": 0.5,
+      "render": [
+        "28"
+      ]
+    }
+  ]
+}

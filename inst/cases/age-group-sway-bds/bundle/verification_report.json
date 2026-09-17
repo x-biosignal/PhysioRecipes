@@ -1,0 +1,80 @@
+{
+  "paper": "age-group-sway-bds",
+  "n_claims": 8,
+  "n_grounded": 8,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "t_statistic",
+      "statement": "Welch two-sample t-statistic of older vs younger foam sway (positive = older sway more)",
+      "expect": 3.8569450652,
+      "artifact": 3.856945,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "neg_log10_p",
+      "statement": "-log10(two-sided p): the group difference is significant",
+      "expect": 2.784484,
+      "artifact": 2.784484,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "df",
+      "statement": "Welch-Satterthwaite degrees of freedom",
+      "expect": 14.500741,
+      "artifact": 14.500741,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|twoSampleTTest t - scipy.stats.ttest_ind(equal_var=FALSE) t| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_baser",
+      "statement": "|twoSampleTTest t - base R t.test t| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "old_young_ratio",
+      "statement": "mean older sway / mean younger sway (the group effect size)",
+      "expect": 1.5033254,
+      "artifact": 1.503325,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "old_gt_young",
+      "statement": "older subjects sway more than younger subjects (group means)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_total",
+      "statement": "total subjects across the two groups",
+      "expect": 50,
+      "artifact": 50,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

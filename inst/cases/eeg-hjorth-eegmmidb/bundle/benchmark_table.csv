@@ -1,0 +1,7 @@
+"metric","value"
+"mean_mobility",0.70961007
+"mean_complexity",1.95129854
+"min_mobility",0.53195199
+"max_diff_numpy",8.88178419700125e-16
+"max_diff_antropy",2.84472833067539e-07
+"n_channels",64

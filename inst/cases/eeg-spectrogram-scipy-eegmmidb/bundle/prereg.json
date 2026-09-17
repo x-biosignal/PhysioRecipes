@@ -1,0 +1,35 @@
+{
+  "registered_at": "2026-09-05T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real eyes-closed posterior EEG channel (eegmmidb S002R02, POz), spectrogram reproduces scipy.signal.spectrogram (symmetric Hann, nperseg=256, noverlap=128, detrend=False, scaling='density', mode='psd') BIT-FOR-BIT over the full frequency x time matrix; and the time-frequency view shows the alpha rhythm dominates every time window (peak power in 8-13 Hz throughout) while its amplitude waxes and wanes across time (a modulation the averaged Welch PSD cannot show).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "spectrogram_time_frequency"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "spectrogram",
+        "params": {
+          "window_size": 256,
+          "overlap": 0.5,
+          "window_type": "hanning",
+          "channel": 58
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "spectrogram_time_frequency",
+      "threshold": "descriptive: the spectrogram equals scipy.signal.spectrogram to machine precision (max |diff| < 1e-9) over all 129 x 11 cells, AND the peak-power frequency is in the alpha band in every time window"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "83b533ae0a17349e95e80c104620949cd2759449997445bb2ad07ec0803ac644",
+    "registered_at": "2026-09-05T00:00:00Z"
+  }
+}

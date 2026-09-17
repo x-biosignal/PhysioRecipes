@@ -1,0 +1,16 @@
+"metric","value"
+"slope",-0.001202775159
+"slope_per_decade",-0.01202775
+"intercept",1.1436454
+"r_squared",0.0936119568
+"p_value",6.98041084220073e-06
+"neg_log10_p",5.156119
+"df",206
+"statistic_t",-4.612562
+"max_diff_slope_scipy",0
+"max_diff_slope_lm",1.30104260698261e-18
+"max_diff_r2_scipy",0
+"slope_negative",1
+"n",208
+"age_min",15
+"age_max",78

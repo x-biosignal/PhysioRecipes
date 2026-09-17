@@ -1,0 +1,11 @@
+{
+  "dataset": "GRABMyo (Gesture Recognition and Biometrics ElectroMyogram)",
+  "authors": "Pradhan A, He J, Jiang N",
+  "repository": "PhysioNet (grabmyo 1.1.0)",
+  "doi": "10.13026/89dm-f662",
+  "url": "https://physionet.org/content/grabmyo/1.1.0/",
+  "license": "CC-BY 4.0",
+  "citation": "Pradhan A, He J, Jiang N. Multi-day dataset of forearm and wrist electromyogram for hand gesture recognition and biometrics. Sci Data. 2022;9:733. Goldberger AL, et al. PhysioNet. Circulation. 2000;101(23):e215-e220.",
+  "record_used": "session1_participant1_gesture10_trial1, 12 forearm channels @ 2048 Hz; NMF muscle-synergy extraction (fixed seed)",
+  "public": true
+}

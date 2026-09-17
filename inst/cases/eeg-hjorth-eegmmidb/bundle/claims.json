@@ -1,0 +1,100 @@
+{
+  "paper": "eeg-hjorth-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "mean_mobility",
+      "statement": "mean Hjorth mobility across the 64-channel montage (mean-frequency proxy)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mean_mobility",
+        "val_col": "value"
+      },
+      "expect": 0.70960558,
+      "tol": 0.0001,
+      "render": [
+        "0.71"
+      ]
+    },
+    {
+      "id": "mean_complexity",
+      "statement": "mean Hjorth complexity across the montage (bandwidth proxy)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mean_complexity",
+        "val_col": "value"
+      },
+      "expect": 1.95130268,
+      "tol": 0.0001,
+      "render": [
+        "1.95"
+      ]
+    },
+    {
+      "id": "min_mobility",
+      "statement": "minimum Hjorth mobility -- the posterior alpha channel (slowest mean frequency)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "min_mobility",
+        "val_col": "value"
+      },
+      "expect": 0.53195,
+      "tol": 0.001,
+      "render": [
+        "0.53"
+      ]
+    },
+    {
+      "id": "max_diff_numpy",
+      "statement": "max |eegComplexity Hjorth - independent numpy (unbiased variance)| over all channels (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_numpy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-10,
+      "render": [
+        "9e-16"
+      ]
+    },
+    {
+      "id": "max_diff_antropy",
+      "statement": "max |eegComplexity Hjorth - antropy.hjorth_params| over all channels (up to the ddof convention)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_antropy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-05,
+      "render": [
+        "3e-07"
+      ]
+    },
+    {
+      "id": "n_channels",
+      "statement": "EEG channels validated (full eegmmidb montage)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_channels",
+        "val_col": "value"
+      },
+      "expect": 64,
+      "tol": 0.5,
+      "render": [
+        "64"
+      ]
+    }
+  ]
+}

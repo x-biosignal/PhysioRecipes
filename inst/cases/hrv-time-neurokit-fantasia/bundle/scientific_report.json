@@ -1,0 +1,127 @@
+{
+  "verdict": "PROCEED-EXPLORATORY",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "guideline:hrv-time-domain-taskforce-1996:short_term_min_length",
+      "status": "SKIP",
+      "detail": "recording_length_s not available (data-stage metric)",
+      "citation": "Task Force of the European Society of Cardiology and the North American Society of Pacing and Electrophysiology (1996). Heart rate variability: standards of measurement, physiological interpretation, and clinical use. Circulation 93(5):1043-1065."
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "guideline:hrv-time-domain-taskforce-1996:min_rr_intervals",
+      "status": "PASS",
+      "detail": "n_rr = 392 (require >= 20)",
+      "citation": "Task Force of the European Society of Cardiology and the North American Society of Pacing and Electrophysiology (1996). Heart rate variability: standards of measurement, physiological interpretation, and clinical use. Circulation 93(5):1043-1065."
+    },
+    {
+      "name": "guideline:hrv-time-domain-taskforce-1996:assumption:ectopy_editing",
+      "status": "WARN",
+      "detail": "assumption 'ectopy_editing' NOT tested (add one of: ecgQualityCheck, ecgRRcorrect)",
+      "citation": "Task Force of the European Society of Cardiology and the North American Society of Pacing and Electrophysiology (1996). Heart rate variability: standards of measurement, physiological interpretation, and clinical use. Circulation 93(5):1043-1065."
+    },
+    {
+      "name": "reference-agreement:hrv_time_vs_neurokit",
+      "status": "PASS",
+      "detail": "6/6 agree [meannn=765.88 vs ref 765.88; sdnn=73.696 vs ref 73.696; rmssd=81.54 vs ref 81.54; max_diff_nk_core=0 vs ref 0; pnn50_gap=0.095255 vs ref 0.095255; nn50_count=146 vs ref 146]",
+      "citation": "Task Force of the European Society of Cardiology and the North American Society of Pacing and Electrophysiology (1996). Heart rate variability: standards of measurement. Circulation 93(5):1043-1065. Reference impl: NeuroKit2 hrv_time (Makowski et al. 2021). Data: Fantasia Database (rr5min f1y01), PhysioNet."
+    }
+  ],
+  "review": "[hrv-time-domain-taskforce-1996] Task Force time-domain HRV requires that ectopic/artefactual beats be identified and edited before analysis; include a quality/ectopy op (ecgQualityCheck or ecgRRcorrect) in the pipeline. The gate checks that such an op is present and reports the measured ectopic burden for human review — it does not itself certify that the burden is acceptable.",
+  "worst": "WARN",
+  "result_metrics": {
+    "n_rr": 392,
+    "meannn": 765.877551020408,
+    "sdnn": 73.6963099023275,
+    "rmssd": 81.5396597523682,
+    "max_diff_nk_core": 0,
+    "pnn50_op": 37.3401534526854,
+    "pnn50_nk": 37.2448979591837,
+    "pnn50_gap": 0.095255493501746,
+    "nn50_count": 146
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "hrv_time_vs_neurokit",
+    "citation": "Task Force of the European Society of Cardiology and the North American Society of Pacing and Electrophysiology (1996). Heart rate variability: standards of measurement. Circulation 93(5):1043-1065. Reference impl: NeuroKit2 hrv_time (Makowski et al. 2021). Data: Fantasia Database (rr5min f1y01), PhysioNet.",
+    "description": "re-computes the time-domain HRV metrics with NeuroKit2 hrv_time on the identical RR series; reports MeanNN, SDNN and RMSSD (bit-exact), the max core deviation, pNN50 from both tools and their gap, and the shared nn50 count",
+    "from_step": {},
+    "scores": {
+      "meannn": 765.877551020408,
+      "sdnn": 73.6963099023275,
+      "rmssd": 81.5396597523682,
+      "max_diff_nk_core": 0,
+      "pnn50_op": 37.3401534526854,
+      "pnn50_nk": 37.2448979591837,
+      "pnn50_gap": 0.095255493501746,
+      "nn50_count": 146
+    },
+    "checks": [
+      {
+        "metric": "meannn",
+        "expect": 765.8775510204,
+        "tol": 1e-06,
+        "ref_value": 765.8775510204,
+        "term_value": 765.877551020408
+      },
+      {
+        "metric": "sdnn",
+        "expect": 73.6963099023,
+        "tol": 1e-06,
+        "ref_value": 73.6963099023,
+        "term_value": 73.6963099023275
+      },
+      {
+        "metric": "rmssd",
+        "expect": 81.5396597524,
+        "tol": 1e-06,
+        "ref_value": 81.5396597524,
+        "term_value": 81.5396597523682
+      },
+      {
+        "metric": "max_diff_nk_core",
+        "expect": 0,
+        "tol": 1e-06,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "pnn50_gap",
+        "expect": 0.0952554935,
+        "tol": 0.0001,
+        "ref_value": 0.0952554935,
+        "term_value": 0.095255493501746
+      },
+      {
+        "metric": "nn50_count",
+        "expect": 146,
+        "tol": 0.5,
+        "ref_value": 146,
+        "term_value": 146
+      }
+    ]
+  }
+}

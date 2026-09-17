@@ -1,0 +1,10 @@
+"metric","value"
+"n_obs",328
+"n_subjects",42
+"rv_coefficient",0.088
+"rv_p",5e-04
+"cca_canonical_cor_1",0.874
+"cca_canonical_cor_2",0.784
+"jive_joint_kinematics",0.211
+"jive_joint_kinetics",0.381
+"jive_joint_score_vs_speed_r",-0.7

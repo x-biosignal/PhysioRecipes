@@ -1,0 +1,100 @@
+{
+  "paper": "adf-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "adf_statistic",
+      "statement": "Augmented Dickey-Fuller statistic (lag 1, constant) of the POz signal",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "adf_statistic",
+        "val_col": "value"
+      },
+      "expect": -22.36064585,
+      "tol": 1e-06,
+      "render": [
+        "-22.36"
+      ]
+    },
+    {
+      "id": "adf_stat_diff_sm",
+      "statement": "|ADF statistic - statsmodels adfuller| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "adf_stat_diff_sm",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "7e-15"
+      ]
+    },
+    {
+      "id": "sm_critical_5pct",
+      "statement": "statsmodels 5% Dickey-Fuller critical value (MacKinnon table)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "sm_critical_5pct",
+        "val_col": "value"
+      },
+      "expect": -2.86335,
+      "tol": 0.0001,
+      "render": [
+        "-2.86"
+      ]
+    },
+    {
+      "id": "reject_unit_root",
+      "statement": "the unit-root null is rejected -- the segment is stationary (1 = rejected)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "reject_unit_root",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "margin_below_critical",
+      "statement": "how far the statistic lies below the 5% critical value (decisive rejection)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "margin_below_critical",
+        "val_col": "value"
+      },
+      "expect": -19.4973,
+      "tol": 0.01,
+      "render": [
+        "-19.5"
+      ]
+    },
+    {
+      "id": "n_obs",
+      "statement": "ADF regression sample size (N - 1 - lag)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_obs",
+        "val_col": "value"
+      },
+      "expect": 1598,
+      "tol": 0.5,
+      "render": [
+        "1598"
+      ]
+    }
+  ]
+}

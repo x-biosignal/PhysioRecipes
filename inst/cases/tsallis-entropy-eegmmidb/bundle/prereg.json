@@ -1,0 +1,33 @@
+{
+  "registered_at": "2026-09-06T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real eyes-closed posterior EEG channel (eegmmidb S002R02, POz), the newly-authored tsallisEntropy reproduces NeuroKit2 entropy_tsallis BIT-FOR-BIT across q = {0.5, 1, 2, 3}; at q=1 it equals the Shannon entropy AND the Renyi entropy (the two generalizations coincide there), while at q=2 it diverges from the Renyi entropy (non-additive vs additive); and it is non-increasing in q.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "tsallis_entropy_family"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "tsallisEntropy",
+        "params": {
+          "q": 2,
+          "bins": 16
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "tsallis_entropy_family",
+      "threshold": "descriptive: tsallisEntropy equals NeuroKit2 entropy_tsallis to machine precision (max |diff| < 1e-9) across q; at q=1 it equals the Renyi entropy; at q=2 it differs from it"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "30cfeb9974f43f2ed6e3c702c81917dd608c9dae74b1bec774044bdee7edb36b",
+    "registered_at": "2026-09-06T00:00:00Z"
+  }
+}

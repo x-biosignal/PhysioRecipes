@@ -1,0 +1,62 @@
+{
+  "paper": "mutual-info-cardioresp-bidmc",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "mi",
+      "statement": "mutual information of RESP and PLETH (histogram estimator, nats) -- the undirected shared information",
+      "expect": 0.07713332,
+      "artifact": 0.077133,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mi_sklearn",
+      "statement": "sklearn.metrics.mutual_info_score on the identical binning -- matches the op",
+      "expect": 0.07713332,
+      "artifact": 0.077133,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_sklearn",
+      "statement": "max |mutualInformation - sklearn.metrics.mutual_info_score| on the identical binning (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mi_shuffled",
+      "statement": "mutual information of RESP vs a SHUFFLED PLETH -- the histogram estimator's finite-sample bias floor",
+      "expect": 0.02402727,
+      "artifact": 0.024027,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "ratio",
+      "statement": "real / shuffled MI ratio -- the coupling detected above the finite-sample floor",
+      "expect": 3.2103,
+      "artifact": 3.2102,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_samples",
+      "statement": "samples per signal (200 s at 25 Hz)",
+      "expect": 5001,
+      "artifact": 5001,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

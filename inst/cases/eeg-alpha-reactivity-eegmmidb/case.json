@@ -1,0 +1,233 @@
+{
+  "id": "eeg-alpha-reactivity-eegmmidb",
+  "title": "Berger's alpha reactivity replicates across ten subjects, reproduced",
+  "modality": ["eeg", "spectral"],
+  "packages": ["PhysioIO", "PhysioPreprocess", "PhysioAnalysis"],
+  "dataset": {
+    "name": "EEG Motor Movement/Imagery Database (eegmmidb)",
+    "record": "subjects S001-S010, R02 (eyes-closed) & R01 (eyes-open) baselines, 64 ch, 160 Hz",
+    "url": "https://physionet.org/content/eegmmidb/",
+    "public": true,
+    "sha256_edf": [
+      {
+        "subject": "S001",
+        "R02_eyes_closed": "31a95e0a880e6c3d89960d9d62c144f24cc4e9f5d7e93c7f864ef61cd49e847e",
+        "R01_eyes_open": "4743b736131a7e147c150e8b37711029b6cda5e356c4b3e8261a03cdcaaf8b0c"
+      },
+      {
+        "subject": "S002",
+        "R02_eyes_closed": "666a9299341ece77522df050b1ddd128179a540548d82642ba975a65b4f6d84e",
+        "R01_eyes_open": "d542689b31c977838f20b1a2062865b98ecf10a7e9702f56f101000d47f2ec68"
+      },
+      {
+        "subject": "S003",
+        "R02_eyes_closed": "41044fea497e05650c4b1f4009011b44a50a6cefd55d5afa9e1d1b7988afd6e5",
+        "R01_eyes_open": "2af68afa8d4f158a7ae7f3903b66f0947925880639b7a8b5b6bb13b0c6c50f96"
+      },
+      {
+        "subject": "S004",
+        "R02_eyes_closed": "32134f3ce7056fd6487855552636b8f93ea2d67631ef1da6f6474eda6040162f",
+        "R01_eyes_open": "23e9645f492488d2376ac3a606d177043efc6e5fb00281c2d6648e4b06a6ce62"
+      },
+      {
+        "subject": "S005",
+        "R02_eyes_closed": "bdb498c613cd048a889899282e8f5491c23a76731f3c2be11800362b7bbcb836",
+        "R01_eyes_open": "f84f58d7d96bce1700af8b2c9e333d66e4b2183e34b3ed5634840fff37845af0"
+      },
+      {
+        "subject": "S006",
+        "R02_eyes_closed": "f114ee8be3445ff48c78422d4cc7b6b68ab83d79f06cb47634b1710796aeda4f",
+        "R01_eyes_open": "bfe32b925fdd469c90ce6913f7409cf85e4492b40d36c77b83511592d6e4c647"
+      },
+      {
+        "subject": "S007",
+        "R02_eyes_closed": "9afdeee151fbbcf9ab5ab3537f8f647f0303d97f506048cfdcc6a99d8da809a7",
+        "R01_eyes_open": "2ca422c6076860f12bce174799c5d7e85cae46b7b09a8e8519681d0f82168b22"
+      },
+      {
+        "subject": "S008",
+        "R02_eyes_closed": "dcd82e2a2477c52ca4a3dc784d9c04a55f935f2ed9ff10cfe0ec880d56c60edc",
+        "R01_eyes_open": "678e47541d9903c300ba7811554ad1f8bfbe2bff086407cb4ff489d2d0e507bc"
+      },
+      {
+        "subject": "S009",
+        "R02_eyes_closed": "ca5a6f0a0fc6fe11696d5505c3db2b965136d85c4c0590f7c03af1b527b97242",
+        "R01_eyes_open": "37f117b69060f2c784d74fe973d6af30b3b978f9c7c127324273f5741749bb2e"
+      },
+      {
+        "subject": "S010",
+        "R02_eyes_closed": "d44f5f6c774771bc2b6cdd6d29c7f558e11ad11e6198cf4603f473edd4b2074a",
+        "R01_eyes_open": "0d694b503e5ea0f6088a790f09390efb1be2688ad92213f5e82fa2f343cd18c4"
+      }
+    ],
+    "citation": "Schalk G, et al. BCI2000. IEEE Trans Biomed Eng. 2004;51(6):1034-43. Goldberger AL, et al. PhysioNet. Circulation. 2000;101(23):e215-20."
+  },
+  "proposition": "Relative occipital (O1) alpha power is higher with the eyes closed than open in 10 of 10 independent eegmmidb subjects (mean drop 0.308) -- Berger's alpha reactivity replicated at group level -- reproduced from 20 frozen substrate runs, with all five band-power claims of the primary (S001 eyes-closed) GROUNDED and a byte-identical replay. Absolute alpha dominance at O1 is not claimed (it holds in 5/10 subjects; several O1 channels are artifact-dominated); the reported, robust quantity is the eyes-closed > eyes-open reactivity.",
+  "opdag": ["readEDF", "butterworthFilter", "bandPower"],
+  "claims": [
+    {
+      "id": "delta",
+      "statement": "relative delta power, O1 (S001 eyes-closed)",
+      "value": 0.2027,
+      "artifact": "bundle/terminal_table.csv",
+      "status": "GROUNDED"
+    },
+    {
+      "id": "theta",
+      "statement": "relative theta power, O1 (S001 eyes-closed)",
+      "value": 0.05,
+      "artifact": "bundle/terminal_table.csv",
+      "status": "GROUNDED"
+    },
+    {
+      "id": "alpha",
+      "statement": "relative alpha power, O1 (S001 eyes-closed)",
+      "value": 0.6284,
+      "artifact": "bundle/terminal_table.csv",
+      "status": "GROUNDED"
+    },
+    {
+      "id": "beta",
+      "statement": "relative beta power, O1 (S001 eyes-closed)",
+      "value": 0.1129,
+      "artifact": "bundle/terminal_table.csv",
+      "status": "GROUNDED"
+    },
+    {
+      "id": "gamma",
+      "statement": "relative gamma power, O1 (S001 eyes-closed)",
+      "value": 0.006,
+      "artifact": "bundle/terminal_table.csv",
+      "status": "GROUNDED"
+    }
+  ],
+  "reactivity": {
+    "quantity": "relative occipital (O1) alpha, eyes-closed minus eyes-open, per subject",
+    "n_subjects": 10,
+    "n_reactive": 10,
+    "n_dominant_closed": 5,
+    "mean_alpha_drop": 0.3076,
+    "all_reactive": true,
+    "subjects": [
+      {
+        "subject": "S001",
+        "alpha_eyes_closed": 0.6284,
+        "alpha_eyes_open": 0.123,
+        "alpha_drop": 0.5054,
+        "reactive": true,
+        "dominant_closed": true,
+        "terminal_closed": "bundle/terminal_table.csv",
+        "terminal_open": "artifacts/open_S001_terminal.csv"
+      },
+      {
+        "subject": "S002",
+        "alpha_eyes_closed": 0.7443,
+        "alpha_eyes_open": 0.1852,
+        "alpha_drop": 0.5592,
+        "reactive": true,
+        "dominant_closed": true,
+        "terminal_closed": "artifacts/closed_S002_terminal.csv",
+        "terminal_open": "artifacts/open_S002_terminal.csv"
+      },
+      {
+        "subject": "S003",
+        "alpha_eyes_closed": 0.7215,
+        "alpha_eyes_open": 0.1182,
+        "alpha_drop": 0.6032,
+        "reactive": true,
+        "dominant_closed": true,
+        "terminal_closed": "artifacts/closed_S003_terminal.csv",
+        "terminal_open": "artifacts/open_S003_terminal.csv"
+      },
+      {
+        "subject": "S004",
+        "alpha_eyes_closed": 0.5935,
+        "alpha_eyes_open": 0.0675,
+        "alpha_drop": 0.526,
+        "reactive": true,
+        "dominant_closed": true,
+        "terminal_closed": "artifacts/closed_S004_terminal.csv",
+        "terminal_open": "artifacts/open_S004_terminal.csv"
+      },
+      {
+        "subject": "S005",
+        "alpha_eyes_closed": 0.0561,
+        "alpha_eyes_open": 0.0311,
+        "alpha_drop": 0.025,
+        "reactive": true,
+        "dominant_closed": false,
+        "terminal_closed": "artifacts/closed_S005_terminal.csv",
+        "terminal_open": "artifacts/open_S005_terminal.csv"
+      },
+      {
+        "subject": "S006",
+        "alpha_eyes_closed": 0.0851,
+        "alpha_eyes_open": 0.0634,
+        "alpha_drop": 0.0217,
+        "reactive": true,
+        "dominant_closed": false,
+        "terminal_closed": "artifacts/closed_S006_terminal.csv",
+        "terminal_open": "artifacts/open_S006_terminal.csv"
+      },
+      {
+        "subject": "S007",
+        "alpha_eyes_closed": 0.5886,
+        "alpha_eyes_open": 0.3357,
+        "alpha_drop": 0.2529,
+        "reactive": true,
+        "dominant_closed": true,
+        "terminal_closed": "artifacts/closed_S007_terminal.csv",
+        "terminal_open": "artifacts/open_S007_terminal.csv"
+      },
+      {
+        "subject": "S008",
+        "alpha_eyes_closed": 0.3433,
+        "alpha_eyes_open": 0.0736,
+        "alpha_drop": 0.2698,
+        "reactive": true,
+        "dominant_closed": false,
+        "terminal_closed": "artifacts/closed_S008_terminal.csv",
+        "terminal_open": "artifacts/open_S008_terminal.csv"
+      },
+      {
+        "subject": "S009",
+        "alpha_eyes_closed": 0.1694,
+        "alpha_eyes_open": 0.041,
+        "alpha_drop": 0.1284,
+        "reactive": true,
+        "dominant_closed": false,
+        "terminal_closed": "artifacts/closed_S009_terminal.csv",
+        "terminal_open": "artifacts/open_S009_terminal.csv"
+      },
+      {
+        "subject": "S010",
+        "alpha_eyes_closed": 0.2502,
+        "alpha_eyes_open": 0.0659,
+        "alpha_drop": 0.1843,
+        "reactive": true,
+        "dominant_closed": false,
+        "terminal_closed": "artifacts/closed_S010_terminal.csv",
+        "terminal_open": "artifacts/open_S010_terminal.csv"
+      }
+    ],
+    "panel_table": "artifacts/reactivity_panel.csv",
+    "secondary_runs": "artifacts/secondary_runs.json"
+  },
+  "verification": {
+    "n_claims": 5,
+    "n_grounded": 5,
+    "n_ungrounded": 0,
+    "prereg_hash": "87fcaf48f158fb93b3fce2587442c1298a032dddc5afc3eb124fa69b254d8b1e",
+    "replay_byte_identical": true
+  },
+  "open_questions": [
+    {
+      "q": "None: Berger's alpha reactivity (Berger 1929) is an established finding, used here to demonstrate a reproducible, substrate-frozen group-level contrast on public EEG. Escalation is reserved for genuinely unresolved questions.",
+      "artifact": null,
+      "escalate": null
+    }
+  ],
+  "reference_tools": [],
+  "bundle": "bundle/",
+  "status": "verified"
+}

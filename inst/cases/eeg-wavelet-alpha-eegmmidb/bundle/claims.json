@@ -1,0 +1,85 @@
+{
+  "paper": "eeg-wavelet-alpha-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "dominant_freq",
+      "statement": "dominant frequency of the eyes-closed occipital scalogram (the alpha rhythm, Hz)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "dominant_freq",
+        "val_col": "value"
+      },
+      "expect": 10,
+      "tol": 0.5,
+      "render": [
+        "10"
+      ]
+    },
+    {
+      "id": "alpha_power_fraction",
+      "statement": "fraction of scalogram power in the alpha band (8-13 Hz) -- alpha dominance",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "alpha_power_fraction",
+        "val_col": "value"
+      },
+      "expect": 0.66434176,
+      "tol": 0.001,
+      "render": [
+        "0.65"
+      ]
+    },
+    {
+      "id": "tfr_corr_vs_mne",
+      "statement": "correlation of the full Morlet TFR between waveletTransform and MNE tfr_array_morlet (structure agreement)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "tfr_corr_vs_mne",
+        "val_col": "value"
+      },
+      "expect": 0.99976175,
+      "tol": 0.001,
+      "render": [
+        "0.9998"
+      ]
+    },
+    {
+      "id": "marginal_corr_vs_mne",
+      "statement": "correlation of the time-averaged marginal spectrum vs MNE",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "marginal_corr_vs_mne",
+        "val_col": "value"
+      },
+      "expect": 0.99990225,
+      "tol": 0.001,
+      "render": [
+        "0.9999"
+      ]
+    },
+    {
+      "id": "n_freqs",
+      "statement": "frequencies in the scalogram (4-30 Hz, step 2)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_freqs",
+        "val_col": "value"
+      },
+      "expect": 14,
+      "tol": 0.5,
+      "render": [
+        "14"
+      ]
+    }
+  ]
+}

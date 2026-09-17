@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-06T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real 5-minute RR series (Fantasia f1y01), ecgHRVtime reproduces NeuroKit2 hrv_time BIT-FOR-BIT for the three core time-domain metrics (MeanNN, SDNN, RMSSD); pNN50 differs ONLY by a documented denominator convention (ecgHRVtime divides the nn50 count by the number of successive differences N-1, NeuroKit2 by the number of intervals N), with the nn50 count itself identical.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "hrv_time_domain"
+  },
+  "analysis_plan": {
+    "dataset": "Fantasia Database (PhysioNet), record f1y01, a 5-minute RR-interval series (392 intervals, ms)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "ecgHRVtime",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "hrv_time_domain",
+      "threshold": "descriptive: MeanNN, SDNN and RMSSD equal NeuroKit2 hrv_time to machine precision (max |diff| < 1e-6); pNN50 differs only by the N-1 vs N denominator convention"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "3ad1862eef91166383f9e5264807d6ec265e5b5394644b515639dbee47a69b6a",
+    "registered_at": "2026-09-06T00:00:00Z"
+  }
+}

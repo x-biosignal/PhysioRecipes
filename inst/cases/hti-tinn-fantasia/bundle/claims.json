@@ -1,0 +1,100 @@
+{
+  "paper": "hti-tinn-fantasia",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "hti",
+      "statement": "HRV triangular index (HTI) of the Fantasia RR series",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "hti",
+        "val_col": "value"
+      },
+      "expect": 11.2,
+      "tol": 1e-06,
+      "render": [
+        "11.2"
+      ]
+    },
+    {
+      "id": "hti_diff_nk",
+      "statement": "|ecgHRVgeometric HTI - NeuroKit2 HRV_HTI| -- bit-exact (integer-ratio index)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "hti_diff_nk",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "modal_count",
+      "statement": "modal (peak) NN-histogram count -- the denominator of HTI",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "modal_count",
+        "val_col": "value"
+      },
+      "expect": 35,
+      "tol": 0.5,
+      "render": [
+        "35"
+      ]
+    },
+    {
+      "id": "n_intervals",
+      "statement": "NN interval count -- the numerator of HTI (HTI = n / modal count)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_intervals",
+        "val_col": "value"
+      },
+      "expect": 392,
+      "tol": 0.5,
+      "render": [
+        "392"
+      ]
+    },
+    {
+      "id": "tinn_op",
+      "statement": "TINN (triangular interpolation of the NN histogram) from ecgHRVgeometric (ms)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "tinn_op",
+        "val_col": "value"
+      },
+      "expect": 164.0625,
+      "tol": 0.001,
+      "render": [
+        "164 ms"
+      ]
+    },
+    {
+      "id": "tinn_gap_nk",
+      "statement": "|TINN op - NeuroKit2 TINN| -- a documented triangular-interpolation convention difference",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "tinn_gap_nk",
+        "val_col": "value"
+      },
+      "expect": 164.0625,
+      "tol": 0.01,
+      "render": [
+        "164 ms"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "paper": "increment-entropy-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "incren_m2",
+      "statement": "increment entropy at m=2, q=4 of the POz signal (bits)",
+      "expect": 4.2691529709,
+      "artifact": 4.269153,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "incren_m3",
+      "statement": "increment entropy at m=3 -- lower than m=2 (non-increasing in dimension)",
+      "expect": 3.5073515082,
+      "artifact": 3.507352,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "incren_m4",
+      "statement": "increment entropy at m=4 -- lower still (monotone family)",
+      "expect": 3.0084084994,
+      "artifact": 3.008408,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_nk",
+      "statement": "max |incrementEntropy - NeuroKit2 entropy_increment| over the (dimension, q) family (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_words_m2",
+      "statement": "distinct increment-words realized at m=2, q=4 (out of (2q+1)^m = 81 possible)",
+      "expect": 33,
+      "artifact": 33,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "monotonic",
+      "statement": "IncrEn is non-increasing in the embedding dimension (1 = holds)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "paper": "fes-reliability-cronbach-bds",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "alpha",
+      "statement": "Cronbach's raw alpha of the 7 FES items (internal-consistency reliability)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "alpha",
+        "val_col": "value"
+      },
+      "expect": 0.8230181471,
+      "tol": 1e-06,
+      "render": [
+        "0.82"
+      ]
+    },
+    {
+      "id": "average_r",
+      "statement": "mean inter-item correlation among the 7 FES items",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "average_r",
+        "val_col": "value"
+      },
+      "expect": 0.4062097132,
+      "tol": 1e-06,
+      "render": [
+        "0.41"
+      ]
+    },
+    {
+      "id": "max_diff_psych",
+      "statement": "|cronbachAlpha - psych::alpha raw_alpha| (bit-for-bit)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_psych",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-12,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "max_diff_pingouin",
+      "statement": "|cronbachAlpha - pingouin.cronbach_alpha| (machine precision, < 1e-9)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_pingouin",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "<1e-9"
+      ]
+    },
+    {
+      "id": "good_reliability",
+      "statement": "the scale's alpha exceeds 0.8 (good internal consistency)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "good_reliability",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "k",
+      "statement": "number of scale items",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "k",
+        "val_col": "value"
+      },
+      "expect": 7,
+      "tol": 0.5,
+      "render": [
+        "7"
+      ]
+    },
+    {
+      "id": "n",
+      "statement": "respondents (complete cases)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n",
+        "val_col": "value"
+      },
+      "expect": 163,
+      "tol": 0.5,
+      "render": [
+        "163"
+      ]
+    }
+  ]
+}

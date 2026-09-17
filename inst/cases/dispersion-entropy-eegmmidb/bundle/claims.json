@@ -1,0 +1,100 @@
+{
+  "paper": "dispersion-entropy-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "dispen",
+      "statement": "dispersion entropy (DispEn) of the POz signal at c=6, dimension=3, delay=1",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "dispen",
+        "val_col": "value"
+      },
+      "expect": 1.1170837477,
+      "tol": 1e-06,
+      "render": [
+        "1.12"
+      ]
+    },
+    {
+      "id": "rden",
+      "statement": "reverse dispersion entropy (RDEn) -- deviation of the pattern distribution from uniformity",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "rden",
+        "val_col": "value"
+      },
+      "expect": 0.0162243036,
+      "tol": 1e-06,
+      "render": [
+        "0.016"
+      ]
+    },
+    {
+      "id": "max_diff_nk_dispen",
+      "statement": "max |dispersionEntropy - NeuroKit2 entropy_dispersion| (DispEn) over the (c,m,delay) family (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_nk_dispen",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "max_diff_nk_rden",
+      "statement": "max |RDEn - NeuroKit2 RDEn| over the (c,m,delay) family (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_nk_rden",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "7e-18"
+      ]
+    },
+    {
+      "id": "n_patterns_observed",
+      "statement": "distinct dispersion patterns realized by the signal (out of c^m = 216)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_patterns_observed",
+        "val_col": "value"
+      },
+      "expect": 108,
+      "tol": 0.5,
+      "render": [
+        "108"
+      ]
+    },
+    {
+      "id": "dispen_below_ceiling",
+      "statement": "DispEn lies below the NeuroKit2 normalization ceiling 1/ln(2) = 1.443 (1 = holds)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "dispen_below_ceiling",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    }
+  ]
+}

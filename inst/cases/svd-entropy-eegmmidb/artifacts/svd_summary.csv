@@ -1,0 +1,10 @@
+"metric","value"
+"svd_entropy_poz",1.20396869
+"max_diff_antropy",2.22044604925031e-16
+"n_samples",1600
+"order",3
+"delay",1
+"posterior_mean",1.239126
+"frontal_mean",1.287266
+"n_posterior_lt_frontmean",9
+"n_posterior",9

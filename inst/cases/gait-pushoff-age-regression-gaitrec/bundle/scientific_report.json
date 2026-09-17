@@ -1,0 +1,148 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:linreg_vs_lm_scipy",
+      "status": "PASS",
+      "detail": "10/10 agree [slope=-0.0012028 vs ref -0.0012028; slope_per_decade=-0.012028 vs ref -0.012028; intercept=1.1436 vs ref 1.1436; r_squared=0.093612 vs ref 0.093612; neg_log10_p=5.1561 vs ref 5.1561; df=206 vs ref 206; max_diff_slope_scipy=0 vs ref 0; max_diff_slope_lm=1.301e-18 vs ref 0; slope_negative=1 vs ref 1; n=208 vs ref 208]",
+      "citation": "Ordinary least squares. Reference impls: base R stats::lm / summary.lm and scipy.stats.linregress. Data: vertical-GRF push-off peak (PhysioMoCap::grfLandmarks) regressed on age in GaitRec healthy controls (Horsak et al. 2020)."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "slope": -0.001202775159,
+    "slope_per_decade": -0.01202775,
+    "intercept": 1.1436454,
+    "r_squared": 0.0936119568,
+    "neg_log10_p": 5.156119,
+    "df": 206,
+    "max_diff_slope_lm": 1.30104260698261e-18,
+    "max_diff_slope_scipy": 0,
+    "max_diff_r2_scipy": 0,
+    "slope_negative": 1,
+    "n": 208
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "linreg_vs_lm_scipy",
+    "citation": "Ordinary least squares. Reference impls: base R stats::lm / summary.lm and scipy.stats.linregress. Data: vertical-GRF push-off peak (PhysioMoCap::grfLandmarks) regressed on age in GaitRec healthy controls (Horsak et al. 2020).",
+    "description": "re-fits the OLS regression of the vertical-GRF push-off peak on age with base R lm and scipy.stats.linregress and confirms linearRegression reproduces the slope, R-squared and slope p-value bit-for-bit; also reports the per-decade slope, the negative-slope direction and the sample size",
+    "from_step": {},
+    "scores": {
+      "slope": -0.001202775159,
+      "slope_per_decade": -0.01202775,
+      "intercept": 1.1436454,
+      "r_squared": 0.0936119568,
+      "neg_log10_p": 5.156119,
+      "df": 206,
+      "max_diff_slope_lm": 1.30104260698261e-18,
+      "max_diff_slope_scipy": 0,
+      "max_diff_r2_scipy": 0,
+      "slope_negative": 1,
+      "n": 208
+    },
+    "checks": [
+      {
+        "metric": "slope",
+        "expect": -0.001202775159,
+        "tol": 1e-09,
+        "ref_value": -0.001202775159,
+        "term_value": -0.001202775159
+      },
+      {
+        "metric": "slope_per_decade",
+        "expect": -0.01202775,
+        "tol": 1e-06,
+        "ref_value": -0.01202775,
+        "term_value": -0.01202775
+      },
+      {
+        "metric": "intercept",
+        "expect": 1.1436454,
+        "tol": 1e-06,
+        "ref_value": 1.1436454,
+        "term_value": 1.1436454
+      },
+      {
+        "metric": "r_squared",
+        "expect": 0.0936119568,
+        "tol": 1e-06,
+        "ref_value": 0.0936119568,
+        "term_value": 0.0936119568
+      },
+      {
+        "metric": "neg_log10_p",
+        "expect": 5.156119,
+        "tol": 0.01,
+        "ref_value": 5.156119,
+        "term_value": 5.156119
+      },
+      {
+        "metric": "df",
+        "expect": 206,
+        "tol": 0.5,
+        "ref_value": 206,
+        "term_value": 206
+      },
+      {
+        "metric": "max_diff_slope_scipy",
+        "expect": 0,
+        "tol": 1e-12,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "max_diff_slope_lm",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 1.30104260698261e-18
+      },
+      {
+        "metric": "slope_negative",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "n",
+        "expect": 208,
+        "tol": 0.5,
+        "ref_value": 208,
+        "term_value": 208
+      }
+    ]
+  }
+}

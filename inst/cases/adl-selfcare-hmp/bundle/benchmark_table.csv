@@ -1,0 +1,13 @@
+"metric","value"
+"overall_accuracy",0.601104787412119
+"selfcare_detection_rate",0.941447368421053
+"n_subjects",13
+"n_test_windows",5974
+"grooming_recall",0.780210867802109
+"drinking_recall",0.806487695749441
+"eating_recall",0
+"walking_recall",0.800666032350143
+"upstairs_recall",0.270432692307692
+"d520_proportion",0.188483428188818
+"d560_proportion",0.278707733511885
+"d550_proportion",0.0299631737529294

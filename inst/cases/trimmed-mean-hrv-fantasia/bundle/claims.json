@@ -1,0 +1,130 @@
+{
+  "paper": "trimmed-mean-hrv-fantasia",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "trimmed_mean_10",
+      "statement": "10%-trimmed mean of the RR intervals (robust location)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "trimmed_mean_10",
+        "val_col": "value"
+      },
+      "expect": 761.7707006369,
+      "tol": 1e-06,
+      "render": [
+        "762"
+      ]
+    },
+    {
+      "id": "trimmed_mean_20",
+      "statement": "20%-trimmed mean of the RR intervals (moves toward the median)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "trimmed_mean_20",
+        "val_col": "value"
+      },
+      "expect": 760.186440678,
+      "tol": 1e-06,
+      "render": [
+        "760"
+      ]
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|trimmedMean - scipy.stats.trim_mean| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "max_diff_baser",
+      "statement": "|trimmedMean - base R mean(x, trim)| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_baser",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "plain_mean",
+      "statement": "ordinary (untrimmed) mean RR -- inflated by the skew",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "plain_mean",
+        "val_col": "value"
+      },
+      "expect": 765.8775510204,
+      "tol": 1e-06,
+      "render": [
+        "766"
+      ]
+    },
+    {
+      "id": "median_rr",
+      "statement": "median RR (the fully robust location) for the progression",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "median_rr",
+        "val_col": "value"
+      },
+      "expect": 756,
+      "tol": 1e-06,
+      "render": [
+        "756"
+      ]
+    },
+    {
+      "id": "mean_gt_trim_gt_median",
+      "statement": "mean > 10%-trimmed > 20%-trimmed > median (skew ordering)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mean_gt_trim_gt_median",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "n_intervals",
+      "statement": "RR intervals in the 5-minute window",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_intervals",
+        "val_col": "value"
+      },
+      "expect": 392,
+      "tol": 0.5,
+      "render": [
+        "392"
+      ]
+    }
+  ]
+}

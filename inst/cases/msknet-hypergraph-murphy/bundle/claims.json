@@ -1,0 +1,85 @@
+{
+  "paper": "msknet-hypergraph-murphy",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "n_bones",
+      "statement": "bones (vertices) in the muscle-bone hypergraph",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_bones",
+        "val_col": "value"
+      },
+      "expect": 173,
+      "tol": 0.5,
+      "render": [
+        "173"
+      ]
+    },
+    {
+      "id": "n_muscles",
+      "statement": "muscles (hyperedges) in the hypergraph",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_muscles",
+        "val_col": "value"
+      },
+      "expect": 270,
+      "tol": 0.5,
+      "render": [
+        "270"
+      ]
+    },
+    {
+      "id": "homunc_r2",
+      "statement": "R-squared of the muscle-impact-vs-cortical-homunculus regression (paper: 0.52)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "homunc_r2",
+        "val_col": "value"
+      },
+      "expect": 0.5173,
+      "tol": 0.001,
+      "render": [
+        "0.52"
+      ]
+    },
+    {
+      "id": "homunc_f",
+      "statement": "F-statistic of the impact-homunculus regression (paper: 21.3)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "homunc_f",
+        "val_col": "value"
+      },
+      "expect": 20.36,
+      "tol": 0.01,
+      "render": [
+        "20.4"
+      ]
+    },
+    {
+      "id": "homunc_n",
+      "statement": "body regions in the homunculus correspondence",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "homunc_n",
+        "val_col": "value"
+      },
+      "expect": 21,
+      "tol": 0.5,
+      "render": [
+        "21"
+      ]
+    }
+  ]
+}

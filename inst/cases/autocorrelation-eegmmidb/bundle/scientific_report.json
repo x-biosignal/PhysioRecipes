@@ -1,0 +1,110 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:acf_vs_statsmodels",
+      "status": "PASS",
+      "detail": "6/6 agree [acf_lag1=0.85646 vs ref 0.85646; acf_lag2=0.56655 vs ref 0.56655; acf_lag0=1 vs ref 1; max_diff_statsmodels=2.2204e-16 vs ref 0; decorrelation_time=3 vs ref 3; n_lags=31 vs ref 31]",
+      "citation": "Box GEP, Jenkins GM (1976). Time Series Analysis: Forecasting and Control. Reference impl: statsmodels.tsa.acf (adjusted=False; Seabold & Perktold 2010). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "acf_lag1": 0.85646134,
+    "acf_lag2": 0.56654886,
+    "acf_lag0": 1,
+    "max_diff_statsmodels": 2.22044604925031e-16,
+    "decorrelation_time": 3,
+    "n_lags": 31
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "acf_vs_statsmodels",
+    "citation": "Box GEP, Jenkins GM (1976). Time Series Analysis: Forecasting and Control. Reference impl: statsmodels.tsa.acf (adjusted=False; Seabold & Perktold 2010). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the autocorrelation with statsmodels.tsa.acf (biased, demeaned) on the identical signal; reports the ACF at lags 1 and 2, the lag-0 identity, the bit-exact statsmodels agreement, the decorrelation time (first lag below 1/e), and the lag count",
+    "from_step": {},
+    "scores": {
+      "acf_lag1": 0.85646134,
+      "acf_lag2": 0.56654886,
+      "acf_lag0": 1,
+      "max_diff_statsmodels": 2.22044604925031e-16,
+      "decorrelation_time": 3,
+      "n_lags": 31
+    },
+    "checks": [
+      {
+        "metric": "acf_lag1",
+        "expect": 0.85646134,
+        "tol": 1e-06,
+        "ref_value": 0.85646134,
+        "term_value": 0.85646134
+      },
+      {
+        "metric": "acf_lag2",
+        "expect": 0.56654886,
+        "tol": 1e-06,
+        "ref_value": 0.56654886,
+        "term_value": 0.56654886
+      },
+      {
+        "metric": "acf_lag0",
+        "expect": 1,
+        "tol": 1e-09,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "max_diff_statsmodels",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 2.22044604925031e-16
+      },
+      {
+        "metric": "decorrelation_time",
+        "expect": 3,
+        "tol": 0.5,
+        "ref_value": 3,
+        "term_value": 3
+      },
+      {
+        "metric": "n_lags",
+        "expect": 31,
+        "tol": 0.5,
+        "ref_value": 31,
+        "term_value": 31
+      }
+    ]
+  }
+}

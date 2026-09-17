@@ -1,0 +1,128 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:mse_vs_neurokit",
+      "status": "PASS",
+      "detail": "8/8 agree [mse_scale1=1.3272 vs ref 1.3272; mse_scale5=1.8792 vs ref 1.8792; mse_scale8=1.3827 vs ref 1.3827; mse_auc=1.5954 vs ref 1.5954; peak_scale=5 vs ref 5; coarse_exceeds_fine=1 vs ref 1; max_diff_neurokit=4.4409e-16 vs ref 0; n_samples=1600 vs ref 1600]",
+      "citation": "Costa M, Goldberger AL, Peng C-K (2002). Multiscale entropy analysis of complex physiologic time series. Phys Rev Lett 89:068102. Reference impl: NeuroKit2 entropy_multiscale (Makowski et al.). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "mse_scale1": 1.3272319919,
+    "mse_scale5": 1.8792187746,
+    "mse_scale8": 1.3826645931,
+    "mse_auc": 1.5954237844,
+    "peak_scale": 5,
+    "coarse_exceeds_fine": 1,
+    "max_diff_neurokit": 4.44089209850063e-16,
+    "n_samples": 1600
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "mse_vs_neurokit",
+    "citation": "Costa M, Goldberger AL, Peng C-K (2002). Multiscale entropy analysis of complex physiologic time series. Phys Rev Lett 89:068102. Reference impl: NeuroKit2 entropy_multiscale (Makowski et al.). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes multiscale entropy (per scale) with NeuroKit2 entropy_multiscale (MSEn) on the identical signal and confirms multiscaleEntropy reproduces the per-scale curve bit-for-bit; reports representative scales, the mean (complexity index), the peak scale, whether coarse-scale MSE exceeds scale 1, and the sample count",
+    "from_step": {},
+    "scores": {
+      "mse_scale1": 1.3272319919,
+      "mse_scale5": 1.8792187746,
+      "mse_scale8": 1.3826645931,
+      "mse_auc": 1.5954237844,
+      "peak_scale": 5,
+      "coarse_exceeds_fine": 1,
+      "max_diff_neurokit": 4.44089209850063e-16,
+      "n_samples": 1600
+    },
+    "checks": [
+      {
+        "metric": "mse_scale1",
+        "expect": 1.3272319919,
+        "tol": 1e-06,
+        "ref_value": 1.3272319919,
+        "term_value": 1.3272319919
+      },
+      {
+        "metric": "mse_scale5",
+        "expect": 1.8792187746,
+        "tol": 1e-06,
+        "ref_value": 1.8792187746,
+        "term_value": 1.8792187746
+      },
+      {
+        "metric": "mse_scale8",
+        "expect": 1.3826645931,
+        "tol": 1e-06,
+        "ref_value": 1.3826645931,
+        "term_value": 1.3826645931
+      },
+      {
+        "metric": "mse_auc",
+        "expect": 1.5954237844,
+        "tol": 1e-06,
+        "ref_value": 1.5954237844,
+        "term_value": 1.5954237844
+      },
+      {
+        "metric": "peak_scale",
+        "expect": 5,
+        "tol": 0.5,
+        "ref_value": 5,
+        "term_value": 5
+      },
+      {
+        "metric": "coarse_exceeds_fine",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "max_diff_neurokit",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 4.44089209850063e-16
+      },
+      {
+        "metric": "n_samples",
+        "expect": 1600,
+        "tol": 0.5,
+        "ref_value": 1600,
+        "term_value": 1600
+      }
+    ]
+  }
+}

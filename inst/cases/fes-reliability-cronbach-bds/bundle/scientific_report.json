@@ -1,0 +1,119 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:cronbach_vs_psych_pingouin",
+      "status": "PASS",
+      "detail": "7/7 agree [alpha=0.82302 vs ref 0.82302; average_r=0.40621 vs ref 0.40621; max_diff_psych=0 vs ref 0; max_diff_pingouin=1.1102e-16 vs ref 0; good_reliability=1 vs ref 1; k=7 vs ref 7; n=163 vs ref 163]",
+      "citation": "Cronbach LJ (1951). Reference impls: psych::alpha (Revelle) raw_alpha and pingouin.cronbach_alpha. Data: the 7 Falls Efficacy Scale items, Santos & Duarte (2016) BDS balance dataset."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "alpha": 0.8230181471,
+    "average_r": 0.4062097132,
+    "max_diff_psych": 0,
+    "max_diff_pingouin": 1.11022302462516e-16,
+    "good_reliability": 1,
+    "k": 7,
+    "n": 163
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "cronbach_vs_psych_pingouin",
+    "citation": "Cronbach LJ (1951). Reference impls: psych::alpha (Revelle) raw_alpha and pingouin.cronbach_alpha. Data: the 7 Falls Efficacy Scale items, Santos & Duarte (2016) BDS balance dataset.",
+    "description": "re-computes Cronbach's raw alpha of the 7 FES items with psych::alpha and pingouin.cronbach_alpha and confirms cronbachAlpha reproduces psych bit-for-bit and pingouin to machine precision; also reports the mean inter-item correlation, the good-reliability flag and the design sizes",
+    "from_step": {},
+    "scores": {
+      "alpha": 0.8230181471,
+      "average_r": 0.4062097132,
+      "max_diff_psych": 0,
+      "max_diff_pingouin": 1.11022302462516e-16,
+      "good_reliability": 1,
+      "k": 7,
+      "n": 163
+    },
+    "checks": [
+      {
+        "metric": "alpha",
+        "expect": 0.8230181471,
+        "tol": 1e-06,
+        "ref_value": 0.8230181471,
+        "term_value": 0.8230181471
+      },
+      {
+        "metric": "average_r",
+        "expect": 0.4062097132,
+        "tol": 1e-06,
+        "ref_value": 0.4062097132,
+        "term_value": 0.4062097132
+      },
+      {
+        "metric": "max_diff_psych",
+        "expect": 0,
+        "tol": 1e-12,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "max_diff_pingouin",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 1.11022302462516e-16
+      },
+      {
+        "metric": "good_reliability",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "k",
+        "expect": 7,
+        "tol": 0.5,
+        "ref_value": 7,
+        "term_value": 7
+      },
+      {
+        "metric": "n",
+        "expect": 163,
+        "tol": 0.5,
+        "ref_value": 163,
+        "term_value": 163
+      }
+    ]
+  }
+}

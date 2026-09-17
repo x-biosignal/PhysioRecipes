@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-07T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real eyes-closed posterior EEG channel (eegmmidb S002R02, POz), the newly-authored medianAbsDev (raw MAD, constant=1) reproduces BOTH scipy.stats.median_abs_deviation AND base R stats::mad(constant=1) BIT-FOR-BIT; and the normal-consistent robust SD estimate (MAD x 1/qnorm(0.75)) closely matches the population SD, indicating a near-Gaussian, artifact-free distribution.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "median_absolute_deviation"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "medianAbsDev",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "median_absolute_deviation",
+      "threshold": "descriptive: medianAbsDev equals scipy.stats.median_abs_deviation AND base R mad(constant=1) to machine precision (max |diff| < 1e-9 vs each)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "6b286d1ad0484e4acebc80a8937300c5d5d9f65be64c50a309fc83f05d3662c3",
+    "registered_at": "2026-09-07T00:00:00Z"
+  }
+}

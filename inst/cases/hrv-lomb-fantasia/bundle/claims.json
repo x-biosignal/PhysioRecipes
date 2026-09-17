@@ -1,0 +1,100 @@
+{
+  "paper": "hrv-lomb-fantasia",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "lf",
+      "statement": "Lomb-Scargle LF-band power (0.04-0.15 Hz) of the real RR tachogram (ms^2)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "lf",
+        "val_col": "value"
+      },
+      "expect": 919.67404,
+      "tol": 0.001,
+      "render": [
+        "920"
+      ]
+    },
+    {
+      "id": "hf",
+      "statement": "Lomb-Scargle HF-band power (0.15-0.4 Hz) -- respiratory/vagal (ms^2)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "hf",
+        "val_col": "value"
+      },
+      "expect": 1915.460049,
+      "tol": 0.001,
+      "render": [
+        "1915"
+      ]
+    },
+    {
+      "id": "lf_hf_ratio",
+      "statement": "LF/HF ratio -- the sympatho-vagal balance (HF-dominant when < 1)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "lf_hf_ratio",
+        "val_col": "value"
+      },
+      "expect": 0.480132,
+      "tol": 1e-05,
+      "render": [
+        "0.48"
+      ]
+    },
+    {
+      "id": "hf_nu",
+      "statement": "HF power in normalized units (100*HF/(LF+HF)) -- vagal fraction (%)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "hf_nu",
+        "val_col": "value"
+      },
+      "expect": 67.5615,
+      "tol": 0.01,
+      "render": [
+        "67.6"
+      ]
+    },
+    {
+      "id": "max_diff_periodogram",
+      "statement": "max |ecgHRVfreq Lomb periodogram - scipy.signal.lombscargle| (machine precision, rel ~1e-10)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_periodogram",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-05,
+      "render": [
+        "5e-08"
+      ]
+    },
+    {
+      "id": "max_diff_bandpower",
+      "statement": "max |op band power - scipy-integrated band power| over VLF/LF/HF (machine precision)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_bandpower",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-06,
+      "render": [
+        "3e-11"
+      ]
+    }
+  ]
+}

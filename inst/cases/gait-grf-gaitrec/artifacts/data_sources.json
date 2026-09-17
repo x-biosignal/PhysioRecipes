@@ -1,0 +1,12 @@
+{
+  "dataset": "GaitRec -- large-scale ground reaction force dataset of healthy and impaired gait",
+  "authors": "Horsak B, Slijepcevic D, Raberger AM, Schwab C, Worisch M, Zeppelzauer M",
+  "repository": "figshare collection 4788012",
+  "doi": "10.1038/s41597-020-0481-z",
+  "figshare_collection": "4788012",
+  "url": "https://doi.org/10.6084/m9.figshare.c.4788012",
+  "license": "CC-BY 4.0",
+  "citation": "Horsak B, Slijepcevic D, Raberger AM, Schwab C, Worisch M, Zeppelzauer M. GaitRec, a large-scale ground reaction force dataset of healthy and impaired gait. Scientific Data 2020;7:143. doi:10.1038/s41597-020-0481-z.",
+  "record_used": "processed (PRO) vertical GRF, body-weight normalised stance curves; healthy controls (HC) vs knee-pathology (K) group landmarks",
+  "public": true
+}

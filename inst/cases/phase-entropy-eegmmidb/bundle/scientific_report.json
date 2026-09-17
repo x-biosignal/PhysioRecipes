@@ -1,0 +1,110 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:phase_vs_neurokit",
+      "status": "PASS",
+      "detail": "6/6 agree [phasen_k4=1.2378 vs ref 1.2378; phasen_k6=1.2868 vs ref 1.2868; phasen_k8=1.2989 vs ref 1.2989; max_diff_nk=4.4409e-16 vs ref 0; increasing_in_k=1 vs ref 1; below_ceiling=1 vs ref 1]",
+      "citation": "Rohila A, Sharma A (2019). Phase entropy: a new complexity measure for heart rate variability. Physiol Meas 40(10):105006. Reference impl: NeuroKit2 entropy_phase (Makowski et al. 2021). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "phasen_k4": 1.23776862,
+    "phasen_k6": 1.28683512,
+    "phasen_k8": 1.29886766,
+    "max_diff_nk": 4.44089209850063e-16,
+    "increasing_in_k": 1,
+    "below_ceiling": 1
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "phase_vs_neurokit",
+    "citation": "Rohila A, Sharma A (2019). Phase entropy: a new complexity measure for heart rate variability. Physiol Meas 40(10):105006. Reference impl: NeuroKit2 entropy_phase (Makowski et al. 2021). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the phase entropy with NeuroKit2 entropy_phase across the sector count k; reports PhasEn at k=4, k=6 and k=8 (delay 1), the bit-exact NeuroKit2 agreement, the increase with k, and that PhasEn lies below the 1/ln(2) ceiling",
+    "from_step": {},
+    "scores": {
+      "phasen_k4": 1.23776862,
+      "phasen_k6": 1.28683512,
+      "phasen_k8": 1.29886766,
+      "max_diff_nk": 4.44089209850063e-16,
+      "increasing_in_k": 1,
+      "below_ceiling": 1
+    },
+    "checks": [
+      {
+        "metric": "phasen_k4",
+        "expect": 1.237768618,
+        "tol": 1e-06,
+        "ref_value": 1.237768618,
+        "term_value": 1.23776862
+      },
+      {
+        "metric": "phasen_k6",
+        "expect": 1.286835125,
+        "tol": 1e-06,
+        "ref_value": 1.286835125,
+        "term_value": 1.28683512
+      },
+      {
+        "metric": "phasen_k8",
+        "expect": 1.2988676599,
+        "tol": 1e-06,
+        "ref_value": 1.2988676599,
+        "term_value": 1.29886766
+      },
+      {
+        "metric": "max_diff_nk",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 4.44089209850063e-16
+      },
+      {
+        "metric": "increasing_in_k",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "below_ceiling",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      }
+    ]
+  }
+}

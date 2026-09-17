@@ -1,0 +1,103 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:coherence_vs_scipy",
+      "status": "PASS",
+      "detail": "5/5 agree [max_abs_diff=4.1228e-14 vs ref 0; peak_coherence=0.89824 vs ref 0.89824; peak_freq_hz=1.4648 vs ref 1.4648; band_mean_coherence=0.43889 vs ref 0.43889; n_freq=257 vs ref 257]",
+      "citation": "Welch PD (1967). The use of FFT for the estimation of power spectra. IEEE Trans Audio Electroacoust 15(2):70-73. Reference impl: scipy.signal.coherence (Virtanen et al. 2020). Data: BIDMC PPG and Respiration Dataset (Pimentel et al. 2017), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "peak_coherence": 0.8982421806,
+    "peak_freq_hz": 1.464844,
+    "band_mean_coherence": 0.4388860116,
+    "max_abs_diff": 4.12278718109338e-14,
+    "confidence_limit": 0.025713,
+    "n_freq": 257
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "coherence_vs_scipy",
+    "citation": "Welch PD (1967). The use of FFT for the estimation of power spectra. IEEE Trans Audio Electroacoust 15(2):70-73. Reference impl: scipy.signal.coherence (Virtanen et al. 2020). Data: BIDMC PPG and Respiration Dataset (Pimentel et al. 2017), PhysioNet.",
+    "description": "re-computes the coherence spectrum with scipy.signal.coherence (matched symmetric-Hann + no detrend) and compares to coherence's; reports the full-spectrum max |diff| (< 1e-9, machine precision), the cardiac-band (0.5-5 Hz) peak coherence (0.898) + its frequency (1.465 Hz ~ 88 bpm), the band mean (0.439), and the 95% confidence limit",
+    "from_step": {},
+    "scores": {
+      "peak_coherence": 0.8982421806,
+      "peak_freq_hz": 1.464844,
+      "band_mean_coherence": 0.4388860116,
+      "max_abs_diff": 4.12278718109338e-14,
+      "confidence_limit": 0.025713,
+      "n_freq": 257
+    },
+    "checks": [
+      {
+        "metric": "max_abs_diff",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 4.12278718109338e-14
+      },
+      {
+        "metric": "peak_coherence",
+        "expect": 0.8982421806,
+        "tol": 1e-06,
+        "ref_value": 0.8982421806,
+        "term_value": 0.8982421806
+      },
+      {
+        "metric": "peak_freq_hz",
+        "expect": 1.464844,
+        "tol": 0.0001,
+        "ref_value": 1.464844,
+        "term_value": 1.464844
+      },
+      {
+        "metric": "band_mean_coherence",
+        "expect": 0.4388860116,
+        "tol": 1e-06,
+        "ref_value": 0.4388860116,
+        "term_value": 0.4388860116
+      },
+      {
+        "metric": "n_freq",
+        "expect": 257,
+        "tol": 0.5,
+        "ref_value": 257,
+        "term_value": 257
+      }
+    ]
+  }
+}

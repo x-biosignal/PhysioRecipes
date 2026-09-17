@@ -1,0 +1,110 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:slope_vs_neurokit",
+      "status": "PASS",
+      "detail": "6/6 agree [slopen_m2=1.2592 vs ref 1.2592; slopen_m3=2.4257 vs ref 2.4257; slopen_m4=3.5714 vs ref 3.5714; max_diff_nk=8.8818e-16 vs ref 0; n_patterns_m3=18 vs ref 18; monotonic_increasing=1 vs ref 1]",
+      "citation": "Cuesta-Frau D (2019). Slope Entropy: A New Time Series Complexity Estimator Based on Both Symbolic Patterns and Amplitude Information. Entropy 21(12):1167. Reference impl: NeuroKit2 entropy_slope (Makowski et al. 2021). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "slopen_m2": 1.25922669,
+    "slopen_m3": 2.42566137,
+    "slopen_m4": 3.57143475,
+    "max_diff_nk": 8.88178419700125e-16,
+    "n_patterns_m3": 18,
+    "monotonic_increasing": 1
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "slope_vs_neurokit",
+    "citation": "Cuesta-Frau D (2019). Slope Entropy: A New Time Series Complexity Estimator Based on Both Symbolic Patterns and Amplitude Information. Entropy 21(12):1167. Reference impl: NeuroKit2 entropy_slope (Makowski et al. 2021). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the slope entropy with NeuroKit2 entropy_slope across the embedding dimension; reports SlopEn at m=2, m=3 and m=4 (thresholds 0.1/45 deg), the bit-exact NeuroKit2 agreement, the number of distinct slope patterns realized at m=3, and the monotone increase with dimension",
+    "from_step": {},
+    "scores": {
+      "slopen_m2": 1.25922669,
+      "slopen_m3": 2.42566137,
+      "slopen_m4": 3.57143475,
+      "max_diff_nk": 8.88178419700125e-16,
+      "n_patterns_m3": 18,
+      "monotonic_increasing": 1
+    },
+    "checks": [
+      {
+        "metric": "slopen_m2",
+        "expect": 1.2592266918,
+        "tol": 1e-06,
+        "ref_value": 1.2592266918,
+        "term_value": 1.25922669
+      },
+      {
+        "metric": "slopen_m3",
+        "expect": 2.4256613701,
+        "tol": 1e-06,
+        "ref_value": 2.4256613701,
+        "term_value": 2.42566137
+      },
+      {
+        "metric": "slopen_m4",
+        "expect": 3.5714347517,
+        "tol": 1e-06,
+        "ref_value": 3.5714347517,
+        "term_value": 3.57143475
+      },
+      {
+        "metric": "max_diff_nk",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 8.88178419700125e-16
+      },
+      {
+        "metric": "n_patterns_m3",
+        "expect": 18,
+        "tol": 0.5,
+        "ref_value": 18,
+        "term_value": 18
+      },
+      {
+        "metric": "monotonic_increasing",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      }
+    ]
+  }
+}

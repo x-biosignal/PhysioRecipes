@@ -1,0 +1,85 @@
+{
+  "paper": "ecg-pvc-mitbih",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "pooled_ppv",
+      "statement": "pooled PVC precision (PPV) - fraction of flagged beats that are true PVCs",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "pooled_ppv",
+        "val_col": "value"
+      },
+      "expect": 0.9541,
+      "tol": 0.02,
+      "render": [
+        "0.9541"
+      ]
+    },
+    {
+      "id": "pooled_sensitivity",
+      "statement": "pooled PVC recall (sensitivity) - fraction of true PVCs caught",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "pooled_sensitivity",
+        "val_col": "value"
+      },
+      "expect": 0.7146,
+      "tol": 0.02,
+      "render": [
+        "0.7146"
+      ]
+    },
+    {
+      "id": "pooled_f1",
+      "statement": "pooled PVC F1",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "pooled_f1",
+        "val_col": "value"
+      },
+      "expect": 0.8172,
+      "tol": 0.02,
+      "render": [
+        "0.8172"
+      ]
+    },
+    {
+      "id": "isolated_f1",
+      "statement": "best record F1 (119, isolated PVCs) - a clean case is recovered perfectly",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "isolated_f1",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.02,
+      "render": [
+        "1.0"
+      ]
+    },
+    {
+      "id": "runs_sensitivity",
+      "statement": "worst record recall (223, sustained runs/couplets) - the honest floor",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "runs_sensitivity",
+        "val_col": "value"
+      },
+      "expect": 0.2727,
+      "tol": 0.02,
+      "render": [
+        "0.2727"
+      ]
+    }
+  ]
+}

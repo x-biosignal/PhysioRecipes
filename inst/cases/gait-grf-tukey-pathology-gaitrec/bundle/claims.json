@@ -1,0 +1,160 @@
+{
+  "paper": "gait-grf-tukey-pathology-gaitrec",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "diff_A_HC",
+      "statement": "Tukey mean difference of the ankle vs healthy-control dynamic range (BW)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "diff_A_HC",
+        "val_col": "value"
+      },
+      "expect": -0.1422369767,
+      "tol": 1e-06,
+      "render": [
+        "-0.142"
+      ]
+    },
+    {
+      "id": "neg_log10_p_A_HC",
+      "statement": "-log10 of the ankle-vs-healthy adjusted p (a representative significant pair)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "neg_log10_p_A_HC",
+        "val_col": "value"
+      },
+      "expect": 10.773178,
+      "tol": 0.01,
+      "render": [
+        "10.8"
+      ]
+    },
+    {
+      "id": "p_K_A",
+      "statement": "adjusted p of knee vs ankle (a representative non-significant pathology-pathology pair)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "p_K_A",
+        "val_col": "value"
+      },
+      "expect": 0.8292210735,
+      "tol": 0.0001,
+      "render": [
+        "0.83"
+      ]
+    },
+    {
+      "id": "p_min_pathology_pathology",
+      "statement": "the smallest of the six pathology-pathology adjusted p-values (all > 0.05: none differ)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "p_min_pathology_pathology",
+        "val_col": "value"
+      },
+      "expect": 0.614931,
+      "tol": 0.0001,
+      "render": [
+        "0.61"
+      ]
+    },
+    {
+      "id": "max_diff_p_baser",
+      "statement": "max |tukeyHSD adjusted p - base R TukeyHSD p| across all 10 pairs (machine precision)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_p_baser",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "<1e-9"
+      ]
+    },
+    {
+      "id": "max_diff_p_scipy",
+      "statement": "max |tukeyHSD adjusted p - scipy.stats.tukey_hsd p| across all 10 pairs (machine precision)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_p_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "<1e-9"
+      ]
+    },
+    {
+      "id": "n_sig_hc_vs_pathology",
+      "statement": "number of healthy-vs-pathology pairs that are significant (all 4)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_sig_hc_vs_pathology",
+        "val_col": "value"
+      },
+      "expect": 4,
+      "tol": 0.5,
+      "render": [
+        "4"
+      ]
+    },
+    {
+      "id": "n_sig_pathology_pathology",
+      "statement": "number of pathology-pathology pairs that are significant (none)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_sig_pathology_pathology",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 0.5,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "n_pairs",
+      "statement": "total pairwise comparisons (5 choose 2)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_pairs",
+        "val_col": "value"
+      },
+      "expect": 10,
+      "tol": 0.5,
+      "render": [
+        "10"
+      ]
+    },
+    {
+      "id": "n_total",
+      "statement": "total subjects across the five classes",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_total",
+        "val_col": "value"
+      },
+      "expect": 1844,
+      "tol": 0.5,
+      "render": [
+        "1844"
+      ]
+    }
+  ]
+}

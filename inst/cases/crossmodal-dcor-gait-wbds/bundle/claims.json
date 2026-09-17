@@ -1,0 +1,85 @@
+{
+  "paper": "crossmodal-dcor-gait-wbds",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "dcor",
+      "statement": "distance correlation between gait kinematics (knee+ankle flexion) and kinetics (GRF), WBDS01",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "dcor",
+        "val_col": "value"
+      },
+      "expect": 0.7224907526,
+      "tol": 1e-06,
+      "render": [
+        "0.72"
+      ]
+    },
+    {
+      "id": "p_value",
+      "statement": "permutation p-value of the distance correlation (999 permutations)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "p_value",
+        "val_col": "value"
+      },
+      "expect": 0.001,
+      "tol": 1e-09,
+      "render": [
+        "0.001"
+      ]
+    },
+    {
+      "id": "dcor_energy",
+      "statement": "the same statistic recomputed by the canonical energy::dcor (op == energy to machine precision)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "dcor_energy",
+        "val_col": "value"
+      },
+      "expect": 0.7224907526,
+      "tol": 0.02,
+      "render": [
+        "0.7224907526"
+      ]
+    },
+    {
+      "id": "dcor_mean5",
+      "statement": "mean distance correlation across all five WBDS subjects",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "dcor_mean5",
+        "val_col": "value"
+      },
+      "expect": 0.7446955784,
+      "tol": 1e-06,
+      "render": [
+        "0.74"
+      ]
+    },
+    {
+      "id": "dcor_min5",
+      "statement": "minimum distance correlation across the five subjects (robustness floor)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "dcor_min5",
+        "val_col": "value"
+      },
+      "expect": 0.7118385738,
+      "tol": 1e-06,
+      "render": [
+        "0.71"
+      ]
+    }
+  ]
+}

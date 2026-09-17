@@ -1,0 +1,53 @@
+{
+  "paper": "eeg-lz-sleep-consciousness-sleepedf",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "abs_diff",
+      "statement": "|eegComplexity LZ - antropy.lziv_complexity| on the deep-sleep EEG (machine precision)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "lz_n3_op",
+      "statement": "Lempel-Ziv complexity of the deep-sleep (N3) EEG -- the complexity minimum",
+      "expect": 0.3639716568,
+      "artifact": 0.363972,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "lz_wake",
+      "statement": "Lempel-Ziv complexity of the wake EEG",
+      "expect": 0.4643776311,
+      "artifact": 0.464378,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "lz_rem",
+      "statement": "Lempel-Ziv complexity of the REM (dream) EEG -- recovers toward wake",
+      "expect": 0.4643776311,
+      "artifact": 0.464378,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "wake_minus_n3",
+      "statement": "the wake-minus-deep-sleep LZ drop -- the consciousness/complexity gradient",
+      "expect": 0.1004059743,
+      "artifact": 0.100406,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

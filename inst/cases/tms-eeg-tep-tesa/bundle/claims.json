@@ -1,0 +1,85 @@
+{
+  "paper": "tms-eeg-tep-tesa",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "n_components",
+      "statement": "canonical TEP components recovered (N15/P30/N45/P60/N100/P180)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_components",
+        "val_col": "value"
+      },
+      "expect": 6,
+      "tol": 0.5,
+      "render": [
+        "6"
+      ]
+    },
+    {
+      "id": "n100_latency",
+      "statement": "median latency of the N100 component (the hallmark late TEP peak), ms",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n100_latency",
+        "val_col": "value"
+      },
+      "expect": 115,
+      "tol": 1,
+      "render": [
+        "115"
+      ]
+    },
+    {
+      "id": "p180_latency",
+      "statement": "median latency of the P180 component, ms",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "p180_latency",
+        "val_col": "value"
+      },
+      "expect": 188,
+      "tol": 1,
+      "render": [
+        "188"
+      ]
+    },
+    {
+      "id": "canonical_order",
+      "statement": "the six components appear in canonical temporal order (latencies monotonically increasing; 1=yes)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "canonical_order",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "1"
+      ]
+    },
+    {
+      "id": "polarity_match",
+      "statement": "mean across-channel polarity-match rate (%): the peak sign matches the expected N/P",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "polarity_match",
+        "val_col": "value"
+      },
+      "expect": 92.1,
+      "tol": 0.5,
+      "render": [
+        "92.1"
+      ]
+    }
+  ]
+}

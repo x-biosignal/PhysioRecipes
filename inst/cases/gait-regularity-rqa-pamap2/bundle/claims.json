@@ -1,0 +1,85 @@
+{
+  "paper": "gait-regularity-rqa-pamap2",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "walk_det",
+      "statement": "RQA determinism of walking ankle acceleration (quasi-periodic)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "walking_DET",
+        "val_col": "value"
+      },
+      "expect": 0.921,
+      "tol": 0.02,
+      "render": [
+        "0.921"
+      ]
+    },
+    {
+      "id": "walk_apen",
+      "statement": "approximate entropy of walking (low = regular)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "walking_ApEn",
+        "val_col": "value"
+      },
+      "expect": 0.455,
+      "tol": 0.02,
+      "render": [
+        "0.455"
+      ]
+    },
+    {
+      "id": "iron_det",
+      "statement": "RQA determinism of ironing (aperiodic)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "ironing_DET",
+        "val_col": "value"
+      },
+      "expect": 0.382,
+      "tol": 0.02,
+      "render": [
+        "0.382"
+      ]
+    },
+    {
+      "id": "iron_apen",
+      "statement": "approximate entropy of ironing (high = irregular)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "ironing_ApEn",
+        "val_col": "value"
+      },
+      "expect": 1.28,
+      "tol": 0.02,
+      "render": [
+        "1.28"
+      ]
+    },
+    {
+      "id": "run_det",
+      "statement": "RQA determinism of running (most rhythmic)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "running_DET",
+        "val_col": "value"
+      },
+      "expect": 0.983,
+      "tol": 0.02,
+      "render": [
+        "0.983"
+      ]
+    }
+  ]
+}

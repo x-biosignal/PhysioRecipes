@@ -1,0 +1,33 @@
+{
+  "registered_at": "2026-09-04T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real simultaneous ECG + PPG recording (BIDMC subject 01), the time-lagged cross-correlation between the ECG and the fingertip PPG peaks at a lag of a few hundred milliseconds -- the pulse arrival time -- and crossCorrelation reproduces an independent from-scratch normalized cross-correlation to machine precision, with the peak lag matching scipy.signal.correlate.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "ecg_ppg_cross_correlation_lag"
+  },
+  "analysis_plan": {
+    "dataset": "BIDMC PPG and Respiration Dataset (Pimentel et al. 2017, PhysioNet), subject bidmc01; simultaneous lead-II ECG and fingertip PPG at 125 Hz, 4 min (30000 samples each)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "crossCorrelation",
+        "params": {
+          "sr": 125,
+          "max_lag": 90
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "ecg_ppg_cross_correlation_lag",
+      "threshold": "descriptive: crossCorrelation equals an independent numpy normalized cross-correlation to machine precision (max |diff| < 1e-10), the peak lag matches scipy.signal.correlate (within the matched window), and the peak lag is a physiologic pulse arrival time (0.1-0.7 s)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "2f0ac71c7cd20f953267e2d161a92e38d3345e344a8bb83573ed8d3ae93ae4c4",
+    "registered_at": "2026-09-04T00:00:00Z"
+  }
+}

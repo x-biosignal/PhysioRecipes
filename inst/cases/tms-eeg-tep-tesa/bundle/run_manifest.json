@@ -1,0 +1,47 @@
+{
+  "schema": "runtrace/1",
+  "seed": 1,
+  "env": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "platform": "x86_64-pc-linux-gnu",
+    "packages": {
+      "PhysioCore": "0.4.0",
+      "PhysioNeurophys": "0.4.0"
+    },
+    "renv_lock": "renv.lock",
+    "renv_lock_hash": "c110eee44b476fb2"
+  },
+  "op_dag": [
+    {
+      "op": 1,
+      "activity": "setTMSpulses",
+      "package": "PhysioNeurophys",
+      "version": "0.4.0",
+      "params": {
+        "intensity_pct_mso": 80,
+        "target": "parietal"
+      }
+    },
+    {
+      "op": 2,
+      "activity": "tepAverage",
+      "package": "PhysioNeurophys",
+      "version": "0.4.0",
+      "params": {
+        "epoch_start_ms": -250,
+        "baseline_window_ms": [
+          -200,
+          -20
+        ]
+      }
+    }
+  ],
+  "prov_hash": "e4d0b48505fcabdb",
+  "outputs": {
+    "terminal.txt": "bab61cae750f3f02"
+  },
+  "algo": "xxhash64",
+  "op_dag_source": "executor",
+  "provenance_op_dag": [],
+  "provenance_consistent": true
+}

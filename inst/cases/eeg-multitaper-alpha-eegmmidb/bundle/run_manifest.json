@@ -1,0 +1,43 @@
+{
+  "schema": "runtrace/1",
+  "seed": 1,
+  "env": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "platform": "x86_64-pc-linux-gnu",
+    "packages": {
+      "PhysioCore": "0.4.0",
+      "PhysioEEG": "0.7.14"
+    },
+    "renv_lock": "renv.lock",
+    "renv_lock_hash": "c110eee44b476fb2"
+  },
+  "op_dag": [
+    {
+      "op": 1,
+      "activity": "eegMultitaper",
+      "package": "PhysioEEG",
+      "version": "0.7.14",
+      "params": {
+        "bandwidth": 4
+      }
+    }
+  ],
+  "prov_hash": "4d5c7b58ebb247a2",
+  "outputs": {
+    "terminal_table.csv": "9c55673e07411282"
+  },
+  "algo": "xxhash64",
+  "op_dag_source": "executor",
+  "provenance_op_dag": [
+    {
+      "op": 1,
+      "activity": "readEDF",
+      "used": null,
+      "generated": "raw",
+      "package": null,
+      "version": "0.2.3",
+      "params": "{\"path\":\"agent/eval/data/S001R02.edf\",\"resample\":false}"
+    }
+  ],
+  "provenance_consistent": false
+}

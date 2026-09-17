@@ -1,0 +1,53 @@
+{
+  "paper": "crossmodal-dcor-gait-wbds",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "dcor",
+      "statement": "distance correlation between gait kinematics (knee+ankle flexion) and kinetics (GRF), WBDS01",
+      "expect": 0.7224907526,
+      "artifact": 0.722491,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "p_value",
+      "statement": "permutation p-value of the distance correlation (999 permutations)",
+      "expect": 0.001,
+      "artifact": 0.001,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "dcor_energy",
+      "statement": "the same statistic recomputed by the canonical energy::dcor (op == energy to machine precision)",
+      "expect": 0.7224907526,
+      "artifact": 0.722491,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "dcor_mean5",
+      "statement": "mean distance correlation across all five WBDS subjects",
+      "expect": 0.7446955784,
+      "artifact": 0.744696,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "dcor_min5",
+      "statement": "minimum distance correlation across the five subjects (robustness floor)",
+      "expect": 0.7118385738,
+      "artifact": 0.711839,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

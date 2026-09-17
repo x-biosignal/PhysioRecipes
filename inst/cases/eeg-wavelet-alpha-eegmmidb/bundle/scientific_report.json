@@ -1,0 +1,103 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:wavelet_vs_mne",
+      "status": "PASS",
+      "detail": "5/5 agree [tfr_corr_vs_mne=0.99976 vs ref 0.99976; marginal_corr_vs_mne=0.9999 vs ref 0.9999; dominant_freq=10 vs ref 10; alpha_power_fraction=0.66434 vs ref 0.66434; n_freqs=14 vs ref 14]",
+      "citation": "Tallon-Baudry C, Bertrand O (1999). Oscillatory gamma activity and its role in object representation. Trends Cogn Sci 3(4):151-162 (Morlet TFR). Reference impl: mne.time_frequency.tfr_array_morlet (Gramfort et al. 2013). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "tfr_corr_vs_mne": 0.99976175,
+    "marginal_corr_vs_mne": 0.99990225,
+    "norm_scale": 0.494067,
+    "dominant_freq": 10,
+    "alpha_power_fraction": 0.66434176,
+    "n_freqs": 14
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "wavelet_vs_mne",
+    "citation": "Tallon-Baudry C, Bertrand O (1999). Oscillatory gamma activity and its role in object representation. Trends Cogn Sci 3(4):151-162 (Morlet TFR). Reference impl: mne.time_frequency.tfr_array_morlet (Gramfort et al. 2013). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the Morlet scalogram with MNE tfr_array_morlet (matched freqs + n_cycles) and compares to waveletTransform's; reports the full-TFR correlation (0.9998), the marginal-spectrum correlation (0.9999), the normalization scale (0.49), the dominant scalogram frequency (10 Hz = alpha), and the alpha-band power fraction (0.65)",
+    "from_step": {},
+    "scores": {
+      "tfr_corr_vs_mne": 0.99976175,
+      "marginal_corr_vs_mne": 0.99990225,
+      "norm_scale": 0.494067,
+      "dominant_freq": 10,
+      "alpha_power_fraction": 0.66434176,
+      "n_freqs": 14
+    },
+    "checks": [
+      {
+        "metric": "tfr_corr_vs_mne",
+        "expect": 0.99976175,
+        "tol": 0.001,
+        "ref_value": 0.99976175,
+        "term_value": 0.99976175
+      },
+      {
+        "metric": "marginal_corr_vs_mne",
+        "expect": 0.99990225,
+        "tol": 0.001,
+        "ref_value": 0.99990225,
+        "term_value": 0.99990225
+      },
+      {
+        "metric": "dominant_freq",
+        "expect": 10,
+        "tol": 0.5,
+        "ref_value": 10,
+        "term_value": 10
+      },
+      {
+        "metric": "alpha_power_fraction",
+        "expect": 0.66434176,
+        "tol": 0.001,
+        "ref_value": 0.66434176,
+        "term_value": 0.66434176
+      },
+      {
+        "metric": "n_freqs",
+        "expect": 14,
+        "tol": 0.5,
+        "ref_value": 14,
+        "term_value": 14
+      }
+    ]
+  }
+}

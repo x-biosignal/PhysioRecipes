@@ -1,0 +1,62 @@
+{
+  "paper": "adl-selfcare-hmp",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "selfcare_detection",
+      "statement": "self-care windows recognised as SOME self-care activity (leave-one-subject-out)",
+      "expect": 0.938,
+      "artifact": 0.941447,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "overall_accuracy",
+      "statement": "5-class leave-one-subject-out accuracy",
+      "expect": 0.603,
+      "artifact": 0.601105,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "grooming_recall",
+      "statement": "grooming (d520) recall (chance 0.20)",
+      "expect": 0.767,
+      "artifact": 0.780211,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "drinking_recall",
+      "statement": "drinking (d560) recall",
+      "expect": 0.809,
+      "artifact": 0.806488,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "eating_recall",
+      "statement": "eating (d550) recall -- NOT distinguished (documented failure)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_subjects",
+      "statement": "subjects in the leave-one-subject-out evaluation",
+      "expect": 13,
+      "artifact": 13,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

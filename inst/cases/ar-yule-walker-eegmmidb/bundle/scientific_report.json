@@ -1,0 +1,110 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:ar_vs_statsmodels",
+      "status": "PASS",
+      "detail": "6/6 agree [ar_phi1=1.1804 vs ref 1.1804; ar_phi2=-0.29061 vs ref -0.29061; var_pred=348.5 vs ref 348.5; max_diff_phi_sm=5.4401e-15 vs ref 0; var_diff_sm=5.1159e-13 vs ref 0; stationary=1 vs ref 1]",
+      "citation": "Box GEP, Jenkins GM (1976). Time Series Analysis: Forecasting and Control. Reference impl: statsmodels.regression.linear_model.yule_walker(method='mle'; Seabold & Perktold 2010). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "ar_phi1": 1.18036606,
+    "ar_phi2": -0.29060893,
+    "var_pred": 348.495014,
+    "max_diff_phi_sm": 5.44009282066327e-15,
+    "var_diff_sm": 5.11590769747272e-13,
+    "stationary": 1
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "ar_vs_statsmodels",
+    "citation": "Box GEP, Jenkins GM (1976). Time Series Analysis: Forecasting and Control. Reference impl: statsmodels.regression.linear_model.yule_walker(method='mle'; Seabold & Perktold 2010). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the AR(4) Yule-Walker fit with statsmodels.regression.yule_walker(method='mle') on the identical signal; reports the first two AR coefficients, the innovation variance, the bit-exact coefficient and variance agreement, and whether the fit is stationary",
+    "from_step": {},
+    "scores": {
+      "ar_phi1": 1.18036606,
+      "ar_phi2": -0.29060893,
+      "var_pred": 348.495014,
+      "max_diff_phi_sm": 5.44009282066327e-15,
+      "var_diff_sm": 5.11590769747272e-13,
+      "stationary": 1
+    },
+    "checks": [
+      {
+        "metric": "ar_phi1",
+        "expect": 1.18036606,
+        "tol": 1e-06,
+        "ref_value": 1.18036606,
+        "term_value": 1.18036606
+      },
+      {
+        "metric": "ar_phi2",
+        "expect": -0.29060893,
+        "tol": 1e-06,
+        "ref_value": -0.29060893,
+        "term_value": -0.29060893
+      },
+      {
+        "metric": "var_pred",
+        "expect": 348.495014,
+        "tol": 0.001,
+        "ref_value": 348.495014,
+        "term_value": 348.495014
+      },
+      {
+        "metric": "max_diff_phi_sm",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 5.44009282066327e-15
+      },
+      {
+        "metric": "var_diff_sm",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 5.11590769747272e-13
+      },
+      {
+        "metric": "stationary",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      }
+    ]
+  }
+}

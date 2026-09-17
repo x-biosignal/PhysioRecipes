@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-02T00:00:00Z",
+  "hypothesis": {
+    "statement": "Building the whole-body muscle-bone hypergraph (bones = vertices, muscles = hyperedges) reproduces Murphy et al. 2018: 173 bones and 270 muscles, and a muscle's structural impact corresponds to its cortical motor-homunculus representation (R^2 ~ 0.52, significant).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "musculoskeletal_hypergraph_reproduction"
+  },
+  "analysis_plan": {
+    "dataset": "Human musculoskeletal hypergraph (Murphy et al. 2018, PLoS Biology, CC-BY 4.0), bundled in PhysioMSKNet: the bone-by-muscle incidence matrix (173 x 270) + the cortical-homunculus correspondence data",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "MSKHypergraph",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "homunc_r2",
+      "estimand": "musculoskeletal_hypergraph_reproduction",
+      "threshold": "descriptive: the hypergraph at the paper scale (173 bones, 270 muscles) + the impact-homunculus correspondence R^2 matching the paper's 0.52 (significant)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "b06278c5077f1f30f9256a044db3fd7df37285ae7ce3ac0d6fd3f8cd45b044f0",
+    "registered_at": "2026-09-02T00:00:00Z"
+  }
+}

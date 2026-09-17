@@ -1,0 +1,43 @@
+{
+  "schema": "runtrace/1",
+  "seed": 1,
+  "env": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "platform": "x86_64-pc-linux-gnu",
+    "packages": {
+      "PhysioCore": "0.4.0",
+      "PhysioEMG": "0.4.1"
+    },
+    "renv_lock": "renv.lock",
+    "renv_lock_hash": "c110eee44b476fb2"
+  },
+  "op_dag": [
+    {
+      "op": 1,
+      "activity": "emgEnvelope",
+      "package": "PhysioEMG",
+      "version": "0.4.1",
+      "params": {
+        "method": "hilbert"
+      }
+    }
+  ],
+  "prov_hash": "d177f201dc3490d9",
+  "outputs": {
+    "terminal_summary.csv": "651d56d3cfdc896c"
+  },
+  "algo": "xxhash64",
+  "op_dag_source": "executor",
+  "provenance_op_dag": [
+    {
+      "op": 1,
+      "activity": "emgEnvelope",
+      "used": "raw",
+      "generated": "envelope",
+      "package": null,
+      "version": "0.4.1",
+      "params": "{\"method\":\"hilbert\",\"window_ms\":50,\"cutoff\":6,\"assay_name\":\"raw\",\"output_assay\":\"envelope\"}"
+    }
+  ],
+  "provenance_consistent": true
+}

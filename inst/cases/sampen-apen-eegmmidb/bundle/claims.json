@@ -1,0 +1,130 @@
+{
+  "paper": "sampen-apen-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "sample_entropy",
+      "statement": "sample entropy (Richman-Moorman, m=2, r=0.2*SD) of the POz channel",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "sample_entropy",
+        "val_col": "value"
+      },
+      "expect": 1.3272319919,
+      "tol": 1e-06,
+      "render": [
+        "1.327"
+      ]
+    },
+    {
+      "id": "approximate_entropy",
+      "statement": "approximate entropy (Pincus, m=2, r=0.2*SD) of the POz channel",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "approximate_entropy",
+        "val_col": "value"
+      },
+      "expect": 1.2922631002,
+      "tol": 1e-06,
+      "render": [
+        "1.292"
+      ]
+    },
+    {
+      "id": "max_diff_sampen_antropy",
+      "statement": "|sampleEntropy - antropy.sample_entropy| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_sampen_antropy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "max_diff_sampen_neurokit",
+      "statement": "|sampleEntropy - NeuroKit2 entropy_sample| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_sampen_neurokit",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "max_diff_apen_antropy",
+      "statement": "|approximateEntropy - antropy.app_entropy| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_apen_antropy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "max_diff_apen_neurokit",
+      "statement": "|approximateEntropy - NeuroKit2 entropy_approximate| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_apen_neurokit",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "sampen_gt_apen",
+      "statement": "sample entropy exceeds approximate entropy (the ApEn self-match bias)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "sampen_gt_apen",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "n_samples",
+      "statement": "samples in the analyzed channel (10 s at 160 Hz)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_samples",
+        "val_col": "value"
+      },
+      "expect": 1600,
+      "tol": 0.5,
+      "render": [
+        "1600"
+      ]
+    }
+  ]
+}

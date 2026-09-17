@@ -1,0 +1,85 @@
+{
+  "paper": "adl-upperlimb-use-dsads",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "use_ratio",
+      "statement": "bilateral use ratio (active time of one arm / the other; ~1 = symmetric)",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "use_ratio",
+        "val_col": "value"
+      },
+      "expect": 0.864,
+      "tol": 0.005,
+      "render": [
+        "0.864"
+      ]
+    },
+    {
+      "id": "magnitude_ratio",
+      "statement": "bilateral magnitude ratio (log ratio of per-epoch activity; ~0 = both arms used equally)",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "magnitude_ratio",
+        "val_col": "value"
+      },
+      "expect": -0.052,
+      "tol": 0.005,
+      "render": [
+        "-0.052"
+      ]
+    },
+    {
+      "id": "n_dynamic",
+      "statement": "activities in which both arms are actively used (use ratio == 1)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_dynamic",
+        "val_col": "value"
+      },
+      "expect": 14,
+      "tol": 0.02,
+      "render": [
+        "14"
+      ]
+    },
+    {
+      "id": "max_abs_mag",
+      "statement": "largest per-activity |magnitude ratio| among dynamic activities (all < 0.5 = symmetric)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_abs_mag",
+        "val_col": "value"
+      },
+      "expect": 0.343,
+      "tol": 0.02,
+      "render": [
+        "0.343"
+      ]
+    },
+    {
+      "id": "mean_abs_mag",
+      "statement": "mean per-activity |magnitude ratio| among dynamic activities",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mean_abs_mag",
+        "val_col": "value"
+      },
+      "expect": 0.119,
+      "tol": 0.02,
+      "render": [
+        "0.119"
+      ]
+    }
+  ]
+}

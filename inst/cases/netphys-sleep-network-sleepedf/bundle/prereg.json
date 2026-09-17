@@ -1,0 +1,42 @@
+{
+  "registered_at": "2026-09-02T00:00:00Z",
+  "hypothesis": {
+    "statement": "Building a 6-node time-delay-stability network (EEG delta/alpha/sigma + EOG/EMG/respiration) from one real overnight polysomnogram and splitting it by sleep stage, the network RECONFIGURES: it is most integrated in REM (most surrogate-significant links) and least in wake/light sleep, the EEG-delta rhythm is the persistent hub, and the link set turns over between wake and REM.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "sleep_stage_network_reconfiguration"
+  },
+  "analysis_plan": {
+    "dataset": "Sleep-EDF Expanded (PhysioNet sleep-edfx), subject SC4001; 6 physiological node signals at 1 Hz over the ~6.7 h scored sleep period, with the hypnogram grouped Wake / Light / Deep / REM",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "physioNodeMatrix",
+        "params": {
+          "standardize": true
+        }
+      },
+      {
+        "activity": "timeDelayStability",
+        "params": {
+          "sampling_rate": 1,
+          "window_sec": 60,
+          "step_sec": 30,
+          "max_lag_sec": 8,
+          "min_stable": 4
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "rem_n_links",
+      "estimand": "sleep_stage_network_reconfiguration",
+      "threshold": "descriptive: the per-stage networks must DIFFER (density and link set change); REM the most integrated; the slow-wave EEG-delta rhythm the hub; only surrogate-significant links kept"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "01550aa0ebcd0b283557f45f999d7220b8df450191755eac443f17e152bf930c",
+    "registered_at": "2026-09-02T00:00:00Z"
+  }
+}

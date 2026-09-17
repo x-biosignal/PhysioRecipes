@@ -1,0 +1,89 @@
+{
+  "paper": "sway-cognition-kendall-bds",
+  "n_claims": 9,
+  "n_grounded": 9,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "tau_statistic",
+      "statement": "Kendall's tau-b of eyes-closed-foam sway vs TMT-A processing speed",
+      "expect": 0.3676316474,
+      "artifact": 0.367632,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "neg_log10_p",
+      "statement": "-log10(two-sided p): the cognitive-motor association is highly significant",
+      "expect": 11.14537,
+      "artifact": 11.14537,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "z_statistic",
+      "statement": "normal-approximation z-statistic of the tau-b test",
+      "expect": 6.854518,
+      "artifact": 6.854518,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|kendallTau tau-b - scipy.stats.kendalltau tau-b| (bit-for-bit)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_baser",
+      "statement": "|kendallTau tau-b - base R cor.test(kendall) tau-b| (bit-for-bit)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "tau_positive",
+      "statement": "the association is positive (slower TMT-A -> more sway)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "pearson_r",
+      "statement": "Pearson r on the same data (context: linear correlation)",
+      "expect": 0.335287,
+      "artifact": 0.335287,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "spearman_rho",
+      "statement": "Spearman rho on the same data (context: the rank-correlation trio agrees, monotonic > linear)",
+      "expect": 0.531679,
+      "artifact": 0.531679,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n",
+      "statement": "subjects with both sway and TMT-A (complete pairs)",
+      "expect": 158,
+      "artifact": 158,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

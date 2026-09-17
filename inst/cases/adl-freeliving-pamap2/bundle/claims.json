@@ -1,0 +1,85 @@
+{
+  "paper": "adl-freeliving-pamap2",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "enmo_max_diff",
+      "statement": "max absolute ENMO difference vs GGIR (g) -- machine precision",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "enmo_max_abs_diff_g",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-06,
+      "render": [
+        "machine precision (< 1e-6 g)"
+      ]
+    },
+    {
+      "id": "enmo_correlation",
+      "statement": "ENMO correlation vs GGIR across 749 epochs",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "enmo_correlation",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.0001,
+      "render": [
+        "1.000000"
+      ]
+    },
+    {
+      "id": "intensity_gradient",
+      "statement": "Rowlands intensity gradient (log-log slope of time vs intensity)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "intensity_gradient",
+        "val_col": "value"
+      },
+      "expect": -1.19,
+      "tol": 0.01,
+      "render": [
+        "-1.19"
+      ]
+    },
+    {
+      "id": "mvpa_min",
+      "statement": "moderate-to-vigorous minutes over the recording",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mvpa_min",
+        "val_col": "value"
+      },
+      "expect": 28.6,
+      "tol": 0.1,
+      "render": [
+        "28.6"
+      ]
+    },
+    {
+      "id": "astp",
+      "statement": "activity-to-sedentary transition probability (fragmentation)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "astp",
+        "val_col": "value"
+      },
+      "expect": 0.113,
+      "tol": 0.001,
+      "render": [
+        "0.113"
+      ]
+    }
+  ]
+}

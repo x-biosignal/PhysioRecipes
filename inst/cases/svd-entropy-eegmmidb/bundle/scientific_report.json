@@ -1,0 +1,107 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:svd_topography",
+      "status": "PASS",
+      "detail": "5/5 agree [svd_entropy=1.204 vs ref 1.204; max_diff_antropy=2.2204e-16 vs ref 0; n_samples=1600 vs ref 1600; order=3 vs ref 3; delay=1 vs ref 1]",
+      "citation": "Roberts SJ, Penny W, Rezek I (1999). Temporal and spatial complexity measures for EEG-based brain-computer interfacing. Med Biol Eng Comput 37(1):93-98. Reference impl: antropy.svd_entropy (Vallat). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "svd_entropy": 1.20396869,
+    "max_diff_antropy": 2.22044604925031e-16,
+    "n_samples": 1600,
+    "order": 3,
+    "delay": 1,
+    "posterior_mean": 1.239126,
+    "frontal_mean": 1.287266,
+    "n_posterior_lt_frontmean": 9
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "svd_topography",
+    "citation": "Roberts SJ, Penny W, Rezek I (1999). Temporal and spatial complexity measures for EEG-based brain-computer interfacing. Med Biol Eng Comput 37(1):93-98. Reference impl: antropy.svd_entropy (Vallat). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the SVD entropy with antropy.svd_entropy (order 3, delay 1) and confirms the newly-authored svdEntropy op reproduces it bit-for-bit; reports the op's SVD entropy, the bit-exact antropy agreement, the sample count, and the embedding parameters",
+    "from_step": {},
+    "scores": {
+      "svd_entropy": 1.20396869,
+      "max_diff_antropy": 2.22044604925031e-16,
+      "n_samples": 1600,
+      "order": 3,
+      "delay": 1,
+      "posterior_mean": 1.239126,
+      "frontal_mean": 1.287266,
+      "n_posterior_lt_frontmean": 9
+    },
+    "checks": [
+      {
+        "metric": "svd_entropy",
+        "expect": 1.20396869,
+        "tol": 1e-06,
+        "ref_value": 1.20396869,
+        "term_value": 1.20396869
+      },
+      {
+        "metric": "max_diff_antropy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 2.22044604925031e-16
+      },
+      {
+        "metric": "n_samples",
+        "expect": 1600,
+        "tol": 0.5,
+        "ref_value": 1600,
+        "term_value": 1600
+      },
+      {
+        "metric": "order",
+        "expect": 3,
+        "tol": 0.5,
+        "ref_value": 3,
+        "term_value": 3
+      },
+      {
+        "metric": "delay",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      }
+    ]
+  }
+}

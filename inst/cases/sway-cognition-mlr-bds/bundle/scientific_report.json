@@ -1,0 +1,146 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:mlr_vs_lm_statsmodels",
+      "status": "PASS",
+      "detail": "10/10 agree [coef_age=1.5877 vs ref 1.5877; neg_log10_p_age=7.6918 vs ref 7.6918; coef_tmt=0.12178 vs ref 0.12178; p_tmt=0.55452 vs ref 0.55452; r_squared=0.27594 vs ref 0.27594; neg_log10_fp=10.868 vs ref 10.868; max_diff_coef_lm=0 vs ref 0; max_diff_coef_statsmodels=1.9895e-13 vs ref 0; age_dominant=1 vs ref 1; n=158 vs ref 158]",
+      "citation": "Ordinary least squares (multivariable). Reference impls: base R stats::lm / summary.lm and statsmodels OLS. Data: eyes-closed-foam COP path length (PhysioMoCap::swayMetrics) on age and Trail Making Test A, Santos & Duarte (2016) BDS."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "coef_age": 1.5877089223,
+    "neg_log10_p_age": 7.69184,
+    "coef_tmt": 0.1217752621,
+    "p_tmt": 0.5545181048,
+    "r_squared": 0.2759419328,
+    "neg_log10_fp": 10.867562,
+    "max_diff_coef_lm": 0,
+    "max_diff_coef_statsmodels": 1.98951966012828e-13,
+    "age_dominant": 1,
+    "n": 158
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "mlr_vs_lm_statsmodels",
+    "citation": "Ordinary least squares (multivariable). Reference impls: base R stats::lm / summary.lm and statsmodels OLS. Data: eyes-closed-foam COP path length (PhysioMoCap::swayMetrics) on age and Trail Making Test A, Santos & Duarte (2016) BDS.",
+    "description": "re-fits the multiple OLS regression of eyes-closed-foam sway on age and TMT-A with base R lm and statsmodels OLS and confirms multipleRegression reproduces the coefficients, R-squared and F bit-for-bit; also reports the age-dominant / TMT-non-significant split and the model fit",
+    "from_step": {},
+    "scores": {
+      "coef_age": 1.5877089223,
+      "neg_log10_p_age": 7.69184,
+      "coef_tmt": 0.1217752621,
+      "p_tmt": 0.5545181048,
+      "r_squared": 0.2759419328,
+      "neg_log10_fp": 10.867562,
+      "max_diff_coef_lm": 0,
+      "max_diff_coef_statsmodels": 1.98951966012828e-13,
+      "age_dominant": 1,
+      "n": 158
+    },
+    "checks": [
+      {
+        "metric": "coef_age",
+        "expect": 1.5877089223,
+        "tol": 1e-06,
+        "ref_value": 1.5877089223,
+        "term_value": 1.5877089223
+      },
+      {
+        "metric": "neg_log10_p_age",
+        "expect": 7.69184,
+        "tol": 0.01,
+        "ref_value": 7.69184,
+        "term_value": 7.69184
+      },
+      {
+        "metric": "coef_tmt",
+        "expect": 0.1217752621,
+        "tol": 1e-06,
+        "ref_value": 0.1217752621,
+        "term_value": 0.1217752621
+      },
+      {
+        "metric": "p_tmt",
+        "expect": 0.5545181048,
+        "tol": 0.0001,
+        "ref_value": 0.5545181048,
+        "term_value": 0.5545181048
+      },
+      {
+        "metric": "r_squared",
+        "expect": 0.2759419328,
+        "tol": 1e-06,
+        "ref_value": 0.2759419328,
+        "term_value": 0.2759419328
+      },
+      {
+        "metric": "neg_log10_fp",
+        "expect": 10.867562,
+        "tol": 0.01,
+        "ref_value": 10.867562,
+        "term_value": 10.867562
+      },
+      {
+        "metric": "max_diff_coef_lm",
+        "expect": 0,
+        "tol": 1e-12,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "max_diff_coef_statsmodels",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 1.98951966012828e-13
+      },
+      {
+        "metric": "age_dominant",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "n",
+        "expect": 158,
+        "tol": 0.5,
+        "ref_value": 158,
+        "term_value": 158
+      }
+    ]
+  }
+}

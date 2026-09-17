@@ -1,0 +1,62 @@
+{
+  "paper": "phase-entropy-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "phasen_k4",
+      "statement": "phase entropy at k=4 sectors (delay 1) of the POz SODP",
+      "expect": 1.237768618,
+      "artifact": 1.237769,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "phasen_k6",
+      "statement": "phase entropy at k=6 -- higher than k=4 (finer angular resolution)",
+      "expect": 1.286835125,
+      "artifact": 1.286835,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "phasen_k8",
+      "statement": "phase entropy at k=8 -- higher still (more sectors)",
+      "expect": 1.2988676599,
+      "artifact": 1.298868,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_nk",
+      "statement": "max |phaseEntropy - NeuroKit2 entropy_phase| over k (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "increasing_in_k",
+      "statement": "PhasEn increases with the sector count k (1 = holds)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "below_ceiling",
+      "statement": "PhasEn lies below the NeuroKit2 normalization ceiling 1/ln(2) = 1.443 (1 = holds)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "dataset": "EEG Motor Movement/Imagery Database (eegmmidb)",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "record_used": "subject S001, baseline run R02 (eyes-closed rest), all 64 EEG channels, 160 Hz, ~61 s (9760 samples). Git-tracked at agent/eval/data/S001R02.edf -- the same EDF the sibling eeg-alpha / eeg-berger cases read.",
+  "pipeline": "readEDF(S001R02.edf) -> PhysioEEG::eegAperiodic(freq_range = c(1,40), aperiodic_mode = 'fixed'), which parameterizes each channel's Welch PSD into an aperiodic 1/f component (offset + exponent) plus Gaussian oscillatory peaks (the specparam engine, PhysioAnalysis::specparam; FOOOF model of Donoghue et al. 2020). The reference re-fits the IDENTICAL per-channel Welch PSD with the canonical Python fooof (via reticulate, matched settings) and compares the per-channel aperiodic exponents. Deterministic (specparam is deterministic; fooof's scipy fit is deterministic).",
+  "note": "The aperiodic exponent is a widely-used qEEG marker of cortical excitation/inhibition balance and state. eegAperiodic and fooof are INDEPENDENT iterative implementations of the same FOOOF model, so the reproduced quantity is the cross-tool AGREEMENT: the per-channel exponents correlate r = 0.98 across the 64 channels with a mean absolute difference of 0.07, both engines yielding physiologically plausible resting exponents (~1.4). The small systematic offset (specparam slightly below fooof) and the largest per-channel divergences (occipital electrodes, strong alpha peak; one poor-fit temporal edge channel) are reported honestly. Every value traces to artifacts/eeg_aperiodic_summary.csv + eeg_aperiodic_by_channel.csv."
+}

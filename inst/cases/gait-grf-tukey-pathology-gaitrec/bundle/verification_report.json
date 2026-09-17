@@ -1,0 +1,98 @@
+{
+  "paper": "gait-grf-tukey-pathology-gaitrec",
+  "n_claims": 10,
+  "n_grounded": 10,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "diff_A_HC",
+      "statement": "Tukey mean difference of the ankle vs healthy-control dynamic range (BW)",
+      "expect": -0.1422369767,
+      "artifact": -0.142237,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "neg_log10_p_A_HC",
+      "statement": "-log10 of the ankle-vs-healthy adjusted p (a representative significant pair)",
+      "expect": 10.773178,
+      "artifact": 10.773178,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "p_K_A",
+      "statement": "adjusted p of knee vs ankle (a representative non-significant pathology-pathology pair)",
+      "expect": 0.8292210735,
+      "artifact": 0.829221,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "p_min_pathology_pathology",
+      "statement": "the smallest of the six pathology-pathology adjusted p-values (all > 0.05: none differ)",
+      "expect": 0.614931,
+      "artifact": 0.614931,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_p_baser",
+      "statement": "max |tukeyHSD adjusted p - base R TukeyHSD p| across all 10 pairs (machine precision)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_p_scipy",
+      "statement": "max |tukeyHSD adjusted p - scipy.stats.tukey_hsd p| across all 10 pairs (machine precision)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_sig_hc_vs_pathology",
+      "statement": "number of healthy-vs-pathology pairs that are significant (all 4)",
+      "expect": 4,
+      "artifact": 4,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_sig_pathology_pathology",
+      "statement": "number of pathology-pathology pairs that are significant (none)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_pairs",
+      "statement": "total pairwise comparisons (5 choose 2)",
+      "expect": 10,
+      "artifact": 10,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_total",
+      "statement": "total subjects across the five classes",
+      "expect": 1844,
+      "artifact": 1844,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

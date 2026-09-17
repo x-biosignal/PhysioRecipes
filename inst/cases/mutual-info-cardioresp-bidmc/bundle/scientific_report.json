@@ -1,0 +1,119 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:mi_vs_sklearn",
+      "status": "PASS",
+      "detail": "7/7 agree [mi=0.077133 vs ref 0.077133; mi_sklearn=0.077133 vs ref 0.077133; max_diff_sklearn=4.5797e-16 vs ref 0; mi_shuffled=0.024027 vs ref 0.024027; ratio=3.2102 vs ref 3.2103; n_samples=5001 vs ref 5001; bins=16 vs ref 16]",
+      "citation": "Shannon CE (1948). A mathematical theory of communication. Bell Syst Tech J 27(3):379-423. Reference impl: sklearn.metrics.mutual_info_score (Pedregosa et al. 2011). Data: BIDMC PPG and Respiration Dataset, PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "mi": 0.07713332,
+    "mi_sklearn": 0.07713332,
+    "max_diff_sklearn": 4.57966997657877e-16,
+    "mi_shuffled": 0.02402727,
+    "ratio": 3.2102,
+    "n_samples": 5001,
+    "bins": 16
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "mi_vs_sklearn",
+    "citation": "Shannon CE (1948). A mathematical theory of communication. Bell Syst Tech J 27(3):379-423. Reference impl: sklearn.metrics.mutual_info_score (Pedregosa et al. 2011). Data: BIDMC PPG and Respiration Dataset, PhysioNet.",
+    "description": "re-computes the mutual information with sklearn.metrics.mutual_info_score on the identical equal-width bin labels (bit-exact), and reports a shuffled-surrogate control quantifying the histogram estimator's finite-sample bias; reports the op MI, the sklearn agreement, the shuffled-control MI, the real/shuffled ratio, the sample count, and the bin count",
+    "from_step": {},
+    "scores": {
+      "mi": 0.07713332,
+      "mi_sklearn": 0.07713332,
+      "max_diff_sklearn": 4.57966997657877e-16,
+      "mi_shuffled": 0.02402727,
+      "ratio": 3.2102,
+      "n_samples": 5001,
+      "bins": 16
+    },
+    "checks": [
+      {
+        "metric": "mi",
+        "expect": 0.07713332,
+        "tol": 1e-06,
+        "ref_value": 0.07713332,
+        "term_value": 0.07713332
+      },
+      {
+        "metric": "mi_sklearn",
+        "expect": 0.07713332,
+        "tol": 1e-06,
+        "ref_value": 0.07713332,
+        "term_value": 0.07713332
+      },
+      {
+        "metric": "max_diff_sklearn",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 4.57966997657877e-16
+      },
+      {
+        "metric": "mi_shuffled",
+        "expect": 0.02402727,
+        "tol": 0.0001,
+        "ref_value": 0.02402727,
+        "term_value": 0.02402727
+      },
+      {
+        "metric": "ratio",
+        "expect": 3.2103,
+        "tol": 0.2,
+        "ref_value": 3.2103,
+        "term_value": 3.2102
+      },
+      {
+        "metric": "n_samples",
+        "expect": 5001,
+        "tol": 0.5,
+        "ref_value": 5001,
+        "term_value": 5001
+      },
+      {
+        "metric": "bins",
+        "expect": 16,
+        "tol": 0.5,
+        "ref_value": 16,
+        "term_value": 16
+      }
+    ]
+  }
+}

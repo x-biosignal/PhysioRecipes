@@ -1,0 +1,62 @@
+{
+  "paper": "ar-yule-walker-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "ar_phi1",
+      "statement": "first AR coefficient (lag 1) of the AR(4) Yule-Walker fit",
+      "expect": 1.18036606,
+      "artifact": 1.180366,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "ar_phi2",
+      "statement": "second AR coefficient (lag 2) -- negative (oscillatory dynamics)",
+      "expect": -0.29060893,
+      "artifact": -0.290609,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "var_pred",
+      "statement": "innovation (one-step prediction) variance of the AR fit",
+      "expect": 348.495014,
+      "artifact": 348.495014,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_phi_sm",
+      "statement": "max |AR coefficient - statsmodels yule_walker(mle)| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "var_diff_sm",
+      "statement": "|innovation variance - statsmodels variance| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "stationary",
+      "statement": "the fitted AR(4) is stationary (all roots outside the unit circle; 1 = holds)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

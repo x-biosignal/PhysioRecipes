@@ -1,0 +1,166 @@
+---
+title: "HRV time-domain, cross-tool: SDNN and RMSSD bit-for-bit against NeuroKit2 — and the one pNN50 convention"
+subtitle: "A reproducibility-audit case study on real RR data, certifying ecgHRVtime against the field standard"
+categories: [ecg, hrv, time-domain, cross-tool-validation, verified]
+author: "Yusuke Matsui"
+date: "2026-09-06"
+---
+
+> **What this case shows** — **SDNN** and **RMSSD** are the two most-reported HRV numbers in all of
+> physiology. The ecosystem computes them in `ecgHRVtime`, previously checked against the Task-Force
+> definitions and RHRV — but never against the field-standard Python reference **NeuroKit2**. Here we
+> close that gap. On a real 5-minute RR series, `ecgHRVtime` reproduces `NeuroKit2.hrv_time`
+> **bit-for-bit** for **MeanNN, SDNN and RMSSD** (max |diff| **0**). The one place they differ is
+> **pNN50**, and it is not a bug in either tool: it is a documented **denominator convention** —
+> the nn50 count (146) is *identical*, but one tool divides by N−1 and the other by N.
+
+::: {.callout-tip title="The recipe you'll learn"}
+**Workflow** — `ecgHRVtime(rr)` → the Task-Force time-domain HRV panel (MeanNN, SDNN, RMSSD, pNN50).
+**Way of thinking** — "our number matches theirs" is not one yes/no. Certify each metric separately,
+and when one disagrees, find out *why* — a shared underlying count with a different denominator is a
+convention, not an error, and must be reported as such.
+**Ecosystem usage** — `PhysioECG::ecgHRVtime()`; cross-checked here against `NeuroKit2.hrv_time`.
+:::
+
+## Proposition
+
+On real Fantasia RR (f1y01, 392 intervals), `ecgHRVtime` reproduces `NeuroKit2.hrv_time` bit-for-bit
+for MeanNN (765.9 ms), SDNN (73.7 ms) and RMSSD (81.5 ms); pNN50 differs by 0.095 points (37.34% vs
+37.24%) — purely the denominator convention (N−1 = 391 vs N = 392), with the nn50 count identical at
+146.
+
+## Question & goal
+
+**The question is a reproducibility audit: do the ecosystem's fundamental HRV time-domain metrics agree
+with the field-standard NeuroKit2 on the same RR series — and where, if anywhere, do they disagree, and
+why?** The goal is to certify `ecgHRVtime` against `NeuroKit2.hrv_time` metric by metric and to
+characterize every divergence honestly.
+
+## Challenge & approach
+
+Time-domain HRV is defined by the Task Force (1996): MeanNN, SDNN (sd of NN), RMSSD (root-mean-square of
+successive differences), pNN50 (proportion of successive |differences| > 50 ms). We run `ecgHRVtime` and
+`NeuroKit2.hrv_time` on the *identical* RR series — feeding NeuroKit2 the intervals as R-peak samples at
+1000 Hz (peaks = `cumsum` with a leading 0) so both tools see exactly the same 392 intervals — and
+compare each metric.
+
+```
+Fantasia RR f1y01 (392 intervals) → ecgHRVtime → MeanNN / SDNN / RMSSD / pNN50
+                    vs NeuroKit2.hrv_time (same 392 intervals) → MeanNN/SDNN/RMSSD bit-exact (diff 0)
+                    pNN50: 37.34% (÷391) vs 37.24% (÷392) — same nn50 = 146, different denominator
+```
+
+## Data
+
+**Fantasia Database (PhysioNet)**: record **f1y01** (young healthy subject), a 5-minute RR-interval
+series (392 intervals, ms) — the same git-tracked RR series the
+[Poincaré](../poincare-hrv-fantasia/index.qmd), [HRA](../hra-hrv-fantasia/index.qmd) and
+[CSI](../csi-cvi-fantasia/index.qmd) cases use. Details in
+[`artifacts/data_sources.json`](artifacts/data_sources.json).
+
+## Results
+
+![Left: ecgHRVtime (blue) vs NeuroKit2 hrv_time (red) for the four time-domain metrics — MeanNN, SDNN and RMSSD are bit-for-bit identical (green "=" marks); only pNN50 shows a visible gap. Right: the distribution of successive RR differences, with the ±50 ms threshold (red dashed) that defines the 146 nn50 counts — the count both tools agree on.](artifacts/figure.png)
+
+*How to read this:* the left panel is the audit result (three exact matches, one convention gap); the
+right panel is *why* pNN50 can differ without the tools disagreeing — they flag the same 146
+differences beyond 50 ms, and only divide by a different denominator.
+
+| Quantity | Value |
+|---|--:|
+| **MeanNN** (bit-exact vs NeuroKit2) | **765.9 ms** |
+| **SDNN** (bit-exact) | **73.7 ms** |
+| **RMSSD** (bit-exact) | **81.5 ms** |
+| max \|diff\| over the three core metrics | **0** |
+| **pNN50** — ecgHRVtime (÷ N−1) vs NeuroKit2 (÷ N) | **37.34% vs 37.24%** |
+| nn50 count (successive \|diff\| > 50 ms) — both tools | **146** |
+
+The two most-reported HRV indices (SDNN, RMSSD) match the field standard to machine precision; the lone
+pNN50 gap is a denominator convention, proven by the shared nn50 count. Values trace to
+[`artifacts/hrvtime_summary.csv`](artifacts/hrvtime_summary.csv).
+
+## Conclusion
+
+The ecosystem's time-domain HRV is now certified against the field-standard NeuroKit2: MeanNN, SDNN and
+RMSSD are bit-for-bit identical, and the single pNN50 divergence is a documented denominator convention,
+not an error. The transferable takeaway: **when you validate one toolchain against another, certify each
+metric and explain every gap. A shared count with a different denominator is a convention to document —
+reporting "3 of 4 match" without the why would hide exactly the information a user needs to reconcile
+pNN50 across tools.**
+
+## Open questions
+
+- The pNN50 denominator ambiguity (N vs N−1) — and the MeanHR estimand ambiguity (60000/mean(RR) vs the
+  mean of instantaneous HR) — are cross-tool convention differences worth a small helper that reports
+  both conventions explicitly. *Documented, not escalated.*
+
+## Using this in your own analysis
+
+| Step | Function | Package |
+|---|---|---|
+| Time-domain HRV (MeanNN, SDNN, RMSSD, pNN50) | `ecgHRVtime()` | PhysioECG |
+| Frequency-domain HRV (LF/HF) | `ecgHRVfreq()` | PhysioECG |
+| Nonlinear HRV (Poincaré, DFA, asymmetry) | `ecgHRVpoincare()`, `ecgDFA()`, `ecgHRVasymmetry()` | PhysioECG |
+
+**Reconciling pNN50 across tools.**
+
+- **denominator** — `ecgHRVtime` reports pNN50 as nn50 / (N−1) (successive differences); NeuroKit2
+  divides by N (intervals). For a 5-minute recording the gap is ~0.1 points; for short segments it
+  matters more. Report which you use.
+- **threshold** — both use a strict `> 50 ms` on |successive difference|; the nn50 count is identical.
+- **MeanHR** — `ecgHRVtime` reports 60000/mean(RR); an instantaneous-HR mean differs by Jensen's
+  inequality. NeuroKit2 `hrv_time` does not report MeanHR.
+
+**The recipe, copy-runnable:**
+
+```r
+library(PhysioECG)
+
+hrv <- ecgHRVtime(rr)     # rr: data.frame(channel, rr_ms, time_sec)
+hrv$sdnn                  # = NeuroKit2 HRV_SDNN (bit-for-bit)
+hrv$rmssd                 # = NeuroKit2 HRV_RMSSD (bit-for-bit)
+# pNN50 uses the N-1 denominator; NeuroKit2 uses N (same nn50 count).
+```
+
+**Auditing the numbers.** Every value on this page traces to
+[`artifacts/hrvtime_summary.csv`](artifacts/hrvtime_summary.csv), and [`audit.py`](audit.py) re-checks
+the three bit-exact core metrics, the pNN50 gap and the shared nn50 count, and the honestly-noted scope
+(cross-tool re-certification; pNN50 denominator convention; MeanHR not cross-validated).
+
+## Replay bundle (verified tier)
+
+This case carries a substrate replay bundle under [`bundle/`](bundle/): the
+frozen pre-registration (`prereg.json`, sha256 `94497a8c9439...`), a run
+manifest with content-addressed output hashes, and a verification report
+grounding all 6 claims (`verification_report.json`). Replay is
+byte-identical: re-executing the frozen op-DAG reproduces the terminal
+artifact hash (`772ea6123683f2ec`) exactly.
+
+## Erratum (PhysioRecipes 0.7.2) {#erratum}
+
+`PhysioIO::readWFDB()` mis-defaulted the signal baseline on WFDB headers that
+state the gain without a `(baseline)` annex — the style of the Fantasia and
+original MIT-BIH headers — taking the gain as the baseline instead of the
+spec default (the ADC zero). Fixed in PhysioIO 0.2.7; the corrected reader
+agrees with the reference implementation `wfdb-python` **bit-for-bit**
+(max |difference| = 0). The RR series this case uses were re-extracted with the
+corrected reader.
+
+Values corrected in this release:
+
+| quantity | published | corrected |
+|---|---|---|
+| `meannn` | 767.161 | **765.878** |
+| `sdnn` | 69.2645 | **73.6963** |
+| `rmssd` | 76.7504 | **81.5397** |
+| `pnn50_gap` | 0.0950882 | **0.0952555** |
+| `nn50_count` | 145 | **146** |
+
+The pNN50 denominators are data-dependent (N-1 and N), so the
+case's audit now checks them at 391 and 392; the nn50 count itself is still
+identical between the two tools (146), confirming the gap is a denominator
+convention and not a detection difference.
+
+The case's finding is unchanged; only the numbers now come from correctly
+scaled signals. Its artifact table, figure and replay bundle were all
+regenerated from the corrected root by a committed generator under `agent/`.

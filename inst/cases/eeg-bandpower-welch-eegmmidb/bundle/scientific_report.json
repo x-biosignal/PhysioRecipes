@@ -1,0 +1,123 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:bandpower_topography",
+      "status": "PASS",
+      "detail": "7/7 agree [mean_delta_power=264.39 vs ref 264.39; mean_alpha_power=617.38 vs ref 617.38; mean_rel_alpha=0.41846 vs ref 0.41846; max_rel_alpha=0.73438 vs ref 0.73438; max_diff_scipy=6.8212e-13 vs ref 0; n_channels=64 vs ref 64; n_bands=5 vs ref 5]",
+      "citation": "Welch PD (1967). The use of fast Fourier transform for the estimation of power spectra. IEEE Trans Audio Electroacoust 15(2):70-73. Reference impl: scipy.signal.welch (Virtanen et al. 2020). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "mean_delta_power": 264.39038,
+    "mean_alpha_power": 617.382241,
+    "mean_rel_alpha": 0.418457,
+    "max_rel_alpha": 0.734383,
+    "max_diff_scipy": 6.82121026329696e-13,
+    "n_channels": 64,
+    "n_bands": 5,
+    "posterior_mean_relalpha": 0.685932,
+    "frontal_mean_relalpha": 0.283871
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "bandpower_topography",
+    "citation": "Welch PD (1967). The use of fast Fourier transform for the estimation of power spectra. IEEE Trans Audio Electroacoust 15(2):70-73. Reference impl: scipy.signal.welch (Virtanen et al. 2020). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes every channel's five EEG-band powers with scipy.signal.welch (symmetric Hann, nperseg=256, noverlap=128, detrend=False, scaling='density') over the identical band indices, and reports the mean delta + alpha power, the mean and peak relative alpha (eyes-closed posterior-alpha topography), the bit-exact scipy agreement (~7e-13), and the 64-channel/5-band counts",
+    "from_step": {},
+    "scores": {
+      "mean_delta_power": 264.39038,
+      "mean_alpha_power": 617.382241,
+      "mean_rel_alpha": 0.418457,
+      "max_rel_alpha": 0.734383,
+      "max_diff_scipy": 6.82121026329696e-13,
+      "n_channels": 64,
+      "n_bands": 5,
+      "posterior_mean_relalpha": 0.685932,
+      "frontal_mean_relalpha": 0.283871
+    },
+    "checks": [
+      {
+        "metric": "mean_delta_power",
+        "expect": 264.39038,
+        "tol": 0.01,
+        "ref_value": 264.39038,
+        "term_value": 264.39038
+      },
+      {
+        "metric": "mean_alpha_power",
+        "expect": 617.382241,
+        "tol": 0.01,
+        "ref_value": 617.382241,
+        "term_value": 617.382241
+      },
+      {
+        "metric": "mean_rel_alpha",
+        "expect": 0.418457,
+        "tol": 0.0001,
+        "ref_value": 0.418457,
+        "term_value": 0.418457
+      },
+      {
+        "metric": "max_rel_alpha",
+        "expect": 0.734383,
+        "tol": 0.0001,
+        "ref_value": 0.734383,
+        "term_value": 0.734383
+      },
+      {
+        "metric": "max_diff_scipy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 6.82121026329696e-13
+      },
+      {
+        "metric": "n_channels",
+        "expect": 64,
+        "tol": 0.5,
+        "ref_value": 64,
+        "term_value": 64
+      },
+      {
+        "metric": "n_bands",
+        "expect": 5,
+        "tol": 0.5,
+        "ref_value": 5,
+        "term_value": 5
+      }
+    ]
+  }
+}

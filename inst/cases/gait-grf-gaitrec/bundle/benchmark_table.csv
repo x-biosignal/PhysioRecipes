@@ -1,0 +1,10 @@
+"metric","value"
+"control_peak1_bw",1.10053030288462
+"control_trough_bw",0.7475299475
+"control_peak2_bw",1.09810470548077
+"patient_peak1_bw",1.01511718176353
+"patient_trough_bw",0.840956646372745
+"patient_peak2_bw",1.03422373885772
+"first_peak_cohens_d",1.33321168714647
+"n_control",208
+"n_patient",499

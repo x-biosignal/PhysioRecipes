@@ -1,0 +1,34 @@
+{
+  "registered_at": "2026-09-05T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real eyes-closed posterior EEG channel (eegmmidb S002R02, POz), the newly-authored svdEntropy reproduces antropy.svd_entropy (order 3, delay 1) BIT-FOR-BIT, and the value is a valid entropy in bits (0 < H < log2(order)).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "svd_entropy"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "svdEntropy",
+        "params": {
+          "order": 3,
+          "delay": 1,
+          "normalize": false
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "svd_entropy",
+      "threshold": "descriptive: svdEntropy equals antropy.svd_entropy to machine precision (max |diff| < 1e-9)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "bfb36888c9b891a32cf013a79b9aea1b55a1bb270aa0383e3d1440c13c85e992",
+    "registered_at": "2026-09-05T00:00:00Z"
+  }
+}

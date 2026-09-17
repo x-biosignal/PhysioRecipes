@@ -1,0 +1,35 @@
+{
+  "registered_at": "2026-09-03T00:00:00Z",
+  "hypothesis": {
+    "statement": "The representational geometry of gait kinematics (the sagittal knee + ankle flexion angles) matches that of the kinetics (antero-posterior + vertical GRF): the Mantel correlation between the two Euclidean dissimilarity matrices (RDMs) is substantially > 0 and significant by permutation on real WBDS treadmill-walking data, and representationalSimilarity reproduces the canonical vegan::mantel to machine precision.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "kinematics_kinetics_representational_similarity"
+  },
+  "analysis_plan": {
+    "dataset": "WBDS (Fukuchi, Fukuchi & Duarte 2018, figshare 5722711, CC-BY 4.0): sagittal knee + ankle flexion angles (kinematics) and antero-posterior + vertical GRF (kinetics), time-aligned and down-sampled to 150 samples; WBDS01 for the terminal proof, all five subjects (WBDS01-05) for the robustness benchmark",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "representationalSimilarity",
+        "params": {
+          "method": "euclidean",
+          "compare": "spearman",
+          "permutations": 99,
+          "seed": 1
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "rsa_similarity",
+      "estimand": "kinematics_kinetics_representational_similarity",
+      "threshold": "descriptive: Mantel r substantially > 0 (~0.35) AND significant (permutation p <= 0.05) AND the op equals vegan::mantel to machine precision (|diff| < 1e-9)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "502484a6b25a8f11f6a0be9a8d6c6bab1d280ddfd4aed0a1f62f0ed77096f1e7",
+    "registered_at": "2026-09-03T00:00:00Z"
+  }
+}

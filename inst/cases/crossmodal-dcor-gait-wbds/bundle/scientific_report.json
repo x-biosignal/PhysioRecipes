@@ -1,0 +1,105 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:crossmodal_dcor_vs_energy",
+      "status": "PASS",
+      "detail": "5/5 agree [dcor=0.72249 vs ref 0.72249; abs_diff=9.881e-15 vs ref 0; p_value=0.001 vs ref 0.001; dcor_mean5=0.7447 vs ref 0.7447; dcor_min5=0.71184 vs ref 0.71184]",
+      "citation": "Szekely GJ, Rizzo ML, Bakirov NK (2007). Measuring and testing dependence by correlation of distances. Ann Statist 35(6):2769-2794. doi:10.1214/009053607000000505. Reference impl: energy::dcor. Data: Fukuchi CA, Fukuchi RK, Duarte M (2018) WBDS, figshare 5722711 (CC-BY 4.0)."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "dcor": 0.7224907526,
+    "dcor_energy": 0.7224907526,
+    "abs_diff": 9.88098491916389e-15,
+    "p_value": 0.001,
+    "dcor_mean5": 0.7446955784,
+    "dcor_min5": 0.7118385738,
+    "n": 450
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "crossmodal_dcor_vs_energy",
+    "citation": "Szekely GJ, Rizzo ML, Bakirov NK (2007). Measuring and testing dependence by correlation of distances. Ann Statist 35(6):2769-2794. doi:10.1214/009053607000000505. Reference impl: energy::dcor. Data: Fukuchi CA, Fukuchi RK, Duarte M (2018) WBDS, figshare 5722711 (CC-BY 4.0).",
+    "description": "re-computes the distance correlation with the canonical energy::dcor directly on the same blocks and compares to distanceCorrelation's; reports op dcor (0.7225), energy dcor, |diff| (< 1e-9, machine precision), the permutation p (0.001), and the 5-subject robustness (mean dcor 0.7447, min 0.7118 via energy)",
+    "from_step": {},
+    "scores": {
+      "dcor": 0.7224907526,
+      "dcor_energy": 0.7224907526,
+      "abs_diff": 9.88098491916389e-15,
+      "p_value": 0.001,
+      "dcor_mean5": 0.7446955784,
+      "dcor_min5": 0.7118385738,
+      "n": 450
+    },
+    "checks": [
+      {
+        "metric": "dcor",
+        "expect": 0.7224907526,
+        "tol": 1e-06,
+        "ref_value": 0.7224907526,
+        "term_value": 0.7224907526
+      },
+      {
+        "metric": "abs_diff",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 9.88098491916389e-15
+      },
+      {
+        "metric": "p_value",
+        "expect": 0.001,
+        "tol": 1e-09,
+        "ref_value": 0.001,
+        "term_value": 0.001
+      },
+      {
+        "metric": "dcor_mean5",
+        "expect": 0.7446955784,
+        "tol": 1e-06,
+        "ref_value": 0.7446955784,
+        "term_value": 0.7446955784
+      },
+      {
+        "metric": "dcor_min5",
+        "expect": 0.7118385738,
+        "tol": 1e-06,
+        "ref_value": 0.7118385738,
+        "term_value": 0.7118385738
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "paper": "ecg-qrs-benchmark-mitbih",
+  "n_claims": 3,
+  "n_grounded": 3,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "gross_se",
+      "statement": "pooled sensitivity Se = TP/(TP+FN) vs cardiologist annotations",
+      "expect": 0.9658,
+      "artifact": 0.9658,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "gross_ppv",
+      "statement": "pooled positive predictive value PPV = TP/(TP+FP)",
+      "expect": 0.9759,
+      "artifact": 0.9759,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "gross_f1",
+      "statement": "pooled F1 = 2TP/(2TP+FP+FN)",
+      "expect": 0.9708,
+      "artifact": 0.9708,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "paper": "rsa-mantel-gait-wbds",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "rsa_similarity",
+      "statement": "RSA / Mantel similarity between gait kinematics and kinetics RDMs, WBDS01",
+      "expect": 0.3440491701,
+      "artifact": 0.344049,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "p_value",
+      "statement": "permutation p-value of the Mantel test (99 permutations, seed 1)",
+      "expect": 0.01,
+      "artifact": 0.01,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mantel_vegan",
+      "statement": "the same statistic recomputed by the canonical vegan::mantel (op == vegan to machine precision)",
+      "expect": 0.3440491701,
+      "artifact": 0.344049,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "rsa_mean5",
+      "statement": "mean Mantel similarity across all five WBDS subjects",
+      "expect": 0.3818447368,
+      "artifact": 0.381845,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "rsa_min5",
+      "statement": "minimum Mantel similarity across the five subjects (robustness floor)",
+      "expect": 0.3440491701,
+      "artifact": 0.344049,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

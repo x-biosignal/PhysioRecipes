@@ -1,0 +1,62 @@
+{
+  "paper": "petrosian-fd-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "petrosian_fd_poz",
+      "statement": "Petrosian fractal dimension of the posterior channel POz -- waveform-complexity index",
+      "expect": 1.0170616506,
+      "artifact": 1.017062,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_antropy",
+      "statement": "max |petrosianFD - antropy.petrosian_fd| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_samples",
+      "statement": "samples in the analyzed channel (10 s at 160 Hz)",
+      "expect": 1600,
+      "artifact": 1600,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "posterior_mean",
+      "statement": "mean Petrosian FD over the posterior (parieto-occipital) channels",
+      "expect": 1.019536,
+      "artifact": 1.019536,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "frontal_mean",
+      "statement": "mean Petrosian FD over the frontal channels -- higher (more complex waveform)",
+      "expect": 1.02661,
+      "artifact": 1.02661,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_posterior_lt_frontmean",
+      "statement": "posterior channels (of 9) with Petrosian FD below the frontal mean -- robustness of the smoother-posterior finding",
+      "expect": 9,
+      "artifact": 9,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

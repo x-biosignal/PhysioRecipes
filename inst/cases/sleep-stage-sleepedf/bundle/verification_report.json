@@ -1,0 +1,53 @@
+{
+  "paper": "sleep-stage-sleepedf",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "n3_reldelta_s1",
+      "statement": "N3 relative delta power, night 1 (highest of all stages)",
+      "expect": 0.9221,
+      "artifact": 0.922112,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n3_reldelta_s2",
+      "statement": "N3 relative delta power, night 2 (reproduces the deep-sleep peak)",
+      "expect": 0.9111,
+      "artifact": 0.911071,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "deltarise_s1",
+      "statement": "relative delta increase from N1 to N3, night 1 (spectrum slows with depth)",
+      "expect": 0.2934,
+      "artifact": 0.293373,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n2_relsigma_s1",
+      "statement": "N2 relative sigma (spindle band) power, night 1 (peak among stages)",
+      "expect": 0.0204,
+      "artifact": 0.020439,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n2_relsigma_s2",
+      "statement": "N2 relative sigma (spindle band) power, night 2 (reproduces the spindle peak)",
+      "expect": 0.0282,
+      "artifact": 0.028243,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

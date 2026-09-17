@@ -1,0 +1,13 @@
+"metric","value"
+"sample_entropy",1.3272319919
+"approximate_entropy",1.2922631002
+"antropy_sampen",1.3272319919
+"neurokit_sampen",1.3272319919
+"antropy_apen",1.2922631002
+"neurokit_apen",1.2922631002
+"max_diff_sampen_antropy",0
+"max_diff_sampen_neurokit",2.22044604925031e-16
+"max_diff_apen_antropy",0
+"max_diff_apen_neurokit",0
+"sampen_gt_apen",1
+"n_samples",1600

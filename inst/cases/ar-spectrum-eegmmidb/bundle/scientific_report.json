@@ -1,0 +1,110 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:arspec_vs_specar",
+      "status": "PASS",
+      "detail": "6/6 agree [ar_peak_hz=10.902 vs ref 10.902; max_rel_diff_specar=4.8728e-14 vs ref 0; n_freq=500 vs ref 500; peak_in_alpha=1 vs ref 1; periodogram_peak_hz=11.4 vs ref 11.4; cross_method_peak_diff_hz=0.4982 vs ref 0.4982]",
+      "citation": "Percival DB, Walden AT (1993). Spectral Analysis for Physical Applications. Reference impl: stats::spec.ar (R) and stats::spec.pgram (smoothed periodogram). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "ar_peak_hz": 10.9018,
+    "max_rel_diff_specar": 4.87283052080556e-14,
+    "n_freq": 500,
+    "peak_in_alpha": 1,
+    "periodogram_peak_hz": 11.4,
+    "cross_method_peak_diff_hz": 0.4982
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "arspec_vs_specar",
+    "citation": "Percival DB, Walden AT (1993). Spectral Analysis for Physical Applications. Reference impl: stats::spec.ar (R) and stats::spec.pgram (smoothed periodogram). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the AR spectrum with stats::spec.ar (bit-exact) on the identical signal; reports the AR alpha peak (Hz), the bit-exact spec.ar agreement, the frequency-bin count, whether the peak is in the alpha band, the nonparametric periodogram peak, and the cross-method peak difference",
+    "from_step": {},
+    "scores": {
+      "ar_peak_hz": 10.9018,
+      "max_rel_diff_specar": 4.87283052080556e-14,
+      "n_freq": 500,
+      "peak_in_alpha": 1,
+      "periodogram_peak_hz": 11.4,
+      "cross_method_peak_diff_hz": 0.4982
+    },
+    "checks": [
+      {
+        "metric": "ar_peak_hz",
+        "expect": 10.9018,
+        "tol": 0.01,
+        "ref_value": 10.9018,
+        "term_value": 10.9018
+      },
+      {
+        "metric": "max_rel_diff_specar",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 4.87283052080556e-14
+      },
+      {
+        "metric": "n_freq",
+        "expect": 500,
+        "tol": 0.5,
+        "ref_value": 500,
+        "term_value": 500
+      },
+      {
+        "metric": "peak_in_alpha",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "periodogram_peak_hz",
+        "expect": 11.4,
+        "tol": 0.01,
+        "ref_value": 11.4,
+        "term_value": 11.4
+      },
+      {
+        "metric": "cross_method_peak_diff_hz",
+        "expect": 0.4982,
+        "tol": 0.01,
+        "ref_value": 0.4982,
+        "term_value": 0.4982
+      }
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "delta",
+      "statement": "absolute delta power (C3, S001, rest)",
+      "expect": 3160.55,
+      "artifact": 3160.5524,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "theta",
+      "statement": "absolute theta power (C3, S001, rest)",
+      "expect": 412.82,
+      "artifact": 412.8193,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "alpha",
+      "statement": "absolute alpha power (C3, S001, rest)",
+      "expect": 323.88,
+      "artifact": 323.8846,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "beta",
+      "statement": "absolute beta power (C3, S001, rest)",
+      "expect": 347.2,
+      "artifact": 347.2005,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "gamma",
+      "statement": "absolute gamma power (C3, S001, rest)",
+      "expect": 125.67,
+      "artifact": 125.6661,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

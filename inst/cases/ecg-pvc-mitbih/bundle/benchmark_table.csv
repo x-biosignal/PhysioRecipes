@@ -1,0 +1,14 @@
+"metric","value"
+"n_beats",2027
+"n_pvc",520
+"TP",504
+"FP",1
+"FN",16
+"sensitivity",0.969230769230769
+"ppv",0.998019801980198
+"f1",0.983414634146341
+"pooled_ppv",0.9541
+"pooled_sensitivity",0.7146
+"pooled_f1",0.8172
+"isolated_f1",1
+"runs_sensitivity",0.2727

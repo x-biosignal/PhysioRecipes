@@ -1,0 +1,26 @@
+{
+  "paper": "eda-decomp-nonEEG",
+  "n_claims": 2,
+  "n_grounded": 2,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "phasic_r",
+      "statement": "phasic-component correlation, PhysioEDA vs NeuroKit2 (matched highpass)",
+      "expect": 0.9568,
+      "artifact": 0.95677,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "tonic_r",
+      "statement": "tonic-component (skin conductance level) correlation vs NeuroKit2 -- effectively identical",
+      "expect": 0.9993,
+      "artifact": 0.999307,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

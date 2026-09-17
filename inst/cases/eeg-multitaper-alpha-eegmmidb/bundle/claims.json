@@ -1,0 +1,100 @@
+{
+  "paper": "eeg-multitaper-alpha-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "peak_freq_hz",
+      "statement": "dominant frequency of the multitaper spectrum -- the alpha rhythm (Hz)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "peak_freq_hz",
+        "val_col": "value"
+      },
+      "expect": 10.5,
+      "tol": 0.6,
+      "render": [
+        "10.5"
+      ]
+    },
+    {
+      "id": "alpha_power_fraction",
+      "statement": "fraction of 0-45 Hz multitaper power in the alpha band (8-13 Hz)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "alpha_power_fraction",
+        "val_col": "value"
+      },
+      "expect": 0.46143,
+      "tol": 0.005,
+      "render": [
+        "0.46"
+      ]
+    },
+    {
+      "id": "dpss_max_diff_vs_scipy",
+      "statement": "max |eegMultitaper DPSS tapers - scipy.signal.windows.dpss| (machine precision)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "dpss_max_diff_vs_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-10,
+      "render": [
+        "6e-14"
+      ]
+    },
+    {
+      "id": "psd_max_diff_vs_scipy",
+      "statement": "max |eegMultitaper PSD - independent scipy+numpy multitaper reconstruction| (machine precision)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "psd_max_diff_vs_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-06,
+      "render": [
+        "1e-10"
+      ]
+    },
+    {
+      "id": "psd_corr_vs_mne",
+      "statement": "correlation of the multitaper PSD with MNE psd_array_multitaper (structure, up to the one-sided factor-of-2)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "psd_corr_vs_mne",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.02,
+      "render": [
+        "0.99"
+      ]
+    },
+    {
+      "id": "n_tapers",
+      "statement": "number of DPSS tapers averaged (2*NW-1 for NW=4)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_tapers",
+        "val_col": "value"
+      },
+      "expect": 7,
+      "tol": 0.5,
+      "render": [
+        "7"
+      ]
+    }
+  ]
+}

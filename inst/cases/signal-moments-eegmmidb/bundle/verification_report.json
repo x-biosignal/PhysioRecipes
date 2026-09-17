@@ -1,0 +1,62 @@
+{
+  "paper": "signal-moments-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "skewness",
+      "statement": "skewness of the POz amplitude distribution (mild left asymmetry)",
+      "expect": -0.22660508,
+      "artifact": -0.226605,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "kurtosis",
+      "statement": "excess kurtosis (tailedness vs Gaussian; 0 = Gaussian)",
+      "expect": 0.16429364,
+      "artifact": 0.164294,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "max |signalMoments - scipy.stats / numpy| over the four moments (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "approx_gaussian",
+      "statement": "the amplitude distribution is approximately Gaussian (|skew|<0.5 and |exkurt|<1; 1 = yes)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean",
+      "statement": "mean amplitude of the POz signal",
+      "expect": 0.241875,
+      "artifact": 0.241875,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "sd",
+      "statement": "population standard deviation of the POz amplitude",
+      "expect": 48.83263122,
+      "artifact": 48.832631,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

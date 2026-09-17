@@ -1,0 +1,53 @@
+{
+  "paper": "netphys-sleep-network-sleepedf",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "n_states",
+      "statement": "sleep-stage networks compared (Wake / Light / Deep / REM)",
+      "expect": 4,
+      "artifact": 4,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "rem_n_links",
+      "statement": "surrogate-significant TDS links in REM (the most-integrated state)",
+      "expect": 11,
+      "artifact": 11,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "rem_density",
+      "statement": "REM network density (fraction of the 15 possible links)",
+      "expect": 0.7333,
+      "artifact": 0.733333,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "wake_rem_reconfig",
+      "statement": "couplings that CHANGE between wake and REM (network reconfiguration, of 15)",
+      "expect": 6,
+      "artifact": 6,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "hub_is_delta",
+      "statement": "the network hub (highest total degree) is the EEG delta rhythm (1=yes)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "paper": "pacf-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "pacf_lag1",
+      "statement": "partial autocorrelation at lag 1 -- equals the lag-1 autocorrelation",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "pacf_lag1",
+        "val_col": "value"
+      },
+      "expect": 0.85646134,
+      "tol": 1e-06,
+      "render": [
+        "0.86"
+      ]
+    },
+    {
+      "id": "pacf_lag2",
+      "statement": "partial autocorrelation at lag 2 -- strongly negative (oscillatory AR(2)-like alpha structure)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "pacf_lag2",
+        "val_col": "value"
+      },
+      "expect": -0.62661714,
+      "tol": 1e-06,
+      "render": [
+        "-0.63"
+      ]
+    },
+    {
+      "id": "pacf_lag0",
+      "statement": "partial autocorrelation at lag 0 -- 1 by convention",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "pacf_lag0",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 1e-09,
+      "render": [
+        "1"
+      ]
+    },
+    {
+      "id": "max_diff_statsmodels",
+      "statement": "max |partialAutocorrelation - statsmodels.tsa.pacf(ldb)| over lags (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_statsmodels",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "6e-15"
+      ]
+    },
+    {
+      "id": "pacf_acf_lag1_identity",
+      "statement": "|PACF(lag 1) - ACF(lag 1)| -- the definitional identity (~0)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "pacf_acf_lag1_identity",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "n_lags",
+      "statement": "number of PACF values returned (lags 0..lag_max)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_lags",
+        "val_col": "value"
+      },
+      "expect": 21,
+      "tol": 0.5,
+      "render": [
+        "21"
+      ]
+    }
+  ]
+}

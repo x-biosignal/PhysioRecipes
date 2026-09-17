@@ -1,0 +1,80 @@
+{
+  "paper": "multiscale-entropy-eegmmidb",
+  "n_claims": 8,
+  "n_grounded": 8,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "mse_scale1",
+      "statement": "multiscale entropy at scale 1 (= single-scale sample entropy)",
+      "expect": 1.3272319919,
+      "artifact": 1.327232,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mse_scale5",
+      "statement": "multiscale entropy at scale 5 (the peak of the curve)",
+      "expect": 1.8792187746,
+      "artifact": 1.879219,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mse_scale8",
+      "statement": "multiscale entropy at scale 8 (coarsest scale here)",
+      "expect": 1.3826645931,
+      "artifact": 1.382665,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mse_auc",
+      "statement": "mean MSE across scales 1-8 (the complexity index)",
+      "expect": 1.5954237844,
+      "artifact": 1.595424,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "peak_scale",
+      "statement": "the scale at which MSE peaks",
+      "expect": 5,
+      "artifact": 5,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "coarse_exceeds_fine",
+      "statement": "coarse-scale MSE exceeds scale 1 (structure, not white noise)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_neurokit",
+      "statement": "max |multiscaleEntropy - NeuroKit2 entropy_multiscale| across scales (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_samples",
+      "statement": "samples in the analyzed channel (10 s at 160 Hz)",
+      "expect": 1600,
+      "artifact": 1600,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

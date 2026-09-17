@@ -1,0 +1,33 @@
+{
+  "registered_at": "2026-09-04T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real RR tachogram (Fantasia young subject f1y01), the Lomb-Scargle periodogram computed by ecgHRVfreq(method='lomb') reproduces scipy.signal.lombscargle to machine precision (both the raw periodogram and the integrated VLF/LF/HF band powers), and the autonomic balance is HF-dominant (LF/HF < 1) as expected for a healthy young adult at rest.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "lomb_scargle_hrv_spectrum"
+  },
+  "analysis_plan": {
+    "dataset": "Fantasia Database (PhysioNet), young subject f1y01; the RR-interval tachogram (channel, rr_ms, time_sec; 8710 beats) derived offline from the real ECG (readWFDB -> ecgDetectRpeaks -> ecgRRintervals, 300-2000 ms) and git-tracked",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "ecgHRVfreq",
+        "params": {
+          "method": "lomb",
+          "rhythm_check": false
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "lomb_scargle_hrv_spectrum",
+      "threshold": "descriptive: the Lomb-Scargle periodogram equals scipy.signal.lombscargle to machine precision (periodogram max |diff| < 1e-5 on power values ~1e2, i.e. relative ~1e-10; band-power max |diff| < 1e-6) AND the autonomic balance is HF-dominant (LF/HF < 1)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "376448fd444d45ab2b88d25ee8a506d414155ed75cbab9d2824dc14443c701d5",
+    "registered_at": "2026-09-04T00:00:00Z"
+  }
+}

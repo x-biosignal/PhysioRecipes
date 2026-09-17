@@ -1,0 +1,34 @@
+{
+  "registered_at": "2026-09-07T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real eyes-closed posterior EEG channel (eegmmidb S002R02, POz), the shipped PhysioMoCap sampleEntropy and approximateEntropy (m=2, r=0.2*SD) reproduce BOTH antropy AND NeuroKit2 BIT-FOR-BIT; and sample entropy exceeds approximate entropy (ApEn is biased low by the self-matches it counts).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "template_match_entropy"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "sampleEntropy",
+        "params": []
+      },
+      {
+        "activity": "approximateEntropy",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "template_match_entropy",
+      "threshold": "descriptive: sampleEntropy and approximateEntropy each equal antropy AND NeuroKit2 to machine precision (max |diff| < 1e-9 vs each)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "70ef1bac87d23ddcf05e1d1bdc81fedf1fa0f3dbcbd659a1cadab609c3dd01b6",
+    "registered_at": "2026-09-07T00:00:00Z"
+  }
+}

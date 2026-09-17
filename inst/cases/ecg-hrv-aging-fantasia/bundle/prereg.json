@@ -1,0 +1,42 @@
+{
+  "registered_at": "2026-08-30T00:00:00Z",
+  "hypothesis": {
+    "statement": "Fantasia young subject f1y01 has well-defined resting frequency-domain HRV (LF/HF/total power) over the t=300-900 s window.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "frequency_domain_hrv"
+  },
+  "analysis_plan": {
+    "dataset": "Fantasia Database, record f1y01 (young, 23 y), resting ECG @ 250 Hz, fixed 10-min window t=300-900 s",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "ecgDetectRpeaks",
+        "params": {
+          "method": "pan_tompkins"
+        }
+      },
+      {
+        "activity": "ecgRRintervals",
+        "params": []
+      },
+      {
+        "activity": "ecgHRVfreq",
+        "params": {
+          "method": "welch"
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "total_power",
+      "estimand": "frequency_domain_hrv",
+      "threshold": "descriptive single-subject frequency-domain HRV (young reference range)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "cc1bc6f4e5c93c3acab9652b1792469053431246e209a22e4726deeb2f2e23d6",
+    "registered_at": "2026-08-30T00:00:00Z"
+  }
+}

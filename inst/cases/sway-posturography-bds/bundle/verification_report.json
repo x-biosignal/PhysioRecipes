@@ -1,0 +1,89 @@
+{
+  "paper": "sway-posturography-bds",
+  "n_claims": 9,
+  "n_grounded": 9,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "path_length",
+      "statement": "total COP excursion (path length, cm) over the 60-s trial",
+      "expect": 37.2113946994,
+      "artifact": 37.211395,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_velocity",
+      "statement": "mean COP velocity (cm/s)",
+      "expect": 0.6202932939,
+      "artifact": 0.620293,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "area_ce",
+      "statement": "95% confidence ellipse area (cm2)",
+      "expect": 0.9442192497,
+      "artifact": 0.944219,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "area_cc",
+      "statement": "95% confidence circle area (cm2)",
+      "expect": 0.9492597818,
+      "artifact": 0.94926,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_distance",
+      "statement": "mean distance from the mean COP (cm)",
+      "expect": 0.3079551644,
+      "artifact": 0.307955,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "area_sw",
+      "statement": "sway area (cm2/s), area swept per unit time",
+      "expect": 0.0459651148,
+      "artifact": 0.045965,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_prieto",
+      "statement": "max |swayMetrics - Prieto reimplementation| across the metrics (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "ellipse_frac_in_95",
+      "statement": "fraction of COP samples inside the 95% confidence ellipse (construct check)",
+      "expect": 0.9665,
+      "artifact": 0.9665,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_samples",
+      "statement": "COP samples in the 60-s trial (100 Hz)",
+      "expect": 6000,
+      "artifact": 6000,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

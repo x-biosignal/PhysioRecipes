@@ -1,0 +1,137 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:sway_vs_prieto",
+      "status": "PASS",
+      "detail": "9/9 agree [path_length=37.211 vs ref 37.211; mean_velocity=0.62029 vs ref 0.62029; area_ce=0.94422 vs ref 0.94422; area_cc=0.94926 vs ref 0.94926; mean_distance=0.30796 vs ref 0.30796; area_sw=0.045965 vs ref 0.045965; max_diff_prieto=3.5527e-15 vs ref 0; ellipse_frac_in_95=0.9665 vs ref 0.9665; n_samples=6000 vs ref 6000]",
+      "citation": "Prieto TE, Myklebust JB, Hoffmann RG, Lovett EG, Myklebust BM (1996). Measures of postural steadiness. IEEE Trans Biomed Eng 43(9):956-966. Data: Santos & Duarte (2016) public balance dataset (figshare)."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "path_length": 37.2113946994,
+    "mean_velocity": 0.6202932939,
+    "area_ce": 0.9442192497,
+    "area_cc": 0.9492597818,
+    "mean_distance": 0.3079551644,
+    "area_sw": 0.0459651148,
+    "max_diff_prieto": 3.5527136788005e-15,
+    "ellipse_frac_in_95": 0.9665,
+    "n_samples": 6000
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "sway_vs_prieto",
+    "citation": "Prieto TE, Myklebust JB, Hoffmann RG, Lovett EG, Myklebust BM (1996). Measures of postural steadiness. IEEE Trans Biomed Eng 43(9):956-966. Data: Santos & Duarte (2016) public balance dataset (figshare).",
+    "description": "re-computes the posturography sway metrics with an independent Python reimplementation of the Prieto reference formulas and confirms swayMetrics reproduces them bit-for-bit; also reports the fraction of COP samples inside the 95% confidence ellipse and the sample count",
+    "from_step": {},
+    "scores": {
+      "path_length": 37.2113946994,
+      "mean_velocity": 0.6202932939,
+      "area_ce": 0.9442192497,
+      "area_cc": 0.9492597818,
+      "mean_distance": 0.3079551644,
+      "area_sw": 0.0459651148,
+      "max_diff_prieto": 3.5527136788005e-15,
+      "ellipse_frac_in_95": 0.9665,
+      "n_samples": 6000
+    },
+    "checks": [
+      {
+        "metric": "path_length",
+        "expect": 37.2113946994,
+        "tol": 1e-06,
+        "ref_value": 37.2113946994,
+        "term_value": 37.2113946994
+      },
+      {
+        "metric": "mean_velocity",
+        "expect": 0.6202932939,
+        "tol": 1e-06,
+        "ref_value": 0.6202932939,
+        "term_value": 0.6202932939
+      },
+      {
+        "metric": "area_ce",
+        "expect": 0.9442192497,
+        "tol": 1e-06,
+        "ref_value": 0.9442192497,
+        "term_value": 0.9442192497
+      },
+      {
+        "metric": "area_cc",
+        "expect": 0.9492597818,
+        "tol": 1e-06,
+        "ref_value": 0.9492597818,
+        "term_value": 0.9492597818
+      },
+      {
+        "metric": "mean_distance",
+        "expect": 0.3079551644,
+        "tol": 1e-06,
+        "ref_value": 0.3079551644,
+        "term_value": 0.3079551644
+      },
+      {
+        "metric": "area_sw",
+        "expect": 0.0459651148,
+        "tol": 1e-06,
+        "ref_value": 0.0459651148,
+        "term_value": 0.0459651148
+      },
+      {
+        "metric": "max_diff_prieto",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 3.5527136788005e-15
+      },
+      {
+        "metric": "ellipse_frac_in_95",
+        "expect": 0.9665,
+        "tol": 0.001,
+        "ref_value": 0.9665,
+        "term_value": 0.9665
+      },
+      {
+        "metric": "n_samples",
+        "expect": 6000,
+        "tol": 0.5,
+        "ref_value": 6000,
+        "term_value": 6000
+      }
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "proposed_by": "LLM operator (non-deterministic proposal; frozen by SUBS-02 below)",
+  "hypothesis": "MIT-BIH record 100 exhibits a normal resting heart rate.",
+  "estimand": "resting_mean_heart_rate",
+  "dataset": {
+    "name": "MIT-BIH Arrhythmia Database, record 100 (MLII/V5, 360 Hz)",
+    "source": "PhysioNet mitdb; shipped offline in PhysioIO/inst/extdata",
+    "files": {
+      "hea": {
+        "path": "PhysioIO/inst/extdata/100.hea",
+        "sha256": "64654999e81e638a4be5b9cad2bdf7a274478bab082c849d8f258110a0364161"
+      },
+      "dat": {
+        "path": "PhysioIO/inst/extdata/100.dat",
+        "sha256": "543e75933f5ae8765ef2b19ddd17566cbfdb1493341fd0fbb552bae49873ce85"
+      }
+    },
+    "n_samples": 5000,
+    "sampling_rate_hz": 360
+  },
+  "rationale": "A resting surface ECG should yield a mean heart rate in the normal sinus range. Pan-Tompkins R-peak detection -> RR intervals -> time-domain HRV is the standard, deterministic pipeline; mean HR is robust over this segment length.",
+  "plan": {
+    "root": {
+      "id": "dataset",
+      "type": "PhysioExperiment"
+    },
+    "steps": [
+      {
+        "id": "peaks",
+        "tool": "ecg_detect_rpeaks",
+        "inputs": [
+          "dataset"
+        ],
+        "args": {
+          "method": "pan_tompkins"
+        }
+      },
+      {
+        "id": "rr",
+        "tool": "ecg_rr_intervals",
+        "inputs": [
+          "dataset",
+          "peaks"
+        ],
+        "args": []
+      },
+      {
+        "id": "hrv",
+        "tool": "ecg_hrv_time",
+        "inputs": [
+          "rr"
+        ],
+        "args": {
+          "rhythm_check": false
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "mean_hr",
+      "estimand": "resting_mean_heart_rate",
+      "threshold": "60 <= mean_hr <= 100 bpm (normal resting sinus range)"
+    }
+  }
+}

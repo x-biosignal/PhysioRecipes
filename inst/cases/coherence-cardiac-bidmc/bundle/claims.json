@@ -1,0 +1,85 @@
+{
+  "paper": "coherence-cardiac-bidmc",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "max_abs_diff",
+      "statement": "max |coherence - scipy.signal.coherence| over the full spectrum (machine precision)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_abs_diff",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "3e-14"
+      ]
+    },
+    {
+      "id": "peak_coherence",
+      "statement": "peak PPG-ECG coherence in the cardiac band (0.5-5 Hz)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "peak_coherence",
+        "val_col": "value"
+      },
+      "expect": 0.8982421806,
+      "tol": 1e-06,
+      "render": [
+        "0.90"
+      ]
+    },
+    {
+      "id": "peak_freq_hz",
+      "statement": "frequency of the coherence peak -- the shared heart rate (Hz)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "peak_freq_hz",
+        "val_col": "value"
+      },
+      "expect": 1.464844,
+      "tol": 0.0001,
+      "render": [
+        "1.46"
+      ]
+    },
+    {
+      "id": "band_mean_coherence",
+      "statement": "mean PPG-ECG coherence across the cardiac band (0.5-5 Hz)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "band_mean_coherence",
+        "val_col": "value"
+      },
+      "expect": 0.4388860116,
+      "tol": 1e-06,
+      "render": [
+        "0.44"
+      ]
+    },
+    {
+      "id": "n_freq",
+      "statement": "frequency bins in the coherence spectrum",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_freq",
+        "val_col": "value"
+      },
+      "expect": 257,
+      "tol": 0.5,
+      "render": [
+        "257"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "dataset": "MIT-BIH Arrhythmia Database (mitdb 1.0.0), MLII lead, 360 Hz, full 30-min records",
+  "source": "PhysioNet mitdb 1.0.0; signals + cardiologist .atr annotations archived offline in agent/eval/data/mitdb/",
+  "ground_truth": "artifacts/ref_beats.json = beat-annotation samples extracted from each .atr with WFDB 4.3.1 (AAMI beat symbols)",
+  "records": [
+    {
+      "record": "100",
+      "sha256": {
+        "hea": "db882392a66ccc4dee10104082cffa1a6f7fd9dd7d55c281c8345b3c7b9a2a6f",
+        "dat": "b2ea3c250e56e48f4b7b90697832b8ecd1afa1e0bb31f2dcfea4ed6e1075a639",
+        "atr": "8d8a5349fb16638ebbf649f1779d12e96d91b736b2aafe59db43719ae583d471"
+      }
+    },
+    {
+      "record": "103",
+      "sha256": {
+        "hea": "c327a1ba393165f2503a34eaf2d136b502c50baca945f8f4d70c317e19ec0a27",
+        "dat": "f7994f0bd196730779998b4bddf26cb47f396599fb370a08b5cb29a3ac4d555d",
+        "atr": "392ce37fbc7e89b3f14998e197a844f23cce6a3db6edaa71b4b49bf3ca5b6596"
+      }
+    },
+    {
+      "record": "105",
+      "sha256": {
+        "hea": "0546efab08d52d00de1924f8c49180b9730bb0b89d40affdfe748de1afc66ad8",
+        "dat": "fcd0153dfea69c749194bb73de7db124588857cfa2f6aecb72754894c8afde02",
+        "atr": "278d534c1ad952a6d41db963b6b2b00be070d8dd5fa66545caa5c18edcc36497"
+      }
+    },
+    {
+      "record": "115",
+      "sha256": {
+        "hea": "4f41f62fd60b092afc3f1dd312dee3ed991aff64e4ffcc6a69414d38db2b7d2e",
+        "dat": "34185efe9889608c76ebfbf5a467d3457970c6d11b77a2bf81b94bcf46e07c41",
+        "atr": "4980667b19b7a637729d40762f071b483d69f5431db818cbddc9a8ae64cc4da2"
+      }
+    },
+    {
+      "record": "117",
+      "sha256": {
+        "hea": "82d1597bece858f85f6f3b91558e409ffec247c26fccf0c805893b51d2e12fe8",
+        "dat": "2ce7de6f20baf4cfef0369f9a13fa53784d18e2da78c11afa1e4c55e8ad1900e",
+        "atr": "232beaacf4a4eb4b6d2f2242f01ecae3d2842be1dd0afe890037ae050f91ce63"
+      }
+    },
+    {
+      "record": "203",
+      "sha256": {
+        "hea": "5a1c8fead3de629bd15a64deeceab18c4f9b6a2ed480aa623094474792d2aba0",
+        "dat": "5ba7d2237fc838438efd8bb0a3baeffc5de2e70c76e3ab7e401e811ad82f43e0",
+        "atr": "2573f948e54a538983a44bf946e3e61cdda60e898b4c65ca8559b57c4877c706"
+      }
+    },
+    {
+      "record": "214",
+      "sha256": {
+        "hea": "19298a143cc419851585d276b09582f35a709a5173c2e12ee0cdf89a65ef28c2",
+        "dat": "a886b1ceb56e950858dedf5b56d3fdb5f26aef3667f8effcb880c1c000ee0cd3",
+        "atr": "09c588b0623f6dc6138928ce2006f294c4ef3da143eec2cdba6eddb9b1597214"
+      }
+    },
+    {
+      "record": "234",
+      "sha256": {
+        "hea": "3d2b9eaa12dcff4c7c627f083ed234a89fe97953160bc14f806f787b15cbd2e3",
+        "dat": "89f826307bfc91a554021da87c17b88b843ed3d26aa9ea237fc6f7c8af00da6d",
+        "atr": "e829a3e4131fbe9420c1740bfb5000b3f4f64a2b40aa5f739ed6420f75be6785"
+      }
+    }
+  ],
+  "citation": "Moody GB, Mark RG. The impact of the MIT-BIH Arrhythmia Database. IEEE Eng Med Biol Mag. 2001;20(3):45-50. Goldberger AL, et al. PhysioNet. Circulation. 2000;101(23):e215-20."
+}

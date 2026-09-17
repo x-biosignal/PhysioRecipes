@@ -1,0 +1,128 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/2 ops validated, 1 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:sampen_apen_vs_antropy",
+      "status": "PASS",
+      "detail": "8/8 agree [sample_entropy=1.3272 vs ref 1.3272; approximate_entropy=1.2923 vs ref 1.2923; max_diff_sampen_antropy=0 vs ref 0; max_diff_sampen_neurokit=2.2204e-16 vs ref 0; max_diff_apen_antropy=0 vs ref 0; max_diff_apen_neurokit=0 vs ref 0; sampen_gt_apen=1 vs ref 1; n_samples=1600 vs ref 1600]",
+      "citation": "Richman JS, Moorman JR (2000). Physiological time-series analysis using approximate entropy and sample entropy. Am J Physiol 278:H2039-H2049. Pincus SM (1991). PNAS 88:2297-2301. Reference impls: antropy.sample_entropy / app_entropy (Vallat) and NeuroKit2 entropy_sample / entropy_approximate (Makowski et al.). Data: EEG Motor Movement/Imagery Database, PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "sample_entropy": 1.3272319919,
+    "approximate_entropy": 1.2922631002,
+    "max_diff_sampen_antropy": 0,
+    "max_diff_sampen_neurokit": 2.22044604925031e-16,
+    "max_diff_apen_antropy": 0,
+    "max_diff_apen_neurokit": 0,
+    "sampen_gt_apen": 1,
+    "n_samples": 1600
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "sampen_apen_vs_antropy",
+    "citation": "Richman JS, Moorman JR (2000). Physiological time-series analysis using approximate entropy and sample entropy. Am J Physiol 278:H2039-H2049. Pincus SM (1991). PNAS 88:2297-2301. Reference impls: antropy.sample_entropy / app_entropy (Vallat) and NeuroKit2 entropy_sample / entropy_approximate (Makowski et al.). Data: EEG Motor Movement/Imagery Database, PhysioNet.",
+    "description": "re-computes sample entropy and approximate entropy with antropy AND NeuroKit2 on the identical signal and confirms the shipped PhysioMoCap ops reproduce BOTH bit-for-bit; reports both values, the four bit-exact agreements, the SampEn>ApEn (ApEn self-match bias) relationship, and the sample count",
+    "from_step": {},
+    "scores": {
+      "sample_entropy": 1.3272319919,
+      "approximate_entropy": 1.2922631002,
+      "max_diff_sampen_antropy": 0,
+      "max_diff_sampen_neurokit": 2.22044604925031e-16,
+      "max_diff_apen_antropy": 0,
+      "max_diff_apen_neurokit": 0,
+      "sampen_gt_apen": 1,
+      "n_samples": 1600
+    },
+    "checks": [
+      {
+        "metric": "sample_entropy",
+        "expect": 1.3272319919,
+        "tol": 1e-06,
+        "ref_value": 1.3272319919,
+        "term_value": 1.3272319919
+      },
+      {
+        "metric": "approximate_entropy",
+        "expect": 1.2922631002,
+        "tol": 1e-06,
+        "ref_value": 1.2922631002,
+        "term_value": 1.2922631002
+      },
+      {
+        "metric": "max_diff_sampen_antropy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "max_diff_sampen_neurokit",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 2.22044604925031e-16
+      },
+      {
+        "metric": "max_diff_apen_antropy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "max_diff_apen_neurokit",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "sampen_gt_apen",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "n_samples",
+        "expect": 1600,
+        "tol": 0.5,
+        "ref_value": 1600,
+        "term_value": 1600
+      }
+    ]
+  }
+}

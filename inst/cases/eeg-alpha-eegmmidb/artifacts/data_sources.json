@@ -1,0 +1,17 @@
+{
+  "ecg": {
+    "dataset": "MIT-BIH Arrhythmia Database, record 100 (MLII/V5, 360 Hz)",
+    "source": "PhysioNet mitdb 1.0.0; shipped offline in PhysioIO/inst/extdata",
+    "sha256": {
+      "hea": "64654999e81e638a4be5b9cad2bdf7a274478bab082c849d8f258110a0364161",
+      "dat": "543e75933f5ae8765ef2b19ddd17566cbfdb1493341fd0fbb552bae49873ce85"
+    }
+  },
+  "eeg": {
+    "dataset": "EEG Motor Movement/Imagery, S001R02 (eyes-closed baseline, 64ch, 160 Hz)",
+    "source": "PhysioNet eegmmidb 1.0.0 (ODC-BY); archived in agent/eval/data/",
+    "sha256": {
+      "edf": "31a95e0a880e6c3d89960d9d62c144f24cc4e9f5d7e93c7f864ef61cd49e847e"
+    }
+  }
+}

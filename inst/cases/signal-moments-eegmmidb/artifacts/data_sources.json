@@ -1,0 +1,10 @@
+{
+  "dataset": "EEG Motor Movement/Imagery Database (eegmmidb)",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples) -- the SAME git-tracked vector the EEG complexity and time-series cases use.",
+  "pipeline": "readRDS(eeg_poz_s002r02) -> PhysioAnalysis::signalMoments(): mean, population SD (ddof=0), skewness = E[(x-mu)^3]/sd^3, excess kurtosis = E[(x-mu)^4]/sd^4 - 3. The reference re-computes them with scipy.stats.skew (biased) / scipy.stats.kurtosis (Fisher/excess, biased) and numpy mean/std, via reticulate. Deterministic.",
+  "note": "The root is the POz channel numeric vector (shared with the EEG complexity and time-series cases). The first four moments summarize the amplitude distribution: mean, SD, skewness (asymmetry) and excess kurtosis (tailedness vs Gaussian). signalMoments is a NEW op adding these shape descriptors (complementing the spectral, autocorrelation and entropy views). It reproduces scipy.stats.skew (biased) + scipy.stats.kurtosis (Fisher/excess, biased) + numpy mean/std BIT-FOR-BIT (max |diff| ~4e-16) with the population SD (ddof=0). Finding: the eyes-closed POz EEG amplitude distribution is approximately Gaussian -- skewness -0.23 (a mild left-tail asymmetry) and excess kurtosis +0.16 (very slightly heavier-tailed/more peaked than Gaussian but close to mesokurtic) -- consistent with the normality many downstream methods assume; a much larger kurtosis would instead flag a spiky artifact. HONEST: signal properties; the reproducible content is the bit-exact moments + the near-Gaussian characterization."
+}

@@ -1,0 +1,62 @@
+{
+  "paper": "gait-grf-gaitrec",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "control_peak1_bw",
+      "statement": "control first (loading) GRF peak, BW",
+      "expect": 1.1159,
+      "artifact": 1.10053,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "patient_peak1_bw",
+      "statement": "knee-pathology first (loading) GRF peak, BW (reduced)",
+      "expect": 1.0185,
+      "artifact": 1.015117,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "control_trough_bw",
+      "statement": "control mid-stance GRF trough, BW",
+      "expect": 0.7437,
+      "artifact": 0.74753,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "patient_trough_bw",
+      "statement": "knee-pathology mid-stance GRF trough, BW (raised)",
+      "expect": 0.8355,
+      "artifact": 0.840957,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "control_peak2_bw",
+      "statement": "control second (push-off) GRF peak, BW",
+      "expect": 1.0978,
+      "artifact": 1.098105,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "patient_peak2_bw",
+      "statement": "knee-pathology second (push-off) GRF peak, BW (reduced)",
+      "expect": 1.0381,
+      "artifact": 1.034224,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

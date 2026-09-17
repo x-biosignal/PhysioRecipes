@@ -1,0 +1,119 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:spectrogram_vs_scipy",
+      "status": "PASS",
+      "detail": "7/7 agree [max_diff_scipy=6.8212e-13 vs ref 0; n_freqs=129 vs ref 129; n_windows=11 vs ref 11; median_peak_freq_hz=11.25 vs ref 11.25; n_windows_alpha_peak=11 vs ref 11; alpha_power_cv_pct=57.923 vs ref 57.923; mean_alpha_power=2464.8 vs ref 2464.8]",
+      "citation": "Allen JB (1977). Short-term spectral analysis, synthesis, and modification by discrete Fourier transform. IEEE Trans ASSP 25(3):235-238. Reference impl: scipy.signal.spectrogram (Virtanen et al. 2020). Data: EEG Motor Movement/ Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "max_diff_scipy": 6.82121026329696e-13,
+    "n_freqs": 129,
+    "n_windows": 11,
+    "median_peak_freq_hz": 11.25,
+    "n_windows_alpha_peak": 11,
+    "alpha_power_cv_pct": 57.923,
+    "mean_alpha_power": 2464.8094
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "spectrogram_vs_scipy",
+    "citation": "Allen JB (1977). Short-term spectral analysis, synthesis, and modification by discrete Fourier transform. IEEE Trans ASSP 25(3):235-238. Reference impl: scipy.signal.spectrogram (Virtanen et al. 2020). Data: EEG Motor Movement/ Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the full frequency x time power matrix with scipy.signal.spectrogram (symmetric Hann, nperseg=256, noverlap=128, detrend=False, scaling='density', mode='psd'), and reports the bit-exact scipy agreement (~7e-13) over all cells, the frequency x time dimensions, the median peak-power frequency, the count of windows whose peak is in alpha, the alpha-power waxing/waning (CV), and the mean alpha power",
+    "from_step": {},
+    "scores": {
+      "max_diff_scipy": 6.82121026329696e-13,
+      "n_freqs": 129,
+      "n_windows": 11,
+      "median_peak_freq_hz": 11.25,
+      "n_windows_alpha_peak": 11,
+      "alpha_power_cv_pct": 57.923,
+      "mean_alpha_power": 2464.8094
+    },
+    "checks": [
+      {
+        "metric": "max_diff_scipy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 6.82121026329696e-13
+      },
+      {
+        "metric": "n_freqs",
+        "expect": 129,
+        "tol": 0.5,
+        "ref_value": 129,
+        "term_value": 129
+      },
+      {
+        "metric": "n_windows",
+        "expect": 11,
+        "tol": 0.5,
+        "ref_value": 11,
+        "term_value": 11
+      },
+      {
+        "metric": "median_peak_freq_hz",
+        "expect": 11.25,
+        "tol": 0.5,
+        "ref_value": 11.25,
+        "term_value": 11.25
+      },
+      {
+        "metric": "n_windows_alpha_peak",
+        "expect": 11,
+        "tol": 0.5,
+        "ref_value": 11,
+        "term_value": 11
+      },
+      {
+        "metric": "alpha_power_cv_pct",
+        "expect": 57.923,
+        "tol": 1,
+        "ref_value": 57.923,
+        "term_value": 57.923
+      },
+      {
+        "metric": "mean_alpha_power",
+        "expect": 2464.8094,
+        "tol": 5,
+        "ref_value": 2464.8094,
+        "term_value": 2464.8094
+      }
+    ]
+  }
+}

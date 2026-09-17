@@ -1,0 +1,52 @@
+{
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "delta",
+      "statement": "relative delta power (O1.., eyes_closed)",
+      "expect": 0.2027,
+      "artifact": 0.2027,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "theta",
+      "statement": "relative theta power (O1.., eyes_closed)",
+      "expect": 0.05,
+      "artifact": 0.05,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "alpha",
+      "statement": "relative alpha power (O1.., eyes_closed)",
+      "expect": 0.6284,
+      "artifact": 0.6284,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "beta",
+      "statement": "relative beta power (O1.., eyes_closed)",
+      "expect": 0.1129,
+      "artifact": 0.1129,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "gamma",
+      "statement": "relative gamma power (O1.., eyes_closed)",
+      "expect": 0.006,
+      "artifact": 0.006,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

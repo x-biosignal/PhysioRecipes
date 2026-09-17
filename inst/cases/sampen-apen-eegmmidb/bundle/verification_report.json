@@ -1,0 +1,80 @@
+{
+  "paper": "sampen-apen-eegmmidb",
+  "n_claims": 8,
+  "n_grounded": 8,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "sample_entropy",
+      "statement": "sample entropy (Richman-Moorman, m=2, r=0.2*SD) of the POz channel",
+      "expect": 1.3272319919,
+      "artifact": 1.327232,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "approximate_entropy",
+      "statement": "approximate entropy (Pincus, m=2, r=0.2*SD) of the POz channel",
+      "expect": 1.2922631002,
+      "artifact": 1.292263,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_sampen_antropy",
+      "statement": "|sampleEntropy - antropy.sample_entropy| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_sampen_neurokit",
+      "statement": "|sampleEntropy - NeuroKit2 entropy_sample| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_apen_antropy",
+      "statement": "|approximateEntropy - antropy.app_entropy| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_apen_neurokit",
+      "statement": "|approximateEntropy - NeuroKit2 entropy_approximate| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "sampen_gt_apen",
+      "statement": "sample entropy exceeds approximate entropy (the ApEn self-match bias)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_samples",
+      "statement": "samples in the analyzed channel (10 s at 160 Hz)",
+      "expect": 1600,
+      "artifact": 1600,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

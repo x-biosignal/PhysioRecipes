@@ -1,0 +1,89 @@
+{
+  "paper": "poincare-hrv-fantasia",
+  "n_claims": 9,
+  "n_grounded": 9,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "sd1",
+      "statement": "Poincare SD1 -- short-term (beat-to-beat) RR variability, a parasympathetic proxy (ms)",
+      "expect": 57.7302389,
+      "artifact": 57.730239,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "sd2",
+      "statement": "Poincare SD2 -- long-term RR variability (analytical closed-form, ms)",
+      "expect": 86.77275899,
+      "artifact": 86.772759,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "sd1_sd2_ratio",
+      "statement": "SD1/SD2 ratio -- the Poincare cloud's short-to-long axis ratio",
+      "expect": 0.66530371,
+      "artifact": 0.665304,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_numpy",
+      "statement": "max |ecgHRVpoincare - independent numpy analytical closed-form| over SD1/SD2/ratio (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "sd1_diff_nk",
+      "statement": "|ecgHRVpoincare SD1 - NeuroKit2 SD1| -- bit-exact (SD1 = universal SDSD/sqrt(2))",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "sd2_paired_vs_nk",
+      "statement": "|independent numpy paired-projection SD2 - NeuroKit2 SD2| -- bit-exact (identifies NeuroKit2's SD2 convention)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "sd2_conv_diff",
+      "statement": "|op SD2 (analytical closed-form) - NeuroKit2 SD2 (paired projection)| -- a documented ~0.2 ms convention gap (O(1/n))",
+      "expect": 0.16917455,
+      "artifact": 0.169175,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "young_mean_sd1",
+      "statement": "mean Poincare SD1 across the 5 young subjects (short-term HRV)",
+      "expect": 55.7522,
+      "artifact": 55.7522,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "old_mean_sd1",
+      "statement": "mean Poincare SD1 across the 5 old subjects -- markedly lower (age-related vagal decline)",
+      "expect": 35.3069,
+      "artifact": 35.3069,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

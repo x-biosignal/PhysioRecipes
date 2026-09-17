@@ -1,0 +1,128 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:romberg_vs_scipy_baser",
+      "status": "PASS",
+      "detail": "8/8 agree [t_statistic=7.5663 vs ref 7.5663; neg_log10_p=9.0532 vs ref 9.0532; df=49 vs ref 49; max_diff_scipy=0 vs ref 0; max_diff_baser=8.8818e-16 vs ref 0; ec_eo_ratio=1.2977 vs ref 1.2977; n_ec_gt_eo=43 vs ref 43; n_subjects=50 vs ref 50]",
+      "citation": "Romberg test; paired t (Student 1908). Reference impls: scipy.stats.ttest_rel and base R t.test(paired=TRUE). Data: eyes-closed vs eyes-open foam-surface COP path length (PhysioMoCap::swayMetrics), Santos & Duarte (2016) balance dataset."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "t_statistic": 7.5662786061,
+    "neg_log10_p": 9.053223,
+    "df": 49,
+    "max_diff_scipy": 0,
+    "max_diff_baser": 8.88178419700125e-16,
+    "ec_eo_ratio": 1.2977151933,
+    "n_ec_gt_eo": 43,
+    "n_subjects": 50
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "romberg_vs_scipy_baser",
+    "citation": "Romberg test; paired t (Student 1908). Reference impls: scipy.stats.ttest_rel and base R t.test(paired=TRUE). Data: eyes-closed vs eyes-open foam-surface COP path length (PhysioMoCap::swayMetrics), Santos & Duarte (2016) balance dataset.",
+    "description": "re-computes the paired t-test of eyes-closed vs eyes-open foam sway with scipy.stats.ttest_rel and base R t.test(paired=TRUE) and confirms pairedTTest reproduces BOTH bit-for-bit; also reports the eyes-closed/eyes-open mean sway ratio, the number of subjects with EC > EO, and the subject count",
+    "from_step": {},
+    "scores": {
+      "t_statistic": 7.5662786061,
+      "neg_log10_p": 9.053223,
+      "df": 49,
+      "max_diff_scipy": 0,
+      "max_diff_baser": 8.88178419700125e-16,
+      "ec_eo_ratio": 1.2977151933,
+      "n_ec_gt_eo": 43,
+      "n_subjects": 50
+    },
+    "checks": [
+      {
+        "metric": "t_statistic",
+        "expect": 7.5662786061,
+        "tol": 1e-06,
+        "ref_value": 7.5662786061,
+        "term_value": 7.5662786061
+      },
+      {
+        "metric": "neg_log10_p",
+        "expect": 9.053223,
+        "tol": 0.001,
+        "ref_value": 9.053223,
+        "term_value": 9.053223
+      },
+      {
+        "metric": "df",
+        "expect": 49,
+        "tol": 0.5,
+        "ref_value": 49,
+        "term_value": 49
+      },
+      {
+        "metric": "max_diff_scipy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "max_diff_baser",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 8.88178419700125e-16
+      },
+      {
+        "metric": "ec_eo_ratio",
+        "expect": 1.2977151933,
+        "tol": 0.0001,
+        "ref_value": 1.2977151933,
+        "term_value": 1.2977151933
+      },
+      {
+        "metric": "n_ec_gt_eo",
+        "expect": 43,
+        "tol": 0.5,
+        "ref_value": 43,
+        "term_value": 43
+      },
+      {
+        "metric": "n_subjects",
+        "expect": 50,
+        "tol": 0.5,
+        "ref_value": 50,
+        "term_value": 50
+      }
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-11T00:00:00Z",
+  "hypothesis": {
+    "statement": "In GaitRec healthy controls (n=208, ages 15-78), the vertical-GRF push-off peak declines with age (negative OLS slope); the newly-authored linearRegression reproduces base R stats::lm and scipy.stats.linregress bit-for-bit for the slope, R-squared and slope p-value.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "ols_slope"
+  },
+  "analysis_plan": {
+    "dataset": "GaitRec (Horsak et al. 2020); vertical-GRF push-off peak (3rd landmark of PhysioMoCap::grfLandmarks) regressed on age in healthy controls, shod, standardised speed, initial-presentation baseline sessions",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "linearRegression",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "ols_slope",
+      "threshold": "descriptive: linearRegression equals scipy.stats.linregress bit-for-bit (|diff| = 0) and base R lm to machine precision (|diff| < 1e-9) for the slope and R-squared; the slope is negative (push-off declines with age) and significant (p < 0.001)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "1390c7e25ee2ac07793b6c240c93e7d7c0ed11b58860704d5b2c11e294402095",
+    "registered_at": "2026-09-11T00:00:00Z"
+  }
+}

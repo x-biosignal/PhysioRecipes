@@ -1,0 +1,85 @@
+{
+  "paper": "gait-inverse-dynamics-fukuchi",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "ankle_r",
+      "statement": "mean correlation of the recovered sagittal ANKLE moment with the WBDS reference (5 subjects)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "ankle_r_mean",
+        "val_col": "value"
+      },
+      "expect": 0.973,
+      "tol": 0.005,
+      "render": [
+        "0.97"
+      ]
+    },
+    {
+      "id": "knee_r",
+      "statement": "mean correlation of the recovered sagittal KNEE moment with the reference",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "knee_r_mean",
+        "val_col": "value"
+      },
+      "expect": 0.847,
+      "tol": 0.005,
+      "render": [
+        "0.85"
+      ]
+    },
+    {
+      "id": "hip_r",
+      "statement": "mean correlation of the recovered sagittal HIP moment with the reference (degrades proximally)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "hip_r_mean",
+        "val_col": "value"
+      },
+      "expect": 0.774,
+      "tol": 0.005,
+      "render": [
+        "0.77"
+      ]
+    },
+    {
+      "id": "ankle_ref_peak",
+      "statement": "reference ankle plantarflexor push-off peak (N*m/kg)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "ankle_ref_peak_mean",
+        "val_col": "value"
+      },
+      "expect": 1.6594,
+      "tol": 0.01,
+      "render": [
+        "1.66"
+      ]
+    },
+    {
+      "id": "n_subjects",
+      "statement": "subjects analysed (WBDS01-05)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_subjects",
+        "val_col": "value"
+      },
+      "expect": 5,
+      "tol": 0.5,
+      "render": [
+        "5"
+      ]
+    }
+  ]
+}

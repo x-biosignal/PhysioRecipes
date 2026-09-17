@@ -1,0 +1,100 @@
+{
+  "paper": "granger-cardioresp-bidmc",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "gc_resp_to_pleth",
+      "statement": "time-domain Granger causality respiration -> PPG pulse (Geweke log-variance-ratio)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "gc_resp_to_pleth",
+        "val_col": "value"
+      },
+      "expect": 0.1031367696,
+      "tol": 1e-06,
+      "render": [
+        "0.103"
+      ]
+    },
+    {
+      "id": "gc_pleth_to_resp",
+      "statement": "time-domain Granger causality PPG pulse -> respiration",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "gc_pleth_to_resp",
+        "val_col": "value"
+      },
+      "expect": 0.101683848,
+      "tol": 1e-06,
+      "render": [
+        "0.102"
+      ]
+    },
+    {
+      "id": "net_gc",
+      "statement": "net Granger causality (respiration->pulse minus pulse->respiration) -- the directional asymmetry",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "net_gc",
+        "val_col": "value"
+      },
+      "expect": 0.0014529216,
+      "tol": 1e-06,
+      "render": [
+        "+0.0015"
+      ]
+    },
+    {
+      "id": "max_diff_statsmodels",
+      "statement": "max |grangerCausality - statsmodels grangercausalitytests| over both directions (agreement)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_statsmodels",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-05,
+      "render": [
+        "3.5e-07"
+      ]
+    },
+    {
+      "id": "max_diff_numpy",
+      "statement": "max |grangerCausality - independent numpy OLS| over both directions (op arithmetic, machine precision up to ridge)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_numpy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-07,
+      "render": [
+        "1.8e-09"
+      ]
+    },
+    {
+      "id": "n_subjects_resp_dominant",
+      "statement": "BIDMC subjects (of 20) where respiration -> pulse is the net-dominant Granger direction",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_subjects_resp_dominant",
+        "val_col": "value"
+      },
+      "expect": 15,
+      "tol": 0.02,
+      "render": [
+        "15"
+      ]
+    }
+  ]
+}

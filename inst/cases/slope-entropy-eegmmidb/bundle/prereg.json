@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-09-07T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real eyes-closed posterior EEG channel (eegmmidb S002R02, POz), the newly-authored slopeEntropy reproduces NeuroKit2 entropy_slope BIT-FOR-BIT across the embedding dimension; it is INCREASING in the dimension (an unnormalized Shannon over longer slope patterns); and the signal realizes only a fraction of the possible slope patterns.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "slope_entropy"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "slopeEntropy",
+        "params": {
+          "dimension": 3
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "slope_entropy",
+      "threshold": "descriptive: slopeEntropy equals NeuroKit2 entropy_slope to machine precision (max |diff| < 1e-9) across the embedding dimension"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "6fce0acd73ab1186034950247c8adfb3bd29caaa8486e865fa23d880d79464bc",
+    "registered_at": "2026-09-07T00:00:00Z"
+  }
+}

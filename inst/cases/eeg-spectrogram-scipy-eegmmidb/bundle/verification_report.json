@@ -1,0 +1,71 @@
+{
+  "paper": "eeg-spectrogram-scipy-eegmmidb",
+  "n_claims": 7,
+  "n_grounded": 7,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "max_diff_scipy",
+      "statement": "max |spectrogram - scipy.signal.spectrogram| over all 129 x 11 (freq x time) cells (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_freqs",
+      "statement": "frequency bins in the spectrogram (window_size/2 + 1)",
+      "expect": 129,
+      "artifact": 129,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_windows",
+      "statement": "time windows in the spectrogram (10 s, 256-sample windows, 50% overlap)",
+      "expect": 11,
+      "artifact": 11,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "median_peak_freq_hz",
+      "statement": "median peak-power frequency across time windows -- the alpha rhythm (~11 Hz)",
+      "expect": 11.25,
+      "artifact": 11.25,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_windows_alpha_peak",
+      "statement": "time windows whose peak power is in the alpha band (8-13 Hz) -- all of them (sustained rhythm)",
+      "expect": 11,
+      "artifact": 11,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "alpha_power_cv_pct",
+      "statement": "coefficient of variation of alpha power across time -- the waxing/waning the averaged PSD hides",
+      "expect": 57.923,
+      "artifact": 57.923,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_alpha_power",
+      "statement": "mean alpha-band power across time windows at POz",
+      "expect": 2464.8094,
+      "artifact": 2464.8094,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "paper": "sway-4cond-nemenyi-bds",
+  "n_claims": 9,
+  "n_grounded": 9,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "p_firm_vision",
+      "statement": "Nemenyi p of eyes-open vs eyes-closed on FIRM ground (the firm-surface vision effect, borderline)",
+      "expect": 0.0442669796,
+      "artifact": 0.044267,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "p_foam_vision",
+      "statement": "Nemenyi p of eyes-open vs eyes-closed on FOAM (the foam-surface vision effect, strong)",
+      "expect": 3.14783e-08,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "stat_extreme",
+      "statement": "largest Nemenyi statistic (Open-Firm vs Closed-Foam, the extreme pair)",
+      "expect": 17.9962548847,
+      "artifact": 17.996255,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_pmcmr",
+      "statement": "max |nemenyiTest p - PMCMRplus p| across all 6 pairs (bit-for-bit)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "max |nemenyiTest p - scikit_posthocs p| across all 6 pairs (machine precision)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "foam_vision_stronger",
+      "statement": "the vision effect is stronger on foam than on firm ground (p_foam < p_firm)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_sig",
+      "statement": "number of the six condition pairs that differ significantly (all 6)",
+      "expect": 6,
+      "artifact": 6,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_pairs",
+      "statement": "total pairwise comparisons (4 choose 2)",
+      "expect": 6,
+      "artifact": 6,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_subjects",
+      "statement": "subjects with all four conditions (complete blocks)",
+      "expect": 158,
+      "artifact": 158,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

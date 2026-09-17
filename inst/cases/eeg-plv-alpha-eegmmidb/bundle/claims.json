@@ -1,0 +1,100 @@
+{
+  "paper": "eeg-plv-alpha-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "plv",
+      "statement": "alpha-band (8-13 Hz) phase-locking value between occipital O1 and Oz -- posterior alpha phase synchronization",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "plv",
+        "val_col": "value"
+      },
+      "expect": 0.9215049424,
+      "tol": 1e-06,
+      "render": [
+        "0.92"
+      ]
+    },
+    {
+      "id": "plv_scipy",
+      "statement": "the same PLV re-computed by an independent scipy Hilbert-band pipeline",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "plv_scipy",
+        "val_col": "value"
+      },
+      "expect": 0.9215835739,
+      "tol": 0.0001,
+      "render": [
+        "0.92"
+      ]
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "max |phaseLockingValue - scipy Hilbert-band PLV| (phase-robust agreement, up to the filtfilt convention)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 0.001,
+      "render": [
+        "8e-05"
+      ]
+    },
+    {
+      "id": "formula_diff",
+      "statement": "|op PLV - |mean(exp(i*phase_diff))|| -- the PLV summation formula, exact given the phases",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "formula_diff",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "plv_locked",
+      "statement": "PLV of constructed phase-locked signals (fixed offset) -- ground-truth recovery, near 1",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "plv_locked",
+        "val_col": "value"
+      },
+      "expect": 0.99507,
+      "tol": 0.001,
+      "render": [
+        "0.995"
+      ]
+    },
+    {
+      "id": "plv_unlocked",
+      "statement": "PLV of constructed independent (drifting-phase) signals -- ground-truth recovery, near 0",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "plv_unlocked",
+        "val_col": "value"
+      },
+      "expect": 0.009201,
+      "tol": 0.005,
+      "render": [
+        "0.009"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "paper": "sway-4cond-nemenyi-bds",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "p_firm_vision",
+      "statement": "Nemenyi p of eyes-open vs eyes-closed on FIRM ground (the firm-surface vision effect, borderline)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "p_firm_vision",
+        "val_col": "value"
+      },
+      "expect": 0.0442669796,
+      "tol": 1e-06,
+      "render": [
+        "0.044"
+      ]
+    },
+    {
+      "id": "p_foam_vision",
+      "statement": "Nemenyi p of eyes-open vs eyes-closed on FOAM (the foam-surface vision effect, strong)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "p_foam_vision",
+        "val_col": "value"
+      },
+      "expect": 3.14783e-08,
+      "tol": 1e-09,
+      "render": [
+        "3.1e-8"
+      ]
+    },
+    {
+      "id": "stat_extreme",
+      "statement": "largest Nemenyi statistic (Open-Firm vs Closed-Foam, the extreme pair)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "stat_extreme",
+        "val_col": "value"
+      },
+      "expect": 17.9962548847,
+      "tol": 1e-06,
+      "render": [
+        "18.0"
+      ]
+    },
+    {
+      "id": "max_diff_pmcmr",
+      "statement": "max |nemenyiTest p - PMCMRplus p| across all 6 pairs (bit-for-bit)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_pmcmr",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-12,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "max |nemenyiTest p - scikit_posthocs p| across all 6 pairs (machine precision)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "<1e-9"
+      ]
+    },
+    {
+      "id": "foam_vision_stronger",
+      "statement": "the vision effect is stronger on foam than on firm ground (p_foam < p_firm)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "foam_vision_stronger",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "n_sig",
+      "statement": "number of the six condition pairs that differ significantly (all 6)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_sig",
+        "val_col": "value"
+      },
+      "expect": 6,
+      "tol": 0.5,
+      "render": [
+        "6"
+      ]
+    },
+    {
+      "id": "n_pairs",
+      "statement": "total pairwise comparisons (4 choose 2)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_pairs",
+        "val_col": "value"
+      },
+      "expect": 6,
+      "tol": 0.5,
+      "render": [
+        "6"
+      ]
+    },
+    {
+      "id": "n_subjects",
+      "statement": "subjects with all four conditions (complete blocks)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_subjects",
+        "val_col": "value"
+      },
+      "expect": 158,
+      "tol": 0.5,
+      "render": [
+        "158"
+      ]
+    }
+  ]
+}

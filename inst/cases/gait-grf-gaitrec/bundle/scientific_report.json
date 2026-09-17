@@ -1,0 +1,137 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:gaitrec_grf_landmarks",
+      "status": "PASS",
+      "detail": "9/9 agree [control_peak1_bw=1.1005 vs ref 1.1005; control_trough_bw=0.74753 vs ref 0.7475; control_peak2_bw=1.0981 vs ref 1.0981; patient_peak1_bw=1.0151 vs ref 1.0151; patient_trough_bw=0.84096 vs ref 0.841; patient_peak2_bw=1.0342 vs ref 1.0342; first_peak_cohens_d=1.3332 vs ref 1.3332; n_control=208 vs ref 208; n_patient=499 vs ref 499]",
+      "citation": "Horsak B, Slijepcevic D, Raberger AM, Schwab C, Worisch M, Zeppelzauer M (2020), Sci Data 7:143 (GaitRec, figshare collection 4788012, CC-BY 4.0); vertical GRF (F_V_PRO), healthy controls vs knee-pathology cohort."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "control_peak1_bw": 1.10053030288462,
+    "control_trough_bw": 0.7475299475,
+    "control_peak2_bw": 1.09810470548077,
+    "patient_peak1_bw": 1.01511718176353,
+    "patient_trough_bw": 0.840956646372745,
+    "patient_peak2_bw": 1.03422373885772,
+    "first_peak_cohens_d": 1.33321168714647,
+    "n_control": 208,
+    "n_patient": 499
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "gaitrec_grf_landmarks",
+    "citation": "Horsak B, Slijepcevic D, Raberger AM, Schwab C, Worisch M, Zeppelzauer M (2020), Sci Data 7:143 (GaitRec, figshare collection 4788012, CC-BY 4.0); vertical GRF (F_V_PRO), healthy controls vs knee-pathology cohort.",
+    "description": "cohort contrast of stance-phase vertical-GRF landmarks between GaitRec healthy controls and the knee-pathology group reproduces the knee-pathology signature -- control loading peak 1.10 BW vs patient 1.02 BW, control mid-stance trough 0.75 BW vs patient 0.84 BW -- with a large first-peak effect size (d=1.33), on 208 vs 499 subjects",
+    "from_step": {},
+    "scores": {
+      "control_peak1_bw": 1.10053030288462,
+      "control_trough_bw": 0.7475299475,
+      "control_peak2_bw": 1.09810470548077,
+      "patient_peak1_bw": 1.01511718176353,
+      "patient_trough_bw": 0.840956646372745,
+      "patient_peak2_bw": 1.03422373885772,
+      "first_peak_cohens_d": 1.33321168714647,
+      "n_control": 208,
+      "n_patient": 499
+    },
+    "checks": [
+      {
+        "metric": "control_peak1_bw",
+        "expect": 1.1005,
+        "tol": 0.005,
+        "ref_value": 1.1005,
+        "term_value": 1.10053030288462
+      },
+      {
+        "metric": "control_trough_bw",
+        "expect": 0.7475,
+        "tol": 0.005,
+        "ref_value": 0.7475,
+        "term_value": 0.7475299475
+      },
+      {
+        "metric": "control_peak2_bw",
+        "expect": 1.0981,
+        "tol": 0.005,
+        "ref_value": 1.0981,
+        "term_value": 1.09810470548077
+      },
+      {
+        "metric": "patient_peak1_bw",
+        "expect": 1.0151,
+        "tol": 0.005,
+        "ref_value": 1.0151,
+        "term_value": 1.01511718176353
+      },
+      {
+        "metric": "patient_trough_bw",
+        "expect": 0.841,
+        "tol": 0.005,
+        "ref_value": 0.841,
+        "term_value": 0.840956646372745
+      },
+      {
+        "metric": "patient_peak2_bw",
+        "expect": 1.0342,
+        "tol": 0.005,
+        "ref_value": 1.0342,
+        "term_value": 1.03422373885772
+      },
+      {
+        "metric": "first_peak_cohens_d",
+        "expect": 1.3332,
+        "tol": 0.01,
+        "ref_value": 1.3332,
+        "term_value": 1.33321168714647
+      },
+      {
+        "metric": "n_control",
+        "expect": 208,
+        "tol": 0.5,
+        "ref_value": 208,
+        "term_value": 208
+      },
+      {
+        "metric": "n_patient",
+        "expect": 499,
+        "tol": 0.5,
+        "ref_value": 499,
+        "term_value": 499
+      }
+    ]
+  }
+}

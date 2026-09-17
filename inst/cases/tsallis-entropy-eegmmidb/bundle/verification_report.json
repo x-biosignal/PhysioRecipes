@@ -1,0 +1,62 @@
+{
+  "paper": "tsallis-entropy-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "tsallis_collision",
+      "statement": "Tsallis entropy at q=2 (collision-order) of the POz amplitude distribution",
+      "expect": 0.8854257813,
+      "artifact": 0.885426,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "tsallis_shannon",
+      "statement": "Tsallis entropy at q=1 -- exactly the Shannon entropy (the family's special case)",
+      "expect": 2.3247657693,
+      "artifact": 2.324766,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_nk",
+      "statement": "max |tsallisEntropy - NeuroKit2 entropy_tsallis| over q = {0.5, 1, 2, 3} (bit-exact family)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "diverge_from_renyi_q2",
+      "statement": "|Tsallis(q=2) - Renyi(alpha=2)| -- the two generalizations diverge (non-additive vs additive)",
+      "expect": 1.281107,
+      "artifact": 1.281107,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "agree_at_1",
+      "statement": "|Tsallis(q=1) - Renyi(alpha=1)| -- both recover Shannon, so they coincide at 1 (~0)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "monotonic",
+      "statement": "Tsallis S_q is non-increasing in q (1 = holds)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

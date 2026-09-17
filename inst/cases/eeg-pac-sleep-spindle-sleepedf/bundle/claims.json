@@ -1,0 +1,85 @@
+{
+  "paper": "eeg-pac-sleep-spindle-sleepedf",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "pac_mi",
+      "statement": "SO-spindle Tort modulation index on the NREM EEG (SO phase 0.5-1.25 Hz, spindle amp 12-15 Hz)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "pac_mi",
+        "val_col": "value"
+      },
+      "expect": 0.000348705,
+      "tol": 1e-06,
+      "render": [
+        "0.00035"
+      ]
+    },
+    {
+      "id": "abs_diff",
+      "statement": "|phaseAmplitudeCoupling - tensorpac|, the cross-tool agreement (machine precision)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "abs_diff",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "tensorpac_mi",
+      "statement": "the same Tort MI recomputed by the canonical Python tensorpac (op == tensorpac)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "tensorpac_mi",
+        "val_col": "value"
+      },
+      "expect": 0.000348705,
+      "tol": 1e-06,
+      "render": [
+        "0.00035"
+      ]
+    },
+    {
+      "id": "surrogate_z",
+      "statement": "z-score of the observed SO-spindle MI against a circular-shift surrogate null (real coupling)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "surrogate_z",
+        "val_col": "value"
+      },
+      "expect": 9.585758,
+      "tol": 0.01,
+      "render": [
+        "9.6"
+      ]
+    },
+    {
+      "id": "n_exceed",
+      "statement": "surrogates (of 200) the observed MI exceeds -- significance of the coupling",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_exceed",
+        "val_col": "value"
+      },
+      "expect": 200,
+      "tol": 0.5,
+      "render": [
+        "200"
+      ]
+    }
+  ]
+}

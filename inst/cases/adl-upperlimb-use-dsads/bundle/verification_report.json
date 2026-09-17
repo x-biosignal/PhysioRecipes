@@ -1,0 +1,53 @@
+{
+  "paper": "adl-upperlimb-use-dsads",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "use_ratio",
+      "statement": "bilateral use ratio (active time of one arm / the other; ~1 = symmetric)",
+      "expect": 0.864,
+      "artifact": 0.864136,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "magnitude_ratio",
+      "statement": "bilateral magnitude ratio (log ratio of per-epoch activity; ~0 = both arms used equally)",
+      "expect": -0.052,
+      "artifact": -0.052173,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_dynamic",
+      "statement": "activities in which both arms are actively used (use ratio == 1)",
+      "expect": 14,
+      "artifact": 14,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_abs_mag",
+      "statement": "largest per-activity |magnitude ratio| among dynamic activities (all < 0.5 = symmetric)",
+      "expect": 0.343,
+      "artifact": 0.343,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_abs_mag",
+      "statement": "mean per-activity |magnitude ratio| among dynamic activities",
+      "expect": 0.119,
+      "artifact": 0.119,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

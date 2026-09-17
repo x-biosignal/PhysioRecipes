@@ -1,0 +1,10 @@
+"metric","value"
+"tsallis_collision",0.88542578
+"tsallis_shannon",2.32476577
+"max_diff_nk",8.88178419700125e-16
+"diverge_from_renyi_q2",1.281107
+"agree_at_1",0
+"monotonic",1
+"tsallis_q05",4.95444473
+"tsallis_q3",0.49242442
+"renyi_q2",2.16653247

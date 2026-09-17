@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-11T00:00:00Z",
+  "hypothesis": {
+    "statement": "In the Tukey HSD post-hoc of the vertical-GRF dynamic range across GaitRec's five gait classes, healthy controls differ significantly from all four pathology classes while the pathology classes do not differ from one another; the newly-authored tukeyHSD reproduces base R stats::TukeyHSD and scipy.stats.tukey_hsd to machine precision.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "pairwise_mean_differences"
+  },
+  "analysis_plan": {
+    "dataset": "GaitRec (Horsak et al. 2020); Tukey HSD of the vertical-GRF dynamic range (peak1 - trough via PhysioMoCap::grfLandmarks) across the five gait classes",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "tukeyHSD",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "pairwise_mean_differences",
+      "threshold": "descriptive: tukeyHSD equals base R TukeyHSD and scipy.stats.tukey_hsd to machine precision (|diff| < 1e-9); all four healthy-vs-pathology pairs are significant (p < 0.05) and none of the six pathology-pathology pairs are"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "45b279e6e8537fd2f9d78e33f6005b4299be8d82053a35ffd0ac31106decb5d0",
+    "registered_at": "2026-09-11T00:00:00Z"
+  }
+}

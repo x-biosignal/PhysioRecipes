@@ -1,0 +1,110 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:jarquebera_vs_scipy",
+      "status": "PASS",
+      "detail": "6/6 agree [jb_statistic=15.493 vs ref 15.493; jb_stat_diff_scipy=1.7764e-14 vs ref 0; jb_pvalue_diff_scipy=4.0115e-18 vs ref 0; critical_value_95=5.9915 vs ref 5.9915; reject_normality=1 vs ref 1; descriptive_near_gaussian=1 vs ref 1]",
+      "citation": "Jarque CM, Bera AK (1980). Efficient tests for normality... Economics Letters 6:255-259. Reference impl: scipy.stats.jarque_bera (Virtanen et al. 2020). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "jb_statistic": 15.49279,
+    "jb_stat_diff_scipy": 1.77635683940025e-14,
+    "jb_pvalue_diff_scipy": 4.01154803819637e-18,
+    "critical_value_95": 5.991465,
+    "reject_normality": 1,
+    "descriptive_near_gaussian": 1
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "jarquebera_vs_scipy",
+    "citation": "Jarque CM, Bera AK (1980). Efficient tests for normality... Economics Letters 6:255-259. Reference impl: scipy.stats.jarque_bera (Virtanen et al. 2020). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the Jarque-Bera test with scipy.stats.jarque_bera on the identical signal; reports the statistic, the bit-exact statistic and p-value agreement, the 95% chi-square critical value, whether normality is rejected, and whether signalMoments finds it descriptively Gaussian",
+    "from_step": {},
+    "scores": {
+      "jb_statistic": 15.49279,
+      "jb_stat_diff_scipy": 1.77635683940025e-14,
+      "jb_pvalue_diff_scipy": 4.01154803819637e-18,
+      "critical_value_95": 5.991465,
+      "reject_normality": 1,
+      "descriptive_near_gaussian": 1
+    },
+    "checks": [
+      {
+        "metric": "jb_statistic",
+        "expect": 15.49279,
+        "tol": 0.0001,
+        "ref_value": 15.49279,
+        "term_value": 15.49279
+      },
+      {
+        "metric": "jb_stat_diff_scipy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 1.77635683940025e-14
+      },
+      {
+        "metric": "jb_pvalue_diff_scipy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 4.01154803819637e-18
+      },
+      {
+        "metric": "critical_value_95",
+        "expect": 5.991465,
+        "tol": 0.0001,
+        "ref_value": 5.991465,
+        "term_value": 5.991465
+      },
+      {
+        "metric": "reject_normality",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "descriptive_near_gaussian",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "paper": "ljung-box-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "lb_statistic",
+      "statement": "Ljung-Box Q statistic at lag h=10 of the POz signal",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "lb_statistic",
+        "val_col": "value"
+      },
+      "expect": 4165.456393,
+      "tol": 0.001,
+      "render": [
+        "4165"
+      ]
+    },
+    {
+      "id": "lb_stat_diff_sm",
+      "statement": "|Ljung-Box Q - statsmodels acorr_ljungbox| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "lb_stat_diff_sm",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "lb_pvalue_diff_sm",
+      "statement": "|Ljung-Box p-value - statsmodels p-value| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "lb_pvalue_diff_sm",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "critical_value_95",
+      "statement": "95% chi-square critical value at 10 df (the rejection threshold)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "critical_value_95",
+        "val_col": "value"
+      },
+      "expect": 18.307038,
+      "tol": 0.0001,
+      "render": [
+        "18.3"
+      ]
+    },
+    {
+      "id": "reject_white_noise",
+      "statement": "the white-noise null is rejected (Q > critical; 1 = rejected)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "reject_white_noise",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "q_over_critical",
+      "statement": "Q as a multiple of the 95% critical value -- how decisively white noise is rejected",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "q_over_critical",
+        "val_col": "value"
+      },
+      "expect": 227.5333,
+      "tol": 0.1,
+      "render": [
+        "228x"
+      ]
+    }
+  ]
+}

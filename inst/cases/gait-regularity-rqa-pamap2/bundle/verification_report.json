@@ -1,0 +1,53 @@
+{
+  "paper": "gait-regularity-rqa-pamap2",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "walk_det",
+      "statement": "RQA determinism of walking ankle acceleration (quasi-periodic)",
+      "expect": 0.921,
+      "artifact": 0.921174,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "walk_apen",
+      "statement": "approximate entropy of walking (low = regular)",
+      "expect": 0.455,
+      "artifact": 0.455337,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "iron_det",
+      "statement": "RQA determinism of ironing (aperiodic)",
+      "expect": 0.382,
+      "artifact": 0.382495,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "iron_apen",
+      "statement": "approximate entropy of ironing (high = irregular)",
+      "expect": 1.28,
+      "artifact": 1.280353,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "run_det",
+      "statement": "RQA determinism of running (most rhythmic)",
+      "expect": 0.983,
+      "artifact": 0.983224,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "dataset": "A public data set of human balance evaluations (BDS)",
+  "source": "figshare",
+  "url": "https://doi.org/10.6084/m9.figshare.3394432",
+  "license": "CC BY 4.0",
+  "citation": "Santos DA, Duarte M. A public data set of human balance evaluations. PeerJ 2016;4:e2648. doi:10.7717/peerj.2648.",
+  "record_used": "50 subjects, one eyes-open trial on a firm surface and one eyes-open trial on a foam surface each (60 s quiet standing, force-plate center of pressure at 100 Hz); the derived quantity is the COP path length per trial.",
+  "pipeline": "For each of 50 subjects, the eyes-open firm and eyes-open foam COP trials -> PhysioMoCap::swayMetrics (certified bit-for-bit against the Prieto reference in the sway-posturography-bds case) -> COP path length (cm). The 50x2 (foam, firm) path-length matrix -> PhysioAnalysis::pairedTTest. The benchmark reference re-computes the paired t-test with scipy.stats.ttest_rel AND base R t.test(paired=TRUE) and reports the foam/firm effect. Deterministic.",
+  "note": "The pairedTTest op is NEWLY AUTHORED (a standard clinical before/after or condition-A/B test the ecosystem lacked). It reproduces BOTH scipy.stats.ttest_rel AND base R t.test(paired=TRUE) BIT-FOR-BIT (statistic and p, |diff| 0 vs each) -- the identical closed-form paired t, not a convention agreement. The per-subject COP path lengths are computed by swayMetrics, itself certified against the Prieto reference in the sibling case, so the test's input is validated. Finding: the sensory-reweighting effect -- foam-surface quiet-standing sway (mean path 167 cm) is about 2.76x firm-surface sway (mean 61 cm, ratio of group means; the mean of the per-subject ratios is ~2.9), the difference is overwhelmingly significant (t=17.3 on 49 df, p~1.6e-22), and foam exceeds firm in ALL 50 of 50 subjects. Standing on foam degrades ankle proprioception, so the balance system reweights toward vision and vestibular input and sways more -- a textbook, rock-solid posturographic result and a core balance / fall-risk concept."
+}

@@ -1,0 +1,100 @@
+{
+  "paper": "adl-selfcare-hmp",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "selfcare_detection",
+      "statement": "self-care windows recognised as SOME self-care activity (leave-one-subject-out)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "selfcare_detection_rate",
+        "val_col": "value"
+      },
+      "expect": 0.938,
+      "tol": 0.02,
+      "render": [
+        "0.938 (descriptor-drift tol 0.02)"
+      ]
+    },
+    {
+      "id": "overall_accuracy",
+      "statement": "5-class leave-one-subject-out accuracy",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "overall_accuracy",
+        "val_col": "value"
+      },
+      "expect": 0.603,
+      "tol": 0.02,
+      "render": [
+        "0.603 (descriptor-drift tol 0.02)"
+      ]
+    },
+    {
+      "id": "grooming_recall",
+      "statement": "grooming (d520) recall (chance 0.20)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "grooming_recall",
+        "val_col": "value"
+      },
+      "expect": 0.767,
+      "tol": 0.02,
+      "render": [
+        "0.767 (descriptor-drift tol 0.02)"
+      ]
+    },
+    {
+      "id": "drinking_recall",
+      "statement": "drinking (d560) recall",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "drinking_recall",
+        "val_col": "value"
+      },
+      "expect": 0.809,
+      "tol": 0.02,
+      "render": [
+        "0.809 (descriptor-drift tol 0.02)"
+      ]
+    },
+    {
+      "id": "eating_recall",
+      "statement": "eating (d550) recall -- NOT distinguished (documented failure)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "eating_recall",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 0.005,
+      "render": [
+        "0.00"
+      ]
+    },
+    {
+      "id": "n_subjects",
+      "statement": "subjects in the leave-one-subject-out evaluation",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_subjects",
+        "val_col": "value"
+      },
+      "expect": 13,
+      "tol": 0.5,
+      "render": [
+        "13"
+      ]
+    }
+  ]
+}

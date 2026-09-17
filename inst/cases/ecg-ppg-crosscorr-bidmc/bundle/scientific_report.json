@@ -1,0 +1,110 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:crosscorr_vs_numpy",
+      "status": "PASS",
+      "detail": "6/6 agree [peak_lag=49 vs ref 49; peak_lag_seconds=0.392 vs ref 0.392; peak_correlation=-0.3257 vs ref -0.3257; max_diff_numpy=2.5424e-14 vs ref 0; scipy_peak_lag_abs=49 vs ref 49; n_lags=181 vs ref 181]",
+      "citation": "Box GEP, Jenkins GM (1976). Time Series Analysis (cross-correlation). Reference impls: stats::ccf (R Core) reproduced with an independent numpy implementation + scipy.signal.correlate (Virtanen et al. 2020). Data: BIDMC PPG and Respiration Dataset (Pimentel et al. 2017), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "peak_lag": 49,
+    "peak_lag_seconds": 0.392,
+    "peak_correlation": -0.32570468,
+    "max_diff_numpy": 2.54241072639161e-14,
+    "scipy_peak_lag_abs": 49,
+    "n_lags": 181
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "crosscorr_vs_numpy",
+    "citation": "Box GEP, Jenkins GM (1976). Time Series Analysis (cross-correlation). Reference impls: stats::ccf (R Core) reproduced with an independent numpy implementation + scipy.signal.correlate (Virtanen et al. 2020). Data: BIDMC PPG and Respiration Dataset (Pimentel et al. 2017), PhysioNet.",
+    "description": "reproduces crossCorrelation with an independent numpy normalized cross-correlation (matched to R's ccf lag convention) bit-for-bit, and matches the peak lag against scipy.signal.correlate (within the matched window); reports the op peak lag (samples + seconds) + peak correlation, the numpy agreement, and the scipy peak-lag magnitude",
+    "from_step": {},
+    "scores": {
+      "peak_lag": 49,
+      "peak_lag_seconds": 0.392,
+      "peak_correlation": -0.32570468,
+      "max_diff_numpy": 2.54241072639161e-14,
+      "scipy_peak_lag_abs": 49,
+      "n_lags": 181
+    },
+    "checks": [
+      {
+        "metric": "peak_lag",
+        "expect": 49,
+        "tol": 0.5,
+        "ref_value": 49,
+        "term_value": 49
+      },
+      {
+        "metric": "peak_lag_seconds",
+        "expect": 0.392,
+        "tol": 0.001,
+        "ref_value": 0.392,
+        "term_value": 0.392
+      },
+      {
+        "metric": "peak_correlation",
+        "expect": -0.32570468,
+        "tol": 1e-05,
+        "ref_value": -0.32570468,
+        "term_value": -0.32570468
+      },
+      {
+        "metric": "max_diff_numpy",
+        "expect": 0,
+        "tol": 1e-10,
+        "ref_value": 0,
+        "term_value": 2.54241072639161e-14
+      },
+      {
+        "metric": "scipy_peak_lag_abs",
+        "expect": 49,
+        "tol": 0.5,
+        "ref_value": 49,
+        "term_value": 49
+      },
+      {
+        "metric": "n_lags",
+        "expect": 181,
+        "tol": 0.5,
+        "ref_value": 181,
+        "term_value": 181
+      }
+    ]
+  }
+}

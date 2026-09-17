@@ -1,0 +1,53 @@
+{
+  "paper": "adl-freeliving-pamap2",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "enmo_max_diff",
+      "statement": "max absolute ENMO difference vs GGIR (g) -- machine precision",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "enmo_correlation",
+      "statement": "ENMO correlation vs GGIR across 749 epochs",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "intensity_gradient",
+      "statement": "Rowlands intensity gradient (log-log slope of time vs intensity)",
+      "expect": -1.19,
+      "artifact": -1.193183,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mvpa_min",
+      "statement": "moderate-to-vigorous minutes over the recording",
+      "expect": 28.6,
+      "artifact": 28.583333,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "astp",
+      "statement": "activity-to-sedentary transition probability (fragmentation)",
+      "expect": 0.113,
+      "artifact": 0.112832,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

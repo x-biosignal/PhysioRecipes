@@ -1,0 +1,53 @@
+{
+  "paper": "coherence-cardiac-bidmc",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "max_abs_diff",
+      "statement": "max |coherence - scipy.signal.coherence| over the full spectrum (machine precision)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "peak_coherence",
+      "statement": "peak PPG-ECG coherence in the cardiac band (0.5-5 Hz)",
+      "expect": 0.8982421806,
+      "artifact": 0.898242,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "peak_freq_hz",
+      "statement": "frequency of the coherence peak -- the shared heart rate (Hz)",
+      "expect": 1.464844,
+      "artifact": 1.464844,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "band_mean_coherence",
+      "statement": "mean PPG-ECG coherence across the cardiac band (0.5-5 Hz)",
+      "expect": 0.4388860116,
+      "artifact": 0.438886,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_freq",
+      "statement": "frequency bins in the coherence spectrum",
+      "expect": 257,
+      "artifact": 257,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

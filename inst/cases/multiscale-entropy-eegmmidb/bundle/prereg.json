@@ -1,0 +1,41 @@
+{
+  "registered_at": "2026-09-07T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real eyes-closed posterior EEG channel (eegmmidb S002R02, POz), the newly-authored multiscaleEntropy reproduces NeuroKit2 entropy_multiscale (MSEn) BIT-FOR-BIT across scales 1-8; and the MSE curve is non-monotonic, rising to a coarse-scale peak that exceeds the scale-1 value (the signature of multi-scale structure, not white noise).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "multiscale_entropy"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "multiscaleEntropy",
+        "params": {
+          "scales": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ]
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "multiscale_entropy",
+      "threshold": "descriptive: multiscaleEntropy equals NeuroKit2 entropy_multiscale to machine precision (max |diff| < 1e-9 across scales 1-8)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "6bfccf99af757422b03608d6842e4c3fa11c0c072d5f95e51690c5ed90b696be",
+    "registered_at": "2026-09-07T00:00:00Z"
+  }
+}
