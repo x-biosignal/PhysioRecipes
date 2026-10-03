@@ -1,0 +1,109 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:circular_stats_vs_circular",
+      "status": "PASS",
+      "detail": "5/5 agree [mean_direction=254.32 vs ref 254.32; resultant_length=0.19528 vs ref 0.19528; mean_abs_diff=5.6843e-14 vs ref 0; rbar_abs_diff=0 vs ref 0; rbar_mean5=0.2093 vs ref 0.2093]",
+      "citation": "Fisher NI (1993). Statistical Analysis of Circular Data. CUP. Reference impl: the R `circular` package (Agostinelli & Lund). Vector coding: Needham et al. (2014). Data: WBDS (Fukuchi et al. 2018), knee-ankle gait coupling angles."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "mean_direction": 254.32456823,
+    "resultant_length": 0.1952812475,
+    "mean_abs_diff": 5.6843418860808e-14,
+    "rbar_abs_diff": 0,
+    "rayleigh_p_op": 3.16169e-08,
+    "rayleigh_p_circular": 3.66259e-08,
+    "rbar_mean5": 0.2093033478,
+    "rbar_min5": 0.058538362,
+    "n": 449
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "circular_stats_vs_circular",
+    "citation": "Fisher NI (1993). Statistical Analysis of Circular Data. CUP. Reference impl: the R `circular` package (Agostinelli & Lund). Vector coding: Needham et al. (2014). Data: WBDS (Fukuchi et al. 2018), knee-ankle gait coupling angles.",
+    "description": "re-computes the mean direction + mean resultant length with the canonical `circular` package (mean.circular, rho.circular) and compares to circularSummary's; reports the machine-precision agreement (R-bar |diff| = 0, mean |diff| ~ 6e-14), the Rayleigh p both ways (op 3.16e-8 vs circular 3.66e-8, both significant), and the 5-subject R-bar (mean 0.209, min 0.059)",
+    "from_step": {},
+    "scores": {
+      "mean_direction": 254.32456823,
+      "resultant_length": 0.1952812475,
+      "mean_abs_diff": 5.6843418860808e-14,
+      "rbar_abs_diff": 0,
+      "rayleigh_p_op": 3.16169e-08,
+      "rayleigh_p_circular": 3.66259e-08,
+      "rbar_mean5": 0.2093033478,
+      "rbar_min5": 0.058538362,
+      "n": 449
+    },
+    "checks": [
+      {
+        "metric": "mean_direction",
+        "expect": 254.32456823,
+        "tol": 1e-06,
+        "ref_value": 254.32456823,
+        "term_value": 254.32456823
+      },
+      {
+        "metric": "resultant_length",
+        "expect": 0.1952812475,
+        "tol": 1e-06,
+        "ref_value": 0.1952812475,
+        "term_value": 0.1952812475
+      },
+      {
+        "metric": "mean_abs_diff",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 5.6843418860808e-14
+      },
+      {
+        "metric": "rbar_abs_diff",
+        "expect": 0,
+        "tol": 1e-12,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "rbar_mean5",
+        "expect": 0.2093033478,
+        "tol": 1e-06,
+        "ref_value": 0.2093033478,
+        "term_value": 0.2093033478
+      }
+    ]
+  }
+}

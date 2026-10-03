@@ -1,0 +1,9 @@
+"metric","value"
+"katz_fd",3.4679139453
+"antropy_katz_fd",3.4679139453
+"neurokit_katz_fd",3.4679139453
+"euclidean_katz_fd",1.6955955784
+"max_diff_antropy",0
+"max_diff_neurokit",0
+"euclidean_diff",1.7723183669
+"n_samples",1600

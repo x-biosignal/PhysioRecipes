@@ -1,0 +1,62 @@
+{
+  "paper": "dispersion-entropy-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "dispen",
+      "statement": "dispersion entropy (DispEn) of the POz signal at c=6, dimension=3, delay=1",
+      "expect": 1.1170837477,
+      "artifact": 1.117084,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "rden",
+      "statement": "reverse dispersion entropy (RDEn) -- deviation of the pattern distribution from uniformity",
+      "expect": 0.0162243036,
+      "artifact": 0.016224,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_nk_dispen",
+      "statement": "max |dispersionEntropy - NeuroKit2 entropy_dispersion| (DispEn) over the (c,m,delay) family (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_nk_rden",
+      "statement": "max |RDEn - NeuroKit2 RDEn| over the (c,m,delay) family (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_patterns_observed",
+      "statement": "distinct dispersion patterns realized by the signal (out of c^m = 216)",
+      "expect": 108,
+      "artifact": 108,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "dispen_below_ceiling",
+      "statement": "DispEn lies below the NeuroKit2 normalization ceiling 1/ln(2) = 1.443 (1 = holds)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

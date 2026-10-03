@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-10T00:00:00Z",
+  "hypothesis": {
+    "statement": "The vertical-GRF dynamic range (loading peak minus mid-stance trough) is greater in healthy controls (n=208) than in knee-pathology patients (n=499); the certified twoSampleTTest reproduces scipy.stats.ttest_ind(equal_var=FALSE) AND base R t.test BIT-FOR-BIT.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "two_group_mean_difference"
+  },
+  "analysis_plan": {
+    "dataset": "GaitRec (Horsak et al. 2020); vertical-GRF dynamic range (peak1 - trough via PhysioMoCap::grfLandmarks) in healthy controls vs knee-pathology patients, shod, standardised walking speed",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "twoSampleTTest",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "two_group_mean_difference",
+      "threshold": "descriptive: twoSampleTTest equals scipy.stats.ttest_ind and base R t.test to machine precision (|diff| < 1e-9); the control dynamic range exceeds the patient one (t > 0, p < 0.001)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "752bd3e4a0ac0b49805ea690fb40c8d6a0b8634f994ef72f9e1ff461352eeb4a",
+    "registered_at": "2026-09-10T00:00:00Z"
+  }
+}

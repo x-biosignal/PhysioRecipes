@@ -1,0 +1,53 @@
+{
+  "paper": "gait-speed-fda-fukuchi",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "beta_peak_pct",
+      "statement": "gait-cycle location of the largest speed coefficient (swing-flexion peak)",
+      "expect": 65,
+      "artifact": 65,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "beta_peak_value",
+      "statement": "speed coefficient at the peak (deg per speed level; > 0 = faster -> more flexion)",
+      "expect": 3.341,
+      "artifact": 3.340759,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "global_p",
+      "statement": "curve-wide (family-wise) permutation p-value for the speed effect",
+      "expect": 0.0005,
+      "artifact": 0.0005,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "cor_speed_peak",
+      "statement": "correlation of walking speed with peak knee flexion (pooled)",
+      "expect": 0.627,
+      "artifact": 0.627066,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_curves",
+      "statement": "subject-speed knee-angle curves analysed",
+      "expect": 328,
+      "artifact": 328,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

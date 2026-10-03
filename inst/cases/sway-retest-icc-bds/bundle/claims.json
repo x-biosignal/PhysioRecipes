@@ -1,0 +1,160 @@
+{
+  "paper": "sway-retest-icc-bds",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "icc2_single",
+      "statement": "ICC(2,1): single-trial test-retest reliability of COP path length",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "icc2_single",
+        "val_col": "value"
+      },
+      "expect": 0.8252765473,
+      "tol": 1e-06,
+      "render": [
+        "0.83"
+      ]
+    },
+    {
+      "id": "icc2k_average",
+      "statement": "ICC(2,k): reliability of the average of the 3 trials",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "icc2k_average",
+        "val_col": "value"
+      },
+      "expect": 0.93408038,
+      "tol": 1e-06,
+      "render": [
+        "0.93"
+      ]
+    },
+    {
+      "id": "icc1_single",
+      "statement": "ICC(1,1) (one-way random) for context",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "icc1_single",
+        "val_col": "value"
+      },
+      "expect": 0.8243552837,
+      "tol": 1e-06,
+      "render": [
+        "0.82"
+      ]
+    },
+    {
+      "id": "icc3_single",
+      "statement": "ICC(3,1) (two-way mixed, consistency) for context",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "icc3_single",
+        "val_col": "value"
+      },
+      "expect": 0.8384699745,
+      "tol": 1e-06,
+      "render": [
+        "0.84"
+      ]
+    },
+    {
+      "id": "max_diff_pingouin",
+      "statement": "max |intraclassCorrelation - pingouin.intraclass_corr| over the 6 forms (machine precision, < 1e-9)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_pingouin",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "<1e-9"
+      ]
+    },
+    {
+      "id": "max_diff_psych",
+      "statement": "max |intraclassCorrelation - psych::ICC(lmer=FALSE)| over the 6 forms (machine precision)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_psych",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "<1e-9"
+      ]
+    },
+    {
+      "id": "good_single",
+      "statement": "single-trial reliability is good (ICC(2,1) > 0.75)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "good_single",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "excellent_average",
+      "statement": "3-trial-average reliability is excellent (ICC(2,k) > 0.9)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "excellent_average",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "n",
+      "statement": "subjects with 3 trials",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n",
+        "val_col": "value"
+      },
+      "expect": 163,
+      "tol": 0.5,
+      "render": [
+        "163"
+      ]
+    },
+    {
+      "id": "k",
+      "statement": "repeated trials per subject",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "k",
+        "val_col": "value"
+      },
+      "expect": 3,
+      "tol": 0.5,
+      "render": [
+        "3"
+      ]
+    }
+  ]
+}

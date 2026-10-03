@@ -1,0 +1,105 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:cca_vs_cancor",
+      "status": "PASS",
+      "detail": "5/5 agree [cca_r1=0.73712 vs ref 0.73712; cca_r2=0.29879 vs ref 0.29879; max_abs_diff=1.1102e-16 vs ref 0; r1_mean5=0.7949 vs ref 0.7949; r1_min5=0.73712 vs ref 0.73712]",
+      "citation": "Hotelling H (1936). Relations between two sets of variates. Biometrika 28(3/4):321-377. Reference impl: base R stats::cancor. Data: WBDS (Fukuchi et al. 2018), gait kinematics vs kinetics."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "cca_r1": 0.7371211004,
+    "cca_r2": 0.2987900654,
+    "cancor_r1": 0.7371211004,
+    "max_abs_diff": 1.11022302462516e-16,
+    "r1_mean5": 0.7949007814,
+    "r1_min5": 0.7371211004,
+    "n": 450
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "cca_vs_cancor",
+    "citation": "Hotelling H (1936). Relations between two sets of variates. Biometrika 28(3/4):321-377. Reference impl: base R stats::cancor. Data: WBDS (Fukuchi et al. 2018), gait kinematics vs kinetics.",
+    "description": "re-computes the canonical correlations with base R's stats::cancor and compares to cca's; reports r1 (0.7371), r2 (0.2988), the max |diff| (< 1e-9, machine precision), and the 5-subject first-canonical-correlation robustness (mean 0.7949, min 0.7371)",
+    "from_step": {},
+    "scores": {
+      "cca_r1": 0.7371211004,
+      "cca_r2": 0.2987900654,
+      "cancor_r1": 0.7371211004,
+      "max_abs_diff": 1.11022302462516e-16,
+      "r1_mean5": 0.7949007814,
+      "r1_min5": 0.7371211004,
+      "n": 450
+    },
+    "checks": [
+      {
+        "metric": "cca_r1",
+        "expect": 0.7371211004,
+        "tol": 1e-06,
+        "ref_value": 0.7371211004,
+        "term_value": 0.7371211004
+      },
+      {
+        "metric": "cca_r2",
+        "expect": 0.2987900654,
+        "tol": 1e-06,
+        "ref_value": 0.2987900654,
+        "term_value": 0.2987900654
+      },
+      {
+        "metric": "max_abs_diff",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 1.11022302462516e-16
+      },
+      {
+        "metric": "r1_mean5",
+        "expect": 0.7949007814,
+        "tol": 1e-06,
+        "ref_value": 0.7949007814,
+        "term_value": 0.7949007814
+      },
+      {
+        "metric": "r1_min5",
+        "expect": 0.7371211004,
+        "tol": 1e-06,
+        "ref_value": 0.7371211004,
+        "term_value": 0.7371211004
+      }
+    ]
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "paper": "ks-normality-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "ks_statistic",
+      "statement": "Kolmogorov-Smirnov normality D statistic of the POz amplitude distribution",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "ks_statistic",
+        "val_col": "value"
+      },
+      "expect": 0.0256387277,
+      "tol": 1e-06,
+      "render": [
+        "0.026"
+      ]
+    },
+    {
+      "id": "ks_pvalue",
+      "statement": "KS two-sided asymptotic p-value (does NOT reject normality)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "ks_pvalue",
+        "val_col": "value"
+      },
+      "expect": 0.2436132165,
+      "tol": 0.0001,
+      "render": [
+        "0.24"
+      ]
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|ksNormalityTest D - scipy.stats.kstest D| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "max_diff_baser",
+      "statement": "|ksNormalityTest D - base R ks.test D| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_baser",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "jb_statistic",
+      "statement": "Jarque-Bera statistic on the same signal (for the KS-vs-JB contrast)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "jb_statistic",
+        "val_col": "value"
+      },
+      "expect": 15.4927900022,
+      "tol": 0.0001,
+      "render": [
+        "15.5"
+      ]
+    },
+    {
+      "id": "jb_pvalue",
+      "statement": "Jarque-Bera p-value on the same signal (DOES reject normality)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "jb_pvalue",
+        "val_col": "value"
+      },
+      "expect": 0.0004322982,
+      "tol": 1e-06,
+      "render": [
+        "4.3e-4"
+      ]
+    },
+    {
+      "id": "tests_disagree",
+      "statement": "KS and Jarque-Bera reach opposite verdicts on the same data",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "tests_disagree",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "n_samples",
+      "statement": "samples in the analyzed channel (10 s at 160 Hz)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_samples",
+        "val_col": "value"
+      },
+      "expect": 1600,
+      "tol": 0.5,
+      "render": [
+        "1600"
+      ]
+    }
+  ]
+}

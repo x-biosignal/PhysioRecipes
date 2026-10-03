@@ -1,0 +1,62 @@
+{
+  "paper": "hti-tinn-fantasia",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "hti",
+      "statement": "HRV triangular index (HTI) of the Fantasia RR series",
+      "expect": 11.2,
+      "artifact": 11.2,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "hti_diff_nk",
+      "statement": "|ecgHRVgeometric HTI - NeuroKit2 HRV_HTI| -- bit-exact (integer-ratio index)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "modal_count",
+      "statement": "modal (peak) NN-histogram count -- the denominator of HTI",
+      "expect": 35,
+      "artifact": 35,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_intervals",
+      "statement": "NN interval count -- the numerator of HTI (HTI = n / modal count)",
+      "expect": 392,
+      "artifact": 392,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "tinn_op",
+      "statement": "TINN (triangular interpolation of the NN histogram) from ecgHRVgeometric (ms)",
+      "expect": 164.0625,
+      "artifact": 164.0625,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "tinn_gap_nk",
+      "statement": "|TINN op - NeuroKit2 TINN| -- a documented triangular-interpolation convention difference",
+      "expect": 164.0625,
+      "artifact": 164.0625,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

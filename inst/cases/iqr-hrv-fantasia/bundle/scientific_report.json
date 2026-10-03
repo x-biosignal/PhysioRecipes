@@ -1,0 +1,139 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:iqr_vs_scipy_baser",
+      "status": "PASS",
+      "detail": "9/9 agree [iqr=76 vs ref 76; q1=724 vs ref 724; q3=800 vs ref 800; max_diff_scipy=0 vs ref 0; max_diff_baser=0 vs ref 0; sdnn=73.696 vs ref 73.696; robust_classical_ratio=0.76447 vs ref 0.76446; rr_skewness=0.073951 vs ref 0.073951; n_intervals=392 vs ref 392]",
+      "citation": "Interquartile range (Tukey 1977). Reference impls: scipy.stats.iqr (Virtanen et al.) and base R stats::IQR (type-7 quantiles). Data: Fantasia RR intervals (PhysioNet)."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "iqr": 76,
+    "q1": 724,
+    "q3": 800,
+    "max_diff_scipy": 0,
+    "max_diff_baser": 0,
+    "sdnn": 73.6963099023,
+    "robust_sd_iqr": 56.3388843032,
+    "robust_classical_ratio": 0.7644736131,
+    "rr_skewness": 0.0739512301,
+    "n_intervals": 392
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "iqr_vs_scipy_baser",
+    "citation": "Interquartile range (Tukey 1977). Reference impls: scipy.stats.iqr (Virtanen et al.) and base R stats::IQR (type-7 quantiles). Data: Fantasia RR intervals (PhysioNet).",
+    "description": "re-computes the interquartile range with scipy.stats.iqr and base R IQR (type-7 quantiles) and confirms interquartileRange reproduces BOTH bit-for-bit; also reports the quartiles, SDNN, the robust IQR-based SD estimate, their ratio, the RR skewness, and the interval count",
+    "from_step": {},
+    "scores": {
+      "iqr": 76,
+      "q1": 724,
+      "q3": 800,
+      "max_diff_scipy": 0,
+      "max_diff_baser": 0,
+      "sdnn": 73.6963099023,
+      "robust_sd_iqr": 56.3388843032,
+      "robust_classical_ratio": 0.7644736131,
+      "rr_skewness": 0.0739512301,
+      "n_intervals": 392
+    },
+    "checks": [
+      {
+        "metric": "iqr",
+        "expect": 76,
+        "tol": 1e-06,
+        "ref_value": 76,
+        "term_value": 76
+      },
+      {
+        "metric": "q1",
+        "expect": 724,
+        "tol": 1e-06,
+        "ref_value": 724,
+        "term_value": 724
+      },
+      {
+        "metric": "q3",
+        "expect": 800,
+        "tol": 1e-06,
+        "ref_value": 800,
+        "term_value": 800
+      },
+      {
+        "metric": "max_diff_scipy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "max_diff_baser",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "sdnn",
+        "expect": 73.6963099023275,
+        "tol": 0.0001,
+        "ref_value": 73.6963099023275,
+        "term_value": 73.6963099023
+      },
+      {
+        "metric": "robust_classical_ratio",
+        "expect": 0.764461996044049,
+        "tol": 0.0001,
+        "ref_value": 0.764461996044049,
+        "term_value": 0.7644736131
+      },
+      {
+        "metric": "rr_skewness",
+        "expect": 0.073951230122033,
+        "tol": 0.0001,
+        "ref_value": 0.073951230122033,
+        "term_value": 0.0739512301
+      },
+      {
+        "metric": "n_intervals",
+        "expect": 392,
+        "tol": 0.5,
+        "ref_value": 392,
+        "term_value": 392
+      }
+    ]
+  }
+}

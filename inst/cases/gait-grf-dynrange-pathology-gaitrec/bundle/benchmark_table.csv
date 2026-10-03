@@ -1,0 +1,9 @@
+"metric","value"
+"t_statistic",17.275369223
+"neg_log10_p",47.652175
+"df",338.123955
+"max_diff_scipy",3.5527136788005e-15
+"max_diff_baser",0
+"control_patient_ratio",1.8702358885
+"control_gt_patient",1
+"n_total",707

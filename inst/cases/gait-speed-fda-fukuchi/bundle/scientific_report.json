@@ -1,0 +1,94 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:gait_speed_fda_wbds",
+      "status": "PASS",
+      "detail": "4/4 agree [beta_peak_pct_cycle=65 vs ref 65; beta_peak_value=3.3408 vs ref 3.341; speed_global_p=0.0005 vs ref 0.0005; cor_speed_peakflexion=0.62707 vs ref 0.627]",
+      "citation": "Fukuchi CA, Fukuchi RK, Duarte M (2018), PeerJ 6:e4640 (WBDS, figshare 5722711, CC-BY 4.0); function-on-scalar (functional) regression. 42 subjects x 8 treadmill speeds, sagittal knee angle."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "beta_peak_pct_cycle": 65,
+    "beta_peak_value": 3.34075897065351,
+    "speed_global_p": 0.0005,
+    "cor_speed_peakflexion": 0.627066209055354,
+    "n_curves": 328
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "gait_speed_fda_wbds",
+    "citation": "Fukuchi CA, Fukuchi RK, Duarte M (2018), PeerJ 6:e4640 (WBDS, figshare 5722711, CC-BY 4.0); function-on-scalar (functional) regression. 42 subjects x 8 treadmill speeds, sagittal knee angle.",
+    "description": "function-on-scalar regression of the within-subject-centred WBDS knee curves on speed reproduces the case EXACTLY: the coefficient peaks at 65% cycle at +3.341 deg/level, curve-wide permutation p=5e-4, pooled peak-flexion-vs-speed r=0.627, over 328 curves",
+    "from_step": {},
+    "scores": {
+      "beta_peak_pct_cycle": 65,
+      "beta_peak_value": 3.34075897065351,
+      "speed_global_p": 0.0005,
+      "cor_speed_peakflexion": 0.627066209055354,
+      "n_curves": 328
+    },
+    "checks": [
+      {
+        "metric": "beta_peak_pct_cycle",
+        "expect": 65,
+        "tol": 0.5,
+        "ref_value": 65,
+        "term_value": 65
+      },
+      {
+        "metric": "beta_peak_value",
+        "expect": 3.341,
+        "tol": 0.005,
+        "ref_value": 3.341,
+        "term_value": 3.34075897065351
+      },
+      {
+        "metric": "speed_global_p",
+        "expect": 0.0005,
+        "tol": 0.0001,
+        "ref_value": 0.0005,
+        "term_value": 0.0005
+      },
+      {
+        "metric": "cor_speed_peakflexion",
+        "expect": 0.627,
+        "tol": 0.005,
+        "ref_value": 0.627,
+        "term_value": 0.627066209055354
+      }
+    ]
+  }
+}

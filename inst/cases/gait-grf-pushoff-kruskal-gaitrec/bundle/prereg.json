@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-10T00:00:00Z",
+  "hypothesis": {
+    "statement": "The vertical-GRF push-off peak differs across the five GaitRec gait classes -- healthy control (n=208), ankle (n=483), knee (n=499), hip (n=364), calcaneus (n=290); the newly-authored kruskalTest reproduces base R stats::kruskal.test BIT-FOR-BIT and scipy.stats.kruskal to machine precision. Healthy controls have the largest push-off (highest mean rank) and calcaneus pathology the smallest (lowest mean rank).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "k_group_rank_difference"
+  },
+  "analysis_plan": {
+    "dataset": "GaitRec (Horsak et al. 2020); vertical-GRF push-off peak (3rd landmark of PhysioMoCap::grfLandmarks) across the five gait classes, shod, standardised speed, initial-presentation baseline sessions",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "kruskalTest",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "k_group_rank_difference",
+      "threshold": "descriptive: kruskalTest equals base R kruskal.test bit-for-bit (|diff| = 0) and scipy.stats.kruskal to machine precision (|diff| < 1e-9); the groups differ (omnibus H, p < 0.001) with healthy controls highest-ranked and calcaneus lowest-ranked in push-off"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "fe778acfb1968ea6ab78638f3e982476eb8e8be32a3caccda4299f701e469b74",
+    "registered_at": "2026-09-10T00:00:00Z"
+  }
+}

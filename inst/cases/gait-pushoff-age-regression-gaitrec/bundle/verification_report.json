@@ -1,0 +1,98 @@
+{
+  "paper": "gait-pushoff-age-regression-gaitrec",
+  "n_claims": 10,
+  "n_grounded": 10,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "slope",
+      "statement": "OLS slope of push-off peak on age (BW per year; negative = decline)",
+      "expect": -0.001202775159,
+      "artifact": -0.001203,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "slope_per_decade",
+      "statement": "push-off decline per decade of age (BW)",
+      "expect": -0.01202775,
+      "artifact": -0.012028,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "intercept",
+      "statement": "OLS intercept (modelled push-off at age 0, extrapolated)",
+      "expect": 1.1436454,
+      "artifact": 1.143645,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "r_squared",
+      "statement": "R-squared: fraction of push-off variance explained by age",
+      "expect": 0.0936119568,
+      "artifact": 0.093612,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "neg_log10_p",
+      "statement": "-log10(two-sided slope p): the age effect is highly significant",
+      "expect": 5.156119,
+      "artifact": 5.156119,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "df",
+      "statement": "residual degrees of freedom (n - 2)",
+      "expect": 206,
+      "artifact": 206,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_slope_scipy",
+      "statement": "|linearRegression slope - scipy.stats.linregress slope| (bit-for-bit)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_slope_lm",
+      "statement": "|linearRegression slope - base R lm slope| (machine precision, < 1e-9)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "slope_negative",
+      "statement": "the slope is negative (push-off peak declines with age)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n",
+      "statement": "healthy-control subjects regressed",
+      "expect": 208,
+      "artifact": 208,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

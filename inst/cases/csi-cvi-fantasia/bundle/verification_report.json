@@ -1,0 +1,71 @@
+{
+  "paper": "csi-cvi-fantasia",
+  "n_claims": 7,
+  "n_grounded": 7,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "csi",
+      "statement": "Cardiac Sympathetic Index (CSI = L/T = SD2/SD1) -- sympathetic predominance marker",
+      "expect": 1.500142,
+      "artifact": 1.500142,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "cvi",
+      "statement": "Cardiac Vagal Index (CVI = log10(L*T)) -- parasympathetic (vagal) activity marker",
+      "expect": 4.903059,
+      "artifact": 4.903059,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "csi_modified",
+      "statement": "Modified CSI (L^2/T) -- a more sensitive sympathetic marker (seizure detection)",
+      "expect": 519.670868,
+      "artifact": 519.670868,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_nk",
+      "statement": "max |ecgHRVautonomic - NeuroKit2 hrv_nonlinear| over CSI/CVI/CSI_Modified (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "young_mean_cvi",
+      "statement": "mean Cardiac Vagal Index across the 5 young subjects",
+      "expect": 4.9436,
+      "artifact": 4.9436,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "old_mean_cvi",
+      "statement": "mean Cardiac Vagal Index across the 5 old subjects -- lower (vagal decline with age)",
+      "expect": 4.5548,
+      "artifact": 4.5548,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_young_cvi_gt_oldmean",
+      "statement": "young subjects (of 5) with CVI above the old mean -- robustness of the vagal-decline finding",
+      "expect": 5,
+      "artifact": 5,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

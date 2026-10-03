@@ -1,0 +1,80 @@
+{
+  "paper": "katz-fd-eegmmidb",
+  "n_claims": 8,
+  "n_grounded": 8,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "katz_fd",
+      "statement": "Katz's fractal dimension of the posterior EEG channel (POz), amplitude-only convention",
+      "expect": 3.4679139453,
+      "artifact": 3.467914,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "antropy_katz_fd",
+      "statement": "antropy.katz_fd on the identical signal",
+      "expect": 3.4679139453,
+      "artifact": 3.467914,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "neurokit_katz_fd",
+      "statement": "NeuroKit2 fractal_katz on the identical signal",
+      "expect": 3.4679139453,
+      "artifact": 3.467914,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "euclidean_katz_fd",
+      "statement": "the earlier Euclidean-plane convention value (what the shipped op previously returned)",
+      "expect": 1.6955955784,
+      "artifact": 1.695596,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_antropy",
+      "statement": "max |katzFD - antropy.katz_fd| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_neurokit",
+      "statement": "max |katzFD - NeuroKit2 fractal_katz| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "euclidean_diff",
+      "statement": "|amplitude-only KFD - earlier Euclidean-plane KFD| -- the size of the convention fix",
+      "expect": 1.7723183669,
+      "artifact": 1.772318,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_samples",
+      "statement": "samples in the analyzed channel (10 s at 160 Hz)",
+      "expect": 1600,
+      "artifact": 1600,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

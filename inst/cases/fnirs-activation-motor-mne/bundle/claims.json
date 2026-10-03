@@ -1,0 +1,85 @@
+{
+  "paper": "fnirs-activation-motor-mne",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "mbll_r_mne",
+      "statement": "minimum per-channel correlation of the ecosystem's mbll() HbO with MNE-Python beer_lambert_law() (cross-validation of the Beer-Lambert step)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mbll_r_mne",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.02,
+      "render": [
+        "1.0"
+      ]
+    },
+    {
+      "id": "hbo_activation",
+      "statement": "channels with a SIGNIFICANT positive HbO activation (Tapping - Control, p<0.05)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_sig_hbo_activation",
+        "val_col": "value"
+      },
+      "expect": 18,
+      "tol": 0.5,
+      "render": [
+        "18"
+      ]
+    },
+    {
+      "id": "hbr_decrease",
+      "statement": "channels with a negative HbR contrast (Tapping - Control) -- HbR falls on activation",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_hbr_decrease",
+        "val_col": "value"
+      },
+      "expect": 25,
+      "tol": 0.5,
+      "render": [
+        "25"
+      ]
+    },
+    {
+      "id": "hbo_peak",
+      "statement": "grand-average HbO response peak (uM) after tapping onset",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "hbo_block_peak",
+        "val_col": "value"
+      },
+      "expect": 0.2139,
+      "tol": 0.01,
+      "render": [
+        "0.21"
+      ]
+    },
+    {
+      "id": "n_channels",
+      "statement": "source-detector channels analysed",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_channels",
+        "val_col": "value"
+      },
+      "expect": 28,
+      "tol": 0.5,
+      "render": [
+        "28"
+      ]
+    }
+  ]
+}

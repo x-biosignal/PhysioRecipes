@@ -1,0 +1,100 @@
+{
+  "paper": "cohort-longitudinal-parkinsons-updrs",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "n_subjects",
+      "statement": "Parkinson's patients in the longitudinal telemonitoring cohort",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_subjects",
+        "val_col": "value"
+      },
+      "expect": 42,
+      "tol": 0.042,
+      "render": [
+        "42"
+      ]
+    },
+    {
+      "id": "n_recordings",
+      "statement": "voice recordings analysed (repeated measures over ~6 months)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_recordings",
+        "val_col": "value"
+      },
+      "expect": 5875,
+      "tol": 5.875,
+      "render": [
+        "5875"
+      ]
+    },
+    {
+      "id": "fixef_agreement",
+      "statement": "max absolute fixed-effect difference, fitMixedModel vs lme4::lmer (machine precision)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_abs_fixef_diff",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "ranef_sd",
+      "statement": "subject random-intercept SD (baseline between-patient UPDRS spread, points)",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "term",
+        "key": "test_time",
+        "val_col": "ranef_sd"
+      },
+      "expect": 10.0650168,
+      "tol": 0.0001,
+      "render": [
+        "10.07"
+      ]
+    },
+    {
+      "id": "beta_testtime",
+      "statement": "UPDRS progression slope: test_time fixed effect (UPDRS points/day, > 0 = progression)",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "term",
+        "key": "test_time",
+        "val_col": "estimate"
+      },
+      "expect": 0.0187505734,
+      "tol": 1e-06,
+      "render": [
+        "0.0188"
+      ]
+    },
+    {
+      "id": "cohort_n",
+      "statement": "subjects in the PhysioCohort container built end-to-end",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "cohort_n",
+        "val_col": "value"
+      },
+      "expect": 42,
+      "tol": 0.042,
+      "render": [
+        "42"
+      ]
+    }
+  ]
+}

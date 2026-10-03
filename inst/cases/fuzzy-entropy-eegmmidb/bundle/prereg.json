@@ -1,0 +1,33 @@
+{
+  "registered_at": "2026-09-06T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real eyes-closed posterior EEG channel (eegmmidb S002R02, POz), the newly-authored fuzzyEntropy reproduces NeuroKit2 entropy_fuzzy BIT-FOR-BIT across (dimension, r); at m=2, r=0.2 it differs from the crisp sample entropy (the soft exponential membership counts partial matches the Heaviside step does not), and it is non-increasing in the embedding dimension.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "fuzzy_entropy"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "fuzzyEntropy",
+        "params": {
+          "dimension": 2,
+          "r": 0.2
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "fuzzy_entropy",
+      "threshold": "descriptive: fuzzyEntropy equals NeuroKit2 entropy_fuzzy to machine precision (max |diff| < 1e-9) across (dimension, r); it differs from the crisp sample entropy at the same (m, r)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "dab00599a93253292853a5cd77d04256ed6f33dc60d2849d6e93e6136a33bf7b",
+    "registered_at": "2026-09-06T00:00:00Z"
+  }
+}

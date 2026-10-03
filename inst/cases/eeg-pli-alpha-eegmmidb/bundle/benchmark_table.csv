@@ -1,0 +1,10 @@
+"metric","value"
+"pli",0.01625
+"pli_scipy",0.02
+"max_diff_scipy",0.00375
+"formula_diff",0
+"plv_real",0.921505
+"plv_zerolag",0.994715
+"pli_zerolag",0.013
+"pli_lagged",1
+"pli_independent",0.026

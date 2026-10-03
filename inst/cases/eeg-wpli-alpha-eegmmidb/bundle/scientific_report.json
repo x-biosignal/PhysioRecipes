@@ -1,0 +1,112 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:wpli_vs_scipy",
+      "status": "PASS",
+      "detail": "6/6 agree [wpli=0.11317 vs ref 0.11317; wpli_debiased=0.01149 vs ref 0.01149; max_diff_scipy=0.0074686 vs ref 0; wpli_indep_biased=0.037685 vs ref 0.037685; wpli_indep_debiased=0.000579 vs ref 0.000579; wpli_lagged=1 vs ref 1]",
+      "citation": "Vinck M, Oostenveld R, van Wingerden M, Battaglia F, Pennartz CMA (2011). An improved index of phase-synchronization... the weighted phase lag index. NeuroImage 55(4):1548-1565. Reference impl: scipy (butter+filtfilt+hilbert; Virtanen et al. 2020). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "wpli": 0.113171225,
+    "wpli_debiased": 0.0114900107,
+    "max_diff_scipy": 0.00746857904162429,
+    "wpli_indep_biased": 0.037685,
+    "wpli_indep_debiased": 0.000579,
+    "wpli_lagged": 1,
+    "wpli_zerolag": -0.000234
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "wpli_vs_scipy",
+    "citation": "Vinck M, Oostenveld R, van Wingerden M, Battaglia F, Pennartz CMA (2011). An improved index of phase-synchronization... the weighted phase lag index. NeuroImage 55(4):1548-1565. Reference impl: scipy (butter+filtfilt+hilbert; Virtanen et al. 2020). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the (debiased) wPLI from the imaginary cross-spectrum with an independent scipy pipeline, and demonstrates the debiasing (independent -> biased spurious but debiased ~0; lagged -> ~1; zero-lag -> ~0); reports the op wPLI + debiased, the scipy agreement, and the ground-truth contrast",
+    "from_step": {},
+    "scores": {
+      "wpli": 0.113171225,
+      "wpli_debiased": 0.0114900107,
+      "max_diff_scipy": 0.00746857904162429,
+      "wpli_indep_biased": 0.037685,
+      "wpli_indep_debiased": 0.000579,
+      "wpli_lagged": 1,
+      "wpli_zerolag": -0.000234
+    },
+    "checks": [
+      {
+        "metric": "wpli",
+        "expect": 0.113171225,
+        "tol": 1e-06,
+        "ref_value": 0.113171225,
+        "term_value": 0.113171225
+      },
+      {
+        "metric": "wpli_debiased",
+        "expect": 0.0114900107,
+        "tol": 1e-06,
+        "ref_value": 0.0114900107,
+        "term_value": 0.0114900107
+      },
+      {
+        "metric": "max_diff_scipy",
+        "expect": 0,
+        "tol": 0.01,
+        "ref_value": 0,
+        "term_value": 0.00746857904162429
+      },
+      {
+        "metric": "wpli_indep_biased",
+        "expect": 0.037685,
+        "tol": 0.01,
+        "ref_value": 0.037685,
+        "term_value": 0.037685
+      },
+      {
+        "metric": "wpli_indep_debiased",
+        "expect": 0.000579,
+        "tol": 0.01,
+        "ref_value": 0.000579,
+        "term_value": 0.000579
+      },
+      {
+        "metric": "wpli_lagged",
+        "expect": 1,
+        "tol": 0.0001,
+        "ref_value": 1,
+        "term_value": 1
+      }
+    ]
+  }
+}

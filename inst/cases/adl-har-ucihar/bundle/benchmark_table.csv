@@ -1,0 +1,7 @@
+"metric","value"
+"overall_accuracy",0.834068544282321
+"n_train_windows",7352
+"n_test_windows",2947
+"laying_recall",1
+"walking_recall",0.895161290322581
+"upstairs_recall",0.619957537154989

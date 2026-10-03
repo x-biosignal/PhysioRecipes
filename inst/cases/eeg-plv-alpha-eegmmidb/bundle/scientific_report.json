@@ -1,0 +1,110 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:plv_vs_scipy",
+      "status": "PASS",
+      "detail": "6/6 agree [plv=0.9215 vs ref 0.9215; plv_scipy=0.92158 vs ref 0.92158; max_diff_scipy=7.8631e-05 vs ref 0; formula_diff=0 vs ref 0; plv_locked=0.99507 vs ref 0.99507; plv_unlocked=0.009201 vs ref 0.009201]",
+      "citation": "Lachaux JP, Rodriguez E, Martinerie J, Varela FJ (1999). Measuring phase synchrony in brain signals. Hum Brain Mapp 8(4):194-208. Reference impl: scipy (butter + filtfilt + hilbert; Virtanen et al. 2020). Data: EEG Motor Movement/ Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "plv": 0.9215049424,
+    "plv_scipy": 0.9215835739,
+    "max_diff_scipy": 7.86314785738984e-05,
+    "formula_diff": 0,
+    "plv_locked": 0.99507,
+    "plv_unlocked": 0.009201
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "plv_vs_scipy",
+    "citation": "Lachaux JP, Rodriguez E, Martinerie J, Varela FJ (1999). Measuring phase synchrony in brain signals. Hum Brain Mapp 8(4):194-208. Reference impl: scipy (butter + filtfilt + hilbert; Virtanen et al. 2020). Data: EEG Motor Movement/ Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the Hilbert-band PLV with an independent scipy pipeline (butter+filtfilt+hilbert), verifies ground-truth recovery (phase-locked ~1, independent ~0), and checks the PLV summation formula; reports the op PLV, the scipy PLV + agreement (~8e-5, phase-robust), the exact formula residual, and the locked/unlocked recovery",
+    "from_step": {},
+    "scores": {
+      "plv": 0.9215049424,
+      "plv_scipy": 0.9215835739,
+      "max_diff_scipy": 7.86314785738984e-05,
+      "formula_diff": 0,
+      "plv_locked": 0.99507,
+      "plv_unlocked": 0.009201
+    },
+    "checks": [
+      {
+        "metric": "plv",
+        "expect": 0.9215049424,
+        "tol": 1e-06,
+        "ref_value": 0.9215049424,
+        "term_value": 0.9215049424
+      },
+      {
+        "metric": "plv_scipy",
+        "expect": 0.9215835739,
+        "tol": 0.0001,
+        "ref_value": 0.9215835739,
+        "term_value": 0.9215835739
+      },
+      {
+        "metric": "max_diff_scipy",
+        "expect": 0,
+        "tol": 0.001,
+        "ref_value": 0,
+        "term_value": 7.86314785738984e-05
+      },
+      {
+        "metric": "formula_diff",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "plv_locked",
+        "expect": 0.99507,
+        "tol": 0.001,
+        "ref_value": 0.99507,
+        "term_value": 0.99507
+      },
+      {
+        "metric": "plv_unlocked",
+        "expect": 0.009201,
+        "tol": 0.005,
+        "ref_value": 0.009201,
+        "term_value": 0.009201
+      }
+    ]
+  }
+}

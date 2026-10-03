@@ -1,0 +1,110 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:ljungbox_vs_statsmodels",
+      "status": "PASS",
+      "detail": "6/6 agree [lb_statistic=4165.5 vs ref 4165.5; lb_stat_diff_sm=0 vs ref 0; lb_pvalue_diff_sm=0 vs ref 0; critical_value_95=18.307 vs ref 18.307; reject_white_noise=1 vs ref 1; q_over_critical=227.53 vs ref 227.53]",
+      "citation": "Ljung GM, Box GEP (1978). On a measure of lack of fit in time series models. Biometrika 65(2):297-303. Reference impl: statsmodels.stats.diagnostic.acorr_ljungbox (Seabold & Perktold 2010). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "lb_statistic": 4165.456393,
+    "lb_stat_diff_sm": 0,
+    "lb_pvalue_diff_sm": 0,
+    "critical_value_95": 18.307038,
+    "reject_white_noise": 1,
+    "q_over_critical": 227.5331
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "ljungbox_vs_statsmodels",
+    "citation": "Ljung GM, Box GEP (1978). On a measure of lack of fit in time series models. Biometrika 65(2):297-303. Reference impl: statsmodels.stats.diagnostic.acorr_ljungbox (Seabold & Perktold 2010). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the Ljung-Box test with statsmodels.stats.diagnostic.acorr_ljungbox on the identical signal; reports the Q statistic, the bit-exact statistic and p-value agreement, the 95% chi-square critical value, whether white noise is rejected, and Q as a multiple of critical",
+    "from_step": {},
+    "scores": {
+      "lb_statistic": 4165.456393,
+      "lb_stat_diff_sm": 0,
+      "lb_pvalue_diff_sm": 0,
+      "critical_value_95": 18.307038,
+      "reject_white_noise": 1,
+      "q_over_critical": 227.5331
+    },
+    "checks": [
+      {
+        "metric": "lb_statistic",
+        "expect": 4165.456393,
+        "tol": 0.001,
+        "ref_value": 4165.456393,
+        "term_value": 4165.456393
+      },
+      {
+        "metric": "lb_stat_diff_sm",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "lb_pvalue_diff_sm",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "critical_value_95",
+        "expect": 18.307038,
+        "tol": 0.0001,
+        "ref_value": 18.307038,
+        "term_value": 18.307038
+      },
+      {
+        "metric": "reject_white_noise",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "q_over_critical",
+        "expect": 227.5333,
+        "tol": 0.1,
+        "ref_value": 227.5333,
+        "term_value": 227.5331
+      }
+    ]
+  }
+}

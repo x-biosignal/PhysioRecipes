@@ -1,0 +1,103 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:perm_entropy_vs_antropy",
+      "status": "PASS",
+      "detail": "5/5 agree [max_abs_diff=2.2204e-16 vs ref 0; pe_corr=1 vs ref 1; mean_pe_op=0.90798 vs ref 0.90798; mean_pe_antropy=0.90798 vs ref 0.90798; n_channels=64 vs ref 64]",
+      "citation": "Bandt C, Pompe B (2002). Permutation entropy: a natural complexity measure for time series. Phys Rev Lett 88(17):174102. Reference impl: antropy.perm_entropy (Vallat). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "max_abs_diff": 2.22044604925031e-16,
+    "mean_abs_diff": 7.45931094670027e-17,
+    "pe_corr": 1,
+    "mean_pe_op": 0.907983126,
+    "mean_pe_antropy": 0.907983126,
+    "n_channels": 64
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "perm_entropy_vs_antropy",
+    "citation": "Bandt C, Pompe B (2002). Permutation entropy: a natural complexity measure for time series. Phys Rev Lett 88(17):174102. Reference impl: antropy.perm_entropy (Vallat). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the permutation entropy per channel with the canonical Python antropy.perm_entropy (order 3, delay 1) and compares to eegComplexity's; reports max |diff| (< 1e-9, machine precision), mean |diff|, the correlation (1.0), both engines' mean entropy (~0.908), and the channel count (64)",
+    "from_step": {},
+    "scores": {
+      "max_abs_diff": 2.22044604925031e-16,
+      "mean_abs_diff": 7.45931094670027e-17,
+      "pe_corr": 1,
+      "mean_pe_op": 0.907983126,
+      "mean_pe_antropy": 0.907983126,
+      "n_channels": 64
+    },
+    "checks": [
+      {
+        "metric": "max_abs_diff",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 2.22044604925031e-16
+      },
+      {
+        "metric": "pe_corr",
+        "expect": 1,
+        "tol": 1e-06,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "mean_pe_op",
+        "expect": 0.907983126,
+        "tol": 1e-06,
+        "ref_value": 0.907983126,
+        "term_value": 0.907983126
+      },
+      {
+        "metric": "mean_pe_antropy",
+        "expect": 0.907983126,
+        "tol": 1e-06,
+        "ref_value": 0.907983126,
+        "term_value": 0.907983126
+      },
+      {
+        "metric": "n_channels",
+        "expect": 64,
+        "tol": 0.5,
+        "ref_value": 64,
+        "term_value": 64
+      }
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "registered_at": "2026-09-04T00:00:00Z",
+  "hypothesis": {
+    "statement": "On the same real occipital O1-Oz pair whose alpha PLV is 0.92 (near zero phase lag), the phase-lag index (PLI, which is ~0 for zero-lag coupling) is LOW -- the high PLV is dominated by volume conduction / common reference, not lagged neural coupling; phaseLagIndex reproduces an independent scipy Hilbert-band PLI and recovers ground truth with the contrast (constructed zero-lag -> PLI~0 while PLV~1; lagged -> PLI high; independent -> both ~0).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "alpha_phase_lag_index"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002 baseline run R02 (eyes-closed), occipital channels O1 and Oz, first 10 s at 160 Hz (1600 samples each)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "phaseLagIndex",
+        "params": {
+          "sr": 160,
+          "freq_band": [
+            8,
+            13
+          ]
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "alpha_phase_lag_index",
+      "threshold": "descriptive: phaseLagIndex equals an independent scipy Hilbert-band PLI to < 1e-2 (agreement; PLI is more sign-sensitive near zero-lag than PLV), the sign formula is exact (< 1e-9), and it recovers the volume-conduction contrast (constructed zero-lag PLI < 0.1 while PLV > 0.9; lagged PLI > 0.9); the real O1-Oz alpha PLI is far below its PLV"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "a4bc4c2895d1db55177a40e6ced2399aeb092ef758120b9d10f551c48d2840cf",
+    "registered_at": "2026-09-04T00:00:00Z"
+  }
+}

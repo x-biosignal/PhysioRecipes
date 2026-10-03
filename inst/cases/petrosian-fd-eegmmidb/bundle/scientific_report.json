@@ -1,0 +1,89 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:petrosian_topography",
+      "status": "PASS",
+      "detail": "3/3 agree [petrosian_fd=1.0171 vs ref 1.0171; max_diff_antropy=0 vs ref 0; n_samples=1600 vs ref 1600]",
+      "citation": "Petrosian A (1995). Kolmogorov complexity of finite sequences and recognition of different preictal EEG patterns. Proc IEEE CBMS, 212-217. Reference impl: antropy.petrosian_fd (Vallat). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "petrosian_fd": 1.0170616506,
+    "max_diff_antropy": 0,
+    "n_samples": 1600,
+    "posterior_mean": 1.019536,
+    "frontal_mean": 1.02661,
+    "n_posterior_lt_frontmean": 9
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "petrosian_topography",
+    "citation": "Petrosian A (1995). Kolmogorov complexity of finite sequences and recognition of different preictal EEG patterns. Proc IEEE CBMS, 212-217. Reference impl: antropy.petrosian_fd (Vallat). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the Petrosian fractal dimension with antropy.petrosian_fd and confirms the newly-authored petrosianFD op reproduces it bit-for-bit; reports the op's FD, the bit-exact antropy agreement, and the sample count",
+    "from_step": {},
+    "scores": {
+      "petrosian_fd": 1.0170616506,
+      "max_diff_antropy": 0,
+      "n_samples": 1600,
+      "posterior_mean": 1.019536,
+      "frontal_mean": 1.02661,
+      "n_posterior_lt_frontmean": 9
+    },
+    "checks": [
+      {
+        "metric": "petrosian_fd",
+        "expect": 1.0170616506,
+        "tol": 1e-06,
+        "ref_value": 1.0170616506,
+        "term_value": 1.0170616506
+      },
+      {
+        "metric": "max_diff_antropy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "n_samples",
+        "expect": 1600,
+        "tol": 0.5,
+        "ref_value": 1600,
+        "term_value": 1600
+      }
+    ]
+  }
+}

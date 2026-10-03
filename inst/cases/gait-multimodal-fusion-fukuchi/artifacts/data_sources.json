@@ -1,0 +1,10 @@
+{
+  "dataset": "A public dataset of overground and treadmill walking kinematics and kinetics (WBDS)",
+  "authors": "Fukuchi CA, Fukuchi RK, Duarte M",
+  "repository": "figshare",
+  "doi": "10.6084/m9.figshare.5722711",
+  "paper_doi": "10.7717/peerj.4640",
+  "license": "CC-BY 4.0",
+  "record_used": "42 subjects x 8 treadmill speeds; KINEMATICS = right hip/knee/ankle sagittal angle (RHipAngleZ/RKneeAngleZ/RAnkleAngleZ, 10 pts each) over the gait cycle; KINETICS = vertical GRF (Fz1) time-normalised heel-strike-to-heel-strike to the gait cycle (12 pts); 328 observations",
+  "note": "The treadmill vertical GRF (Fz1, one belt) is used in the dataset's own force units; the fusion centres/scales each block so the ABSOLUTE GRF units do not affect the shared-structure analysis."
+}

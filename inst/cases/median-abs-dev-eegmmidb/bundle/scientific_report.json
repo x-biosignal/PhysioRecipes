@@ -1,0 +1,119 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:mad_vs_scipy_baser",
+      "status": "PASS",
+      "detail": "7/7 agree [median_abs_dev=33 vs ref 33; max_diff_scipy=0 vs ref 0; max_diff_baser=0 vs ref 0; mad_scale_normal=48.926 vs ref 48.926; sd_population=48.833 vs ref 48.833; mad_sd_ratio=1.0019 vs ref 1.0019; n_samples=1600 vs ref 1600]",
+      "citation": "Median absolute deviation (Hampel 1974). Reference impls: scipy.stats.median_abs_deviation (Virtanen et al.) and base R stats::mad. Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "median_abs_dev": 33,
+    "max_diff_scipy": 0,
+    "max_diff_baser": 0,
+    "mad_scale_normal": 48.9258732107,
+    "sd_population": 48.8326312161,
+    "mad_sd_ratio": 1.0019094198,
+    "n_samples": 1600
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "mad_vs_scipy_baser",
+    "citation": "Median absolute deviation (Hampel 1974). Reference impls: scipy.stats.median_abs_deviation (Virtanen et al.) and base R stats::mad. Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the median absolute deviation with scipy.stats.median_abs_deviation and base R mad (both scale/constant = 1) and confirms medianAbsDev reproduces BOTH bit-for-bit; also reports the normal-consistent robust SD estimate, the population SD, their ratio, and the sample count",
+    "from_step": {},
+    "scores": {
+      "median_abs_dev": 33,
+      "max_diff_scipy": 0,
+      "max_diff_baser": 0,
+      "mad_scale_normal": 48.9258732107,
+      "sd_population": 48.8326312161,
+      "mad_sd_ratio": 1.0019094198,
+      "n_samples": 1600
+    },
+    "checks": [
+      {
+        "metric": "median_abs_dev",
+        "expect": 33,
+        "tol": 1e-06,
+        "ref_value": 33,
+        "term_value": 33
+      },
+      {
+        "metric": "max_diff_scipy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "max_diff_baser",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "mad_scale_normal",
+        "expect": 48.9258732107,
+        "tol": 0.0001,
+        "ref_value": 48.9258732107,
+        "term_value": 48.9258732107
+      },
+      {
+        "metric": "sd_population",
+        "expect": 48.8326312161,
+        "tol": 0.0001,
+        "ref_value": 48.8326312161,
+        "term_value": 48.8326312161
+      },
+      {
+        "metric": "mad_sd_ratio",
+        "expect": 1.0019094198,
+        "tol": 0.0001,
+        "ref_value": 1.0019094198,
+        "term_value": 1.0019094198
+      },
+      {
+        "metric": "n_samples",
+        "expect": 1600,
+        "tol": 0.5,
+        "ref_value": 1600,
+        "term_value": 1600
+      }
+    ]
+  }
+}

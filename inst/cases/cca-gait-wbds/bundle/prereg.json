@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-03T00:00:00Z",
+  "hypothesis": {
+    "statement": "The gait kinematics (sagittal knee + ankle flexion angles) and kinetics (antero-posterior + vertical GRF) have a strong linear canonical relationship: the first canonical correlation is substantially > 0 on real WBDS treadmill-walking data, and cca reproduces base R's stats::cancor to machine precision.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "kinematics_kinetics_canonical_correlation"
+  },
+  "analysis_plan": {
+    "dataset": "WBDS (Fukuchi, Fukuchi & Duarte 2018, figshare 5722711, CC-BY 4.0): sagittal knee + ankle flexion angles (kinematics) and antero-posterior + vertical GRF (kinetics), time-aligned to 450 samples; WBDS01 for the terminal proof, all five subjects for the robustness benchmark (the SAME blocks as the dCor and RSA cases)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "cca",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "cca_r1",
+      "estimand": "kinematics_kinetics_canonical_correlation",
+      "threshold": "descriptive: the first canonical correlation is substantially > 0 (~0.7) AND cca equals stats::cancor to machine precision (max |diff| < 1e-9)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "be1aafa471cd9139ad95a65ec31faee1048a08e5bc5a81e39c44df9335bee5fe",
+    "registered_at": "2026-09-03T00:00:00Z"
+  }
+}

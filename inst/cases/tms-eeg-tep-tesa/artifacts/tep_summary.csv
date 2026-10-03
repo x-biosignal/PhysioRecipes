@@ -1,0 +1,10 @@
+"metric","value"
+"n_components",6
+"n_pulses",150
+"n_channels",59
+"n100_median_latency_ms",115
+"p180_median_latency_ms",188
+"latency_order_canonical",1
+"mean_polarity_match_pct",92.1
+"tep_min_channel_corr_vs_mne",1
+"tep_latency_max_abs_diff_vs_mne_ms",0

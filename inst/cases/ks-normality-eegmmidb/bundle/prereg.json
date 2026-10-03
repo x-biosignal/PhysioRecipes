@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-07T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real eyes-closed posterior EEG channel (eegmmidb S002R02, POz), the newly-authored ksNormalityTest reproduces BOTH scipy.stats.kstest AND base R ks.test D statistic BIT-FOR-BIT; and KS does NOT reject normality (its p-value exceeds 0.05) even though Jarque-Bera does -- the moment-based and CDF-based normality tests disagree.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "ks_normality"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "ksNormalityTest",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "ks_normality",
+      "threshold": "descriptive: ksNormalityTest equals scipy.stats.kstest AND base R ks.test D to machine precision (max |diff| < 1e-9 vs each)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "572b4ca90271a695d58e9eb20cad035fd15b0be676225a934cfee9fb2ba13e7a",
+    "registered_at": "2026-09-07T00:00:00Z"
+  }
+}

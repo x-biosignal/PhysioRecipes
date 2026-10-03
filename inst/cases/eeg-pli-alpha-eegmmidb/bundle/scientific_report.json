@@ -1,0 +1,116 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:pli_vs_scipy",
+      "status": "PASS",
+      "detail": "6/6 agree [pli=0.01625 vs ref 0.01625; max_diff_scipy=0.00375 vs ref 0; formula_diff=0 vs ref 0; plv_zerolag=0.99472 vs ref 0.99472; pli_zerolag=0.013 vs ref 0.013; pli_lagged=1 vs ref 1]",
+      "citation": "Stam CJ, Nolte G, Daffertshofer A (2007). Phase lag index. Hum Brain Mapp 28(11):1178-1193. Vinck M et al. (2011) NeuroImage 55:1548-1565 (wPLI). Reference impl: scipy (butter+filtfilt+hilbert; Virtanen et al. 2020). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "pli": 0.01625,
+    "pli_scipy": 0.02,
+    "max_diff_scipy": 0.00375,
+    "formula_diff": 0,
+    "plv_real": 0.921505,
+    "plv_zerolag": 0.994715,
+    "pli_zerolag": 0.013,
+    "pli_lagged": 1,
+    "pli_independent": 0.026
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "pli_vs_scipy",
+    "citation": "Stam CJ, Nolte G, Daffertshofer A (2007). Phase lag index. Hum Brain Mapp 28(11):1178-1193. Vinck M et al. (2011) NeuroImage 55:1548-1565 (wPLI). Reference impl: scipy (butter+filtfilt+hilbert; Virtanen et al. 2020). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the Hilbert-band PLI with an independent scipy pipeline, checks the sign formula, and recovers ground truth with the volume-conduction contrast (zero-lag -> PLI~0 while PLV~1; lagged -> PLI high; independent -> both ~0); reports the real-EEG PLI + PLV, the scipy agreement, the exact formula, and the constructed-signal PLV/PLI",
+    "from_step": {},
+    "scores": {
+      "pli": 0.01625,
+      "pli_scipy": 0.02,
+      "max_diff_scipy": 0.00375,
+      "formula_diff": 0,
+      "plv_real": 0.921505,
+      "plv_zerolag": 0.994715,
+      "pli_zerolag": 0.013,
+      "pli_lagged": 1,
+      "pli_independent": 0.026
+    },
+    "checks": [
+      {
+        "metric": "pli",
+        "expect": 0.01625,
+        "tol": 1e-05,
+        "ref_value": 0.01625,
+        "term_value": 0.01625
+      },
+      {
+        "metric": "max_diff_scipy",
+        "expect": 0,
+        "tol": 0.01,
+        "ref_value": 0,
+        "term_value": 0.00375
+      },
+      {
+        "metric": "formula_diff",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "plv_zerolag",
+        "expect": 0.994715,
+        "tol": 0.005,
+        "ref_value": 0.994715,
+        "term_value": 0.994715
+      },
+      {
+        "metric": "pli_zerolag",
+        "expect": 0.013,
+        "tol": 0.05,
+        "ref_value": 0.013,
+        "term_value": 0.013
+      },
+      {
+        "metric": "pli_lagged",
+        "expect": 1,
+        "tol": 0.02,
+        "ref_value": 1,
+        "term_value": 1
+      }
+    ]
+  }
+}

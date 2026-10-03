@@ -1,0 +1,53 @@
+{
+  "paper": "adl-washing-htad",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "washing_recall",
+      "statement": "washing (d510) leave-one-subject-out recall (chance 0.14)",
+      "expect": 0.534,
+      "artifact": 0.528358,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "overall_accuracy",
+      "statement": "7-task leave-one-subject-out accuracy",
+      "expect": 0.625,
+      "artifact": 0.622292,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "chance_level",
+      "statement": "chance level (1 / 7 tasks)",
+      "expect": 0.143,
+      "artifact": 0.142857,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_subjects",
+      "statement": "subjects in the dataset (small-N flagged)",
+      "expect": 3,
+      "artifact": 3,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "washing_pcr",
+      "statement": "washing recall in the per-class table (cross-check)",
+      "expect": 0.534,
+      "artifact": 0.528358,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

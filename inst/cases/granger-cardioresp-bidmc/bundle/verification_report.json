@@ -1,0 +1,62 @@
+{
+  "paper": "granger-cardioresp-bidmc",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "gc_resp_to_pleth",
+      "statement": "time-domain Granger causality respiration -> PPG pulse (Geweke log-variance-ratio)",
+      "expect": 0.1031367696,
+      "artifact": 0.103137,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "gc_pleth_to_resp",
+      "statement": "time-domain Granger causality PPG pulse -> respiration",
+      "expect": 0.101683848,
+      "artifact": 0.101684,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "net_gc",
+      "statement": "net Granger causality (respiration->pulse minus pulse->respiration) -- the directional asymmetry",
+      "expect": 0.0014529216,
+      "artifact": 0.001453,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_statsmodels",
+      "statement": "max |grangerCausality - statsmodels grangercausalitytests| over both directions (agreement)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_numpy",
+      "statement": "max |grangerCausality - independent numpy OLS| over both directions (op arithmetic, machine precision up to ridge)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_subjects_resp_dominant",
+      "statement": "BIDMC subjects (of 20) where respiration -> pulse is the net-dominant Granger direction",
+      "expect": 15,
+      "artifact": 15,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

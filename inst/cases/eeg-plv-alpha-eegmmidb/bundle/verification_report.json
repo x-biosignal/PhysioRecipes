@@ -1,0 +1,62 @@
+{
+  "paper": "eeg-plv-alpha-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "plv",
+      "statement": "alpha-band (8-13 Hz) phase-locking value between occipital O1 and Oz -- posterior alpha phase synchronization",
+      "expect": 0.9215049424,
+      "artifact": 0.921505,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "plv_scipy",
+      "statement": "the same PLV re-computed by an independent scipy Hilbert-band pipeline",
+      "expect": 0.9215835739,
+      "artifact": 0.921584,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "max |phaseLockingValue - scipy Hilbert-band PLV| (phase-robust agreement, up to the filtfilt convention)",
+      "expect": 0,
+      "artifact": 7.9e-05,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "formula_diff",
+      "statement": "|op PLV - |mean(exp(i*phase_diff))|| -- the PLV summation formula, exact given the phases",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "plv_locked",
+      "statement": "PLV of constructed phase-locked signals (fixed offset) -- ground-truth recovery, near 1",
+      "expect": 0.99507,
+      "artifact": 0.99507,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "plv_unlocked",
+      "statement": "PLV of constructed independent (drifting-phase) signals -- ground-truth recovery, near 0",
+      "expect": 0.009201,
+      "artifact": 0.009201,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

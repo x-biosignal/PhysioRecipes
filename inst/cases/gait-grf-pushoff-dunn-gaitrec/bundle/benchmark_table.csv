@@ -1,0 +1,11 @@
+"metric","value"
+"max_abs_z",16.025387166
+"p_adj_C_A",1.7246e-06
+"p_adj_K_A",0.0674892556
+"p_adj_H_K",1
+"max_diff_z_pmcmr",1.77635683940025e-15
+"max_diff_padj_scipy",4.16333634234434e-17
+"n_sig_hc_vs_pathology",4
+"n_sig_pathology_pathology",4
+"n_pairs",10
+"n_total",1844

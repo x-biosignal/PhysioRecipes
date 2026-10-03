@@ -1,0 +1,100 @@
+{
+  "paper": "eeg-wpli-alpha-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "wpli",
+      "statement": "alpha-band (8-13 Hz) weighted phase-lag index (biased) between occipital O1 and Oz",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "wpli",
+        "val_col": "value"
+      },
+      "expect": 0.113171225,
+      "tol": 1e-06,
+      "render": [
+        "0.11"
+      ]
+    },
+    {
+      "id": "wpli_debiased",
+      "statement": "the DEBIASED wPLI (Vinck 2011 Eq. 6) -- low, confirming the O1-Oz alpha coupling is mostly volume conduction",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "wpli_debiased",
+        "val_col": "value"
+      },
+      "expect": 0.0114900107,
+      "tol": 1e-06,
+      "render": [
+        "0.011"
+      ]
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "max |weightedPLI - scipy imaginary-cross-spectrum wPLI| (agreement, filtfilt-limited)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 0.01,
+      "render": [
+        "7e-03"
+      ]
+    },
+    {
+      "id": "wpli_indep_biased",
+      "statement": "biased wPLI of INDEPENDENT signals -- spuriously positive (the finite-sample bias)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "wpli_indep_biased",
+        "val_col": "value"
+      },
+      "expect": 0.037685,
+      "tol": 0.01,
+      "render": [
+        "0.038"
+      ]
+    },
+    {
+      "id": "wpli_indep_debiased",
+      "statement": "DEBIASED wPLI of the SAME independent signals -- corrected to ~0 (the bias removed)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "wpli_indep_debiased",
+        "val_col": "value"
+      },
+      "expect": 0.000579,
+      "tol": 0.01,
+      "render": [
+        "0.001"
+      ]
+    },
+    {
+      "id": "wpli_lagged",
+      "statement": "debiased wPLI of constructed LAGGED signals -- genuine coupling survives debiasing (~1)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "wpli_lagged",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.0001,
+      "render": [
+        "1.0"
+      ]
+    }
+  ]
+}

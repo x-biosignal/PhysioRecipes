@@ -1,0 +1,34 @@
+{
+  "registered_at": "2026-09-01T00:00:00Z",
+  "hypothesis": {
+    "statement": "On real dual-arm accelerometry from a HEALTHY subject (DSADS p1, 19 activities), the two arms are used near-symmetrically: the bilateral use ratio is close to 1 and the magnitude ratio close to 0 (the affected/unaffected asymmetry a stroke arm would show is absent).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "bilateral_upper_limb_use"
+  },
+  "analysis_plan": {
+    "dataset": "DSADS (UCI #256), subject p1, right-arm + left-arm accelerometers @ 25 Hz, 19 activities x 60 five-second segments, converted to g",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "upperLimbUse",
+        "params": {
+          "sampling_rate": 25,
+          "epoch_sec": 5,
+          "active_threshold": 2
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "use_ratio",
+      "estimand": "bilateral_upper_limb_use",
+      "threshold": "descriptive: use ratio (active time of one arm / the other) and magnitude ratio (log activity ratio); ~1 and ~0 = symmetric"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "bae5a07d7b948402e92d2068fcc388ae220bf055f6493b73156b0001abb14d72",
+    "registered_at": "2026-09-01T00:00:00Z"
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "3/3 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "guideline:aami-ec57-qrs-detection:min_f1",
+      "status": "SKIP",
+      "detail": "F1 not available (result-stage metric)",
+      "citation": "ANSI/AAMI EC57:2012 — Testing and reporting performance results of cardiac rhythm and ST-segment measurement algorithms (150 ms beat-matching tolerance)."
+    },
+    {
+      "name": "reference-agreement:pvc_detection_cohort",
+      "status": "PASS",
+      "detail": "3/3 agree [sensitivity=0.96923 vs ref 0.9692; ppv=0.99802 vs ref 0.998; f1=0.98341 vs ref 0.9834]",
+      "citation": "MIT-BIH Arrhythmia Database cardiologist beat annotations (.atr); AAMI beat classes (V = premature ventricular contraction). Reference-beat protocol."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "n_rr": 2017,
+    "n_beats": 2027,
+    "n_pvc": 520,
+    "TP": 504,
+    "FP": 1,
+    "FN": 16,
+    "sensitivity": 0.969230769230769,
+    "ppv": 0.998019801980198,
+    "f1": 0.983414634146341,
+    "pooled_ppv": 0.9541,
+    "pooled_sensitivity": 0.7146,
+    "pooled_f1": 0.8172,
+    "isolated_f1": 1,
+    "runs_sensitivity": 0.2727
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "pvc_detection_cohort",
+    "citation": "MIT-BIH Arrhythmia Database cardiologist beat annotations (.atr); AAMI beat classes (V = premature ventricular contraction). Reference-beat protocol.",
+    "description": "on the .atr reference beats, ecgDetectPVC flags PVCs by prematurity + morphology; scored vs the cardiologist V labels -> Se/PPV/F1, reproducing the case's record-106 row",
+    "from_step": {},
+    "scores": {
+      "n_beats": 2027,
+      "n_pvc": 520,
+      "TP": 504,
+      "FP": 1,
+      "FN": 16,
+      "sensitivity": 0.969230769230769,
+      "ppv": 0.998019801980198,
+      "f1": 0.983414634146341,
+      "pooled_ppv": 0.9541,
+      "pooled_sensitivity": 0.7146,
+      "pooled_f1": 0.8172,
+      "isolated_f1": 1,
+      "runs_sensitivity": 0.2727
+    },
+    "checks": [
+      {
+        "metric": "sensitivity",
+        "expect": 0.9692,
+        "tol": 0.001,
+        "ref_value": 0.9692,
+        "term_value": 0.969230769230769
+      },
+      {
+        "metric": "ppv",
+        "expect": 0.998,
+        "tol": 0.001,
+        "ref_value": 0.998,
+        "term_value": 0.998019801980198
+      },
+      {
+        "metric": "f1",
+        "expect": 0.9834,
+        "tol": 0.001,
+        "ref_value": 0.9834,
+        "term_value": 0.983414634146341
+      }
+    ]
+  }
+}

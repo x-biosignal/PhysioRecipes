@@ -1,0 +1,11 @@
+"metric","value"
+"diff_A_HC",-0.1422369767
+"neg_log10_p_A_HC",10.773178
+"p_K_A",0.8292210735
+"p_min_pathology_pathology",0.614931
+"max_diff_p_baser",1.37001521238744e-13
+"max_diff_p_scipy",1.61706203982703e-11
+"n_sig_hc_vs_pathology",4
+"n_sig_pathology_pathology",0
+"n_pairs",10
+"n_total",1844

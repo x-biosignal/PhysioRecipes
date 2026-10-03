@@ -1,0 +1,114 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "1 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:granger_cohort",
+      "status": "PASS",
+      "detail": "6/6 agree [gc_resp_to_pleth=0.10314 vs ref 0.10314; gc_pleth_to_resp=0.10168 vs ref 0.10168; net_gc=0.0014529 vs ref 0.0014529; max_diff_statsmodels=3.5205e-07 vs ref 0; max_diff_numpy=1.7852e-09 vs ref 0; F_resp_to_pleth=53.996 vs ref 53.996]",
+      "citation": "Granger CWJ (1969). Investigating causal relations by econometric models. Econometrica 37(3):424-438. Geweke J (1982). JASA 77:304-313. Reference impls: statsmodels.tsa.stattools.grangercausalitytests (Seabold & Perktold 2010) + independent numpy OLS (Harris et al. 2020). Data: BIDMC PPG and Respiration Dataset (Pimentel et al. 2017), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "gc_resp_to_pleth": 0.1031367696,
+    "gc_pleth_to_resp": 0.101683848,
+    "net_gc": 0.0014529216,
+    "max_diff_statsmodels": 3.52048169657837e-07,
+    "max_diff_numpy": 1.785223205375e-09,
+    "F_resp_to_pleth": 53.9956,
+    "order": 10,
+    "n_subjects_resp_dominant": 15
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "granger_cohort",
+    "citation": "Granger CWJ (1969). Investigating causal relations by econometric models. Econometrica 37(3):424-438. Geweke J (1982). JASA 77:304-313. Reference impls: statsmodels.tsa.stattools.grangercausalitytests (Seabold & Perktold 2010) + independent numpy OLS (Harris et al. 2020). Data: BIDMC PPG and Respiration Dataset (Pimentel et al. 2017), PhysioNet.",
+    "description": "re-computes both-direction time-domain Granger causality with statsmodels' grangercausalitytests (restricted/unrestricted OLS SSR log-ratio) and an independent numpy OLS on the same demeaned BIDMC resp/PPG signals; reports the op's GC both ways, the net direction, the max |op - statsmodels| (~1e-7) and max |op - independent OLS| (~1e-9) agreement, and the statsmodels F-statistic (both directions significant)",
+    "from_step": {},
+    "scores": {
+      "gc_resp_to_pleth": 0.1031367696,
+      "gc_pleth_to_resp": 0.101683848,
+      "net_gc": 0.0014529216,
+      "max_diff_statsmodels": 3.52048169657837e-07,
+      "max_diff_numpy": 1.785223205375e-09,
+      "F_resp_to_pleth": 53.9956,
+      "order": 10,
+      "n_subjects_resp_dominant": 15
+    },
+    "checks": [
+      {
+        "metric": "gc_resp_to_pleth",
+        "expect": 0.1031367696,
+        "tol": 1e-06,
+        "ref_value": 0.1031367696,
+        "term_value": 0.1031367696
+      },
+      {
+        "metric": "gc_pleth_to_resp",
+        "expect": 0.101683848,
+        "tol": 1e-06,
+        "ref_value": 0.101683848,
+        "term_value": 0.101683848
+      },
+      {
+        "metric": "net_gc",
+        "expect": 0.0014529216,
+        "tol": 1e-06,
+        "ref_value": 0.0014529216,
+        "term_value": 0.0014529216
+      },
+      {
+        "metric": "max_diff_statsmodels",
+        "expect": 0,
+        "tol": 1e-05,
+        "ref_value": 0,
+        "term_value": 3.52048169657837e-07
+      },
+      {
+        "metric": "max_diff_numpy",
+        "expect": 0,
+        "tol": 1e-07,
+        "ref_value": 0,
+        "term_value": 1.785223205375e-09
+      },
+      {
+        "metric": "F_resp_to_pleth",
+        "expect": 53.996,
+        "tol": 0.05,
+        "ref_value": 53.996,
+        "term_value": 53.9956
+      }
+    ]
+  }
+}

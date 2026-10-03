@@ -1,0 +1,100 @@
+{
+  "paper": "adl-rasch-verbagg",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "item_spearman",
+      "statement": "item-difficulty rank agreement, pcm_measure (JMLE) vs eRm (CML)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "item_spearman",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.02,
+      "render": [
+        "1.0"
+      ]
+    },
+    {
+      "id": "item_pearson",
+      "statement": "item-location agreement (Pearson) vs eRm's conditional-ML calibration",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "item_pearson",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.005,
+      "render": [
+        "1.00"
+      ]
+    },
+    {
+      "id": "person_pearson",
+      "statement": "person-measure agreement (Pearson) vs eRm",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "person_pearson",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.005,
+      "render": [
+        "1.00"
+      ]
+    },
+    {
+      "id": "person_reliability",
+      "statement": "person separation reliability",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "person_reliability",
+        "val_col": "value"
+      },
+      "expect": 0.863,
+      "tol": 0.001,
+      "render": [
+        "0.863"
+      ]
+    },
+    {
+      "id": "n_items",
+      "statement": "items calibrated on the interval logit scale",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_items",
+        "val_col": "value"
+      },
+      "expect": 24,
+      "tol": 0.5,
+      "render": [
+        "24"
+      ]
+    },
+    {
+      "id": "n_persons",
+      "statement": "non-extreme persons calibrated (of 316; all-min/all-max are dropped)",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_persons",
+        "val_col": "value"
+      },
+      "expect": 310,
+      "tol": 0.5,
+      "render": [
+        "310"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+"metric","value"
+"mi",0.07713332
+"mi_sklearn",0.07713332
+"max_diff_sklearn",4.57966997657877e-16
+"mi_shuffled",0.02402727
+"ratio",3.2102
+"n_samples",5001
+"bins",16

@@ -1,0 +1,108 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "0/1 ops validated, 1 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:adl_selfcare_loso",
+      "status": "PASS",
+      "detail": "4/4 agree [overall_accuracy=0.6011 vs ref 0.603; selfcare_detection_rate=0.94145 vs ref 0.938; eating_recall=0 vs ref 0; n_test_windows=5974 vs ref 5974]",
+      "citation": "Bruno B, Mastrogiovanni F, Sgorbissa A (2014). HMP wrist-accelerometer ADL dataset (UCI #283, CC-BY 4.0); WHO ICF performance codes. Leave-one-subject-out."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "overall_accuracy": 0.601104787412119,
+    "selfcare_detection_rate": 0.941447368421053,
+    "n_subjects": 13,
+    "n_test_windows": 5974,
+    "grooming_recall": 0.780210867802109,
+    "drinking_recall": 0.806487695749441,
+    "eating_recall": 0,
+    "walking_recall": 0.800666032350143,
+    "upstairs_recall": 0.270432692307692,
+    "d520_proportion": 0.188483428188818,
+    "d560_proportion": 0.278707733511885,
+    "d550_proportion": 0.0299631737529294
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "adl_selfcare_loso",
+    "citation": "Bruno B, Mastrogiovanni F, Sgorbissa A (2014). HMP wrist-accelerometer ADL dataset (UCI #283, CC-BY 4.0); WHO ICF performance codes. Leave-one-subject-out.",
+    "description": "leave-one-subject-out kNN over 13 HMP subjects reproduces the self-care detection rate, 5-class accuracy, and per-class recalls (within adlFeatures descriptor-version drift), including the exact eating-recall=0 failure; adlToICF surfaces d520/d560",
+    "from_step": {},
+    "scores": {
+      "overall_accuracy": 0.601104787412119,
+      "selfcare_detection_rate": 0.941447368421053,
+      "n_subjects": 13,
+      "n_test_windows": 5974,
+      "grooming_recall": 0.780210867802109,
+      "drinking_recall": 0.806487695749441,
+      "eating_recall": 0,
+      "walking_recall": 0.800666032350143,
+      "upstairs_recall": 0.270432692307692,
+      "d520_proportion": 0.188483428188818,
+      "d560_proportion": 0.278707733511885,
+      "d550_proportion": 0.0299631737529294
+    },
+    "checks": [
+      {
+        "metric": "overall_accuracy",
+        "expect": 0.603,
+        "tol": 0.02,
+        "ref_value": 0.603,
+        "term_value": 0.601104787412119
+      },
+      {
+        "metric": "selfcare_detection_rate",
+        "expect": 0.938,
+        "tol": 0.02,
+        "ref_value": 0.938,
+        "term_value": 0.941447368421053
+      },
+      {
+        "metric": "eating_recall",
+        "expect": 0,
+        "tol": 0.005,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "n_test_windows",
+        "expect": 5974,
+        "tol": 0.5,
+        "ref_value": 5974,
+        "term_value": 5974
+      }
+    ]
+  }
+}

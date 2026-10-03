@@ -1,0 +1,107 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:csi_cvi_cohort",
+      "status": "PASS",
+      "detail": "5/5 agree [csi=1.5001 vs ref 1.5001; cvi=4.9031 vs ref 4.9031; csi_modified=519.67 vs ref 519.67; max_diff_nk=1.1369e-13 vs ref 0; n_rr=392 vs ref 392]",
+      "citation": "Toichi M, Sugiura T, Murai T, Sengoku A (1997). A new method of assessing cardiac autonomic function. J Auton Nerv Syst 62(1-2):79-84. Reference impl: NeuroKit2 hrv_nonlinear (Makowski et al. 2021). Data: Fantasia Database, PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "n_rr": 392,
+    "csi": 1.500142,
+    "cvi": 4.903059,
+    "csi_modified": 519.670868,
+    "max_diff_nk": 1.13686837721616e-13,
+    "young_mean_cvi": 4.9436,
+    "old_mean_cvi": 4.5548,
+    "n_young_cvi_gt_oldmean": 5
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "csi_cvi_cohort",
+    "citation": "Toichi M, Sugiura T, Murai T, Sengoku A (1997). A new method of assessing cardiac autonomic function. J Auton Nerv Syst 62(1-2):79-84. Reference impl: NeuroKit2 hrv_nonlinear (Makowski et al. 2021). Data: Fantasia Database, PhysioNet.",
+    "description": "re-computes the Toichi cardiac autonomic indices (CSI/CVI/CSI_Modified) with NeuroKit2 hrv_nonlinear and confirms the newly-authored ecgHRVautonomic op reproduces them bit-for-bit; reports the op's indices, the bit-exact NeuroKit2 agreement, and the RR count",
+    "from_step": {},
+    "scores": {
+      "csi": 1.500142,
+      "cvi": 4.903059,
+      "csi_modified": 519.670868,
+      "max_diff_nk": 1.13686837721616e-13,
+      "n_rr": 392,
+      "young_mean_cvi": 4.9436,
+      "old_mean_cvi": 4.5548,
+      "n_young_cvi_gt_oldmean": 5
+    },
+    "checks": [
+      {
+        "metric": "csi",
+        "expect": 1.500142,
+        "tol": 0.0001,
+        "ref_value": 1.500142,
+        "term_value": 1.500142
+      },
+      {
+        "metric": "cvi",
+        "expect": 4.903059,
+        "tol": 0.0001,
+        "ref_value": 4.903059,
+        "term_value": 4.903059
+      },
+      {
+        "metric": "csi_modified",
+        "expect": 519.670868,
+        "tol": 0.01,
+        "ref_value": 519.670868,
+        "term_value": 519.670868
+      },
+      {
+        "metric": "max_diff_nk",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 1.13686837721616e-13
+      },
+      {
+        "metric": "n_rr",
+        "expect": 392,
+        "tol": 0.5,
+        "ref_value": 392,
+        "term_value": 392
+      }
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema": "runtrace/1",
+  "seed": 1,
+  "env": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "platform": "x86_64-pc-linux-gnu",
+    "packages": {
+      "PhysioCore": "0.4.0",
+      "PhysioPreprocess": "0.4.0"
+    },
+    "renv_lock": "renv.lock",
+    "renv_lock_hash": "c110eee44b476fb2"
+  },
+  "op_dag": [
+    {
+      "op": 1,
+      "activity": "detrendSignal",
+      "package": "PhysioPreprocess",
+      "version": "0.4.0",
+      "params": {
+        "type": "linear"
+      }
+    }
+  ],
+  "prov_hash": "7a4e2181eb549e56",
+  "outputs": {
+    "terminal_summary.csv": "fdaf72570b284520"
+  },
+  "algo": "xxhash64",
+  "op_dag_source": "executor",
+  "provenance_op_dag": [
+    {
+      "op": 1,
+      "activity": "readEDF",
+      "used": null,
+      "generated": "raw",
+      "package": null,
+      "version": "0.2.3",
+      "params": "{\"path\":\"eval/data/eegmmidb/S002R02.edf\",\"resample\":false}"
+    },
+    {
+      "op": 2,
+      "activity": "detrendSignal",
+      "used": "raw",
+      "generated": "detrended",
+      "package": null,
+      "version": "0.4.0",
+      "params": "{\"type\":\"linear\",\"output_assay\":\"detrended\"}"
+    }
+  ],
+  "provenance_consistent": false
+}

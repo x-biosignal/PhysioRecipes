@@ -1,0 +1,33 @@
+{
+  "registered_at": "2026-09-03T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real simultaneous respiration + PPG recording (BIDMC subject 01), time-domain Granger causality is strong and BIDIRECTIONAL (cardiorespiratory coupling), with the respiration->pulse direction slightly dominant (respiration modulates the peripheral pulse), and grangerCausality reproduces the field-standard statsmodels.tsa.stattools.grangercausalitytests (and an independent numpy OLS) on the real signals.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "cardiorespiratory_granger_causality"
+  },
+  "analysis_plan": {
+    "dataset": "BIDMC PPG and Respiration Dataset (Pimentel et al. 2017, PhysioNet), subject bidmc01; simultaneous RESP (impedance pneumography) and PLETH (PPG), decimated 125->25 Hz, a 200 s segment (5001 samples each)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "grangerCausality",
+        "params": {
+          "sr": 25,
+          "order": 10
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "cardiorespiratory_granger_causality",
+      "threshold": "descriptive: the op's both-direction Granger magnitudes equal statsmodels' to < 1e-5 (intercept-convention floor) AND an independent numpy OLS to < 1e-7 (ridge floor), AND both directions are significant (statsmodels F-test p << 0.001), AND the respiration->pulse direction is net-positive"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "cad348cc22fbd032c7d1a430c097e07c6e3759351e8547b5a32de38b59adf339",
+    "registered_at": "2026-09-03T00:00:00Z"
+  }
+}

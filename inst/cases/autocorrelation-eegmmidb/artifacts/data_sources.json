@@ -1,0 +1,10 @@
+{
+  "dataset": "EEG Motor Movement/Imagery Database (eegmmidb)",
+  "source": "PhysioNet",
+  "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Schalk G, McFarland DJ, Hinterberger T, Birbaumer N, Wolpaw JR. BCI2000: a general-purpose brain-computer interface (BCI) system. IEEE Trans Biomed Eng 2004;51(6):1034-1043. EEG Motor Movement/Imagery Database, PhysioNet (Goldberger et al. 2000).",
+  "record_used": "subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples) -- the SAME git-tracked vector the EEG complexity cases use.",
+  "pipeline": "readRDS(eeg_poz_s002r02) -> PhysioAnalysis::autocorrelation(lag_max=30): the biased, demeaned sample ACF at lags 0..30, acf_k = sum_t (x_t - xbar)(x_{t+k} - xbar) / sum_t (x_t - xbar)^2. The reference re-computes it with statsmodels.tsa.acf(adjusted=False) on the identical signal, via reticulate. Deterministic.",
+  "note": "The root is the POz channel numeric vector (shared with the EEG complexity cases). The autocorrelation function (ACF) measures how similar a signal is to a lag-shifted copy of itself; it is the basic tool for periodicity, rhythmicity and the decorrelation time of a single series. autocorrelation is a NEW op filling the single-series gap (the ecosystem had crossCorrelation between TWO series, folded as xcorr, but not the single-series ACF). It uses the biased, demeaned estimator (dividing by N), the same definition as stats::acf and statsmodels.tsa.acf(adjusted=False), which it reproduces BIT-FOR-BIT (max |diff| ~2e-16) across lags 0..30. The lag-0 value is exactly 1 (the ACF identity), and on this broadband eyes-closed EEG segment the ACF decays below 1/e by lag 3 -- a short decorrelation time (~19 ms at 160 Hz). HONEST: the ACF is a foundational primitive certified against the field-standard statsmodels; the reproducible content is the bit-exact ACF vector + the decorrelation structure, a signal property."
+}

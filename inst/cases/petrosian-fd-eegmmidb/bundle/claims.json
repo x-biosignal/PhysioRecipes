@@ -1,0 +1,100 @@
+{
+  "paper": "petrosian-fd-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "petrosian_fd_poz",
+      "statement": "Petrosian fractal dimension of the posterior channel POz -- waveform-complexity index",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "petrosian_fd",
+        "val_col": "value"
+      },
+      "expect": 1.0170616506,
+      "tol": 0.02,
+      "render": [
+        "1.0170616506"
+      ]
+    },
+    {
+      "id": "max_diff_antropy",
+      "statement": "max |petrosianFD - antropy.petrosian_fd| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_antropy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "n_samples",
+      "statement": "samples in the analyzed channel (10 s at 160 Hz)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_samples",
+        "val_col": "value"
+      },
+      "expect": 1600,
+      "tol": 0.5,
+      "render": [
+        "1600"
+      ]
+    },
+    {
+      "id": "posterior_mean",
+      "statement": "mean Petrosian FD over the posterior (parieto-occipital) channels",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "posterior_mean",
+        "val_col": "value"
+      },
+      "expect": 1.019536,
+      "tol": 0.02,
+      "render": [
+        "1.019536"
+      ]
+    },
+    {
+      "id": "frontal_mean",
+      "statement": "mean Petrosian FD over the frontal channels -- higher (more complex waveform)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "frontal_mean",
+        "val_col": "value"
+      },
+      "expect": 1.02661,
+      "tol": 0.02,
+      "render": [
+        "1.02661"
+      ]
+    },
+    {
+      "id": "n_posterior_lt_frontmean",
+      "statement": "posterior channels (of 9) with Petrosian FD below the frontal mean -- robustness of the smoother-posterior finding",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_posterior_lt_frontmean",
+        "val_col": "value"
+      },
+      "expect": 9,
+      "tol": 0.02,
+      "render": [
+        "9"
+      ]
+    }
+  ]
+}

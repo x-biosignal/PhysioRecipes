@@ -1,0 +1,62 @@
+{
+  "paper": "fuzzy-entropy-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "fuzzyen_m2",
+      "statement": "fuzzy entropy at m=2, r=0.2 of the POz signal",
+      "expect": 0.947552018,
+      "artifact": 0.947552,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "fuzzyen_m3",
+      "statement": "fuzzy entropy at m=3 -- lower than m=2 (non-increasing in dimension)",
+      "expect": 0.7039108125,
+      "artifact": 0.703911,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_nk",
+      "statement": "max |fuzzyEntropy - NeuroKit2 entropy_fuzzy| over the (dimension, r) family (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "sampen_m2",
+      "statement": "crisp sample entropy at the same m=2, r=0.2 (the reference FuzzyEn generalizes)",
+      "expect": 1.3272319919,
+      "artifact": 1.327232,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "fuzzy_vs_sampen_gap",
+      "statement": "|FuzzyEn - SampEn| at m=2 -- the soft membership counts partial matches the crisp step rejects",
+      "expect": 0.37968,
+      "artifact": 0.37968,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "monotonic",
+      "statement": "FuzzyEn is non-increasing in the embedding dimension (1 = holds)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

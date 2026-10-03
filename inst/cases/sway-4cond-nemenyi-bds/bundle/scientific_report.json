@@ -1,0 +1,137 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:nemenyi_vs_pmcmr_scipy",
+      "status": "PASS",
+      "detail": "9/9 agree [p_firm_vision=0.044267 vs ref 0.044267; p_foam_vision=3.1478e-08 vs ref 3.1478e-08; stat_extreme=17.996 vs ref 17.996; max_diff_pmcmr=0 vs ref 0; max_diff_scipy=5.0182e-13 vs ref 0; foam_vision_stronger=1 vs ref 1; n_sig=6 vs ref 6; n_pairs=6 vs ref 6; n_subjects=158 vs ref 158]",
+      "citation": "Nemenyi PB (1963) distribution-free multiple comparisons. Reference impls: PMCMRplus::frdAllPairsNemenyiTest and scikit_posthocs.posthoc_nemenyi_friedman. Data: COP path length (PhysioMoCap::swayMetrics) across four vision x surface conditions, Santos & Duarte (2016) BDS."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "p_firm_vision": 0.0442669796,
+    "p_foam_vision": 3.14782977461903e-08,
+    "stat_extreme": 17.9962548847,
+    "max_diff_pmcmr": 0,
+    "max_diff_scipy": 5.01820807130571e-13,
+    "foam_vision_stronger": 1,
+    "n_sig": 6,
+    "n_pairs": 6,
+    "n_subjects": 158
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "nemenyi_vs_pmcmr_scipy",
+    "citation": "Nemenyi PB (1963) distribution-free multiple comparisons. Reference impls: PMCMRplus::frdAllPairsNemenyiTest and scikit_posthocs.posthoc_nemenyi_friedman. Data: COP path length (PhysioMoCap::swayMetrics) across four vision x surface conditions, Santos & Duarte (2016) BDS.",
+    "description": "re-computes all pairwise Nemenyi comparisons of COP path length across the four conditions with PMCMRplus::frdAllPairsNemenyiTest and scikit_posthocs.posthoc_nemenyi_friedman and confirms nemenyiTest reproduces both to machine precision; also reports the firm-vs-foam vision-effect contrast and the significance count",
+    "from_step": {},
+    "scores": {
+      "p_firm_vision": 0.0442669796,
+      "p_foam_vision": 3.14782977461903e-08,
+      "stat_extreme": 17.9962548847,
+      "max_diff_pmcmr": 0,
+      "max_diff_scipy": 5.01820807130571e-13,
+      "foam_vision_stronger": 1,
+      "n_sig": 6,
+      "n_pairs": 6,
+      "n_subjects": 158
+    },
+    "checks": [
+      {
+        "metric": "p_firm_vision",
+        "expect": 0.0442669796,
+        "tol": 1e-06,
+        "ref_value": 0.0442669796,
+        "term_value": 0.0442669796
+      },
+      {
+        "metric": "p_foam_vision",
+        "expect": 3.14783e-08,
+        "tol": 1e-09,
+        "ref_value": 3.14783e-08,
+        "term_value": 3.14782977461903e-08
+      },
+      {
+        "metric": "stat_extreme",
+        "expect": 17.9962548847,
+        "tol": 1e-06,
+        "ref_value": 17.9962548847,
+        "term_value": 17.9962548847
+      },
+      {
+        "metric": "max_diff_pmcmr",
+        "expect": 0,
+        "tol": 1e-12,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "max_diff_scipy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 5.01820807130571e-13
+      },
+      {
+        "metric": "foam_vision_stronger",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "n_sig",
+        "expect": 6,
+        "tol": 0.5,
+        "ref_value": 6,
+        "term_value": 6
+      },
+      {
+        "metric": "n_pairs",
+        "expect": 6,
+        "tol": 0.5,
+        "ref_value": 6,
+        "term_value": 6
+      },
+      {
+        "metric": "n_subjects",
+        "expect": 158,
+        "tol": 0.5,
+        "ref_value": 158,
+        "term_value": 158
+      }
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+"metric","value"
+"coef_age",1.5877089223
+"neg_log10_p_age",7.69184
+"coef_tmt",0.1217752621
+"p_tmt",0.5545181048
+"r_squared",0.2759419328
+"neg_log10_fp",10.867562
+"max_diff_coef_lm",0
+"max_diff_coef_statsmodels",8.5265128291212e-14
+"age_dominant",1
+"n",158
+"f_statistic",29.535614
+"se_age",0.268349
+"se_tmt",0.2056

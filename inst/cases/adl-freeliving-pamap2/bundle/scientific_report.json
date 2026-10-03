@@ -1,0 +1,136 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "2/2 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:intensity_gradient_vs_ggir",
+      "status": "PASS",
+      "detail": "8/8 agree [enmo_max_abs_diff_g=1.342e-14 vs ref 0; enmo_correlation=1 vs ref 1; intensity_gradient=-1.1932 vs ref -1.19; intensity_gradient_ggir=-1.1932 vs ref -1.19; ig_max_abs_diff_vs_ggir=0 vs ref 0; n_epochs_over_4000mg=0 vs ref 0; mvpa_min=28.583 vs ref 28.6; astp=0.11283 vs ref 0.113]",
+      "citation": "Reiss A, Stricker D (2012), IEEE ISWC (PAMAP2, UCI #231, CC-BY 4.0); Rowlands AV et al. (2018) Med Sci Sports Exerc 50:1323-1332 (intensity gradient); van Hees et al. GGIR (CRAN) g.intensitygradient."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "enmo_max_abs_diff_g": 1.34198208101566e-14,
+    "enmo_correlation": 1,
+    "n_epochs": 749,
+    "intensity_gradient": -1.19318290973464,
+    "mvpa_min": 28.5833333333333,
+    "astp": 0.11283185840708,
+    "mean_enmo_mg": 161.682586476098,
+    "intensity_gradient_ggir": -1.19318290973464,
+    "ig_intercept_ggir": 6.57629509876308,
+    "ig_rsquared_ggir": 0.756929512644977,
+    "ig_max_abs_diff_vs_ggir": 0,
+    "n_epochs_over_4000mg": 0
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "intensity_gradient_vs_ggir",
+    "citation": "Reiss A, Stricker D (2012), IEEE ISWC (PAMAP2, UCI #231, CC-BY 4.0); Rowlands AV et al. (2018) Med Sci Sports Exerc 50:1323-1332 (intensity gradient); van Hees et al. GGIR (CRAN) g.intensitygradient.",
+    "description": "computeENMO reproduces GGIR::g.applymetrics ENMO to machine precision on the identical PAMAP2 hand-acc signal (749 epochs), summarizeFreeLiving reproduces the intensity gradient / MVPA minutes / ASTP fragmentation on that GGIR-validated ENMO series, AND the Rowlands intensity gradient is checked against GGIR::g.intensitygradient on the identical ENMO series (GGIR default binning): GGIR independently returns the same gradient (-1.19) and the op matches GGIR to machine precision (max abs diff < 1e-8). Binning note: max ENMO ~1.2 g, so GGIR's [4000,8000) mg catch-all bin is empty (n_epochs_over_4000mg=0) and the two conventions coincide -- agreement is under matched bins.",
+    "from_step": {},
+    "scores": {
+      "enmo_max_abs_diff_g": 1.34198208101566e-14,
+      "enmo_correlation": 1,
+      "n_epochs": 749,
+      "intensity_gradient": -1.19318290973464,
+      "mvpa_min": 28.5833333333333,
+      "astp": 0.11283185840708,
+      "mean_enmo_mg": 161.682586476098,
+      "intensity_gradient_ggir": -1.19318290973464,
+      "ig_intercept_ggir": 6.57629509876308,
+      "ig_rsquared_ggir": 0.756929512644977,
+      "ig_max_abs_diff_vs_ggir": 0,
+      "n_epochs_over_4000mg": 0
+    },
+    "checks": [
+      {
+        "metric": "enmo_max_abs_diff_g",
+        "expect": 0,
+        "tol": 1e-06,
+        "ref_value": 0,
+        "term_value": 1.34198208101566e-14
+      },
+      {
+        "metric": "enmo_correlation",
+        "expect": 1,
+        "tol": 0.0001,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "intensity_gradient",
+        "expect": -1.19,
+        "tol": 0.01,
+        "ref_value": -1.19,
+        "term_value": -1.19318290973464
+      },
+      {
+        "metric": "intensity_gradient_ggir",
+        "expect": -1.19,
+        "tol": 0.01,
+        "ref_value": -1.19,
+        "term_value": -1.19318290973464
+      },
+      {
+        "metric": "ig_max_abs_diff_vs_ggir",
+        "expect": 0,
+        "tol": 1e-08,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "n_epochs_over_4000mg",
+        "expect": 0,
+        "tol": 0.5,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "mvpa_min",
+        "expect": 28.6,
+        "tol": 0.1,
+        "ref_value": 28.6,
+        "term_value": 28.5833333333333
+      },
+      {
+        "metric": "astp",
+        "expect": 0.113,
+        "tol": 0.001,
+        "ref_value": 0.113,
+        "term_value": 0.11283185840708
+      }
+    ]
+  }
+}

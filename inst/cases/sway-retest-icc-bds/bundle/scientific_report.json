@@ -1,0 +1,146 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:icc_vs_psych_pingouin",
+      "status": "PASS",
+      "detail": "10/10 agree [icc2_single=0.82528 vs ref 0.82528; icc2k_average=0.93408 vs ref 0.93408; icc1_single=0.82436 vs ref 0.82436; icc3_single=0.83847 vs ref 0.83847; max_diff_pingouin=2.2204e-16 vs ref 0; max_diff_psych=9.992e-16 vs ref 0; good_single=1 vs ref 1; excellent_average=1 vs ref 1; n=163 vs ref 163; k=3 vs ref 3]",
+      "citation": "McGraw KO, Wong SP (1996) intraclass correlation. Reference impls: psych::ICC(lmer=FALSE) (Revelle) and pingouin.intraclass_corr. Data: COP path length (PhysioMoCap::swayMetrics) across 3 repeated eyes-open-firm quiet-standing trials, Santos & Duarte (2016) BDS."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "icc2_single": 0.8252765473,
+    "icc2k_average": 0.93408038,
+    "icc1_single": 0.8243552837,
+    "icc3_single": 0.8384699745,
+    "max_diff_psych": 9.99200722162641e-16,
+    "max_diff_pingouin": 2.22044604925031e-16,
+    "good_single": 1,
+    "excellent_average": 1,
+    "n": 163,
+    "k": 3
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "icc_vs_psych_pingouin",
+    "citation": "McGraw KO, Wong SP (1996) intraclass correlation. Reference impls: psych::ICC(lmer=FALSE) (Revelle) and pingouin.intraclass_corr. Data: COP path length (PhysioMoCap::swayMetrics) across 3 repeated eyes-open-firm quiet-standing trials, Santos & Duarte (2016) BDS.",
+    "description": "re-computes the ICC forms of the 3-trial COP path length with psych::ICC(lmer=FALSE) and pingouin.intraclass_corr and confirms intraclassCorrelation reproduces both; also reports the single-trial (ICC2,1) and 3-trial-average (ICC2,k) reliabilities and the design sizes",
+    "from_step": {},
+    "scores": {
+      "icc2_single": 0.8252765473,
+      "icc2k_average": 0.93408038,
+      "icc1_single": 0.8243552837,
+      "icc3_single": 0.8384699745,
+      "max_diff_psych": 9.99200722162641e-16,
+      "max_diff_pingouin": 2.22044604925031e-16,
+      "good_single": 1,
+      "excellent_average": 1,
+      "n": 163,
+      "k": 3
+    },
+    "checks": [
+      {
+        "metric": "icc2_single",
+        "expect": 0.8252765473,
+        "tol": 1e-06,
+        "ref_value": 0.8252765473,
+        "term_value": 0.8252765473
+      },
+      {
+        "metric": "icc2k_average",
+        "expect": 0.93408038,
+        "tol": 1e-06,
+        "ref_value": 0.93408038,
+        "term_value": 0.93408038
+      },
+      {
+        "metric": "icc1_single",
+        "expect": 0.8243552837,
+        "tol": 1e-06,
+        "ref_value": 0.8243552837,
+        "term_value": 0.8243552837
+      },
+      {
+        "metric": "icc3_single",
+        "expect": 0.8384699745,
+        "tol": 1e-06,
+        "ref_value": 0.8384699745,
+        "term_value": 0.8384699745
+      },
+      {
+        "metric": "max_diff_pingouin",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 2.22044604925031e-16
+      },
+      {
+        "metric": "max_diff_psych",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 9.99200722162641e-16
+      },
+      {
+        "metric": "good_single",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "excellent_average",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "n",
+        "expect": 163,
+        "tol": 0.5,
+        "ref_value": 163,
+        "term_value": 163
+      },
+      {
+        "metric": "k",
+        "expect": 3,
+        "tol": 0.5,
+        "ref_value": 3,
+        "term_value": 3
+      }
+    ]
+  }
+}

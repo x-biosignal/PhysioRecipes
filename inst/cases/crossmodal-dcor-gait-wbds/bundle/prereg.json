@@ -1,0 +1,33 @@
+{
+  "registered_at": "2026-09-03T00:00:00Z",
+  "hypothesis": {
+    "statement": "Gait kinematics (sagittal knee + ankle flexion angles) and kinetics (antero-posterior + vertical ground reaction force) are statistically dependent: their distance correlation (Szekely, Rizzo & Bakirov 2007) is substantially > 0 and significant by permutation on real WBDS treadmill-walking data, and distanceCorrelation reproduces the canonical energy::dcor to machine precision.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "kinematics_kinetics_distance_correlation"
+  },
+  "analysis_plan": {
+    "dataset": "WBDS (Fukuchi, Fukuchi & Duarte 2018, figshare 5722711, CC-BY 4.0): sagittal knee + ankle flexion angles (kinematics, marker-derived, translation-invariant) and antero-posterior + vertical GRF (kinetics), time-aligned and down-sampled to 450 samples; WBDS01 for the terminal proof, all five subjects (WBDS01-05) for the robustness benchmark",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "distanceCorrelation",
+        "params": {
+          "permutations": 999,
+          "seed": 1
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "dcor",
+      "estimand": "kinematics_kinetics_distance_correlation",
+      "threshold": "descriptive: dcor substantially > 0 (biomechanically ~0.7) AND significant (permutation p <= 0.01) AND the op equals energy::dcor to machine precision (|diff| < 1e-9)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "d539f157fbd36975a7b4741dc31d27bad91ecf069640c89fdff0423b425af142",
+    "registered_at": "2026-09-03T00:00:00Z"
+  }
+}

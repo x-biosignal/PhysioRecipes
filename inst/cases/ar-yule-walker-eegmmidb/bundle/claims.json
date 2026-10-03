@@ -1,0 +1,100 @@
+{
+  "paper": "ar-yule-walker-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "ar_phi1",
+      "statement": "first AR coefficient (lag 1) of the AR(4) Yule-Walker fit",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "ar_phi1",
+        "val_col": "value"
+      },
+      "expect": 1.18036606,
+      "tol": 1e-06,
+      "render": [
+        "1.18"
+      ]
+    },
+    {
+      "id": "ar_phi2",
+      "statement": "second AR coefficient (lag 2) -- negative (oscillatory dynamics)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "ar_phi2",
+        "val_col": "value"
+      },
+      "expect": -0.29060893,
+      "tol": 1e-06,
+      "render": [
+        "-0.29"
+      ]
+    },
+    {
+      "id": "var_pred",
+      "statement": "innovation (one-step prediction) variance of the AR fit",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "var_pred",
+        "val_col": "value"
+      },
+      "expect": 348.495014,
+      "tol": 0.001,
+      "render": [
+        "348.5"
+      ]
+    },
+    {
+      "id": "max_diff_phi_sm",
+      "statement": "max |AR coefficient - statsmodels yule_walker(mle)| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_phi_sm",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "5e-15"
+      ]
+    },
+    {
+      "id": "var_diff_sm",
+      "statement": "|innovation variance - statsmodels variance| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "var_diff_sm",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "5e-13"
+      ]
+    },
+    {
+      "id": "stationary",
+      "statement": "the fitted AR(4) is stationary (all roots outside the unit circle; 1 = holds)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "stationary",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    }
+  ]
+}

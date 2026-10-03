@@ -1,0 +1,62 @@
+{
+  "paper": "ar-spectrum-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "ar_peak_hz",
+      "statement": "AR parametric spectrum peak frequency (Hz) -- the alpha rhythm",
+      "expect": 10.9018,
+      "artifact": 10.9018,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_rel_diff_specar",
+      "statement": "max |arSpectrum - stats::spec.ar| / spec.ar over all frequencies (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_freq",
+      "statement": "number of frequency bins in the AR spectrum",
+      "expect": 500,
+      "artifact": 500,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "peak_in_alpha",
+      "statement": "the AR spectral peak falls in the alpha band (8-13 Hz; 1 = yes)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "periodogram_peak_hz",
+      "statement": "nonparametric smoothed-periodogram peak frequency (Hz)",
+      "expect": 11.4,
+      "artifact": 11.4,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "cross_method_peak_diff_hz",
+      "statement": "|AR peak - periodogram peak| -- parametric/nonparametric agreement (~0.5 Hz)",
+      "expect": 0.4982,
+      "artifact": 0.4982,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

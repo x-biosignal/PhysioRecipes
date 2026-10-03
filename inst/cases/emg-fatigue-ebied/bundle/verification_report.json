@@ -1,0 +1,53 @@
+{
+  "paper": "emg-fatigue-ebied",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "n_fatigued",
+      "statement": "subjects whose median frequency declines (fatigue index < 1), of 15",
+      "expect": 14,
+      "artifact": 14,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_fatigue_index",
+      "statement": "cohort mean fatigue index (final / initial MDF)",
+      "expect": 0.9183,
+      "artifact": 0.9183,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_pct_change",
+      "statement": "cohort mean MDF percent change over the hold",
+      "expect": -8.17,
+      "artifact": -8.17,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_initial_mdf",
+      "statement": "cohort mean initial MDF (Hz)",
+      "expect": 63.35,
+      "artifact": 63.35,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_final_mdf",
+      "statement": "cohort mean final MDF (Hz)",
+      "expect": 58.19,
+      "artifact": 58.19,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

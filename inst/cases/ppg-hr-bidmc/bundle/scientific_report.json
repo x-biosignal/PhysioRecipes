@@ -1,0 +1,86 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "0/2 ops validated, 2 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:ppg_cohort",
+      "status": "PASS",
+      "detail": "2/2 agree [ecg_hr=91.292 vs ref 91.29; diff_bpm=-1.4968 vs ref -1.5]",
+      "citation": "BIDMC PPG and Respiration Dataset (Pimentel et al. 2017, IEEE TBME 64(8): 1914-1923); PhysioNet. ECG lead-II R-peaks as the gold-standard cardiac rate."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "ecg_hr": 91.292369343797,
+    "ppg_pr": 89.7956116621581,
+    "diff_bpm": -1.49675768163885,
+    "pearson_r": 0.9598,
+    "mean_bias": -2.14,
+    "loa_lower": -9.36,
+    "loa_upper": 5.09,
+    "within5": 90.4
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "ppg_cohort",
+    "citation": "BIDMC PPG and Respiration Dataset (Pimentel et al. 2017, IEEE TBME 64(8): 1914-1923); PhysioNet. ECG lead-II R-peaks as the gold-standard cardiac rate.",
+    "description": "PPG pulse rate (pipeline, PLETH) vs the ECG heart-rate gold standard (R-peaks on lead II, re-read from the record); reproduces the case's per-record ecg_hr and PPG-ECG difference",
+    "from_step": {},
+    "scores": {
+      "ecg_hr": 91.292369343797,
+      "ppg_pr": 89.7956116621581,
+      "diff_bpm": -1.49675768163885,
+      "pearson_r": 0.9598,
+      "mean_bias": -2.14,
+      "loa_lower": -9.36,
+      "loa_upper": 5.09,
+      "within5": 90.4
+    },
+    "checks": [
+      {
+        "metric": "ecg_hr",
+        "expect": 91.29,
+        "tol": 0.05,
+        "ref_value": 91.29,
+        "term_value": 91.292369343797
+      },
+      {
+        "metric": "diff_bpm",
+        "expect": -1.5,
+        "tol": 0.1,
+        "ref_value": -1.5,
+        "term_value": -1.49675768163885
+      }
+    ]
+  }
+}

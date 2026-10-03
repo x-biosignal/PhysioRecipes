@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-09-07T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real eyes-closed posterior EEG channel (eegmmidb S002R02, POz), the newly-authored partialAutocorrelation (Durbin-Levinson on the biased ACF) reproduces statsmodels.tsa.pacf(method='ldb') BIT-FOR-BIT across lags; the lag-1 PACF equals the lag-1 ACF (the definitional identity); and the lag-2 PACF is strongly negative (an oscillatory, AR(2)-like structure characteristic of the alpha rhythm).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "partial_autocorrelation"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "partialAutocorrelation",
+        "params": {
+          "lag_max": 20
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "partial_autocorrelation",
+      "threshold": "descriptive: partialAutocorrelation equals statsmodels.tsa.pacf(method='ldb') to machine precision (max |diff| < 1e-9) across lags"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "7eb4d02b33a81690161f883b24104216c74ae59c16eeb920ed06acf93a4a8948",
+    "registered_at": "2026-09-07T00:00:00Z"
+  }
+}

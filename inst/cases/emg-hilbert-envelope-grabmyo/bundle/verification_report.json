@@ -1,0 +1,53 @@
+{
+  "paper": "emg-hilbert-envelope-grabmyo",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "max_abs_diff",
+      "statement": "max |emgEnvelope(hilbert) - scipy.signal.hilbert| over all channels (machine precision)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_channels",
+      "statement": "EMG channels with a Hilbert envelope",
+      "expect": 32,
+      "artifact": 32,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_envelope",
+      "statement": "mean Hilbert-envelope amplitude across channels (activation amplitude)",
+      "expect": 0.058412,
+      "artifact": 0.058412,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_modulation",
+      "statement": "mean peak/mean envelope modulation -- the gesture's burst activity",
+      "expect": 6.4672,
+      "artifact": 6.4672,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "most_active_channel",
+      "statement": "the most active EMG channel (highest mean envelope)",
+      "expect": 14,
+      "artifact": 14,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

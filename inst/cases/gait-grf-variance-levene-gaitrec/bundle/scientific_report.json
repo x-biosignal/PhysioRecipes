@@ -1,0 +1,146 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:levene_vs_scipy_car",
+      "status": "PASS",
+      "detail": "10/10 agree [f_statistic=3.4157 vs ref 3.4157; neg_log10_p=2.0648 vs ref 2.0648; df1=4 vs ref 4; df2=1839 vs ref 1839; max_diff_scipy=3.5527e-15 vs ref 0; max_diff_car=5.7288e-14 vs ref 0; bartlett_p=0.079072 vs ref 0.079072; variances_differ=1 vs ref 1; bartlett_disagrees=1 vs ref 1; n=1844 vs ref 1844]",
+      "citation": "Levene H (1960); Brown & Forsythe (1974). Reference impls: scipy.stats.levene(center='median') and car::leveneTest(center=median); Bartlett (1937) via base R bartlett.test. Data: vertical-GRF dynamic range across five gait classes, GaitRec (Horsak et al. 2020)."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "f_statistic": 3.4157175076,
+    "neg_log10_p": 2.064849,
+    "df1": 4,
+    "df2": 1839,
+    "max_diff_scipy": 3.5527136788005e-15,
+    "max_diff_car": 5.72875080706581e-14,
+    "bartlett_p": 0.0790715,
+    "variances_differ": 1,
+    "bartlett_disagrees": 1,
+    "n": 1844
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "levene_vs_scipy_car",
+    "citation": "Levene H (1960); Brown & Forsythe (1974). Reference impls: scipy.stats.levene(center='median') and car::leveneTest(center=median); Bartlett (1937) via base R bartlett.test. Data: vertical-GRF dynamic range across five gait classes, GaitRec (Horsak et al. 2020).",
+    "description": "re-computes Levene's (Brown-Forsythe) test of the vertical-GRF dynamic-range variance across the five gait classes with scipy.stats.levene(center='median') and car::leveneTest(center=median) and confirms leveneTest reproduces both to machine precision; also reports the classical Bartlett p, showing the robust/classical disagreement",
+    "from_step": {},
+    "scores": {
+      "f_statistic": 3.4157175076,
+      "neg_log10_p": 2.064849,
+      "df1": 4,
+      "df2": 1839,
+      "max_diff_scipy": 3.5527136788005e-15,
+      "max_diff_car": 5.72875080706581e-14,
+      "bartlett_p": 0.0790715,
+      "variances_differ": 1,
+      "bartlett_disagrees": 1,
+      "n": 1844
+    },
+    "checks": [
+      {
+        "metric": "f_statistic",
+        "expect": 3.4157175076,
+        "tol": 1e-06,
+        "ref_value": 3.4157175076,
+        "term_value": 3.4157175076
+      },
+      {
+        "metric": "neg_log10_p",
+        "expect": 2.064849,
+        "tol": 0.01,
+        "ref_value": 2.064849,
+        "term_value": 2.064849
+      },
+      {
+        "metric": "df1",
+        "expect": 4,
+        "tol": 0.5,
+        "ref_value": 4,
+        "term_value": 4
+      },
+      {
+        "metric": "df2",
+        "expect": 1839,
+        "tol": 0.5,
+        "ref_value": 1839,
+        "term_value": 1839
+      },
+      {
+        "metric": "max_diff_scipy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 3.5527136788005e-15
+      },
+      {
+        "metric": "max_diff_car",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 5.72875080706581e-14
+      },
+      {
+        "metric": "bartlett_p",
+        "expect": 0.0790715,
+        "tol": 0.0001,
+        "ref_value": 0.0790715,
+        "term_value": 0.0790715
+      },
+      {
+        "metric": "variances_differ",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "bartlett_disagrees",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "n",
+        "expect": 1844,
+        "tol": 0.5,
+        "ref_value": 1844,
+        "term_value": 1844
+      }
+    ]
+  }
+}

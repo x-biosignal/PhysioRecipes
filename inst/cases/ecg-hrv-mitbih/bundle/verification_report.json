@@ -1,0 +1,26 @@
+{
+  "paper": "ecg-hrv-mitbih",
+  "n_claims": 2,
+  "n_grounded": 2,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "mean_hr",
+      "statement": "Mean heart rate on MIT-BIH record 100",
+      "expect": 75.51,
+      "artifact": 75.506921,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_rr",
+      "statement": "Mean RR interval (ms) on MIT-BIH record 100",
+      "expect": 794.63,
+      "artifact": 794.62914,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

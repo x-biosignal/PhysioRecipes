@@ -1,0 +1,7 @@
+"metric","value"
+"pacf_lag1",0.85646134
+"pacf_lag2",-0.62661714
+"pacf_lag0",1
+"max_diff_statsmodels",5.68295410730002e-15
+"pacf_acf_lag1_identity",0
+"n_lags",21

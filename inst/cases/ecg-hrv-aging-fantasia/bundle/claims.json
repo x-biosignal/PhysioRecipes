@@ -1,0 +1,85 @@
+{
+  "paper": "ecg-hrv-aging-fantasia",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "totpow_young",
+      "statement": "young median total HRV power (ms^2)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "totpow_young",
+        "val_col": "value"
+      },
+      "expect": 3596.415,
+      "tol": 3.596415,
+      "render": [
+        "3596.415"
+      ]
+    },
+    {
+      "id": "totpow_elderly",
+      "statement": "elderly median total HRV power (ms^2)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "totpow_elderly",
+        "val_col": "value"
+      },
+      "expect": 1020.87,
+      "tol": 1.02087,
+      "render": [
+        "1020.87"
+      ]
+    },
+    {
+      "id": "totpow_p",
+      "statement": "total-power young-vs-elderly Wilcoxon p (young > elderly)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "totpow_p",
+        "val_col": "value"
+      },
+      "expect": 0.000411,
+      "tol": 0.02,
+      "render": [
+        "0.000411"
+      ]
+    },
+    {
+      "id": "hf_p",
+      "statement": "HF (vagal) power young-vs-elderly Wilcoxon p (young > elderly)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "hf_p",
+        "val_col": "value"
+      },
+      "expect": 0.00414,
+      "tol": 0.02,
+      "render": [
+        "0.00414"
+      ]
+    },
+    {
+      "id": "lfhf_p",
+      "statement": "LF/HF balance ratio young-vs-elderly Wilcoxon p (no separation)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "lfhf_p",
+        "val_col": "value"
+      },
+      "expect": 0.661,
+      "tol": 0.02,
+      "render": [
+        "0.661"
+      ]
+    }
+  ]
+}

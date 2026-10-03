@@ -1,0 +1,103 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:emg_envelope_vs_scipy",
+      "status": "PASS",
+      "detail": "5/5 agree [max_abs_diff=5.5511e-16 vs ref 0; n_channels=32 vs ref 32; mean_envelope=0.058412 vs ref 0.058412; mean_modulation=6.4672 vs ref 6.4672; most_active_channel=14 vs ref 14]",
+      "citation": "Gabor D (1946). Theory of communication. J IEE 93(26):429-457 (the analytic signal). Reference impl: scipy.signal.hilbert (Virtanen et al. 2020). Data: GRABMyo forearm surface EMG (Pradhan, Wang & He 2022), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "max_abs_diff": 5.55111512312578e-16,
+    "mean_abs_diff": 2.95390881893676e-16,
+    "n_channels": 32,
+    "mean_envelope": 0.058412,
+    "mean_modulation": 6.4672,
+    "most_active_channel": 14
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "emg_envelope_vs_scipy",
+    "citation": "Gabor D (1946). Theory of communication. J IEE 93(26):429-457 (the analytic signal). Reference impl: scipy.signal.hilbert (Virtanen et al. 2020). Data: GRABMyo forearm surface EMG (Pradhan, Wang & He 2022), PhysioNet.",
+    "description": "re-computes the Hilbert envelope |scipy.signal.hilbert(x)| per channel and compares to emgEnvelope's; reports the machine-precision agreement (max |diff| < 1e-9), the channel count (32), the mean envelope amplitude (0.058), and the mean peak/mean modulation (6.47, the gesture's burst activity)",
+    "from_step": {},
+    "scores": {
+      "max_abs_diff": 5.55111512312578e-16,
+      "mean_abs_diff": 2.95390881893676e-16,
+      "n_channels": 32,
+      "mean_envelope": 0.058412,
+      "mean_modulation": 6.4672,
+      "most_active_channel": 14
+    },
+    "checks": [
+      {
+        "metric": "max_abs_diff",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 5.55111512312578e-16
+      },
+      {
+        "metric": "n_channels",
+        "expect": 32,
+        "tol": 0.5,
+        "ref_value": 32,
+        "term_value": 32
+      },
+      {
+        "metric": "mean_envelope",
+        "expect": 0.058412,
+        "tol": 1e-05,
+        "ref_value": 0.058412,
+        "term_value": 0.058412
+      },
+      {
+        "metric": "mean_modulation",
+        "expect": 6.4672,
+        "tol": 0.01,
+        "ref_value": 6.4672,
+        "term_value": 6.4672
+      },
+      {
+        "metric": "most_active_channel",
+        "expect": 14,
+        "tol": 0.5,
+        "ref_value": 14,
+        "term_value": 14
+      }
+    ]
+  }
+}

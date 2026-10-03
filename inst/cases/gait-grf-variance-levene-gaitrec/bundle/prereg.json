@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-09-11T00:00:00Z",
+  "hypothesis": {
+    "statement": "The five GaitRec gait classes differ in the variance of their vertical-GRF dynamic range; the robust Levene (Brown-Forsythe) test is significant while the normality-sensitive Bartlett test may not be. The newly-authored leveneTest reproduces scipy.stats.levene(center='median') and car::leveneTest(center=median) to machine precision.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "variance_homogeneity"
+  },
+  "analysis_plan": {
+    "dataset": "GaitRec (Horsak et al. 2020); Levene's test of the vertical-GRF dynamic-range variance across the five gait classes",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "leveneTest",
+        "params": {
+          "center": "median"
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "variance_homogeneity",
+      "threshold": "descriptive: leveneTest equals scipy.stats.levene and car::leveneTest to machine precision (|diff| < 1e-9); the robust Levene test finds the class variances differ (p < 0.05)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "050f1cbd29861564129d62b6143480d44a6a48ef52d0f52802a68df5568023c3",
+    "registered_at": "2026-09-11T00:00:00Z"
+  }
+}

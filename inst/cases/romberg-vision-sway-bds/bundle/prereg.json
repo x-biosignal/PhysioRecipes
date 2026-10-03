@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-10T00:00:00Z",
+  "hypothesis": {
+    "statement": "Across 50 subjects, foam-surface COP path length is greater with eyes closed than eyes open (paired difference > 0); pairedTTest reproduces scipy.stats.ttest_rel AND base R t.test(paired=TRUE) BIT-FOR-BIT.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "paired_mean_difference"
+  },
+  "analysis_plan": {
+    "dataset": "Santos & Duarte (2016) balance dataset (figshare); COP path length (PhysioMoCap::swayMetrics) on eyes-closed vs eyes-open foam surface for 50 subjects",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "pairedTTest",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "paired_mean_difference",
+      "threshold": "descriptive: pairedTTest equals scipy.stats.ttest_rel and base R t.test to machine precision (|diff| < 1e-9); eyes-closed sway exceeds eyes-open (t > 0, p < 0.001)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "280721d36b392fd89d8537a815bd7a96041d3bc425a2d0a5a52829a65ddd089d",
+    "registered_at": "2026-09-10T00:00:00Z"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "registered_at": "2026-09-07T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real eyes-closed posterior EEG channel (eegmmidb S002R02, POz), the newly-authored phaseEntropy reproduces NeuroKit2 entropy_phase BIT-FOR-BIT across the sector count k; it increases with k (finer angular resolution); and it lies below the 1/ln(2) normalization ceiling implied by NeuroKit2's base-2/natural-log convention.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "phase_entropy"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "phaseEntropy",
+        "params": {
+          "delay": 1,
+          "k": 4
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "phase_entropy",
+      "threshold": "descriptive: phaseEntropy equals NeuroKit2 entropy_phase to machine precision (max |diff| < 1e-9) across k"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "1a06a0817b4a5a12857ef63b805819549f6ae5e0d73f1b045013d01fd526aaba",
+    "registered_at": "2026-09-07T00:00:00Z"
+  }
+}

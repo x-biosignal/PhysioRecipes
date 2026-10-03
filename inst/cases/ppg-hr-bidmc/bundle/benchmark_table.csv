@@ -1,0 +1,9 @@
+"metric","value"
+"ecg_hr",91.292369343797
+"ppg_pr",89.7956116621581
+"diff_bpm",-1.49675768163885
+"pearson_r",0.9598
+"mean_bias",-2.14
+"loa_lower",-9.36
+"loa_upper",5.09
+"within5",90.4

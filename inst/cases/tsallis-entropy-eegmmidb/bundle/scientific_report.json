@@ -1,0 +1,110 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:tsallis_vs_neurokit",
+      "status": "PASS",
+      "detail": "6/6 agree [tsallis_collision=0.88543 vs ref 0.88543; tsallis_shannon=2.3248 vs ref 2.3248; max_diff_nk=8.8818e-16 vs ref 0; diverge_from_renyi_q2=1.2811 vs ref 1.2811; agree_at_1=0 vs ref 0; monotonic=1 vs ref 1]",
+      "citation": "Tsallis C (1988). Possible generalization of Boltzmann-Gibbs statistics. J Stat Phys 52(1-2):479-487. Reference impl: NeuroKit2 entropy_tsallis (Makowski et al. 2021). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "tsallis_collision": 0.88542578,
+    "tsallis_shannon": 2.32476577,
+    "max_diff_nk": 8.88178419700125e-16,
+    "diverge_from_renyi_q2": 1.281107,
+    "agree_at_1": 0,
+    "monotonic": 1
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "tsallis_vs_neurokit",
+    "citation": "Tsallis C (1988). Possible generalization of Boltzmann-Gibbs statistics. J Stat Phys 52(1-2):479-487. Reference impl: NeuroKit2 entropy_tsallis (Makowski et al. 2021). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the Tsallis entropy with NeuroKit2 entropy_tsallis across q = {0.5, 1, 2, 3} on the identical amplitude histogram and contrasts it with the Renyi entropy; reports the collision (q=2) and Shannon (q=1) Tsallis entropies, the bit-exact NeuroKit2 agreement, the divergence from Renyi at q=2, the agreement with Renyi at q=1, and the monotonicity",
+    "from_step": {},
+    "scores": {
+      "tsallis_collision": 0.88542578,
+      "tsallis_shannon": 2.32476577,
+      "max_diff_nk": 8.88178419700125e-16,
+      "diverge_from_renyi_q2": 1.281107,
+      "agree_at_1": 0,
+      "monotonic": 1
+    },
+    "checks": [
+      {
+        "metric": "tsallis_collision",
+        "expect": 0.8854257813,
+        "tol": 1e-06,
+        "ref_value": 0.8854257813,
+        "term_value": 0.88542578
+      },
+      {
+        "metric": "tsallis_shannon",
+        "expect": 2.3247657693,
+        "tol": 1e-06,
+        "ref_value": 2.3247657693,
+        "term_value": 2.32476577
+      },
+      {
+        "metric": "max_diff_nk",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 8.88178419700125e-16
+      },
+      {
+        "metric": "diverge_from_renyi_q2",
+        "expect": 1.281107,
+        "tol": 0.001,
+        "ref_value": 1.281107,
+        "term_value": 1.281107
+      },
+      {
+        "metric": "agree_at_1",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "monotonic",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+"metric","value"
+"max_diff_scipy",1.03739239420975e-12
+"slope_removed_uv_per_sample",0.014031
+"lowfreq_power_raw",1283.7017
+"lowfreq_power_linear",58.8515
+"lowfreq_power_constant",111.8781
+"leakage_reduction_pct",47.3968

@@ -1,0 +1,46 @@
+{
+  "schema": "runtrace/1",
+  "seed": 1,
+  "env": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "platform": "x86_64-pc-linux-gnu",
+    "packages": {
+      "PhysioCore": "0.4.0",
+      "PhysioNetPhysiology": "0.2.0"
+    },
+    "renv_lock": "renv.lock",
+    "renv_lock_hash": "c110eee44b476fb2"
+  },
+  "op_dag": [
+    {
+      "op": 1,
+      "activity": "physioNodeMatrix",
+      "package": "PhysioNetPhysiology",
+      "version": "0.2.0",
+      "params": {
+        "standardize": true
+      }
+    },
+    {
+      "op": 2,
+      "activity": "timeDelayStability",
+      "package": "PhysioNetPhysiology",
+      "version": "0.2.0",
+      "params": {
+        "sampling_rate": 1,
+        "window_sec": 60,
+        "step_sec": 30,
+        "max_lag_sec": 8,
+        "min_stable": 4
+      }
+    }
+  ],
+  "prov_hash": null,
+  "outputs": {
+    "terminal.txt": "bab61cae750f3f02"
+  },
+  "algo": "xxhash64",
+  "op_dag_source": "executor",
+  "provenance_op_dag": [],
+  "provenance_consistent": true
+}

@@ -1,0 +1,8 @@
+{
+  "dataset": "BDS -- a public data set of human balance evaluations (Santos & Duarte 2016)",
+  "citation": "Santos DA, Duarte M. A public data set of human balance evaluations. PeerJ 2016;4:e2648. doi:10.7717/peerj.2648.",
+  "doi": "10.7717/peerj.2648", "figshare_article": "3394432", "license": "CC-BY 4.0",
+  "record": "force-plate COP (COPx/COPy) at 100 Hz, 60 s quiet standing; 2x2 vision (open/closed) x surface (firm/foam) design",
+  "selection": "158 subjects who completed all four vision x surface conditions (complete blocks). Per subject-condition: mean COP path length (PhysioMoCap::swayMetrics) across trials.",
+  "design": {"blocks_subjects": 158, "conditions": ["Open-Firm","Closed-Firm","Open-Foam","Closed-Foam"]},
+  "public": true }

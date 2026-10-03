@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-09-01T00:00:00Z",
+  "hypothesis": {
+    "statement": "Under strict leave-one-subject-out on real wrist accelerometry (HTAD, 3 subjects, 7 home tasks), washing hands (ICF d510) is recognised ABOVE the 1/7 chance level (~0.14) -- recall ~0.53, about 3.7x chance -- and 7-task accuracy is ~0.63. Washing carries a wrist-detectable signature, though on only 3 subjects this is a demonstration, not a definitive validation.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "washing_recognition_loso"
+  },
+  "analysis_plan": {
+    "dataset": "HTAD (figshare 6667532), 3 subjects, wrist accelerometer @ ~31 Hz; 7 home tasks (washing/grooming/eating/sweeping/mopping/typing/watch_tv); leave-one-subject-out kNN",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "adlFeatures",
+        "params": {
+          "sampling_rate": 31
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "washing_recall",
+      "estimand": "washing_recognition_loso",
+      "threshold": "descriptive: washing (d510) leave-one-subject-out recall vs the 1/7 chance level; washing should clear 2x chance (~0.29), demonstrating a wrist-detectable signature"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "ac751c71ccfb9381e339e47421c93df4f0b53c405d6b7acd03d1cca13c446b25",
+    "registered_at": "2026-09-01T00:00:00Z"
+  }
+}

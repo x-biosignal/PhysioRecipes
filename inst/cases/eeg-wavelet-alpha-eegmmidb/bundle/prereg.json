@@ -1,0 +1,49 @@
+{
+  "registered_at": "2026-09-03T00:00:00Z",
+  "hypothesis": {
+    "statement": "The Morlet-wavelet scalogram of eyes-closed occipital (O1) EEG (eegmmidb S001R02) is dominated by the alpha rhythm (peak power ~10 Hz), and waveletTransform reproduces MNE-Python's tfr_array_morlet in time-frequency structure (correlation ~1) up to a normalization convention.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "eeg_morlet_tfr_alpha"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S001, eyes-closed baseline run R02, occipital channel O1, first 10 s (1600 samples) at 160 Hz",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "waveletTransform",
+        "params": {
+          "frequencies": [
+            4,
+            6,
+            8,
+            10,
+            12,
+            14,
+            16,
+            18,
+            20,
+            22,
+            24,
+            26,
+            28,
+            30
+          ],
+          "n_cycles": 7,
+          "normalization": "L2"
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "dominant_freq",
+      "estimand": "eeg_morlet_tfr_alpha",
+      "threshold": "descriptive: the scalogram peaks in the alpha band (dominant frequency 8-13 Hz), and waveletTransform reproduces MNE tfr_array_morlet in structure (correlation >= 0.99)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "c3c21e01eea67eba0b15c141b13cecd807a144031d4fd801d749b9172293a7a9",
+    "registered_at": "2026-09-03T00:00:00Z"
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "paper": "csi-cvi-fantasia",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "csi",
+      "statement": "Cardiac Sympathetic Index (CSI = L/T = SD2/SD1) -- sympathetic predominance marker",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "csi",
+        "val_col": "value"
+      },
+      "expect": 1.500142,
+      "tol": 0.0001,
+      "render": [
+        "1.50"
+      ]
+    },
+    {
+      "id": "cvi",
+      "statement": "Cardiac Vagal Index (CVI = log10(L*T)) -- parasympathetic (vagal) activity marker",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "cvi",
+        "val_col": "value"
+      },
+      "expect": 4.903059,
+      "tol": 0.0001,
+      "render": [
+        "4.90"
+      ]
+    },
+    {
+      "id": "csi_modified",
+      "statement": "Modified CSI (L^2/T) -- a more sensitive sympathetic marker (seizure detection)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "csi_modified",
+        "val_col": "value"
+      },
+      "expect": 519.670868,
+      "tol": 0.01,
+      "render": [
+        "520"
+      ]
+    },
+    {
+      "id": "max_diff_nk",
+      "statement": "max |ecgHRVautonomic - NeuroKit2 hrv_nonlinear| over CSI/CVI/CSI_Modified (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_nk",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "~1e-13"
+      ]
+    },
+    {
+      "id": "young_mean_cvi",
+      "statement": "mean Cardiac Vagal Index across the 5 young subjects",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "young_mean_cvi",
+        "val_col": "value"
+      },
+      "expect": 4.9436,
+      "tol": 0.02,
+      "render": [
+        "4.9436"
+      ]
+    },
+    {
+      "id": "old_mean_cvi",
+      "statement": "mean Cardiac Vagal Index across the 5 old subjects -- lower (vagal decline with age)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "old_mean_cvi",
+        "val_col": "value"
+      },
+      "expect": 4.5548,
+      "tol": 0.02,
+      "render": [
+        "4.5548"
+      ]
+    },
+    {
+      "id": "n_young_cvi_gt_oldmean",
+      "statement": "young subjects (of 5) with CVI above the old mean -- robustness of the vagal-decline finding",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_young_cvi_gt_oldmean",
+        "val_col": "value"
+      },
+      "expect": 5,
+      "tol": 0.02,
+      "render": [
+        "5"
+      ]
+    }
+  ]
+}

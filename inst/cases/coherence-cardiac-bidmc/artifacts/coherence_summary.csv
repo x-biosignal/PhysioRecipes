@@ -1,0 +1,9 @@
+"metric","value"
+"max_abs_diff_vs_scipy",2.875e-14
+"peak_coherence",0.8982421806
+"peak_freq_hz",1.464844
+"peak_bpm",87.89
+"band_mean_coherence",0.4388860116
+"confidence_limit",0.025713
+"n_freq",257
+"n_segments",116

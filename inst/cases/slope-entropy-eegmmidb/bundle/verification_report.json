@@ -1,0 +1,62 @@
+{
+  "paper": "slope-entropy-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "slopen_m2",
+      "statement": "slope entropy at m=2 (thresholds 0.1/45 deg) of the POz signal (bits)",
+      "expect": 1.2592266918,
+      "artifact": 1.259227,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "slopen_m3",
+      "statement": "slope entropy at m=3 -- higher than m=2 (increasing in dimension)",
+      "expect": 2.4256613701,
+      "artifact": 2.425661,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "slopen_m4",
+      "statement": "slope entropy at m=4 -- higher still (unnormalized, grows with pattern length)",
+      "expect": 3.5714347517,
+      "artifact": 3.571435,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_nk",
+      "statement": "max |slopeEntropy - NeuroKit2 entropy_slope| over the embedding dimension (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_patterns_m3",
+      "statement": "distinct slope patterns realized at m=3 (out of 5^(m-1) = 25 possible)",
+      "expect": 18,
+      "artifact": 18,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "monotonic_increasing",
+      "statement": "SlopEn INCREASES with the embedding dimension (1 = holds; contrast with normalized entropies)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

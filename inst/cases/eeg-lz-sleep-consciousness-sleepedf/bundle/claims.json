@@ -1,0 +1,85 @@
+{
+  "paper": "eeg-lz-sleep-consciousness-sleepedf",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "abs_diff",
+      "statement": "|eegComplexity LZ - antropy.lziv_complexity| on the deep-sleep EEG (machine precision)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "abs_diff",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "lz_n3_op",
+      "statement": "Lempel-Ziv complexity of the deep-sleep (N3) EEG -- the complexity minimum",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "lz_n3_op",
+        "val_col": "value"
+      },
+      "expect": 0.3639716568,
+      "tol": 1e-06,
+      "render": [
+        "0.36"
+      ]
+    },
+    {
+      "id": "lz_wake",
+      "statement": "Lempel-Ziv complexity of the wake EEG",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "lz_wake",
+        "val_col": "value"
+      },
+      "expect": 0.4643776311,
+      "tol": 1e-06,
+      "render": [
+        "0.46"
+      ]
+    },
+    {
+      "id": "lz_rem",
+      "statement": "Lempel-Ziv complexity of the REM (dream) EEG -- recovers toward wake",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "lz_rem",
+        "val_col": "value"
+      },
+      "expect": 0.4643776311,
+      "tol": 1e-06,
+      "render": [
+        "0.46"
+      ]
+    },
+    {
+      "id": "wake_minus_n3",
+      "statement": "the wake-minus-deep-sleep LZ drop -- the consciousness/complexity gradient",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "wake_minus_n3",
+        "val_col": "value"
+      },
+      "expect": 0.1004059743,
+      "tol": 1e-06,
+      "render": [
+        "0.10"
+      ]
+    }
+  ]
+}

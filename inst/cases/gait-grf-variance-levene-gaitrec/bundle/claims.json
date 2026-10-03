@@ -1,0 +1,160 @@
+{
+  "paper": "gait-grf-variance-levene-gaitrec",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "f_statistic",
+      "statement": "Levene (Brown-Forsythe) F-statistic for variance homogeneity across the five classes",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "f_statistic",
+        "val_col": "value"
+      },
+      "expect": 3.4157175076,
+      "tol": 1e-06,
+      "render": [
+        "3.42"
+      ]
+    },
+    {
+      "id": "neg_log10_p",
+      "statement": "-log10(Levene p): the class variances differ significantly",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "neg_log10_p",
+        "val_col": "value"
+      },
+      "expect": 2.064849,
+      "tol": 0.01,
+      "render": [
+        "2.06"
+      ]
+    },
+    {
+      "id": "df1",
+      "statement": "between-groups degrees of freedom (k - 1)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "df1",
+        "val_col": "value"
+      },
+      "expect": 4,
+      "tol": 0.5,
+      "render": [
+        "4"
+      ]
+    },
+    {
+      "id": "df2",
+      "statement": "within-groups degrees of freedom (N - k)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "df2",
+        "val_col": "value"
+      },
+      "expect": 1839,
+      "tol": 0.5,
+      "render": [
+        "1839"
+      ]
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|leveneTest F - scipy.stats.levene F| (machine precision, < 1e-9)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "<1e-9"
+      ]
+    },
+    {
+      "id": "max_diff_car",
+      "statement": "|leveneTest F - car::leveneTest F| (machine precision, < 1e-9)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_car",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "<1e-9"
+      ]
+    },
+    {
+      "id": "bartlett_p",
+      "statement": "classical Bartlett-test p (normality-sensitive): non-significant, for contrast",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "bartlett_p",
+        "val_col": "value"
+      },
+      "expect": 0.0790715,
+      "tol": 0.0001,
+      "render": [
+        "0.079"
+      ]
+    },
+    {
+      "id": "variances_differ",
+      "statement": "the robust Levene test finds the class variances differ (p < 0.05)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "variances_differ",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "bartlett_disagrees",
+      "statement": "Levene and Bartlett disagree (Bartlett ns while Levene significant)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "bartlett_disagrees",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "n",
+      "statement": "total subjects across the five classes",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n",
+        "val_col": "value"
+      },
+      "expect": 1844,
+      "tol": 0.5,
+      "render": [
+        "1844"
+      ]
+    }
+  ]
+}

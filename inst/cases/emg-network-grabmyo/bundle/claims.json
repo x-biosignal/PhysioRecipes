@@ -1,0 +1,85 @@
+{
+  "paper": "emg-network-grabmyo",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "coherence_edge_r",
+      "statement": "split-half edge-weight correlation, coherence network",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "coherence_edge_r",
+        "val_col": "value"
+      },
+      "expect": 0.9942,
+      "tol": 0.001,
+      "render": [
+        "0.9942"
+      ]
+    },
+    {
+      "id": "partial_edge_r",
+      "statement": "split-half edge-weight correlation, partial coherence",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "partial_coherence_edge_r",
+        "val_col": "value"
+      },
+      "expect": 0.9747,
+      "tol": 0.001,
+      "render": [
+        "0.9747"
+      ]
+    },
+    {
+      "id": "wpli_edge_r",
+      "statement": "split-half edge-weight correlation, wPLI",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "wpli_edge_r",
+        "val_col": "value"
+      },
+      "expect": 0.8352,
+      "tol": 0.001,
+      "render": [
+        "0.8352"
+      ]
+    },
+    {
+      "id": "gc_edge_r",
+      "statement": "split-half edge-weight correlation, directed Granger causality",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "directed_gc_edge_r",
+        "val_col": "value"
+      },
+      "expect": 0.9389,
+      "tol": 0.005,
+      "render": [
+        "0.9389 (reimpl-drift tol 5e-3)"
+      ]
+    },
+    {
+      "id": "coherence_node_r",
+      "statement": "split-half node-strength correlation, coherence network",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "coherence_node_r",
+        "val_col": "value"
+      },
+      "expect": 0.9969,
+      "tol": 0.005,
+      "render": [
+        "0.9969 (row-sum node strength, tol 5e-3)"
+      ]
+    }
+  ]
+}

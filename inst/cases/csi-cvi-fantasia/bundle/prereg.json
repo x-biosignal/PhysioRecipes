@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-05T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real 5-minute RR window (Fantasia f1y01), the newly-authored ecgHRVautonomic reproduces NeuroKit2 hrv_nonlinear's Toichi cardiac autonomic indices (CSI, CVI, CSI_Modified) BIT-FOR-BIT; the indices are physiologic (CSI ~ 1.5, CVI ~ 4.8), and the Cardiac Vagal Index is higher in young than old subjects (parasympathetic decline with age).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "cardiac_autonomic_indices"
+  },
+  "analysis_plan": {
+    "dataset": "Fantasia Database (PhysioNet), subject f1y01 (young healthy adult), the first 5-minute RR window (392 RR intervals, integer ms at 250 Hz)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "ecgHRVautonomic",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "cardiac_autonomic_indices",
+      "threshold": "descriptive: CSI/CVI/CSI_Modified equal NeuroKit2 hrv_nonlinear to machine precision (max |diff| < 1e-9)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "f92c703e146058208fd6a113f6c2def1502504494c07c276c412d3d270192390",
+    "registered_at": "2026-09-05T00:00:00Z"
+  }
+}

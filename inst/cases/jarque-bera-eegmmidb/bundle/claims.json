@@ -1,0 +1,100 @@
+{
+  "paper": "jarque-bera-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "jb_statistic",
+      "statement": "Jarque-Bera statistic of the POz amplitude distribution",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "jb_statistic",
+        "val_col": "value"
+      },
+      "expect": 15.49279,
+      "tol": 0.0001,
+      "render": [
+        "15.5"
+      ]
+    },
+    {
+      "id": "jb_stat_diff_scipy",
+      "statement": "|Jarque-Bera statistic - scipy.stats.jarque_bera| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "jb_stat_diff_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "2e-14"
+      ]
+    },
+    {
+      "id": "jb_pvalue_diff_scipy",
+      "statement": "|Jarque-Bera p-value - scipy p-value| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "jb_pvalue_diff_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "4e-18"
+      ]
+    },
+    {
+      "id": "critical_value_95",
+      "statement": "95% chi-square critical value at 2 df (the rejection threshold)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "critical_value_95",
+        "val_col": "value"
+      },
+      "expect": 5.991465,
+      "tol": 0.0001,
+      "render": [
+        "5.99"
+      ]
+    },
+    {
+      "id": "reject_normality",
+      "statement": "the normality null is rejected (JB > critical; 1 = rejected)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "reject_normality",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "descriptive_near_gaussian",
+      "statement": "signalMoments finds it descriptively near-Gaussian -- yet JB rejects (the large-N nuance)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "descriptive_near_gaussian",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    }
+  ]
+}

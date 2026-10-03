@@ -1,0 +1,36 @@
+{
+  "registered_at": "2026-08-31T00:00:00Z",
+  "hypothesis": {
+    "statement": "The PPG (PLETH) pulse rate agrees with the simultaneous ECG (lead II) heart rate on BIDMC record bidmc01 (mean pulse rate within a few bpm of the ECG gold standard).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "ppg_pulse_rate_vs_ecg"
+  },
+  "analysis_plan": {
+    "dataset": "BIDMC record bidmc01 (PhysioNet), PLETH + II @ 125 Hz, ~8 min ICU recording",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "ppgDetectPulses",
+        "params": []
+      },
+      {
+        "activity": "pulseRateVariability",
+        "params": {
+          "freq": false
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "mean_pr",
+      "estimand": "ppg_pulse_rate_vs_ecg",
+      "threshold": "descriptive: PPG mean pulse rate vs ECG heart rate; |PPG - ECG| within a few bpm"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "d04c7e7c4d78e74f41b983e23f5bbd0d45ec5175be96ef7507dc78be94474cb4",
+    "registered_at": "2026-08-31T00:00:00Z"
+  }
+}

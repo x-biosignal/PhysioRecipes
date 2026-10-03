@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-07T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real 5-minute RR series (Fantasia f1y01), ecgHRVgeometric reproduces NeuroKit2 hrv_time HTI (HRV_HTI) BIT-FOR-BIT -- an integer-ratio index (interval count / modal histogram height at the 1/128 s standard bin); TINN differs by a documented triangular-interpolation convention (a least-squares triangle base width vs NeuroKit2's fit).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "geometric_hrv"
+  },
+  "analysis_plan": {
+    "dataset": "Fantasia Database (PhysioNet), record f1y01, a 5-minute RR-interval series (392 intervals, ms)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "ecgHRVgeometric",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "geometric_hrv",
+      "threshold": "descriptive: HTI equals NeuroKit2 HRV_HTI to machine precision (|diff| < 1e-9); TINN differs by the interpolation convention"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "58dcabf2fd69333004a64d5b1be987f90a30ede7918680e12a9ece4120b837fa",
+    "registered_at": "2026-09-07T00:00:00Z"
+  }
+}

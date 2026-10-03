@@ -1,0 +1,83 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:rasch_vs_erm",
+      "status": "PASS",
+      "detail": "3/3 agree [item_pearson=0.99999 vs ref 1; item_spearman=1 vs ref 1; person_pearson=0.99999 vs ref 1]",
+      "citation": "Mair P, Hatzinger R (2007). Extended Rasch Modeling: The eRm Package for the Application of IRT Models in R. J Stat Softw 20(9):1-20. Partial Credit Model by conditional maximum likelihood."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "item_pearson": 0.999994024085637,
+    "item_spearman": 1,
+    "person_pearson": 0.999994496950702
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "rasch_vs_erm",
+    "citation": "Mair P, Hatzinger R (2007). Extended Rasch Modeling: The eRm Package for the Application of IRT Models in R. J Stat Softw 20(9):1-20. Partial Credit Model by conditional maximum likelihood.",
+    "description": "re-fit the Partial Credit Model with eRm (CML) and correlate item locations + person measures against pcm_measure's (JMLE); reproduces the case's cross-tool agreement",
+    "from_step": "dataset",
+    "scores": {
+      "item_pearson": 0.999994024085637,
+      "item_spearman": 1,
+      "person_pearson": 0.999994496950702
+    },
+    "checks": [
+      {
+        "metric": "item_pearson",
+        "expect": 1,
+        "tol": 0.005,
+        "ref_value": 1,
+        "term_value": 0.999994024085637
+      },
+      {
+        "metric": "item_spearman",
+        "expect": 1,
+        "tol": 0.005,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "person_pearson",
+        "expect": 1,
+        "tol": 0.005,
+        "ref_value": 1,
+        "term_value": 0.999994496950702
+      }
+    ]
+  }
+}

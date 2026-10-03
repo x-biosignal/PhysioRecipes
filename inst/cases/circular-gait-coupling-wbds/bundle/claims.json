@@ -1,0 +1,85 @@
+{
+  "paper": "circular-gait-coupling-wbds",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "mean_direction",
+      "statement": "mean coordination direction of the knee-ankle coupling angles (degrees), WBDS01",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mean_direction",
+        "val_col": "value"
+      },
+      "expect": 254.32456823,
+      "tol": 1e-06,
+      "render": [
+        "254.3"
+      ]
+    },
+    {
+      "id": "resultant_length",
+      "statement": "mean resultant length R-bar (coordination consistency, 0-1), the Rayleigh statistic",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "resultant_length",
+        "val_col": "value"
+      },
+      "expect": 0.1952812475,
+      "tol": 1e-06,
+      "render": [
+        "0.195"
+      ]
+    },
+    {
+      "id": "mean_abs_diff",
+      "statement": "|circularSummary mean - circular::mean.circular| (machine precision)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mean_abs_diff",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "6e-14"
+      ]
+    },
+    {
+      "id": "rbar_abs_diff",
+      "statement": "|circularSummary R-bar - circular::rho.circular| (exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "rbar_abs_diff",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-12,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "rbar_mean5",
+      "statement": "mean resultant length across all five WBDS subjects (robustness)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "rbar_mean5",
+        "val_col": "value"
+      },
+      "expect": 0.2093033478,
+      "tol": 1e-06,
+      "render": [
+        "0.21"
+      ]
+    }
+  ]
+}

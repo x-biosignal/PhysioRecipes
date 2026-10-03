@@ -1,0 +1,36 @@
+{
+  "registered_at": "2026-09-04T00:00:00Z",
+  "hypothesis": {
+    "statement": "On real eyes-closed occipital EEG (eegmmidb S002R02, channels O1 and Oz), the alpha-band (8-13 Hz) phase-locking value is high (the posterior alpha rhythm is phase-synchronized across neighbouring occipital sites), phaseLockingValue reproduces an independent scipy Hilbert-band PLV, and it recovers ground truth on constructed signals (phase-locked -> PLV ~ 1, independent -> PLV ~ 0).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "alpha_phase_locking_value"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002 baseline run R02 (eyes-closed), occipital channels O1 and Oz, first 10 s at 160 Hz (1600 samples each)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "phaseLockingValue",
+        "params": {
+          "sr": 160,
+          "freq_band": [
+            8,
+            13
+          ]
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "alpha_phase_locking_value",
+      "threshold": "descriptive: phaseLockingValue equals an independent scipy Hilbert-band PLV to < 1e-3 (phase-robust agreement, up to the filtfilt convention), the PLV summation formula is exact (< 1e-9), and the op recovers ground truth (constructed phase-locked PLV > 0.9, independent PLV < 0.1); the real O1-Oz alpha PLV is high (> 0.7)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "aca78bd49a24ddd581e33e01e8f64866958618926945f7591bd6b314057cbd60",
+    "registered_at": "2026-09-04T00:00:00Z"
+  }
+}

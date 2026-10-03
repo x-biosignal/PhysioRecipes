@@ -1,0 +1,115 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "0/1 ops validated, 1 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:hrv_lomb_vs_scipy",
+      "status": "PASS",
+      "detail": "6/6 agree [lf=919.67 vs ref 919.67; hf=1915.5 vs ref 1915.5; lf_hf_ratio=0.48013 vs ref 0.48013; hf_nu=67.561 vs ref 67.561; max_diff_periodogram=4.9098e-08 vs ref 0; max_diff_bandpower=2.8422e-11 vs ref 0]",
+      "citation": "Lomb NR (1976). Ap&SS 39:447-462. Scargle JD (1982). ApJ 263:835-853. Reference impl: scipy.signal.lombscargle (Virtanen et al. 2020). HRV bands: Task Force of ESC/NASPE (1996) Circulation 93:1043-1065. Data: Fantasia Database (Iyengar et al. 1996), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "n_rr": 8710,
+    "lf": 919.67404,
+    "hf": 1915.460049,
+    "lf_hf_ratio": 0.480132,
+    "hf_nu": 67.5615,
+    "total_power": 4448.6159,
+    "max_diff_periodogram": 4.90981619805098e-08,
+    "max_diff_bandpower": 2.8421709430404e-11,
+    "n_freq": 512
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "hrv_lomb_vs_scipy",
+    "citation": "Lomb NR (1976). Ap&SS 39:447-462. Scargle JD (1982). ApJ 263:835-853. Reference impl: scipy.signal.lombscargle (Virtanen et al. 2020). HRV bands: Task Force of ESC/NASPE (1996) Circulation 93:1043-1065. Data: Fantasia Database (Iyengar et al. 1996), PhysioNet.",
+    "description": "re-computes the Lomb-Scargle periodogram of the uneven RR tachogram with scipy.signal.lombscargle on the same 512 frequencies, integrates the VLF/LF/HF bands identically, and compares to ecgHRVfreq(method='lomb'); reports the op's LF/HF band powers + normalized units, the periodogram max |diff| (~5e-8, machine precision) and the band-power max |diff| (~3e-11) vs scipy",
+    "from_step": {},
+    "scores": {
+      "lf": 919.67404,
+      "hf": 1915.460049,
+      "lf_hf_ratio": 0.480132,
+      "hf_nu": 67.5615,
+      "total_power": 4448.6159,
+      "max_diff_periodogram": 4.90981619805098e-08,
+      "max_diff_bandpower": 2.8421709430404e-11,
+      "n_freq": 512
+    },
+    "checks": [
+      {
+        "metric": "lf",
+        "expect": 919.67404,
+        "tol": 0.001,
+        "ref_value": 919.67404,
+        "term_value": 919.67404
+      },
+      {
+        "metric": "hf",
+        "expect": 1915.460049,
+        "tol": 0.001,
+        "ref_value": 1915.460049,
+        "term_value": 1915.460049
+      },
+      {
+        "metric": "lf_hf_ratio",
+        "expect": 0.480132,
+        "tol": 1e-05,
+        "ref_value": 0.480132,
+        "term_value": 0.480132
+      },
+      {
+        "metric": "hf_nu",
+        "expect": 67.5615,
+        "tol": 0.01,
+        "ref_value": 67.5615,
+        "term_value": 67.5615
+      },
+      {
+        "metric": "max_diff_periodogram",
+        "expect": 0,
+        "tol": 1e-05,
+        "ref_value": 0,
+        "term_value": 4.90981619805098e-08
+      },
+      {
+        "metric": "max_diff_bandpower",
+        "expect": 0,
+        "tol": 1e-06,
+        "ref_value": 0,
+        "term_value": 2.8421709430404e-11
+      }
+    ]
+  }
+}

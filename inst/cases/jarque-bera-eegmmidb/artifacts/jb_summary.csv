@@ -1,0 +1,7 @@
+"metric","value"
+"jb_statistic",15.49279
+"jb_stat_diff_scipy",1.77635683940025e-14
+"jb_pvalue_diff_scipy",4.01154803819637e-18
+"critical_value_95",5.991465
+"reject_normality",1
+"descriptive_near_gaussian",1

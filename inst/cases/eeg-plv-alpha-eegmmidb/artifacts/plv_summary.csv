@@ -1,0 +1,12 @@
+"metric","value"
+"plv",0.9215049424
+"plv_scipy",0.9215835739
+"max_diff_scipy",7.863e-05
+"formula_diff",0
+"plv_locked",0.99507
+"plv_unlocked",0.009201
+"mean_phase_diff_rad",0.0757
+"n_samples",1600
+"sr_hz",160
+"band_lo_hz",8
+"band_hi_hz",13

@@ -1,0 +1,102 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:gait_coordination_wbds",
+      "status": "PASS",
+      "detail": "4/4 agree [marp_deg=83.772 vs ref 83.8; in_phase=0.29 vs ref 0.29; distal=0.36 vs ref 0.36; n_treadmill_cycles=328 vs ref 328]",
+      "citation": "Fukuchi CA, Fukuchi RK, Duarte M (2018), PeerJ 6:e4640 (WBDS, figshare 5722711, CC-BY 4.0); Hamill et al. continuous relative phase; Needham et al. vector coding. Sagittal hip-knee coordination."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "marp_deg": 83.7719080319223,
+    "in_phase": 0.29,
+    "anti_phase": 0.15,
+    "proximal": 0.2,
+    "distal": 0.36,
+    "n_treadmill_cycles": 328,
+    "n_overground_cycles": 123,
+    "treadmill_deviation_phase": 35.0097792056851,
+    "overground_deviation_phase": 34.0139234393335
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "gait_coordination_wbds",
+    "citation": "Fukuchi CA, Fukuchi RK, Duarte M (2018), PeerJ 6:e4640 (WBDS, figshare 5722711, CC-BY 4.0); Hamill et al. continuous relative phase; Needham et al. vector coding. Sagittal hip-knee coordination.",
+    "description": "on the WBDS ensemble-mean treadmill gait cycle, continuousRelativePhase (MARP) + vectorCoding (pattern proportions) + coordinationVariability reproduce the case's hip-knee coordination summary; the vector-coding proportions reproduce EXACTLY and MARP within 0.1 deg",
+    "from_step": {},
+    "scores": {
+      "marp_deg": 83.7719080319223,
+      "in_phase": 0.29,
+      "anti_phase": 0.15,
+      "proximal": 0.2,
+      "distal": 0.36,
+      "n_treadmill_cycles": 328,
+      "n_overground_cycles": 123,
+      "treadmill_deviation_phase": 35.0097792056851,
+      "overground_deviation_phase": 34.0139234393335
+    },
+    "checks": [
+      {
+        "metric": "marp_deg",
+        "expect": 83.8,
+        "tol": 0.1,
+        "ref_value": 83.8,
+        "term_value": 83.7719080319223
+      },
+      {
+        "metric": "in_phase",
+        "expect": 0.29,
+        "tol": 0.005,
+        "ref_value": 0.29,
+        "term_value": 0.29
+      },
+      {
+        "metric": "distal",
+        "expect": 0.36,
+        "tol": 0.005,
+        "ref_value": 0.36,
+        "term_value": 0.36
+      },
+      {
+        "metric": "n_treadmill_cycles",
+        "expect": 328,
+        "tol": 0.5,
+        "ref_value": 328,
+        "term_value": 328
+      }
+    ]
+  }
+}

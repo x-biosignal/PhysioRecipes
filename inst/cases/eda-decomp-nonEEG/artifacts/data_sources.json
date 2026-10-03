@@ -1,0 +1,11 @@
+{
+  "dataset": "PhysioNet Non-EEG Dataset for Assessment of Neurological Status",
+  "authors": "Birjandtalab J, Cogan D, Pouyan MB, Nourani M",
+  "repository": "PhysioNet (noneeg 1.0.0)",
+  "doi": "10.13026/C26Q2Z",
+  "url": "https://physionet.org/content/noneeg/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Birjandtalab J, Cogan D, Pouyan MB, Nourani M. A Non-EEG Biosignals Dataset for Assessment and Visualization of Neurological Status. IEEE SiPS 2016:110-114. Goldberger AL, et al. PhysioNet. Circulation. 2000;101(23):e215-e220.",
+  "record_used": "Subject1_AccTempEDA (wrist EDA channel), windowed EDA segment",
+  "public": true
+}

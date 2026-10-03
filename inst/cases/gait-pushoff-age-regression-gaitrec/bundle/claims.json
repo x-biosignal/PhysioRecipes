@@ -1,0 +1,160 @@
+{
+  "paper": "gait-pushoff-age-regression-gaitrec",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "slope",
+      "statement": "OLS slope of push-off peak on age (BW per year; negative = decline)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "slope",
+        "val_col": "value"
+      },
+      "expect": -0.001202775159,
+      "tol": 1e-09,
+      "render": [
+        "-0.00120"
+      ]
+    },
+    {
+      "id": "slope_per_decade",
+      "statement": "push-off decline per decade of age (BW)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "slope_per_decade",
+        "val_col": "value"
+      },
+      "expect": -0.01202775,
+      "tol": 1e-06,
+      "render": [
+        "-0.012"
+      ]
+    },
+    {
+      "id": "intercept",
+      "statement": "OLS intercept (modelled push-off at age 0, extrapolated)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "intercept",
+        "val_col": "value"
+      },
+      "expect": 1.1436454,
+      "tol": 1e-06,
+      "render": [
+        "1.144"
+      ]
+    },
+    {
+      "id": "r_squared",
+      "statement": "R-squared: fraction of push-off variance explained by age",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "r_squared",
+        "val_col": "value"
+      },
+      "expect": 0.0936119568,
+      "tol": 1e-06,
+      "render": [
+        "0.094"
+      ]
+    },
+    {
+      "id": "neg_log10_p",
+      "statement": "-log10(two-sided slope p): the age effect is highly significant",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "neg_log10_p",
+        "val_col": "value"
+      },
+      "expect": 5.156119,
+      "tol": 0.01,
+      "render": [
+        "5.2"
+      ]
+    },
+    {
+      "id": "df",
+      "statement": "residual degrees of freedom (n - 2)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "df",
+        "val_col": "value"
+      },
+      "expect": 206,
+      "tol": 0.5,
+      "render": [
+        "206"
+      ]
+    },
+    {
+      "id": "max_diff_slope_scipy",
+      "statement": "|linearRegression slope - scipy.stats.linregress slope| (bit-for-bit)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_slope_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-12,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "max_diff_slope_lm",
+      "statement": "|linearRegression slope - base R lm slope| (machine precision, < 1e-9)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_slope_lm",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "<1e-9"
+      ]
+    },
+    {
+      "id": "slope_negative",
+      "statement": "the slope is negative (push-off peak declines with age)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "slope_negative",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "n",
+      "statement": "healthy-control subjects regressed",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n",
+        "val_col": "value"
+      },
+      "expect": 208,
+      "tol": 0.5,
+      "render": [
+        "208"
+      ]
+    }
+  ]
+}

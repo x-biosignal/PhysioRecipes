@@ -1,0 +1,89 @@
+{
+  "paper": "iqr-hrv-fantasia",
+  "n_claims": 9,
+  "n_grounded": 9,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "iqr",
+      "statement": "interquartile range of the RR intervals (robust HRV dispersion)",
+      "expect": 76,
+      "artifact": 76,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "q1",
+      "statement": "first quartile (25th percentile) of the RR intervals",
+      "expect": 724,
+      "artifact": 724,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "q3",
+      "statement": "third quartile (75th percentile) of the RR intervals",
+      "expect": 800,
+      "artifact": 800,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|interquartileRange - scipy.stats.iqr| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_baser",
+      "statement": "|interquartileRange - base R IQR| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "sdnn",
+      "statement": "SDNN (classical SD of the RR intervals) for the robust-vs-classical comparison",
+      "expect": 73.6963099023275,
+      "artifact": 73.69631,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "robust_classical_ratio",
+      "statement": "robust IQR-based SD / SDNN -- below 1 for a heavy-tailed distribution",
+      "expect": 0.764461996044049,
+      "artifact": 0.764474,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "rr_skewness",
+      "statement": "skewness of the RR distribution (non-Gaussian, right-skewed)",
+      "expect": 0.073951230122033,
+      "artifact": 0.073951,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_intervals",
+      "statement": "RR intervals in the 5-minute window",
+      "expect": 392,
+      "artifact": 392,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

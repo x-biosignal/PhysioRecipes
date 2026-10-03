@@ -1,0 +1,38 @@
+{
+  "registered_at": "2026-09-05T00:00:00Z",
+  "hypothesis": {
+    "statement": "On the eight parieto-occipital channels of real eyes-closed EEG (eegmmidb S002R02), eegCoherence's magnitude-squared coherence reproduces scipy.signal.coherence (symmetric Hann, matched window length + overlap, detrend=False) band-averaged over 8-13 Hz, BIT-FOR-BIT across all channel pairs; and the posterior alpha-band coherence is high (the eyes-closed alpha rhythm is spatially synchronized), peaking between adjacent occipital channels.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "posterior_alpha_coherence"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), the eight parieto-occipital channels (PO7, PO3, POz, PO4, PO8, O1, Oz, O2), first 10 s at 160 Hz",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "eegCoherence",
+        "params": {
+          "method": "coherence",
+          "window_sec": 2,
+          "overlap": 0.5,
+          "band": [
+            8,
+            13
+          ]
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "posterior_alpha_coherence",
+      "threshold": "descriptive: the coherence matrix equals scipy.signal.coherence to machine precision (max |diff| < 1e-9) across all 28 channel pairs, AND the mean posterior alpha coherence is high (> 0.4)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "334a9120e66a830ffbfd5455b976e24d8356fd5c82c720670b3bfe9cf2ccce73",
+    "registered_at": "2026-09-05T00:00:00Z"
+  }
+}

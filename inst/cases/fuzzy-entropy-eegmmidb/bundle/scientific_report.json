@@ -1,0 +1,110 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:fuzzy_vs_neurokit",
+      "status": "PASS",
+      "detail": "6/6 agree [fuzzyen_m2=0.94755 vs ref 0.94755; fuzzyen_m3=0.70391 vs ref 0.70391; max_diff_nk=3.5527e-15 vs ref 0; sampen_m2=1.3272 vs ref 1.3272; fuzzy_vs_sampen_gap=0.37968 vs ref 0.37968; monotonic=1 vs ref 1]",
+      "citation": "Chen W, Zhuang J, Yu W, Wang Z (2009). Measuring complexity using FuzzyEn, ApEn, and SampEn. Med Eng Phys 31(1):61-68. Reference impl: NeuroKit2 entropy_fuzzy / entropy_sample (Makowski et al. 2021). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "fuzzyen_m2": 0.94755202,
+    "fuzzyen_m3": 0.70391081,
+    "max_diff_nk": 3.5527136788005e-15,
+    "sampen_m2": 1.32723199,
+    "fuzzy_vs_sampen_gap": 0.37968,
+    "monotonic": 1
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "fuzzy_vs_neurokit",
+    "citation": "Chen W, Zhuang J, Yu W, Wang Z (2009). Measuring complexity using FuzzyEn, ApEn, and SampEn. Med Eng Phys 31(1):61-68. Reference impl: NeuroKit2 entropy_fuzzy / entropy_sample (Makowski et al. 2021). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the fuzzy entropy with NeuroKit2 entropy_fuzzy across (dimension, r) and contrasts it with the crisp sample entropy (NeuroKit2 entropy_sample) at m=2, r=0.2; reports FuzzyEn at m=2 and m=3, the bit-exact NeuroKit2 agreement, the SampEn reference, the fuzzy-vs-sample gap, and the monotonicity",
+    "from_step": {},
+    "scores": {
+      "fuzzyen_m2": 0.94755202,
+      "fuzzyen_m3": 0.70391081,
+      "max_diff_nk": 3.5527136788005e-15,
+      "sampen_m2": 1.32723199,
+      "fuzzy_vs_sampen_gap": 0.37968,
+      "monotonic": 1
+    },
+    "checks": [
+      {
+        "metric": "fuzzyen_m2",
+        "expect": 0.947552018,
+        "tol": 1e-06,
+        "ref_value": 0.947552018,
+        "term_value": 0.94755202
+      },
+      {
+        "metric": "fuzzyen_m3",
+        "expect": 0.7039108125,
+        "tol": 1e-06,
+        "ref_value": 0.7039108125,
+        "term_value": 0.70391081
+      },
+      {
+        "metric": "max_diff_nk",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 3.5527136788005e-15
+      },
+      {
+        "metric": "sampen_m2",
+        "expect": 1.3272319919,
+        "tol": 1e-06,
+        "ref_value": 1.3272319919,
+        "term_value": 1.32723199
+      },
+      {
+        "metric": "fuzzy_vs_sampen_gap",
+        "expect": 0.37968,
+        "tol": 0.0001,
+        "ref_value": 0.37968,
+        "term_value": 0.37968
+      },
+      {
+        "metric": "monotonic",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      }
+    ]
+  }
+}

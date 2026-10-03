@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-07T00:00:00Z",
+  "hypothesis": {
+    "statement": "On real Fantasia RR intervals, the newly-authored interquartileRange (type-7 quantiles) reproduces BOTH scipy.stats.iqr AND base R IQR BIT-FOR-BIT; and because the RR distribution is right-skewed and heavy-tailed, the robust IQR-based SD estimate is materially below SDNN -- the opposite of the near-Gaussian EEG where the robust scale matched the SD.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "interquartile_range"
+  },
+  "analysis_plan": {
+    "dataset": "Fantasia database (PhysioNet), subject f1y01 (young healthy adult), first 5-minute RR window (391 intervals, ms)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "interquartileRange",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "interquartile_range",
+      "threshold": "descriptive: interquartileRange equals scipy.stats.iqr AND base R IQR to machine precision (max |diff| < 1e-9 vs each)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "b036e0b9963ce4563f68756c7e3c9069371d817f12e8f998248e5a268ada46d2",
+    "registered_at": "2026-09-07T00:00:00Z"
+  }
+}

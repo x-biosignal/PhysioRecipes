@@ -1,0 +1,10 @@
+"metric","value"
+"median_abs_dev",33
+"scipy_median_abs_dev",33
+"baser_mad_const1",33
+"max_diff_scipy",0
+"max_diff_baser",0
+"mad_scale_normal",48.9258732107
+"sd_population",48.8326312161
+"mad_sd_ratio",1.0019094198
+"n_samples",1600

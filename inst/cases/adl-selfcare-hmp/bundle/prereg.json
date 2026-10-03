@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-09-01T00:00:00Z",
+  "hypothesis": {
+    "statement": "Under leave-one-subject-out on real single-wrist accelerometry (HMP, 13 subjects, 5 classes), self-care windows are recognised as SOME self-care activity ~0.94 of the time and 5-class accuracy is ~0.60; grooming (d520) and drinking (d560) are recognised cross-subject (recall ~0.77 / ~0.81), but eating (d550) is NOT distinguished (recall ~0) -- confused with other hand-to-mouth gestures.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "self_care_adl_recognition_loso"
+  },
+  "analysis_plan": {
+    "dataset": "HMP (UCI #283), 13 subjects, single tri-axial wrist accelerometer @ 32 Hz; 7 activities grouped into 5 classes (grooming/drinking/eating/walking/walking_upstairs); leave-one-subject-out kNN",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "adlFeatures",
+        "params": {
+          "sampling_rate": 32
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "overall_accuracy",
+      "estimand": "self_care_adl_recognition_loso",
+      "threshold": "descriptive: self-care detection rate + 5-class leave-one-subject-out accuracy + per-class recall; grooming and drinking should clear 2x chance (0.20), eating should be near 0 (not distinguished)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "47760b4db2de8bad04b5d39c85a630dbc910c6ec067ab7355eee4d3263a852e5",
+    "registered_at": "2026-09-01T00:00:00Z"
+  }
+}

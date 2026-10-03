@@ -1,0 +1,85 @@
+---
+title: "Browsing the PhysioRecipes case database"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Browsing the PhysioRecipes case database}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+PhysioRecipes is a version-controlled **database of reproducible analysis case
+studies** on public physiological data. Each case states a proposition, answers
+a question on a public dataset, and runs through to figures and a conclusion,
+with every reported number traced to an artifact and the whole operation DAG
+replayable byte-identically.
+
+This package ships the verified run bundles plus a small API to *browse* the
+corpus. This vignette uses only that bundled metadata -- it is fully offline and
+does **not** replay any case.
+
+```{r setup}
+library(PhysioRecipes)
+```
+
+## The corpus at a glance
+
+`list_cases()` returns one row per case: its modality, the ecosystem packages it
+exercises, the dataset, the reproducibility status, and how many reported claims
+are grounded.
+
+```{r list}
+cases <- list_cases()
+nrow(cases)
+head(cases[, c("id", "modality", "status", "n_grounded", "n_claims")])
+```
+
+How many cases per modality and status:
+
+```{r tabulate}
+sort(table(cases$status), decreasing = TRUE)
+head(sort(table(cases$modality), decreasing = TRUE))
+```
+
+## Opening one case
+
+`get_case()` parses a case's `case.json`; `case_path()` and `case_bundle()`
+resolve its files on disk.
+
+```{r open}
+id <- cases$id[1]
+case <- get_case(id)
+case$title
+case$proposition
+# The verified evidence bundle (prereg, op-DAG, artifact, claims, report):
+list.files(case_bundle(id))
+```
+
+## Checking the invariants
+
+`validate_cases()` applies the structural gate every case must satisfy (public
+dataset, every claim grounded, a byte-identical replay recorded). Here we check
+the first few; omit `ids` to gate the whole corpus.
+
+```{r validate}
+validate_cases(ids = head(cases$id, 5))
+```
+
+## The research queue
+
+Some cases escalate an unresolved question to a paper. `escalations()` lists
+them (public cases keep this empty by embargo):
+
+```{r escalate}
+escalations()
+```
+
+## Where to go next
+
+* `?list_cases` / `?get_case` -- browse and open cases.
+* `?validate_cases` -- the invariants gate.
+* `?case_bundle` -- the on-disk evidence a reader re-runs or audits; the same
+  bundle shape `PhysioLake::physioPutBundle()` stores with lineage.

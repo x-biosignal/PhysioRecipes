@@ -1,0 +1,112 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:eeg_aperiodic_vs_fooof",
+      "status": "PASS",
+      "detail": "6/6 agree [exp_corr=0.98029 vs ref 0.98029; mean_abs_exp_diff=0.069977 vs ref 0.069977; mean_exp_specparam=1.3844 vs ref 1.3844; mean_exp_fooof=1.4542 vs ref 1.4542; mean_r2=0.93199 vs ref 0.93199; n_channels=64 vs ref 64]",
+      "citation": "Donoghue T, Haller M, Peterson EJ, et al. (2020). Parameterizing neural power spectra into periodic and aperiodic components. Nat Neurosci 23(12):1655-1665. Reference impl: fooof (Python). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "exp_corr": 0.980294,
+    "mean_abs_exp_diff": 0.069977,
+    "max_abs_exp_diff": 0.25085,
+    "mean_exp_specparam": 1.384365,
+    "mean_exp_fooof": 1.454238,
+    "mean_r2": 0.931992,
+    "n_channels": 64
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "eeg_aperiodic_vs_fooof",
+    "citation": "Donoghue T, Haller M, Peterson EJ, et al. (2020). Parameterizing neural power spectra into periodic and aperiodic components. Nat Neurosci 23(12):1655-1665. Reference impl: fooof (Python). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-fits the identical per-channel Welch PSD with the canonical Python fooof (matched settings, via reticulate) and compares aperiodic exponents to eegAperiodic's; reports the spatial correlation (0.9803), mean |exponent diff| (0.070), max |diff| (0.251), both engines' mean exponent (specparam 1.384, fooof 1.454), mean fit R^2 (0.932), and the channel count (64)",
+    "from_step": {},
+    "scores": {
+      "exp_corr": 0.980294,
+      "mean_abs_exp_diff": 0.069977,
+      "max_abs_exp_diff": 0.25085,
+      "mean_exp_specparam": 1.384365,
+      "mean_exp_fooof": 1.454238,
+      "mean_r2": 0.931992,
+      "n_channels": 64
+    },
+    "checks": [
+      {
+        "metric": "exp_corr",
+        "expect": 0.980294,
+        "tol": 0.005,
+        "ref_value": 0.980294,
+        "term_value": 0.980294
+      },
+      {
+        "metric": "mean_abs_exp_diff",
+        "expect": 0.069977,
+        "tol": 0.005,
+        "ref_value": 0.069977,
+        "term_value": 0.069977
+      },
+      {
+        "metric": "mean_exp_specparam",
+        "expect": 1.384365,
+        "tol": 0.001,
+        "ref_value": 1.384365,
+        "term_value": 1.384365
+      },
+      {
+        "metric": "mean_exp_fooof",
+        "expect": 1.454238,
+        "tol": 0.005,
+        "ref_value": 1.454238,
+        "term_value": 1.454238
+      },
+      {
+        "metric": "mean_r2",
+        "expect": 0.931992,
+        "tol": 0.001,
+        "ref_value": 0.931992,
+        "term_value": 0.931992
+      },
+      {
+        "metric": "n_channels",
+        "expect": 64,
+        "tol": 0.5,
+        "ref_value": 64,
+        "term_value": 64
+      }
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-09-05T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real drifting frontopolar EEG channel (eegmmidb S002R02, Fpz), detrendSignal reproduces scipy.signal.detrend BIT-FOR-BIT for both the linear (least-squares line) and constant (mean) types; and the linear detrend removes a low-frequency trend that constant (mean) removal leaves in -- so the sub-1-Hz spectral power is markedly lower after linear than after constant detrending.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "detrend_spectral_leakage"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), channel Fpz (frontopolar, the largest linear drift), first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "detrendSignal",
+        "params": {
+          "type": "linear"
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "detrend_spectral_leakage",
+      "threshold": "descriptive: detrendSignal equals scipy.signal.detrend to machine precision (max |diff| < 1e-9) for linear and constant, AND linear detrend leaves less sub-1-Hz power than constant detrend"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "09490ec19ff13ca163b384cbada72bf3a587079d3ebe970384ec4b2aea186a8b",
+    "registered_at": "2026-09-05T00:00:00Z"
+  }
+}

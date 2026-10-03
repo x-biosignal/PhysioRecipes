@@ -1,0 +1,53 @@
+{
+  "paper": "renyi-entropy-eegmmidb",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "renyi_collision",
+      "statement": "Renyi collision entropy (alpha=2) of the POz amplitude distribution (nats)",
+      "expect": 2.1665324673,
+      "artifact": 2.166532,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "renyi_shannon",
+      "statement": "Renyi entropy at alpha=1 -- exactly the Shannon entropy (the family's special case)",
+      "expect": 2.3247657693,
+      "artifact": 2.324766,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_nk",
+      "statement": "max |renyiEntropy - NeuroKit2 entropy_renyi| over alpha = {0.5, 1, 2, 3} (bit-exact family)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_bins",
+      "statement": "equal-width bins in the amplitude histogram",
+      "expect": 16,
+      "artifact": 16,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "monotonic",
+      "statement": "H_alpha is non-increasing in alpha (1 = the defining Renyi-family property holds)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

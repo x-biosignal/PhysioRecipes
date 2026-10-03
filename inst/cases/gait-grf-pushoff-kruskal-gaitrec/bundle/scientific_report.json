@@ -1,0 +1,154 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:kruskal_vs_scipy_baser",
+      "status": "PASS",
+      "detail": "10/10 agree [H_statistic=274.46 vs ref 274.46; neg_log10_p=57.457 vs ref 57.457; df=4 vs ref 4; max_diff_scipy=9.0949e-13 vs ref 0; max_diff_baser=0 vs ref 0; rank_hc=1407.5 vs ref 1407.5; rank_calcaneus=632.2 vs ref 632.2; hc_rank_highest=1 vs ref 1; calcaneus_rank_lowest=1 vs ref 1; n_total=1844 vs ref 1844]",
+      "citation": "Kruskal WH, Wallis WA (1952) one-way analysis of variance by ranks. Reference impls: scipy.stats.kruskal and base R stats::kruskal.test. Data: vertical-GRF push-off peak (PhysioMoCap::grfLandmarks) in healthy controls vs four lower-limb pathology classes, GaitRec (Horsak et al. 2020)."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "H_statistic": 274.4576636289,
+    "neg_log10_p": 57.457126,
+    "df": 4,
+    "max_diff_scipy": 9.09494701772928e-13,
+    "max_diff_baser": 0,
+    "rank_hc": 1407.5192,
+    "rank_ankle": 838.9482,
+    "rank_knee": 931.02,
+    "rank_hip": 975.8159,
+    "rank_calcaneus": 632.2,
+    "hc_rank_highest": 1,
+    "calcaneus_rank_lowest": 1,
+    "n_total": 1844,
+    "k_groups": 5
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "kruskal_vs_scipy_baser",
+    "citation": "Kruskal WH, Wallis WA (1952) one-way analysis of variance by ranks. Reference impls: scipy.stats.kruskal and base R stats::kruskal.test. Data: vertical-GRF push-off peak (PhysioMoCap::grfLandmarks) in healthy controls vs four lower-limb pathology classes, GaitRec (Horsak et al. 2020).",
+    "description": "re-computes the tie-corrected Kruskal-Wallis H of the vertical-GRF push-off peak across the five gait classes with scipy.stats.kruskal and base R kruskal.test and confirms kruskalTest reproduces base R bit-for-bit and scipy to machine precision; also reports the per-class mean ranks (healthy-highest, calcaneus-lowest) and the design sizes",
+    "from_step": {},
+    "scores": {
+      "H_statistic": 274.4576636289,
+      "neg_log10_p": 57.457126,
+      "df": 4,
+      "max_diff_scipy": 9.09494701772928e-13,
+      "max_diff_baser": 0,
+      "rank_hc": 1407.5192,
+      "rank_ankle": 838.9482,
+      "rank_knee": 931.02,
+      "rank_hip": 975.8159,
+      "rank_calcaneus": 632.2,
+      "hc_rank_highest": 1,
+      "calcaneus_rank_lowest": 1,
+      "n_total": 1844,
+      "k_groups": 5
+    },
+    "checks": [
+      {
+        "metric": "H_statistic",
+        "expect": 274.4576636289,
+        "tol": 1e-06,
+        "ref_value": 274.4576636289,
+        "term_value": 274.4576636289
+      },
+      {
+        "metric": "neg_log10_p",
+        "expect": 57.457126,
+        "tol": 0.01,
+        "ref_value": 57.457126,
+        "term_value": 57.457126
+      },
+      {
+        "metric": "df",
+        "expect": 4,
+        "tol": 0.5,
+        "ref_value": 4,
+        "term_value": 4
+      },
+      {
+        "metric": "max_diff_scipy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 9.09494701772928e-13
+      },
+      {
+        "metric": "max_diff_baser",
+        "expect": 0,
+        "tol": 1e-12,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "rank_hc",
+        "expect": 1407.5192,
+        "tol": 0.001,
+        "ref_value": 1407.5192,
+        "term_value": 1407.5192
+      },
+      {
+        "metric": "rank_calcaneus",
+        "expect": 632.2,
+        "tol": 0.001,
+        "ref_value": 632.2,
+        "term_value": 632.2
+      },
+      {
+        "metric": "hc_rank_highest",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "calcaneus_rank_lowest",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "n_total",
+        "expect": 1844,
+        "tol": 0.5,
+        "ref_value": 1844,
+        "term_value": 1844
+      }
+    ]
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "schema": "runtrace/1",
+  "seed": 1,
+  "env": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "platform": "x86_64-pc-linux-gnu",
+    "packages": {
+      "PhysioCore": "0.4.0",
+      "PhysioEEG": "0.7.14"
+    },
+    "renv_lock": "renv.lock",
+    "renv_lock_hash": "c110eee44b476fb2"
+  },
+  "op_dag": [
+    {
+      "op": 1,
+      "activity": "eegCoherence",
+      "package": "PhysioEEG",
+      "version": "0.7.14",
+      "params": {
+        "method": "coherence",
+        "window_sec": 2,
+        "overlap": 0.5,
+        "band": [
+          8,
+          13
+        ]
+      }
+    }
+  ],
+  "prov_hash": "b62504cf6bc9f252",
+  "outputs": {
+    "terminal_table.csv": "0bafa4529c19cf71"
+  },
+  "algo": "xxhash64",
+  "op_dag_source": "executor",
+  "provenance_op_dag": [
+    {
+      "op": 1,
+      "activity": "readEDF",
+      "used": null,
+      "generated": "raw",
+      "package": null,
+      "version": "0.2.3",
+      "params": "{\"path\":\"eval/data/eegmmidb/S002R02.edf\",\"resample\":false}"
+    },
+    {
+      "op": 2,
+      "activity": "eegCoherence",
+      "used": "raw",
+      "generated": null,
+      "package": null,
+      "version": "0.7.14",
+      "params": "{\"method\":\"coherence\",\"window_sec\":2,\"overlap\":0.5,\"band\":[8,13],\"assay_name\":\"raw\"}"
+    }
+  ],
+  "provenance_consistent": false
+}

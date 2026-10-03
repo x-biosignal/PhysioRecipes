@@ -1,0 +1,130 @@
+{
+  "paper": "katz-fd-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "katz_fd",
+      "statement": "Katz's fractal dimension of the posterior EEG channel (POz), amplitude-only convention",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "katz_fd",
+        "val_col": "value"
+      },
+      "expect": 3.4679139453,
+      "tol": 1e-06,
+      "render": [
+        "3.468"
+      ]
+    },
+    {
+      "id": "antropy_katz_fd",
+      "statement": "antropy.katz_fd on the identical signal",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "katz_fd",
+        "val_col": "value"
+      },
+      "expect": 3.4679139453,
+      "tol": 0.02,
+      "render": [
+        "3.4679139453"
+      ]
+    },
+    {
+      "id": "neurokit_katz_fd",
+      "statement": "NeuroKit2 fractal_katz on the identical signal",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "katz_fd",
+        "val_col": "value"
+      },
+      "expect": 3.4679139453,
+      "tol": 0.02,
+      "render": [
+        "3.4679139453"
+      ]
+    },
+    {
+      "id": "euclidean_katz_fd",
+      "statement": "the earlier Euclidean-plane convention value (what the shipped op previously returned)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "euclidean_katz_fd",
+        "val_col": "value"
+      },
+      "expect": 1.6955955784,
+      "tol": 0.02,
+      "render": [
+        "1.6955955784"
+      ]
+    },
+    {
+      "id": "max_diff_antropy",
+      "statement": "max |katzFD - antropy.katz_fd| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_antropy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "max_diff_neurokit",
+      "statement": "max |katzFD - NeuroKit2 fractal_katz| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_neurokit",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "euclidean_diff",
+      "statement": "|amplitude-only KFD - earlier Euclidean-plane KFD| -- the size of the convention fix",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "euclidean_diff",
+        "val_col": "value"
+      },
+      "expect": 1.7723183669,
+      "tol": 0.0001,
+      "render": [
+        "1.77"
+      ]
+    },
+    {
+      "id": "n_samples",
+      "statement": "samples in the analyzed channel (10 s at 160 Hz)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_samples",
+        "val_col": "value"
+      },
+      "expect": 1600,
+      "tol": 0.5,
+      "render": [
+        "1600"
+      ]
+    }
+  ]
+}

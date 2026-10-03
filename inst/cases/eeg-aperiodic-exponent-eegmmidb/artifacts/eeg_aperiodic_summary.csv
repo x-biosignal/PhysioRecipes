@@ -1,0 +1,10 @@
+"metric","value"
+"exp_corr",0.980294
+"mean_abs_exp_diff",0.069977
+"max_abs_exp_diff",0.25085
+"median_abs_exp_diff",0.070677
+"mean_exp_specparam",1.384365
+"mean_exp_fooof",1.454238
+"mean_r2",0.931992
+"n_channels",64
+"n_ch_diff_gt_0.15",4

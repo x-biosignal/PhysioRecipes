@@ -1,0 +1,9 @@
+"metric","value"
+"trimmed_mean_10",761.7707006369
+"trimmed_mean_20",760.186440678
+"max_diff_scipy",0
+"max_diff_baser",0
+"plain_mean",765.8775510204
+"median_rr",756
+"mean_gt_trim_gt_median",1
+"n_intervals",392

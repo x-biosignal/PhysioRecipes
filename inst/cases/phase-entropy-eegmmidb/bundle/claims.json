@@ -1,0 +1,100 @@
+{
+  "paper": "phase-entropy-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "phasen_k4",
+      "statement": "phase entropy at k=4 sectors (delay 1) of the POz SODP",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "phasen_k4",
+        "val_col": "value"
+      },
+      "expect": 1.237768618,
+      "tol": 1e-06,
+      "render": [
+        "1.24"
+      ]
+    },
+    {
+      "id": "phasen_k6",
+      "statement": "phase entropy at k=6 -- higher than k=4 (finer angular resolution)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "phasen_k6",
+        "val_col": "value"
+      },
+      "expect": 1.286835125,
+      "tol": 1e-06,
+      "render": [
+        "1.29"
+      ]
+    },
+    {
+      "id": "phasen_k8",
+      "statement": "phase entropy at k=8 -- higher still (more sectors)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "phasen_k8",
+        "val_col": "value"
+      },
+      "expect": 1.2988676599,
+      "tol": 1e-06,
+      "render": [
+        "1.30"
+      ]
+    },
+    {
+      "id": "max_diff_nk",
+      "statement": "max |phaseEntropy - NeuroKit2 entropy_phase| over k (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_nk",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "4e-16"
+      ]
+    },
+    {
+      "id": "increasing_in_k",
+      "statement": "PhasEn increases with the sector count k (1 = holds)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "increasing_in_k",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "below_ceiling",
+      "statement": "PhasEn lies below the NeuroKit2 normalization ceiling 1/ln(2) = 1.443 (1 = holds)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "below_ceiling",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    }
+  ]
+}

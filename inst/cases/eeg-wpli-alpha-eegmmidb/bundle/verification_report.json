@@ -1,0 +1,62 @@
+{
+  "paper": "eeg-wpli-alpha-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "wpli",
+      "statement": "alpha-band (8-13 Hz) weighted phase-lag index (biased) between occipital O1 and Oz",
+      "expect": 0.113171225,
+      "artifact": 0.113171,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "wpli_debiased",
+      "statement": "the DEBIASED wPLI (Vinck 2011 Eq. 6) -- low, confirming the O1-Oz alpha coupling is mostly volume conduction",
+      "expect": 0.0114900107,
+      "artifact": 0.01149,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "max |weightedPLI - scipy imaginary-cross-spectrum wPLI| (agreement, filtfilt-limited)",
+      "expect": 0,
+      "artifact": 0.007469,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "wpli_indep_biased",
+      "statement": "biased wPLI of INDEPENDENT signals -- spuriously positive (the finite-sample bias)",
+      "expect": 0.037685,
+      "artifact": 0.037685,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "wpli_indep_debiased",
+      "statement": "DEBIASED wPLI of the SAME independent signals -- corrected to ~0 (the bias removed)",
+      "expect": 0.000579,
+      "artifact": 0.000579,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "wpli_lagged",
+      "statement": "debiased wPLI of constructed LAGGED signals -- genuine coupling survives debiasing (~1)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

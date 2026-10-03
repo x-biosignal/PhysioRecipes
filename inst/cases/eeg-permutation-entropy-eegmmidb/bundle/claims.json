@@ -1,0 +1,85 @@
+{
+  "paper": "eeg-permutation-entropy-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "max_abs_diff",
+      "statement": "max per-channel |permutation entropy diff| between eegComplexity and antropy (machine precision)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_abs_diff",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "2e-16"
+      ]
+    },
+    {
+      "id": "pe_corr",
+      "statement": "correlation of the per-channel permutation entropy (eegComplexity vs antropy) across the 64 channels",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "pe_corr",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 1e-06,
+      "render": [
+        "1.0"
+      ]
+    },
+    {
+      "id": "mean_pe_op",
+      "statement": "mean permutation entropy across channels (eegComplexity)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mean_pe_op",
+        "val_col": "value"
+      },
+      "expect": 0.907983126,
+      "tol": 1e-06,
+      "render": [
+        "0.91"
+      ]
+    },
+    {
+      "id": "mean_pe_antropy",
+      "statement": "mean permutation entropy across channels (canonical antropy)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mean_pe_antropy",
+        "val_col": "value"
+      },
+      "expect": 0.907983126,
+      "tol": 1e-06,
+      "render": [
+        "0.91"
+      ]
+    },
+    {
+      "id": "n_channels",
+      "statement": "EEG channels with a permutation entropy",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_channels",
+        "val_col": "value"
+      },
+      "expect": 64,
+      "tol": 0.5,
+      "render": [
+        "64"
+      ]
+    }
+  ]
+}

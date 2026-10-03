@@ -1,0 +1,62 @@
+{
+  "paper": "svd-entropy-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "svd_entropy_poz",
+      "statement": "SVD entropy of the posterior channel POz, in bits -- the signal's dimensionality index",
+      "expect": 1.20396869,
+      "artifact": 1.203969,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_antropy",
+      "statement": "max |svdEntropy - antropy.svd_entropy| (bit-exact; both via LAPACK SVD)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_samples",
+      "statement": "samples in the analyzed channel (10 s at 160 Hz)",
+      "expect": 1600,
+      "artifact": 1600,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "posterior_mean",
+      "statement": "mean SVD entropy over the posterior (parieto-occipital) channels",
+      "expect": 1.239126,
+      "artifact": 1.239126,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "frontal_mean",
+      "statement": "mean SVD entropy over the frontal channels -- higher (more high-dimensional)",
+      "expect": 1.287266,
+      "artifact": 1.287266,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_posterior_lt_frontmean",
+      "statement": "posterior channels (of 9) with SVD entropy below the frontal mean -- robustness of the low-dimensional-posterior finding",
+      "expect": 9,
+      "artifact": 9,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

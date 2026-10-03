@@ -1,0 +1,110 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:kpss_vs_statsmodels",
+      "status": "PASS",
+      "detail": "6/6 agree [kpss_statistic=0.20051 vs ref 0.20051; kpss_stat_diff_sm=6.9389e-16 vs ref 0; sm_critical_5pct=0.463 vs ref 0.463; kpss_stationary=1 vs ref 1; adf_stationary=1 vs ref 1; both_tests_agree=1 vs ref 1]",
+      "citation": "Kwiatkowski D, Phillips PCB, Schmidt P, Shin Y (1992). Testing the null hypothesis of stationarity... J Econometrics 54:159-178. Reference impl: statsmodels.tsa.stattools.kpss / adfuller (Seabold & Perktold 2010). Data: eegmmidb, PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "kpss_statistic": 0.20050789,
+    "kpss_stat_diff_sm": 6.93889390390723e-16,
+    "sm_critical_5pct": 0.463,
+    "kpss_stationary": 1,
+    "adf_stationary": 1,
+    "both_tests_agree": 1
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "kpss_vs_statsmodels",
+    "citation": "Kwiatkowski D, Phillips PCB, Schmidt P, Shin Y (1992). Testing the null hypothesis of stationarity... J Econometrics 54:159-178. Reference impl: statsmodels.tsa.stattools.kpss / adfuller (Seabold & Perktold 2010). Data: eegmmidb, PhysioNet.",
+    "description": "re-computes the KPSS statistic with statsmodels.tsa.stattools.kpss(regression='c') on the identical signal; reports the statistic, the bit-exact agreement, statsmodels' 5% critical value, whether KPSS fails to reject stationarity, whether ADF rejects the unit root, and whether the two tests agree",
+    "from_step": {},
+    "scores": {
+      "kpss_statistic": 0.20050789,
+      "kpss_stat_diff_sm": 6.93889390390723e-16,
+      "sm_critical_5pct": 0.463,
+      "kpss_stationary": 1,
+      "adf_stationary": 1,
+      "both_tests_agree": 1
+    },
+    "checks": [
+      {
+        "metric": "kpss_statistic",
+        "expect": 0.20050789,
+        "tol": 1e-06,
+        "ref_value": 0.20050789,
+        "term_value": 0.20050789
+      },
+      {
+        "metric": "kpss_stat_diff_sm",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 6.93889390390723e-16
+      },
+      {
+        "metric": "sm_critical_5pct",
+        "expect": 0.463,
+        "tol": 0.0001,
+        "ref_value": 0.463,
+        "term_value": 0.463
+      },
+      {
+        "metric": "kpss_stationary",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "adf_stationary",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "both_tests_agree",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      }
+    ]
+  }
+}

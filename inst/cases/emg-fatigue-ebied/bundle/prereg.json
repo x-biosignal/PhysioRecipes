@@ -1,0 +1,34 @@
+{
+  "registered_at": "2026-08-30T00:00:00Z",
+  "hypothesis": {
+    "statement": "Under a sustained 6 kg elbow-flexion hold, the EMG median frequency declines from start to end (fatigue index < 1), reproducing the De Luca (1984) myoelectric-fatigue law on subject 1 of the Ebied et al. (2021) cohort.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "emg_fatigue_index_subject"
+  },
+  "analysis_plan": {
+    "dataset": "Ebied et al. 2021 (Zenodo 5189275) subject 1, 8-channel sEMG @ 200 Hz, 6 kg load, 120 s sustained contraction, 50 Hz notch",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "emgFatigueIndex",
+        "params": {
+          "initial_pct": 0.2,
+          "final_pct": 0.2,
+          "assay_name": "raw"
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "fatigue_index",
+      "estimand": "emg_fatigue_index_subject",
+      "threshold": "descriptive: fatigue index = final/initial median frequency; < 1 indicates fatigue"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "1653c7a0f7ec5bac963f66b7e48ceeb3e665a2598f5245b08fd8e5f5cd91f308",
+    "registered_at": "2026-08-30T00:00:00Z"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-07T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real eyes-closed posterior EEG channel (eegmmidb S002R02, POz), the newly-authored standalone katzFD, in the field-standard amplitude-only convention, reproduces BOTH antropy.katz_fd AND NeuroKit2 fractal_katz BIT-FOR-BIT; and this amplitude-only value differs materially from the earlier Euclidean-plane convention the shipped op used.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "katz_fractal_dimension"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "katzFD",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "katz_fractal_dimension",
+      "threshold": "descriptive: katzFD equals antropy.katz_fd AND NeuroKit2 fractal_katz to machine precision (max |diff| < 1e-9 vs each)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "1ebe847ae2c7e12b1c376a4603113fd7ad3a4f43823bc9802f0991b54fa40892",
+    "registered_at": "2026-09-07T00:00:00Z"
+  }
+}

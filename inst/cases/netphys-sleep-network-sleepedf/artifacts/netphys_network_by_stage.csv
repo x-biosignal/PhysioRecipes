@@ -1,0 +1,5 @@
+"stage","n_links","density","mean_degree","windows"
+"Wake",9,0.6,3,135
+"Light",9,0.6,3,291
+"Deep",10,0.6667,3.333,251
+"REM",11,0.7333,3.667,122

@@ -1,0 +1,53 @@
+{
+  "paper": "eeg-wavelet-alpha-eegmmidb",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "dominant_freq",
+      "statement": "dominant frequency of the eyes-closed occipital scalogram (the alpha rhythm, Hz)",
+      "expect": 10,
+      "artifact": 10,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "alpha_power_fraction",
+      "statement": "fraction of scalogram power in the alpha band (8-13 Hz) -- alpha dominance",
+      "expect": 0.66434176,
+      "artifact": 0.664342,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "tfr_corr_vs_mne",
+      "statement": "correlation of the full Morlet TFR between waveletTransform and MNE tfr_array_morlet (structure agreement)",
+      "expect": 0.99976175,
+      "artifact": 0.999762,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "marginal_corr_vs_mne",
+      "statement": "correlation of the time-averaged marginal spectrum vs MNE",
+      "expect": 0.99990225,
+      "artifact": 0.999902,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_freqs",
+      "statement": "frequencies in the scalogram (4-30 Hz, step 2)",
+      "expect": 14,
+      "artifact": 14,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

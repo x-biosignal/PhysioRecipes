@@ -1,0 +1,145 @@
+{
+  "paper": "sway-posturography-bds",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "path_length",
+      "statement": "total COP excursion (path length, cm) over the 60-s trial",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "path_length",
+        "val_col": "value"
+      },
+      "expect": 37.2113946994,
+      "tol": 1e-06,
+      "render": [
+        "37.2"
+      ]
+    },
+    {
+      "id": "mean_velocity",
+      "statement": "mean COP velocity (cm/s)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mean_velocity",
+        "val_col": "value"
+      },
+      "expect": 0.6202932939,
+      "tol": 1e-06,
+      "render": [
+        "0.62"
+      ]
+    },
+    {
+      "id": "area_ce",
+      "statement": "95% confidence ellipse area (cm2)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "area_ce",
+        "val_col": "value"
+      },
+      "expect": 0.9442192497,
+      "tol": 1e-06,
+      "render": [
+        "0.94"
+      ]
+    },
+    {
+      "id": "area_cc",
+      "statement": "95% confidence circle area (cm2)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "area_cc",
+        "val_col": "value"
+      },
+      "expect": 0.9492597818,
+      "tol": 1e-06,
+      "render": [
+        "0.95"
+      ]
+    },
+    {
+      "id": "mean_distance",
+      "statement": "mean distance from the mean COP (cm)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mean_distance",
+        "val_col": "value"
+      },
+      "expect": 0.3079551644,
+      "tol": 1e-06,
+      "render": [
+        "0.31"
+      ]
+    },
+    {
+      "id": "area_sw",
+      "statement": "sway area (cm2/s), area swept per unit time",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "area_sw",
+        "val_col": "value"
+      },
+      "expect": 0.0459651148,
+      "tol": 1e-06,
+      "render": [
+        "0.046"
+      ]
+    },
+    {
+      "id": "max_diff_prieto",
+      "statement": "max |swayMetrics - Prieto reimplementation| across the metrics (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_prieto",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "ellipse_frac_in_95",
+      "statement": "fraction of COP samples inside the 95% confidence ellipse (construct check)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "ellipse_frac_in_95",
+        "val_col": "value"
+      },
+      "expect": 0.9665,
+      "tol": 0.001,
+      "render": [
+        "0.97"
+      ]
+    },
+    {
+      "id": "n_samples",
+      "statement": "COP samples in the 60-s trial (100 Hz)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_samples",
+        "val_col": "value"
+      },
+      "expect": 6000,
+      "tol": 0.5,
+      "render": [
+        "6000"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "registered_at": "2026-09-01T00:00:00Z",
+  "hypothesis": {
+    "statement": "On real ankle-acceleration magnitude (PAMAP2 subject 101), rhythmic locomotion is quasi-periodic and deterministic while aperiodic activity is not: recurrence determinism (DET) orders running > walking >> ironing, and approximate entropy orders ironing >> walking -- each stride recurs, so walking's DET is high (~0.92) and its entropy low (~0.46), whereas ironing's DET is low (~0.38) and its entropy high (~1.28).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "gait_rhythm_regularity"
+  },
+  "analysis_plan": {
+    "dataset": "PAMAP2 (UCI #231), subject 101, ankle IMU +-16g acceleration vector magnitude @ 100 Hz; walking / running / vacuuming / ironing, first 2500 valid samples each",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "recurrenceQuantification",
+        "params": {
+          "m": 4,
+          "tau": 8,
+          "target_rr": 0.1
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "walking_DET",
+      "estimand": "gait_rhythm_regularity",
+      "threshold": "descriptive: recurrence determinism (DET) and approximate entropy (ApEn) per activity; locomotion is more deterministic (higher DET) and more regular (lower ApEn) than aperiodic activity, with a determinism gap (walk-iron) > 0.3 and an entropy gap (iron-walk) > 0.5"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "90e1e0433b34de3597e4dafc8a3e0fa7c7845b9f13534ace6c1b59129aac79b1",
+    "registered_at": "2026-09-01T00:00:00Z"
+  }
+}

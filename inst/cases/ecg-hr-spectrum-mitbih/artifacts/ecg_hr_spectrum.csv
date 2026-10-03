@@ -1,0 +1,5 @@
+"record","zone","mean_hr","mean_rr","hr_from_rr","reciprocal_ok","sdnn","rmssd","pnn50"
+"117","bradycardia",51.02,1176,51.02,TRUE,50.5,43.6,11.9
+"115","normal-low",64.89,924.7,64.89,TRUE,87.2,74.2,46.1
+"103","normal",69.06,868.8,69.06,TRUE,98,132.2,10.4
+"234","upper-normal (fast)",91.37,656.7,91.37,TRUE,38.7,42.4,0.9

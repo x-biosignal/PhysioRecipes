@@ -1,0 +1,25 @@
+{
+  "n_claims": 2,
+  "n_grounded": 2,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "mean_hr",
+      "statement": "mean heart rate (MLII), bpm -- record 117",
+      "expect": 51.02,
+      "artifact": 51.0194,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_rr",
+      "statement": "mean RR interval (MLII), ms -- record 117",
+      "expect": 1176.02,
+      "artifact": 1176.0242,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

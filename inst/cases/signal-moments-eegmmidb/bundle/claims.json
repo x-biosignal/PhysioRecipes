@@ -1,0 +1,100 @@
+{
+  "paper": "signal-moments-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "skewness",
+      "statement": "skewness of the POz amplitude distribution (mild left asymmetry)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "skewness",
+        "val_col": "value"
+      },
+      "expect": -0.22660508,
+      "tol": 1e-06,
+      "render": [
+        "-0.23"
+      ]
+    },
+    {
+      "id": "kurtosis",
+      "statement": "excess kurtosis (tailedness vs Gaussian; 0 = Gaussian)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "kurtosis",
+        "val_col": "value"
+      },
+      "expect": 0.16429364,
+      "tol": 1e-06,
+      "render": [
+        "0.16"
+      ]
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "max |signalMoments - scipy.stats / numpy| over the four moments (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "4e-16"
+      ]
+    },
+    {
+      "id": "approx_gaussian",
+      "statement": "the amplitude distribution is approximately Gaussian (|skew|<0.5 and |exkurt|<1; 1 = yes)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "approx_gaussian",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "mean",
+      "statement": "mean amplitude of the POz signal",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mean",
+        "val_col": "value"
+      },
+      "expect": 0.241875,
+      "tol": 0.0001,
+      "render": [
+        "0.24"
+      ]
+    },
+    {
+      "id": "sd",
+      "statement": "population standard deviation of the POz amplitude",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "sd",
+        "val_col": "value"
+      },
+      "expect": 48.83263122,
+      "tol": 0.0001,
+      "render": [
+        "48.8"
+      ]
+    }
+  ]
+}

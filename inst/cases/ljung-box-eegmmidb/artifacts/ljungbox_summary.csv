@@ -1,0 +1,7 @@
+"metric","value"
+"lb_statistic",4165.456393
+"lb_stat_diff_sm",0
+"lb_pvalue_diff_sm",0
+"critical_value_95",18.307038
+"reject_white_noise",1
+"q_over_critical",227.5331

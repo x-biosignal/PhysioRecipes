@@ -1,0 +1,62 @@
+{
+  "paper": "autocorrelation-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "acf_lag1",
+      "statement": "autocorrelation at lag 1 of the POz signal",
+      "expect": 0.85646134,
+      "artifact": 0.856461,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "acf_lag2",
+      "statement": "autocorrelation at lag 2 -- lower than lag 1 (decaying)",
+      "expect": 0.56654886,
+      "artifact": 0.566549,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "acf_lag0",
+      "statement": "autocorrelation at lag 0 -- exactly 1 (the ACF identity)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_statsmodels",
+      "statement": "max |autocorrelation - statsmodels.tsa.acf| over lags 0..30 (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "decorrelation_time",
+      "statement": "decorrelation time -- first lag where the ACF drops below 1/e",
+      "expect": 3,
+      "artifact": 3,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_lags",
+      "statement": "number of ACF values returned (lags 0..lag_max)",
+      "expect": 31,
+      "artifact": 31,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

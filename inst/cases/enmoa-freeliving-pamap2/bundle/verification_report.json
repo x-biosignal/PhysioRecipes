@@ -1,0 +1,62 @@
+{
+  "paper": "enmoa-freeliving-pamap2",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "enmoa_max_abs_diff_g",
+      "statement": "max |computeENMOa - GGIR g.applymetrics ENMOa| over all epochs (g) -- bit-exact",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "enmoa_correlation",
+      "statement": "correlation between computeENMOa and GGIR ENMOa across epochs",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_epochs",
+      "statement": "number of 5 s epochs certified against GGIR",
+      "expect": 749,
+      "artifact": 749,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_enmoa_mg",
+      "statement": "mean ENMOa across the recording (mg) -- a physical movement-intensity descriptor",
+      "expect": 224.325129,
+      "artifact": 224.325129,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "enmoa_ge_enmo",
+      "statement": "ENMOa >= ENMO at every epoch (the abs retains sub-1 g dips ENMO truncates)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "enmoa_minus_enmo_mg",
+      "statement": "mean ENMOa - mean ENMO (mg) -- the sub-1 g movement ENMO discards",
+      "expect": 62.642543,
+      "artifact": 62.642543,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

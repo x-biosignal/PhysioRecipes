@@ -1,0 +1,9 @@
+"metric","value"
+"csi",1.500142
+"cvi",4.903059
+"csi_modified",519.670868
+"max_diff_nk",1.13686837721616e-13
+"n_rr",392
+"young_mean_cvi",4.9436
+"old_mean_cvi",4.5548
+"n_young_cvi_gt_oldmean",5

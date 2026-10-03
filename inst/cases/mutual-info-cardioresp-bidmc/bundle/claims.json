@@ -1,0 +1,100 @@
+{
+  "paper": "mutual-info-cardioresp-bidmc",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "mi",
+      "statement": "mutual information of RESP and PLETH (histogram estimator, nats) -- the undirected shared information",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mi",
+        "val_col": "value"
+      },
+      "expect": 0.07713332,
+      "tol": 1e-06,
+      "render": [
+        "0.077"
+      ]
+    },
+    {
+      "id": "mi_sklearn",
+      "statement": "sklearn.metrics.mutual_info_score on the identical binning -- matches the op",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mi_sklearn",
+        "val_col": "value"
+      },
+      "expect": 0.07713332,
+      "tol": 0.02,
+      "render": [
+        "0.07713332"
+      ]
+    },
+    {
+      "id": "max_diff_sklearn",
+      "statement": "max |mutualInformation - sklearn.metrics.mutual_info_score| on the identical binning (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_sklearn",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "5e-16"
+      ]
+    },
+    {
+      "id": "mi_shuffled",
+      "statement": "mutual information of RESP vs a SHUFFLED PLETH -- the histogram estimator's finite-sample bias floor",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mi_shuffled",
+        "val_col": "value"
+      },
+      "expect": 0.02402727,
+      "tol": 0.0001,
+      "render": [
+        "0.024"
+      ]
+    },
+    {
+      "id": "ratio",
+      "statement": "real / shuffled MI ratio -- the coupling detected above the finite-sample floor",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "ratio",
+        "val_col": "value"
+      },
+      "expect": 3.2103,
+      "tol": 0.2,
+      "render": [
+        "3.2x"
+      ]
+    },
+    {
+      "id": "n_samples",
+      "statement": "samples per signal (200 s at 25 Hz)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_samples",
+        "val_col": "value"
+      },
+      "expect": 5001,
+      "tol": 0.5,
+      "render": [
+        "5001"
+      ]
+    }
+  ]
+}

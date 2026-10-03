@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-09-03T00:00:00Z",
+  "hypothesis": {
+    "statement": "The vector-coding coupling angles of the knee-ankle pair over a real WBDS gait cycle have a well-defined mean direction and mean resultant length (R-bar), and circularSummary reproduces the canonical `circular` package (mean.circular, rho.circular) to machine precision; the coupling angles are significantly non-uniform (Rayleigh test).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "gait_coupling_circular_statistics"
+  },
+  "analysis_plan": {
+    "dataset": "WBDS (Fukuchi, Fukuchi & Duarte 2018, figshare 5722711, CC-BY 4.0): the knee-ankle vector-coding coupling angles (degrees) over one gait cycle of subject WBDS01 (449 angles); all five subjects for the robustness benchmark",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "circularSummary",
+        "params": {
+          "units": "degrees"
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "rbar_abs_diff",
+      "estimand": "gait_coupling_circular_statistics",
+      "threshold": "descriptive: the mean direction and mean resultant length (R-bar) of circularSummary equal the `circular` package's to machine precision (|diff| < 1e-9), and the coupling angles are significantly non-uniform by the Rayleigh test (p < 1e-3)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "9aac44c60b00a82e5a2b15a1a1bd6adb20e2252342a84f433a0745c901ccd5dc",
+    "registered_at": "2026-09-03T00:00:00Z"
+  }
+}

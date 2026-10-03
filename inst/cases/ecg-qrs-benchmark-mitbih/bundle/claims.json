@@ -1,0 +1,55 @@
+{
+  "paper": "ecg-qrs-benchmark-mitbih",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "gross_se",
+      "statement": "pooled sensitivity Se = TP/(TP+FN) vs cardiologist annotations",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "gross_se",
+        "val_col": "value"
+      },
+      "expect": 0.9658,
+      "tol": 0.02,
+      "render": [
+        "0.9658"
+      ]
+    },
+    {
+      "id": "gross_ppv",
+      "statement": "pooled positive predictive value PPV = TP/(TP+FP)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "gross_ppv",
+        "val_col": "value"
+      },
+      "expect": 0.9759,
+      "tol": 0.02,
+      "render": [
+        "0.9759"
+      ]
+    },
+    {
+      "id": "gross_f1",
+      "statement": "pooled F1 = 2TP/(2TP+FP+FN)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "gross_f1",
+        "val_col": "value"
+      },
+      "expect": 0.9708,
+      "tol": 0.02,
+      "render": [
+        "0.9708"
+      ]
+    }
+  ]
+}

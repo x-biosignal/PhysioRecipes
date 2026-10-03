@@ -1,0 +1,43 @@
+{
+  "registered_at": "2026-09-02T00:00:00Z",
+  "hypothesis": {
+    "statement": "Running setTMSpulses + tepAverage on the real TESA TMS-EEG average, all six canonical TEP components (N15/P30/N45/P60/N100/P180) are recovered in the correct temporal ORDER (monotonically increasing median latencies) and with the correct POLARITIES (peak sign matches the expected N/P in the large majority of channels), the N100 (~115 ms) and P180 (~188 ms) at their literature latencies.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "canonical_tep_sequence"
+  },
+  "analysis_plan": {
+    "dataset": "TESA example TMS-EEG (figshare 3188800), one participant, 150 TMS pulses over left parietal cortex; the baseline-corrected average TEP over 59 channels (time -250..450 ms)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "setTMSpulses",
+        "params": {
+          "intensity_pct_mso": 80,
+          "target": "parietal"
+        }
+      },
+      {
+        "activity": "tepAverage",
+        "params": {
+          "epoch_start_ms": -250,
+          "baseline_window_ms": [
+            -200,
+            -20
+          ]
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "canonical_order",
+      "estimand": "canonical_tep_sequence",
+      "threshold": "descriptive: all six components recovered in canonical temporal order (monotonic latencies) with the correct polarities (>80% per component); N100/P180 at their literature latencies"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "c56c359dca2204a99585a16ae85827fe82b86bc966f391052fe2ed3a2b2c2bc6",
+    "registered_at": "2026-09-02T00:00:00Z"
+  }
+}

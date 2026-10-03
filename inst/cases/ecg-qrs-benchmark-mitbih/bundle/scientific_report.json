@@ -1,0 +1,99 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "guideline:aami-ec57-qrs-detection:min_f1",
+      "status": "PASS",
+      "detail": "F1 = 0.999 (require >= 0.95)",
+      "citation": "ANSI/AAMI EC57:2012 — Testing and reporting performance results of cardiac rhythm and ST-segment measurement algorithms (150 ms beat-matching tolerance)."
+    },
+    {
+      "name": "reference-agreement:qrs_beat_detection_cohort",
+      "status": "PASS",
+      "detail": "3/3 agree [F1=0.99934 vs ref 0.99934; Se=0.99912 vs ref 0.99912; PPV=0.99956 vs ref 0.99956]",
+      "citation": "AAMI EC57 (matching tolerance 150 ms); MIT-BIH Arrhythmia Database cardiologist beat annotations (.atr) as ground truth."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "n_ref": 2273,
+    "n_det": 2272,
+    "TP": 2271,
+    "FP": 1,
+    "FN": 2,
+    "Se": 0.99912010558733,
+    "PPV": 0.99955985915493,
+    "F1": 0.999339933993399,
+    "gross_se": 0.9658,
+    "gross_ppv": 0.9759,
+    "gross_f1": 0.9708
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "qrs_beat_detection_cohort",
+    "citation": "AAMI EC57 (matching tolerance 150 ms); MIT-BIH Arrhythmia Database cardiologist beat annotations (.atr) as ground truth.",
+    "description": "The detected R-peaks are scored against the cardiologist .atr beats by greedy nearest-neighbour matching within the AAMI EC57 window; the resulting Se/PPV/F1 must reproduce the values the validated-tier PhysioRecipes case published for record 100.",
+    "from_step": "peaks",
+    "scores": {
+      "n_ref": 2273,
+      "n_det": 2272,
+      "TP": 2271,
+      "FP": 1,
+      "FN": 2,
+      "Se": 0.99912010558733,
+      "PPV": 0.99955985915493,
+      "F1": 0.999339933993399,
+      "gross_se": 0.9658,
+      "gross_ppv": 0.9759,
+      "gross_f1": 0.9708
+    },
+    "checks": [
+      {
+        "metric": "F1",
+        "expect": 0.99934,
+        "tol": 0.0005,
+        "ref_value": 0.99934,
+        "term_value": 0.999339933993399
+      },
+      {
+        "metric": "Se",
+        "expect": 0.99912,
+        "tol": 0.0005,
+        "ref_value": 0.99912,
+        "term_value": 0.99912010558733
+      },
+      {
+        "metric": "PPV",
+        "expect": 0.99956,
+        "tol": 0.0005,
+        "ref_value": 0.99956,
+        "term_value": 0.99955985915493
+      }
+    ]
+  }
+}

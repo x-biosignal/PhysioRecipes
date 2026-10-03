@@ -1,0 +1,53 @@
+{
+  "paper": "ecg-pvc-mitbih",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "pooled_ppv",
+      "statement": "pooled PVC precision (PPV) - fraction of flagged beats that are true PVCs",
+      "expect": 0.9541,
+      "artifact": 0.9541,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "pooled_sensitivity",
+      "statement": "pooled PVC recall (sensitivity) - fraction of true PVCs caught",
+      "expect": 0.7146,
+      "artifact": 0.7146,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "pooled_f1",
+      "statement": "pooled PVC F1",
+      "expect": 0.8172,
+      "artifact": 0.8172,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "isolated_f1",
+      "statement": "best record F1 (119, isolated PVCs) - a clean case is recovered perfectly",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "runs_sensitivity",
+      "statement": "worst record recall (223, sustained runs/couplets) - the honest floor",
+      "expect": 0.2727,
+      "artifact": 0.2727,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

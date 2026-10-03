@@ -1,0 +1,94 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "2/2 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:fnirs_activation_mbll_mne",
+      "status": "PASS",
+      "detail": "4/4 agree [n_sig_hbo_activation=18 vs ref 18; n_hbr_decrease=25 vs ref 25; hbo_block_peak=0.2139 vs ref 0.2139; n_channels=28 vs ref 28]",
+      "citation": "MNE-Python fNIRS motor dataset (mne.datasets.fnirs_motor), a public single-subject finger-tapping NIRx recording; the modified Beer-Lambert step reproduces MNE beer_lambert_law() to machine precision."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "n_sig_hbo_activation": 18,
+    "n_hbr_decrease": 25,
+    "hbo_block_peak": 0.213899384313469,
+    "n_channels": 28,
+    "mbll_r_mne": 1
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "fnirs_activation_mbll_mne",
+    "citation": "MNE-Python fNIRS motor dataset (mne.datasets.fnirs_motor), a public single-subject finger-tapping NIRx recording; the modified Beer-Lambert step reproduces MNE beer_lambert_law() to machine precision.",
+    "description": "the full PhysioNIRS activation pipeline on the real fnirs_motor recording reproduces the canonical motor-activation signature: HbO up in 18/28 channels significantly (Tapping-Control), HbR down in 25/28, grand-average HbO response peak +0.214 uM, over 28 channels",
+    "from_step": {},
+    "scores": {
+      "n_sig_hbo_activation": 18,
+      "n_hbr_decrease": 25,
+      "hbo_block_peak": 0.213899384313469,
+      "n_channels": 28,
+      "mbll_r_mne": 1
+    },
+    "checks": [
+      {
+        "metric": "n_sig_hbo_activation",
+        "expect": 18,
+        "tol": 0.5,
+        "ref_value": 18,
+        "term_value": 18
+      },
+      {
+        "metric": "n_hbr_decrease",
+        "expect": 25,
+        "tol": 0.5,
+        "ref_value": 25,
+        "term_value": 25
+      },
+      {
+        "metric": "hbo_block_peak",
+        "expect": 0.2139,
+        "tol": 0.01,
+        "ref_value": 0.2139,
+        "term_value": 0.213899384313469
+      },
+      {
+        "metric": "n_channels",
+        "expect": 28,
+        "tol": 0.5,
+        "ref_value": 28,
+        "term_value": 28
+      }
+    ]
+  }
+}

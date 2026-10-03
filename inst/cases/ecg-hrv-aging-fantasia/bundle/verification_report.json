@@ -1,0 +1,53 @@
+{
+  "paper": "ecg-hrv-aging-fantasia",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "totpow_young",
+      "statement": "young median total HRV power (ms^2)",
+      "expect": 3596.415,
+      "artifact": 3596.415,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "totpow_elderly",
+      "statement": "elderly median total HRV power (ms^2)",
+      "expect": 1020.87,
+      "artifact": 1020.871,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "totpow_p",
+      "statement": "total-power young-vs-elderly Wilcoxon p (young > elderly)",
+      "expect": 0.000411,
+      "artifact": 0.000411,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "hf_p",
+      "statement": "HF (vagal) power young-vs-elderly Wilcoxon p (young > elderly)",
+      "expect": 0.00414,
+      "artifact": 0.00414,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "lfhf_p",
+      "statement": "LF/HF balance ratio young-vs-elderly Wilcoxon p (no separation)",
+      "expect": 0.661,
+      "artifact": 0.661,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

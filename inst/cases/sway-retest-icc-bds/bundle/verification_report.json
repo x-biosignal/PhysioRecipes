@@ -1,0 +1,98 @@
+{
+  "paper": "sway-retest-icc-bds",
+  "n_claims": 10,
+  "n_grounded": 10,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "icc2_single",
+      "statement": "ICC(2,1): single-trial test-retest reliability of COP path length",
+      "expect": 0.8252765473,
+      "artifact": 0.825277,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "icc2k_average",
+      "statement": "ICC(2,k): reliability of the average of the 3 trials",
+      "expect": 0.93408038,
+      "artifact": 0.93408,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "icc1_single",
+      "statement": "ICC(1,1) (one-way random) for context",
+      "expect": 0.8243552837,
+      "artifact": 0.824355,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "icc3_single",
+      "statement": "ICC(3,1) (two-way mixed, consistency) for context",
+      "expect": 0.8384699745,
+      "artifact": 0.83847,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_pingouin",
+      "statement": "max |intraclassCorrelation - pingouin.intraclass_corr| over the 6 forms (machine precision, < 1e-9)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_psych",
+      "statement": "max |intraclassCorrelation - psych::ICC(lmer=FALSE)| over the 6 forms (machine precision)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "good_single",
+      "statement": "single-trial reliability is good (ICC(2,1) > 0.75)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "excellent_average",
+      "statement": "3-trial-average reliability is excellent (ICC(2,k) > 0.9)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n",
+      "statement": "subjects with 3 trials",
+      "expect": 163,
+      "artifact": 163,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "k",
+      "statement": "repeated trials per subject",
+      "expect": 3,
+      "artifact": 3,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "registered_at": "2026-09-08T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real 60-s quiet-standing center-of-pressure trial, PhysioMoCap::swayMetrics reproduces an independent Python reimplementation of the Prieto et al. (1996) formulas BIT-FOR-BIT (path length, mean velocity, 95% confidence ellipse/circle area, sway area, mean/RMS distance); and the 95% confidence ellipse contains approximately 95% of the COP samples.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "postural_sway"
+  },
+  "analysis_plan": {
+    "dataset": "Santos & Duarte (2016) public balance dataset (figshare), subject 1, eyes-open firm-surface trial, 60 s quiet standing, force-plate center of pressure at 100 Hz",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "swayMetrics",
+        "params": {
+          "sampling_rate": 100,
+          "entropy": false
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "postural_sway",
+      "threshold": "descriptive: swayMetrics equals the Prieto reference to machine precision (max |diff| < 1e-9 across metrics)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "e2b378f82a5fd8d092c6dc0de845061419e8f0fdfcbb98767e9d163b1b75de30",
+    "registered_at": "2026-09-08T00:00:00Z"
+  }
+}

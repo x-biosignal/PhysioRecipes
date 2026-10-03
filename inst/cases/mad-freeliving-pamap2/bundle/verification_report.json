@@ -1,0 +1,62 @@
+{
+  "paper": "mad-freeliving-pamap2",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "mad_max_abs_diff_g",
+      "statement": "max |computeMAD - GGIR g.applymetrics MAD| over all epochs (g) -- bit-exact",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mad_correlation",
+      "statement": "correlation between computeMAD and GGIR MAD across epochs",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_epochs",
+      "statement": "number of 5 s epochs certified against GGIR",
+      "expect": 749,
+      "artifact": 749,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_mad_mg",
+      "statement": "mean MAD across the recording (mg) -- a physical movement-intensity descriptor",
+      "expect": 232.391241,
+      "artifact": 232.391241,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_mad_mg",
+      "statement": "peak epoch MAD (mg) -- the most vigorous 5 s of movement",
+      "expect": 1221.911908,
+      "artifact": 1221.911908,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "min_mad_mg",
+      "statement": "quietest epoch MAD (mg) -- near-stationary movement",
+      "expect": 4.985768,
+      "artifact": 4.985768,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

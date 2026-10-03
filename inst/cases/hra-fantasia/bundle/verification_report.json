@@ -1,0 +1,89 @@
+{
+  "paper": "hra-fantasia",
+  "n_claims": 9,
+  "n_grounded": 9,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "gi",
+      "statement": "Guzik's Index (%) -- deceleration-point distance contribution (>50 = deceleration asymmetry)",
+      "expect": 50.416983,
+      "artifact": 50.416983,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "si",
+      "statement": "Slope Index (%) -- deceleration-point phase-angle contribution",
+      "expect": 50.514533,
+      "artifact": 50.514533,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "pi",
+      "statement": "Porta's Index (%) -- fraction of points below the line of identity (accelerations)",
+      "expect": 53.968254,
+      "artifact": 53.968254,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "c1d",
+      "statement": "contribution of DECELERATIONS to short-term HRV (C1d) -- the larger short-term component",
+      "expect": 0.584288,
+      "artifact": 0.584288,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "c1a",
+      "statement": "contribution of ACCELERATIONS to short-term HRV (C1a) -- the smaller short-term component",
+      "expect": 0.415712,
+      "artifact": 0.415712,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "c2d",
+      "statement": "contribution of decelerations to long-term HRV (C2d) -- the smaller long-term component",
+      "expect": 0.411294,
+      "artifact": 0.411294,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "c2a",
+      "statement": "contribution of accelerations to long-term HRV (C2a) -- the larger long-term component (the complementary asymmetry)",
+      "expect": 0.588706,
+      "artifact": 0.588706,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_nk",
+      "statement": "max |ecgHRVasymmetry - NeuroKit2 hrv_nonlinear| over all HRA indices (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_subj_c1d_gt_c1a",
+      "statement": "subjects (of 10) where C1d > C1a -- decelerations dominate short-term variability (HRA signature robustness)",
+      "expect": 8,
+      "artifact": 8,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

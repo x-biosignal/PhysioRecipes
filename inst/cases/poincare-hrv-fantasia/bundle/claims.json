@@ -1,0 +1,145 @@
+{
+  "paper": "poincare-hrv-fantasia",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "sd1",
+      "statement": "Poincare SD1 -- short-term (beat-to-beat) RR variability, a parasympathetic proxy (ms)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "sd1",
+        "val_col": "value"
+      },
+      "expect": 57.7302389,
+      "tol": 0.0001,
+      "render": [
+        "57.7"
+      ]
+    },
+    {
+      "id": "sd2",
+      "statement": "Poincare SD2 -- long-term RR variability (analytical closed-form, ms)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "sd2",
+        "val_col": "value"
+      },
+      "expect": 86.77275899,
+      "tol": 0.0001,
+      "render": [
+        "86.8"
+      ]
+    },
+    {
+      "id": "sd1_sd2_ratio",
+      "statement": "SD1/SD2 ratio -- the Poincare cloud's short-to-long axis ratio",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "sd1_sd2_ratio",
+        "val_col": "value"
+      },
+      "expect": 0.66530371,
+      "tol": 0.0001,
+      "render": [
+        "0.67"
+      ]
+    },
+    {
+      "id": "max_diff_numpy",
+      "statement": "max |ecgHRVpoincare - independent numpy analytical closed-form| over SD1/SD2/ratio (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_numpy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-10,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "sd1_diff_nk",
+      "statement": "|ecgHRVpoincare SD1 - NeuroKit2 SD1| -- bit-exact (SD1 = universal SDSD/sqrt(2))",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "sd1_diff_nk",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "sd2_paired_vs_nk",
+      "statement": "|independent numpy paired-projection SD2 - NeuroKit2 SD2| -- bit-exact (identifies NeuroKit2's SD2 convention)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "sd2_paired_vs_nk",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "sd2_conv_diff",
+      "statement": "|op SD2 (analytical closed-form) - NeuroKit2 SD2 (paired projection)| -- a documented ~0.2 ms convention gap (O(1/n))",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "sd2_conv_diff",
+        "val_col": "value"
+      },
+      "expect": 0.16917455,
+      "tol": 0.005,
+      "render": [
+        "0.17"
+      ]
+    },
+    {
+      "id": "young_mean_sd1",
+      "statement": "mean Poincare SD1 across the 5 young subjects (short-term HRV)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "young_mean_sd1",
+        "val_col": "value"
+      },
+      "expect": 55.7522,
+      "tol": 0.0557522,
+      "render": [
+        "55.7522"
+      ]
+    },
+    {
+      "id": "old_mean_sd1",
+      "statement": "mean Poincare SD1 across the 5 old subjects -- markedly lower (age-related vagal decline)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "old_mean_sd1",
+        "val_col": "value"
+      },
+      "expect": 35.3069,
+      "tol": 0.0353069,
+      "render": [
+        "35.3069"
+      ]
+    }
+  ]
+}

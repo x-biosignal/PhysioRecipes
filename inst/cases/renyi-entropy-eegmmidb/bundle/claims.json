@@ -1,0 +1,85 @@
+{
+  "paper": "renyi-entropy-eegmmidb",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "renyi_collision",
+      "statement": "Renyi collision entropy (alpha=2) of the POz amplitude distribution (nats)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "renyi_collision",
+        "val_col": "value"
+      },
+      "expect": 2.1665324673,
+      "tol": 1e-06,
+      "render": [
+        "2.17"
+      ]
+    },
+    {
+      "id": "renyi_shannon",
+      "statement": "Renyi entropy at alpha=1 -- exactly the Shannon entropy (the family's special case)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "renyi_shannon",
+        "val_col": "value"
+      },
+      "expect": 2.3247657693,
+      "tol": 1e-06,
+      "render": [
+        "2.32"
+      ]
+    },
+    {
+      "id": "max_diff_nk",
+      "statement": "max |renyiEntropy - NeuroKit2 entropy_renyi| over alpha = {0.5, 1, 2, 3} (bit-exact family)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_nk",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "4e-16"
+      ]
+    },
+    {
+      "id": "n_bins",
+      "statement": "equal-width bins in the amplitude histogram",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_bins",
+        "val_col": "value"
+      },
+      "expect": 16,
+      "tol": 0.5,
+      "render": [
+        "16"
+      ]
+    },
+    {
+      "id": "monotonic",
+      "statement": "H_alpha is non-increasing in alpha (1 = the defining Renyi-family property holds)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "monotonic",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    }
+  ]
+}

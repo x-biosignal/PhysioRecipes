@@ -1,0 +1,160 @@
+{
+  "paper": "gait-grf-pushoff-kruskal-gaitrec",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "H_statistic",
+      "statement": "tie-corrected Kruskal-Wallis H of the vertical-GRF push-off peak across the five gait classes",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "H_statistic",
+        "val_col": "value"
+      },
+      "expect": 274.4576636289,
+      "tol": 1e-06,
+      "render": [
+        "274.5"
+      ]
+    },
+    {
+      "id": "neg_log10_p",
+      "statement": "-log10(omnibus p): the group difference is overwhelmingly significant",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "neg_log10_p",
+        "val_col": "value"
+      },
+      "expect": 57.457126,
+      "tol": 0.01,
+      "render": [
+        "57.5"
+      ]
+    },
+    {
+      "id": "df",
+      "statement": "Kruskal-Wallis degrees of freedom (k - 1)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "df",
+        "val_col": "value"
+      },
+      "expect": 4,
+      "tol": 0.5,
+      "render": [
+        "4"
+      ]
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|kruskalTest H - scipy.stats.kruskal H| (machine precision, < 1e-9)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "<1e-9"
+      ]
+    },
+    {
+      "id": "max_diff_baser",
+      "statement": "|kruskalTest H - base R kruskal.test H| (bit-for-bit)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_baser",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-12,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "rank_hc",
+      "statement": "mean rank of healthy controls (the largest push-off, highest rank)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "rank_hc",
+        "val_col": "value"
+      },
+      "expect": 1407.5192,
+      "tol": 0.001,
+      "render": [
+        "1408"
+      ]
+    },
+    {
+      "id": "rank_calcaneus",
+      "statement": "mean rank of calcaneus pathology (the smallest push-off, lowest rank)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "rank_calcaneus",
+        "val_col": "value"
+      },
+      "expect": 632.2,
+      "tol": 0.001,
+      "render": [
+        "632"
+      ]
+    },
+    {
+      "id": "hc_rank_highest",
+      "statement": "healthy controls have the highest mean push-off rank of the five classes",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "hc_rank_highest",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "calcaneus_rank_lowest",
+      "statement": "calcaneus pathology has the lowest mean push-off rank (worst propulsion)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "calcaneus_rank_lowest",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "n_total",
+      "statement": "total subjects across the five classes",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_total",
+        "val_col": "value"
+      },
+      "expect": 1844,
+      "tol": 0.5,
+      "render": [
+        "1844"
+      ]
+    }
+  ]
+}

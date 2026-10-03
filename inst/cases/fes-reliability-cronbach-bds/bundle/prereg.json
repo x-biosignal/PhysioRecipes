@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-11T00:00:00Z",
+  "hypothesis": {
+    "statement": "The 7 Falls Efficacy Scale items in the BDS cohort (n=163) have good internal-consistency reliability (Cronbach's alpha > 0.8); the newly-authored cronbachAlpha reproduces the psych package (psych::alpha raw_alpha) bit-for-bit and pingouin.cronbach_alpha to machine precision.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "internal_consistency_reliability"
+  },
+  "analysis_plan": {
+    "dataset": "Santos & Duarte (2016) BDS; the 7 Falls Efficacy Scale items (FES_1..FES_7) across the cohort",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "cronbachAlpha",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "internal_consistency_reliability",
+      "threshold": "descriptive: cronbachAlpha equals psych::alpha raw_alpha bit-for-bit (|diff| = 0) and pingouin.cronbach_alpha to machine precision (|diff| < 1e-9); the scale's alpha exceeds 0.8 (good internal consistency)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "d44a9a930a874cfa6a84d554686874f77924e8064d0467f6b539c06ad5f2bde3",
+    "registered_at": "2026-09-11T00:00:00Z"
+  }
+}

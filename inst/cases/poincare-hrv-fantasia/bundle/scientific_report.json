@@ -1,0 +1,132 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:poincare_sd1_cohort",
+      "status": "PASS",
+      "detail": "8/8 agree [sd1=57.73 vs ref 57.73; sd2=86.773 vs ref 86.773; sd1_sd2_ratio=0.6653 vs ref 0.6653; max_diff_numpy=1.4211e-14 vs ref 0; sd1_diff_nk=7.1054e-15 vs ref 0; sd2_paired_vs_nk=0 vs ref 0; sd2_conv_diff=0.16917 vs ref 0.16917; n_rr=392 vs ref 392]",
+      "citation": "Brennan M, Palaniswami M, Kamen P (2001). Do existing measures of Poincare plot geometry reflect nonlinear features of heart rate variability? IEEE Trans Biomed Eng 48(11):1342-1347. Reference impls: NeuroKit2 hrv_nonlinear (Makowski et al. 2021) + independent numpy (Harris et al. 2020). Data: Fantasia Database, PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "n_rr": 392,
+    "sd1": 57.7302389,
+    "sd2": 86.77275899,
+    "sd1_sd2_ratio": 0.66530371,
+    "max_diff_numpy": 1.4210854715202e-14,
+    "sd1_diff_nk": 7.105427357601e-15,
+    "sd2_paired_vs_nk": 0,
+    "sd2_conv_diff": 0.16917455,
+    "young_mean_sd1": 55.7522,
+    "old_mean_sd1": 35.3069
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "poincare_sd1_cohort",
+    "citation": "Brennan M, Palaniswami M, Kamen P (2001). Do existing measures of Poincare plot geometry reflect nonlinear features of heart rate variability? IEEE Trans Biomed Eng 48(11):1342-1347. Reference impls: NeuroKit2 hrv_nonlinear (Makowski et al. 2021) + independent numpy (Harris et al. 2020). Data: Fantasia Database, PhysioNet.",
+    "description": "re-computes SD1/SD2/ratio with an independent numpy analytical closed-form (bit-exact) and cross-checks NeuroKit2 hrv_nonlinear (SD1 bit-for-bit; NeuroKit2's SD2 = paired projection, reproduced bit-for-bit by an independent numpy paired projection), and reports SD1/SD2/ratio, the numpy agreement, both NeuroKit2 checks, the SD2 convention gap, and the RR count",
+    "from_step": {},
+    "scores": {
+      "sd1": 57.7302389,
+      "sd2": 86.77275899,
+      "sd1_sd2_ratio": 0.66530371,
+      "max_diff_numpy": 1.4210854715202e-14,
+      "sd1_diff_nk": 7.105427357601e-15,
+      "sd2_paired_vs_nk": 0,
+      "sd2_conv_diff": 0.16917455,
+      "n_rr": 392,
+      "young_mean_sd1": 55.7522,
+      "old_mean_sd1": 35.3069
+    },
+    "checks": [
+      {
+        "metric": "sd1",
+        "expect": 57.7302389,
+        "tol": 0.0001,
+        "ref_value": 57.7302389,
+        "term_value": 57.7302389
+      },
+      {
+        "metric": "sd2",
+        "expect": 86.77275899,
+        "tol": 0.0001,
+        "ref_value": 86.77275899,
+        "term_value": 86.77275899
+      },
+      {
+        "metric": "sd1_sd2_ratio",
+        "expect": 0.66530371,
+        "tol": 0.0001,
+        "ref_value": 0.66530371,
+        "term_value": 0.66530371
+      },
+      {
+        "metric": "max_diff_numpy",
+        "expect": 0,
+        "tol": 1e-10,
+        "ref_value": 0,
+        "term_value": 1.4210854715202e-14
+      },
+      {
+        "metric": "sd1_diff_nk",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 7.105427357601e-15
+      },
+      {
+        "metric": "sd2_paired_vs_nk",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "sd2_conv_diff",
+        "expect": 0.16917455,
+        "tol": 0.005,
+        "ref_value": 0.16917455,
+        "term_value": 0.16917455
+      },
+      {
+        "metric": "n_rr",
+        "expect": 392,
+        "tol": 0.5,
+        "ref_value": 392,
+        "term_value": 392
+      }
+    ]
+  }
+}

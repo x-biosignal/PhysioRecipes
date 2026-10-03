@@ -1,0 +1,85 @@
+{
+  "paper": "emg-synergy-grabmyo",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "vaf_4syn",
+      "statement": "NMF variance accounted for at 4 synergies (reproduced within NMF tolerance of the case's 0.9815)",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "n_synergies",
+        "key": "4",
+        "val_col": "vaf"
+      },
+      "expect": 0.9815,
+      "tol": 0.02,
+      "render": [
+        "0.98"
+      ]
+    },
+    {
+      "id": "optimal_n",
+      "statement": "optimal number of synergies (smallest n with NMF VAF >= 0.90)",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "n_synergies",
+        "key": "4",
+        "val_col": "optimal_n"
+      },
+      "expect": 2,
+      "tol": 0.5,
+      "render": [
+        "2"
+      ]
+    },
+    {
+      "id": "pooled_icc",
+      "statement": "pooled split-half reliability, ICC(A,1) over the synergy weights",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "pooled_icc",
+        "val_col": "value"
+      },
+      "expect": 0.8935,
+      "tol": 0.02,
+      "render": [
+        "0.8935"
+      ]
+    },
+    {
+      "id": "icc_ci_lo",
+      "statement": "lower 95% CI bound of the pooled ICC",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "icc_ci_lo",
+        "val_col": "value"
+      },
+      "expect": 0.8175,
+      "tol": 0.02,
+      "render": [
+        "0.8175"
+      ]
+    },
+    {
+      "id": "splithalf_min_r",
+      "statement": "weakest best-matched split-half correlation (all four synergies reproduce)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "splithalf_min_r",
+        "val_col": "value"
+      },
+      "expect": 0.8481,
+      "tol": 0.02,
+      "render": [
+        "0.8481"
+      ]
+    }
+  ]
+}

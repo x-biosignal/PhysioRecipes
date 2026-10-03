@@ -1,0 +1,44 @@
+{
+  "schema": "runtrace/1",
+  "seed": 1,
+  "env": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "platform": "x86_64-pc-linux-gnu",
+    "packages": {
+      "PhysioCore": "0.4.0",
+      "PhysioEDA": "0.2.2"
+    },
+    "renv_lock": "renv.lock",
+    "renv_lock_hash": "c110eee44b476fb2"
+  },
+  "op_dag": [
+    {
+      "op": 1,
+      "activity": "edaDecompose",
+      "package": "PhysioEDA",
+      "version": "0.2.2",
+      "params": {
+        "method": "highpass",
+        "cutoff": 0.05
+      }
+    }
+  ],
+  "prov_hash": "145dbbb0ac107eda",
+  "outputs": {
+    "terminal_summary.csv": "3282341e457c8063"
+  },
+  "algo": "xxhash64",
+  "op_dag_source": "executor",
+  "provenance_op_dag": [
+    {
+      "op": 1,
+      "activity": "edaDecompose",
+      "used": "raw",
+      "generated": "phasic",
+      "package": null,
+      "version": "0.2.2",
+      "params": "{\"method\":\"highpass\",\"cutoff\":0.05,\"window_sec\":4,\"tau1\":0.75,\"tau2\":2,\"alpha\":0.01,\"gamma\":0.1,\"delta_knot\":10,\"qp_sr\":4,\"optimize_tau\":false,\"assay_name\":\"raw\",\"output_tonic\":\"tonic\",\"output_phasic\":\"phasic\"}"
+    }
+  ],
+  "provenance_consistent": true
+}

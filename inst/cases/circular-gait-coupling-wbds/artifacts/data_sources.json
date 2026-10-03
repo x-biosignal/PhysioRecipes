@@ -1,0 +1,9 @@
+{
+  "dataset": "WBDS -- Fukuchi, Fukuchi & Duarte (2018), a public data set of overground and treadmill walking",
+  "source": "figshare",
+  "url": "https://doi.org/10.6084/m9.figshare.5722711",
+  "license": "CC-BY 4.0",
+  "record_used": "five subjects (WBDS01-05), treadmill walking. For each, the knee-ankle vector-coding coupling angles (degrees) were derived from the sagittal knee + ankle flexion angles: gamma_i = atan2(delta ankle, delta knee) mod 360 (Needham et al. 2014). WBDS01 gives 449 coupling angles; the terminal proof runs on WBDS01, and all five subjects are used for the R-bar robustness.",
+  "pipeline": "sagittal knee + ankle flexion angles -> vector-coding coupling angles (offline) -> PhysioCore::circularSummary(units='degrees'), the directional statistics (mean direction + mean resultant length R-bar + circular SD + von Mises kappa). The reference re-computes the mean direction + R-bar with the canonical R `circular` package (mean.circular, rho.circular), runs the Rayleigh test both ways (PhysioCore::rayleighTest vs circular::rayleigh.test), and reports the 5-subject R-bar. Deterministic.",
+  "note": "Circular (directional) statistics are the correct tool for angles -- the ordinary mean is wrong because 0 and 360 degrees coincide. In biomechanics the vector-coding coupling angle summarises how two joints co-vary, and its circular statistics quantify inter-joint coordination: R-bar (0-1) is the coordination consistency, the mean direction the dominant coordination pattern. The tracked inputs are eval/data/circular-gait/ (coupling_angles_wbds01.rds + coupling_angles_5subj.rds). The mean direction and R-bar are DEFINITIONAL, so circularSummary reproduces the `circular` package to machine precision (R-bar |diff| = 0, mean |diff| ~ 6e-14); the Rayleigh p is an asymptotic approximation and the two libraries' higher-order series differ slightly (both p ~ 3e-8, significant) -- reported honestly."
+}

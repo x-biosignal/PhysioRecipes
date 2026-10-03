@@ -1,0 +1,11 @@
+{
+  "dataset": "MIT-BIH Arrhythmia Database",
+  "authors": "Moody GB, Mark RG",
+  "repository": "PhysioNet (mitdb 1.0.0)",
+  "doi": "10.13026/C2F305",
+  "url": "https://physionet.org/content/mitdb/1.0.0/",
+  "license": "Open Data Commons Attribution License v1.0",
+  "citation": "Moody GB, Mark RG. The impact of the MIT-BIH Arrhythmia Database. IEEE Eng Med Biol Mag. 2001;20(3):45-50. Goldberger AL, et al. PhysioBank, PhysioToolkit, and PhysioNet. Circulation. 2000;101(23):e215-e220.",
+  "record_used": "record 100 (MLII, 360 Hz), with .atr cardiologist beat annotations",
+  "public": true
+}

@@ -1,0 +1,62 @@
+{
+  "paper": "eeg-coherence-scipy-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "max_diff_scipy",
+      "statement": "max |eegCoherence - scipy.signal.coherence| over all 28 channel pairs (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_coherence",
+      "statement": "mean posterior alpha-band coherence across the 28 channel pairs -- the eyes-closed alpha synchrony",
+      "expect": 0.627992,
+      "artifact": 0.627992,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_coherence",
+      "statement": "peak alpha coherence -- the most synchronized posterior pair (adjacent occipital channels)",
+      "expect": 0.896151,
+      "artifact": 0.896151,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "min_coherence",
+      "statement": "minimum alpha coherence -- the least synchronized posterior pair",
+      "expect": 0.363215,
+      "artifact": 0.363215,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_channels",
+      "statement": "posterior EEG channels (parieto-occipital)",
+      "expect": 8,
+      "artifact": 8,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_pairs",
+      "statement": "channel pairs in the coherence matrix (8 choose 2)",
+      "expect": 28,
+      "artifact": 28,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

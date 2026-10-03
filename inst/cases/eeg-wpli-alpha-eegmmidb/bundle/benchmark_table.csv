@@ -1,0 +1,8 @@
+"metric","value"
+"wpli",0.113171225
+"wpli_debiased",0.0114900107
+"max_diff_scipy",0.00746857904162429
+"wpli_indep_biased",0.037685
+"wpli_indep_debiased",0.000579
+"wpli_lagged",1
+"wpli_zerolag",-0.000234

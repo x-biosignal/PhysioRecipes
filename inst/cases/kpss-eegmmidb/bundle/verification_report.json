@@ -1,0 +1,62 @@
+{
+  "paper": "kpss-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "kpss_statistic",
+      "statement": "KPSS level-stationarity statistic (lag 10) of the POz signal",
+      "expect": 0.20050789,
+      "artifact": 0.200508,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "kpss_stat_diff_sm",
+      "statement": "|KPSS statistic - statsmodels kpss| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "sm_critical_5pct",
+      "statement": "statsmodels 5% KPSS critical value (reference table)",
+      "expect": 0.463,
+      "artifact": 0.463,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "kpss_stationary",
+      "statement": "KPSS fails to reject the stationarity null (statistic < critical; 1 = stationary)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "adf_stationary",
+      "statement": "ADF rejects the unit-root null (the complementary test also says stationary)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "both_tests_agree",
+      "statement": "ADF and KPSS concur the segment is stationary (the confirmatory pair agrees)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

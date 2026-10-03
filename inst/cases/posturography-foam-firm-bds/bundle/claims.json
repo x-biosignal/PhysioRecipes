@@ -1,0 +1,130 @@
+{
+  "paper": "posturography-foam-firm-bds",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "t_statistic",
+      "statement": "paired t-statistic of foam vs firm COP path length (positive = foam sways more)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "t_statistic",
+        "val_col": "value"
+      },
+      "expect": 17.3168722493,
+      "tol": 1e-06,
+      "render": [
+        "17.3"
+      ]
+    },
+    {
+      "id": "neg_log10_p",
+      "statement": "-log10(two-sided p): the effect is overwhelmingly significant",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "neg_log10_p",
+        "val_col": "value"
+      },
+      "expect": 21.799469,
+      "tol": 0.001,
+      "render": [
+        "21.8"
+      ]
+    },
+    {
+      "id": "df",
+      "statement": "degrees of freedom (n - 1)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "df",
+        "val_col": "value"
+      },
+      "expect": 49,
+      "tol": 0.5,
+      "render": [
+        "49"
+      ]
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|pairedTTest t - scipy.stats.ttest_rel t| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "max_diff_baser",
+      "statement": "|pairedTTest t - base R t.test(paired=TRUE) t| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_baser",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "foam_firm_ratio",
+      "statement": "mean foam sway / mean firm sway (the sensory-reweighting effect size)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "foam_firm_ratio",
+        "val_col": "value"
+      },
+      "expect": 2.7576590003,
+      "tol": 0.0001,
+      "render": [
+        "2.76"
+      ]
+    },
+    {
+      "id": "n_foam_gt_firm",
+      "statement": "subjects with foam sway > firm sway (out of 50)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_foam_gt_firm",
+        "val_col": "value"
+      },
+      "expect": 50,
+      "tol": 0.5,
+      "render": [
+        "50"
+      ]
+    },
+    {
+      "id": "n_subjects",
+      "statement": "paired subjects in the cohort",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_subjects",
+        "val_col": "value"
+      },
+      "expect": 50,
+      "tol": 0.5,
+      "render": [
+        "50"
+      ]
+    }
+  ]
+}

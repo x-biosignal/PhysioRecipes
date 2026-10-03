@@ -1,0 +1,105 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:pac_vs_tensorpac",
+      "status": "PASS",
+      "detail": "5/5 agree [pac_mi=0.0003487 vs ref 0.0003487; tensorpac_mi=0.0003487 vs ref 0.0003487; abs_diff=5.3289e-17 vs ref 0; surrogate_z=9.5858 vs ref 9.5858; n_exceed=200 vs ref 200]",
+      "citation": "Tort ABL, Komorowski R, Eichenbaum H, Kopell N (2010). Measuring phase-amplitude coupling between neuronal oscillations of different frequencies. J Neurophysiol 104(2):1195-1210. Reference impl: tensorpac (Combrisson et al. 2020). Data: Sleep-EDF Expanded (PhysioNet)."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "pac_mi": 0.000348705,
+    "tensorpac_mi": 0.000348705,
+    "abs_diff": 5.32885367776625e-17,
+    "surrogate_z": 9.585758,
+    "surrogate_mean": 4.50256e-05,
+    "n_exceed": 200,
+    "n_surrogates": 200
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "pac_vs_tensorpac",
+    "citation": "Tort ABL, Komorowski R, Eichenbaum H, Kopell N (2010). Measuring phase-amplitude coupling between neuronal oscillations of different frequencies. J Neurophysiol 104(2):1195-1210. Reference impl: tensorpac (Combrisson et al. 2020). Data: Sleep-EDF Expanded (PhysioNet).",
+    "description": "re-computes the Tort modulation index on the identical phase+amplitude with the canonical Python tensorpac and tests it against 200 circular-shift surrogates; reports op MI (0.000349), tensorpac MI, |diff| (0, machine precision), the surrogate-null z (9.59), and the number of surrogates the observed MI exceeds (200/200)",
+    "from_step": {},
+    "scores": {
+      "pac_mi": 0.000348705,
+      "tensorpac_mi": 0.000348705,
+      "abs_diff": 5.32885367776625e-17,
+      "surrogate_z": 9.585758,
+      "surrogate_mean": 4.50256e-05,
+      "n_exceed": 200,
+      "n_surrogates": 200
+    },
+    "checks": [
+      {
+        "metric": "pac_mi",
+        "expect": 0.000348705,
+        "tol": 1e-06,
+        "ref_value": 0.000348705,
+        "term_value": 0.000348705
+      },
+      {
+        "metric": "tensorpac_mi",
+        "expect": 0.000348705,
+        "tol": 1e-06,
+        "ref_value": 0.000348705,
+        "term_value": 0.000348705
+      },
+      {
+        "metric": "abs_diff",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 5.32885367776625e-17
+      },
+      {
+        "metric": "surrogate_z",
+        "expect": 9.585758,
+        "tol": 0.01,
+        "ref_value": 9.585758,
+        "term_value": 9.585758
+      },
+      {
+        "metric": "n_exceed",
+        "expect": 200,
+        "tol": 0.5,
+        "ref_value": 200,
+        "term_value": 200
+      }
+    ]
+  }
+}

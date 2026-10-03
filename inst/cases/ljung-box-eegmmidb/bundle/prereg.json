@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-09-07T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real eyes-closed posterior EEG channel (eegmmidb S002R02, POz), the newly-authored ljungBoxTest reproduces statsmodels.stats.diagnostic.acorr_ljungbox BIT-FOR-BIT for both the Q statistic and the p-value; and the test decisively rejects the white-noise null (Q far above the 95% chi-square critical value).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "ljung_box"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "ljungBoxTest",
+        "params": {
+          "lag": 10
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "ljung_box",
+      "threshold": "descriptive: ljungBoxTest equals statsmodels acorr_ljungbox to machine precision (|diff| < 1e-9 for statistic and p-value); Q exceeds the 95% critical value"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "4faed34117b7ebca3f2e583200d3ed7a85dfa01299693e33350cb03b383fcf16",
+    "registered_at": "2026-09-07T00:00:00Z"
+  }
+}

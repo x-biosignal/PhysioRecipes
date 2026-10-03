@@ -1,0 +1,53 @@
+{
+  "paper": "eeg-pac-sleep-spindle-sleepedf",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "pac_mi",
+      "statement": "SO-spindle Tort modulation index on the NREM EEG (SO phase 0.5-1.25 Hz, spindle amp 12-15 Hz)",
+      "expect": 0.000348705,
+      "artifact": 0.000349,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "abs_diff",
+      "statement": "|phaseAmplitudeCoupling - tensorpac|, the cross-tool agreement (machine precision)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "tensorpac_mi",
+      "statement": "the same Tort MI recomputed by the canonical Python tensorpac (op == tensorpac)",
+      "expect": 0.000348705,
+      "artifact": 0.000349,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "surrogate_z",
+      "statement": "z-score of the observed SO-spindle MI against a circular-shift surrogate null (real coupling)",
+      "expect": 9.585758,
+      "artifact": 9.585758,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_exceed",
+      "statement": "surrogates (of 200) the observed MI exceeds -- significance of the coupling",
+      "expect": 200,
+      "artifact": 200,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

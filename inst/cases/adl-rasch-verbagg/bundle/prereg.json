@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-08-31T00:00:00Z",
+  "hypothesis": {
+    "statement": "On the VerbAgg Partial Credit Model benchmark (316 persons x 24 three-category items), pcm_measure's JMLE item locations and person measures reproduce the eRm CML reference (Spearman/Pearson agreement ~ 1.0), with a person separation reliability of ~0.86.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "rasch_pcm_calibration"
+  },
+  "analysis_plan": {
+    "dataset": "lme4::VerbAgg, 316 persons x 24 three-category verbal-aggression items (a labelled stand-in for a polytomous ADL/IADL response matrix)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "pcm_measure",
+        "params": {
+          "model": "PCM"
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "person_reliability",
+      "estimand": "rasch_pcm_calibration",
+      "threshold": "descriptive: cross-engine agreement (item/person correlation vs eRm) + person separation reliability"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "49827c4bec26b5de355d3edb69ccb86973ff09ff7ac1cda4a6a3fc4bbdfcca17",
+    "registered_at": "2026-08-31T00:00:00Z"
+  }
+}

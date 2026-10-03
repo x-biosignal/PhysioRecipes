@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-07T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real eyes-closed posterior EEG channel (eegmmidb S002R02, POz), the newly-authored signalMoments reproduces scipy.stats.skew / kurtosis (and numpy mean/std) BIT-FOR-BIT; and the amplitude distribution is approximately Gaussian (|skewness| < 0.5 and |excess kurtosis| < 1).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "distribution_moments"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "signalMoments",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "distribution_moments",
+      "threshold": "descriptive: signalMoments equals scipy.stats to machine precision (max |diff| < 1e-9); the distribution is approximately Gaussian"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "13cde56e5b90727613105bba3552a2351dafc7fbfc5d6af84c4e9466353a3694",
+    "registered_at": "2026-09-07T00:00:00Z"
+  }
+}

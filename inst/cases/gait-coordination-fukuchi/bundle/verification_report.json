@@ -1,0 +1,53 @@
+{
+  "paper": "gait-coordination-fukuchi",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "marp",
+      "statement": "mean absolute relative phase, hip-knee (deg)",
+      "expect": 83.8,
+      "artifact": 83.771908,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "distal",
+      "statement": "vector-coding distal (knee-led) proportion (the modal pattern)",
+      "expect": 0.36,
+      "artifact": 0.36,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "in_phase",
+      "statement": "vector-coding in-phase proportion",
+      "expect": 0.29,
+      "artifact": 0.29,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "proximal",
+      "statement": "vector-coding proximal (hip-led) proportion",
+      "expect": 0.2,
+      "artifact": 0.2,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_cycles",
+      "statement": "treadmill trial-cycles analysed",
+      "expect": 328,
+      "artifact": 328,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

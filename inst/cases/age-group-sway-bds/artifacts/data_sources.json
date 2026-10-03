@@ -1,0 +1,10 @@
+{
+  "dataset": "A public data set of human balance evaluations (BDS)",
+  "source": "figshare",
+  "url": "https://doi.org/10.6084/m9.figshare.3394432",
+  "license": "CC BY 4.0",
+  "citation": "Santos DA, Duarte M. A public data set of human balance evaluations. PeerJ 2016;4:e2648. doi:10.7717/peerj.2648.",
+  "record_used": "50 subjects split by the BDS age group into older (n=11) and younger (n=39); the derived quantity is each subject's eyes-open foam-surface COP path length (60 s quiet standing, force-plate COP at 100 Hz).",
+  "pipeline": "For each subject the eyes-open foam COP trial -> PhysioMoCap::swayMetrics (certified bit-for-bit against the Prieto reference in the sway-posturography-bds case) -> COP path length (cm); grouped by the BDS age group. The two-element list (old, young) -> PhysioAnalysis::twoSampleTTest (Welch). The benchmark reference re-computes the Welch t-test with scipy.stats.ttest_ind(equal_var=False) AND base R t.test, and reports the older/younger ratio. Deterministic.",
+  "note": "The twoSampleTTest op is NEWLY AUTHORED (the independent two-sample t-test -- Welch by default -- the standard two-group comparison the ecosystem lacked). It reproduces BOTH scipy.stats.ttest_ind(equal_var=False) AND base R t.test BIT-FOR-BIT (t, p and the Welch-Satterthwaite df, |diff| ~1e-15 vs each) -- the identical closed-form Welch t, not a convention agreement. The per-subject COP path lengths come from swayMetrics, itself certified against the Prieto reference, so the test's inputs are validated. Finding: older subjects (n=11) sway markedly more than younger subjects (n=39) on the foam surface -- mean path 227 vs 151 cm, a ratio of about 1.5, t=3.86 on 14.5 Welch df, p=1.6e-3 -- the age-related balance decline as a group comparison, complementing the continuous age-sway correlation (r=0.62) in the sibling age-sway-correlation case. The groups are unbalanced and this is a cross-sectional association, not causation; a young-skewed convenience sample, one trial per subject."
+}

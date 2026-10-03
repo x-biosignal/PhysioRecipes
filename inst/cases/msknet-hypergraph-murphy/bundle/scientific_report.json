@@ -1,0 +1,101 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:mskn_murphy",
+      "status": "PASS",
+      "detail": "5/5 agree [n_bones=173 vs ref 173; n_muscles=270 vs ref 270; homunc_r2=0.5173 vs ref 0.5173; homunc_f=20.36 vs ref 20.36; homunc_n=21 vs ref 21]",
+      "citation": "Murphy AC, Muldoon SF, Baker D, et al. Structure, function, and control of the human musculoskeletal network. PLoS Biology 2018;16(1):e2002811 (CC-BY 4.0). Data bundled in PhysioMSKNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "n_bones": 173,
+    "n_muscles": 270,
+    "homunc_r2": 0.5173,
+    "homunc_f": 20.36,
+    "homunc_n": 21
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "mskn_murphy",
+    "citation": "Murphy AC, Muldoon SF, Baker D, et al. Structure, function, and control of the human musculoskeletal network. PLoS Biology 2018;16(1):e2002811 (CC-BY 4.0). Data bundled in PhysioMSKNet.",
+    "description": "mskReproducePaper() reproduces Murphy et al. 2018: the paper-scale muscle-bone hypergraph (173 bones, 270 muscles) and the impact-vs-cortical-homunculus correspondence R^2=0.517 (F=20.4) over 21 body regions, matching the paper's 0.52",
+    "from_step": {},
+    "scores": {
+      "n_bones": 173,
+      "n_muscles": 270,
+      "homunc_r2": 0.5173,
+      "homunc_f": 20.36,
+      "homunc_n": 21
+    },
+    "checks": [
+      {
+        "metric": "n_bones",
+        "expect": 173,
+        "tol": 0.5,
+        "ref_value": 173,
+        "term_value": 173
+      },
+      {
+        "metric": "n_muscles",
+        "expect": 270,
+        "tol": 0.5,
+        "ref_value": 270,
+        "term_value": 270
+      },
+      {
+        "metric": "homunc_r2",
+        "expect": 0.5173,
+        "tol": 0.001,
+        "ref_value": 0.5173,
+        "term_value": 0.5173
+      },
+      {
+        "metric": "homunc_f",
+        "expect": 20.36,
+        "tol": 0.01,
+        "ref_value": 20.36,
+        "term_value": 20.36
+      },
+      {
+        "metric": "homunc_n",
+        "expect": 21,
+        "tol": 0.5,
+        "ref_value": 21,
+        "term_value": 21
+      }
+    ]
+  }
+}

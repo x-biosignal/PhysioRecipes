@@ -1,0 +1,146 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:partialcor_vs_ppcor",
+      "status": "PASS",
+      "detail": "10/10 agree [partial_spearman_r=0.20087 vs ref 0.20087; neg_log10_p=1.9337 vs ref 1.9337; df=155 vs ref 155; max_diff_ppcor=1.9429e-16 vs ref 0; max_diff_formula=3.3307e-16 vs ref 0; partial_pearson_r=0.04752 vs ref 0.04752; partial_pearson_p=0.55452 vs ref 0.55452; marginal_spearman=0.53168 vs ref 0.53168; attenuated=1 vs ref 1; n=158 vs ref 158]",
+      "citation": "Partial correlation. Reference impls: ppcor::pcor.test (Kim 2015) and the closed-form residual recompute. Data: eyes-closed-foam COP path length (PhysioMoCap::swayMetrics), Trail Making Test A time and age, Santos & Duarte (2016) BDS balance dataset."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "partial_spearman_r": 0.2008706993,
+    "neg_log10_p": 1.933653,
+    "df": 155,
+    "max_diff_ppcor": 1.94289029309402e-16,
+    "max_diff_formula": 3.33066907387547e-16,
+    "partial_pearson_r": 0.047520292,
+    "partial_pearson_p": 0.554518,
+    "marginal_spearman": 0.5316791333,
+    "attenuated": 1,
+    "n": 158
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "partialcor_vs_ppcor",
+    "citation": "Partial correlation. Reference impls: ppcor::pcor.test (Kim 2015) and the closed-form residual recompute. Data: eyes-closed-foam COP path length (PhysioMoCap::swayMetrics), Trail Making Test A time and age, Santos & Duarte (2016) BDS balance dataset.",
+    "description": "re-computes the Spearman partial correlation of sway and TMT-A controlling for age with ppcor::pcor.test and an independent closed-form formula and confirms partialCorrelation reproduces both to machine precision; also reports the Pearson partial, the marginal Spearman rho, the attenuation and the sample size",
+    "from_step": {},
+    "scores": {
+      "partial_spearman_r": 0.2008706993,
+      "neg_log10_p": 1.933653,
+      "df": 155,
+      "max_diff_ppcor": 1.94289029309402e-16,
+      "max_diff_formula": 3.33066907387547e-16,
+      "partial_pearson_r": 0.047520292,
+      "partial_pearson_p": 0.554518,
+      "marginal_spearman": 0.5316791333,
+      "attenuated": 1,
+      "n": 158
+    },
+    "checks": [
+      {
+        "metric": "partial_spearman_r",
+        "expect": 0.2008706993,
+        "tol": 1e-06,
+        "ref_value": 0.2008706993,
+        "term_value": 0.2008706993
+      },
+      {
+        "metric": "neg_log10_p",
+        "expect": 1.933653,
+        "tol": 0.01,
+        "ref_value": 1.933653,
+        "term_value": 1.933653
+      },
+      {
+        "metric": "df",
+        "expect": 155,
+        "tol": 0.5,
+        "ref_value": 155,
+        "term_value": 155
+      },
+      {
+        "metric": "max_diff_ppcor",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 1.94289029309402e-16
+      },
+      {
+        "metric": "max_diff_formula",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 3.33066907387547e-16
+      },
+      {
+        "metric": "partial_pearson_r",
+        "expect": 0.047520292,
+        "tol": 1e-06,
+        "ref_value": 0.047520292,
+        "term_value": 0.047520292
+      },
+      {
+        "metric": "partial_pearson_p",
+        "expect": 0.554518,
+        "tol": 0.001,
+        "ref_value": 0.554518,
+        "term_value": 0.554518
+      },
+      {
+        "metric": "marginal_spearman",
+        "expect": 0.5316791333,
+        "tol": 1e-06,
+        "ref_value": 0.5316791333,
+        "term_value": 0.5316791333
+      },
+      {
+        "metric": "attenuated",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "n",
+        "expect": 158,
+        "tol": 0.5,
+        "ref_value": 158,
+        "term_value": 158
+      }
+    ]
+  }
+}

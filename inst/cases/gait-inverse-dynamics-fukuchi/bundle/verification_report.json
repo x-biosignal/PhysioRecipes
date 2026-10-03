@@ -1,0 +1,53 @@
+{
+  "paper": "gait-inverse-dynamics-fukuchi",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "ankle_r",
+      "statement": "mean correlation of the recovered sagittal ANKLE moment with the WBDS reference (5 subjects)",
+      "expect": 0.973,
+      "artifact": 0.973006,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "knee_r",
+      "statement": "mean correlation of the recovered sagittal KNEE moment with the reference",
+      "expect": 0.847,
+      "artifact": 0.846559,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "hip_r",
+      "statement": "mean correlation of the recovered sagittal HIP moment with the reference (degrades proximally)",
+      "expect": 0.774,
+      "artifact": 0.774104,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "ankle_ref_peak",
+      "statement": "reference ankle plantarflexor push-off peak (N*m/kg)",
+      "expect": 1.6594,
+      "artifact": 1.65939,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_subjects",
+      "statement": "subjects analysed (WBDS01-05)",
+      "expect": 5,
+      "artifact": 5,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

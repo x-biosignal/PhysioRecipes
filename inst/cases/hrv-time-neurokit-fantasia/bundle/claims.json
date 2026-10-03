@@ -1,0 +1,100 @@
+{
+  "paper": "hrv-time-neurokit-fantasia",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "meannn",
+      "statement": "mean NN interval (MeanNN), reproducing NeuroKit2 hrv_time bit-for-bit",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "meannn",
+        "val_col": "value"
+      },
+      "expect": 765.8775510204,
+      "tol": 1e-06,
+      "render": [
+        "765.9 ms"
+      ]
+    },
+    {
+      "id": "sdnn",
+      "statement": "SDNN (sd of NN intervals) -- reproduces NeuroKit2 bit-for-bit",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "sdnn",
+        "val_col": "value"
+      },
+      "expect": 73.6963099023,
+      "tol": 1e-06,
+      "render": [
+        "73.7 ms"
+      ]
+    },
+    {
+      "id": "rmssd",
+      "statement": "RMSSD (root-mean-square of successive differences) -- reproduces NeuroKit2 bit-for-bit",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "rmssd",
+        "val_col": "value"
+      },
+      "expect": 81.5396597524,
+      "tol": 1e-06,
+      "render": [
+        "81.5 ms"
+      ]
+    },
+    {
+      "id": "max_diff_nk_core",
+      "statement": "max |ecgHRVtime - NeuroKit2 hrv_time| over MeanNN, SDNN, RMSSD (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_nk_core",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-06,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "pnn50_gap",
+      "statement": "pNN50 gap vs NeuroKit2 -- the ONLY divergence, a documented denominator convention (N-1 vs N)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "pnn50_gap",
+        "val_col": "value"
+      },
+      "expect": 0.0952554935,
+      "tol": 0.0001,
+      "render": [
+        "0.10 pt"
+      ]
+    },
+    {
+      "id": "nn50_count",
+      "statement": "nn50 count (successive |diff| > 50 ms) -- IDENTICAL in both tools, proving the pNN50 gap is denominator-only",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "nn50_count",
+        "val_col": "value"
+      },
+      "expect": 146,
+      "tol": 0.5,
+      "render": [
+        "146"
+      ]
+    }
+  ]
+}

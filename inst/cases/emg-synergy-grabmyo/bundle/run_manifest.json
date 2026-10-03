@@ -1,0 +1,70 @@
+{
+  "schema": "runtrace/1",
+  "seed": 42,
+  "env": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "platform": "x86_64-pc-linux-gnu",
+    "packages": {
+      "PhysioCore": "0.4.0",
+      "PhysioEMG": "0.4.1"
+    },
+    "renv_lock": "renv.lock",
+    "renv_lock_hash": "c110eee44b476fb2"
+  },
+  "op_dag": [
+    {
+      "op": 1,
+      "activity": "emgEnvelope",
+      "package": "PhysioEMG",
+      "version": "0.4.1",
+      "params": {
+        "method": "rms",
+        "window_ms": 50,
+        "assay_name": "raw",
+        "output_assay": "envelope_rms"
+      }
+    },
+    {
+      "op": 2,
+      "activity": "emgAmplitudeNormalize",
+      "package": "PhysioEMG",
+      "version": "0.4.1",
+      "params": {
+        "method": "peak",
+        "assay_name": "envelope_rms",
+        "output_assay": "normalized"
+      }
+    },
+    {
+      "op": 3,
+      "activity": "muscleSynergyOrder",
+      "package": "PhysioEMG",
+      "version": "0.4.1",
+      "params": {
+        "max_synergies": 4,
+        "vaf_threshold": 0.9,
+        "n_restarts": 10,
+        "seed": 42,
+        "assay_name": "normalized"
+      }
+    }
+  ],
+  "prov_hash": "622a695a95bb4e52",
+  "outputs": {
+    "terminal_table.csv": "3d46a7484e47fd37"
+  },
+  "algo": "xxhash64",
+  "op_dag_source": "executor",
+  "provenance_op_dag": [
+    {
+      "op": 1,
+      "activity": "emgEnvelope",
+      "used": "raw",
+      "generated": "envelope_rms",
+      "package": null,
+      "version": "0.4.1",
+      "params": "{\"method\":\"rms\",\"window_ms\":50,\"cutoff\":6,\"assay_name\":\"raw\",\"output_assay\":\"envelope_rms\"}"
+    }
+  ],
+  "provenance_consistent": true
+}

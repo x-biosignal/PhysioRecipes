@@ -1,0 +1,62 @@
+{
+  "paper": "eeg-pli-alpha-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "pli",
+      "statement": "alpha-band (8-13 Hz) phase-lag index between occipital O1 and Oz -- volume-conduction-robust coupling (far below the PLV)",
+      "expect": 0.01625,
+      "artifact": 0.01625,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "max |phaseLagIndex - scipy Hilbert-band PLI| (agreement; PLI is sign-sensitive near zero-lag)",
+      "expect": 0,
+      "artifact": 0.00375,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "formula_diff",
+      "statement": "|op PLI - |mean(sign(sin(phase_diff)))|| -- the PLI sign formula, exact given the phases",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "plv_zerolag",
+      "statement": "PLV of constructed ZERO-LAG (common-source) signals -- PLV counts volume conduction, so it is high",
+      "expect": 0.994715,
+      "artifact": 0.994715,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "pli_zerolag",
+      "statement": "PLI of the SAME zero-lag signals -- PLI correctly DISCOUNTS volume conduction, so it is ~0",
+      "expect": 0.013,
+      "artifact": 0.013,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "pli_lagged",
+      "statement": "PLI of constructed LAGGED (pi/4-offset) signals -- genuine non-zero-lag coupling, PLI ~ 1",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

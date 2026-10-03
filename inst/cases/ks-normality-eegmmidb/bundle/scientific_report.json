@@ -1,0 +1,128 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:ks_normality_vs_scipy_baser",
+      "status": "PASS",
+      "detail": "8/8 agree [ks_statistic=0.025639 vs ref 0.025639; ks_pvalue=0.24361 vs ref 0.24361; max_diff_scipy=0 vs ref 0; max_diff_baser=0 vs ref 0; jb_statistic=15.493 vs ref 15.493; jb_pvalue=0.0004323 vs ref 0.0004323; tests_disagree=1 vs ref 1; n_samples=1600 vs ref 1600]",
+      "citation": "Kolmogorov AN (1933); Smirnov NV (1948). Reference impls: scipy.stats.kstest (Virtanen et al.) and base R stats::ks.test. Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "ks_statistic": 0.0256387277,
+    "ks_pvalue": 0.2436132165,
+    "max_diff_scipy": 0,
+    "max_diff_baser": 0,
+    "jb_statistic": 15.4927900022,
+    "jb_pvalue": 0.0004322982,
+    "tests_disagree": 1,
+    "n_samples": 1600
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "ks_normality_vs_scipy_baser",
+    "citation": "Kolmogorov AN (1933); Smirnov NV (1948). Reference impls: scipy.stats.kstest (Virtanen et al.) and base R stats::ks.test. Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the KS normality D statistic with scipy.stats.kstest and base R ks.test (normal fitted to the sample) and confirms ksNormalityTest reproduces BOTH bit-for-bit; also reports the KS p-value, the Jarque-Bera statistic/p-value on the same signal, and whether the two tests disagree",
+    "from_step": {},
+    "scores": {
+      "ks_statistic": 0.0256387277,
+      "ks_pvalue": 0.2436132165,
+      "max_diff_scipy": 0,
+      "max_diff_baser": 0,
+      "jb_statistic": 15.4927900022,
+      "jb_pvalue": 0.0004322982,
+      "tests_disagree": 1,
+      "n_samples": 1600
+    },
+    "checks": [
+      {
+        "metric": "ks_statistic",
+        "expect": 0.0256387277,
+        "tol": 1e-06,
+        "ref_value": 0.0256387277,
+        "term_value": 0.0256387277
+      },
+      {
+        "metric": "ks_pvalue",
+        "expect": 0.2436132165,
+        "tol": 0.0001,
+        "ref_value": 0.2436132165,
+        "term_value": 0.2436132165
+      },
+      {
+        "metric": "max_diff_scipy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "max_diff_baser",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "jb_statistic",
+        "expect": 15.4927900022,
+        "tol": 0.0001,
+        "ref_value": 15.4927900022,
+        "term_value": 15.4927900022
+      },
+      {
+        "metric": "jb_pvalue",
+        "expect": 0.0004322982,
+        "tol": 1e-06,
+        "ref_value": 0.0004322982,
+        "term_value": 0.0004322982
+      },
+      {
+        "metric": "tests_disagree",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "n_samples",
+        "expect": 1600,
+        "tol": 0.5,
+        "ref_value": 1600,
+        "term_value": 1600
+      }
+    ]
+  }
+}

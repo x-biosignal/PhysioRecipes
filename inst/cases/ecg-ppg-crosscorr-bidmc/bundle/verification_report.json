@@ -1,0 +1,62 @@
+{
+  "paper": "ecg-ppg-crosscorr-bidmc",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "peak_lag",
+      "statement": "lag (samples) of the peak ECG-PPG cross-correlation within +/- 0.72 s",
+      "expect": 49,
+      "artifact": 49,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "peak_lag_seconds",
+      "statement": "the peak lag in seconds -- the pulse arrival time (heart -> fingertip)",
+      "expect": 0.392,
+      "artifact": 0.392,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "peak_correlation",
+      "statement": "the peak normalized cross-correlation (negative: ECG QRS vs PPG pulse morphology)",
+      "expect": -0.32570468,
+      "artifact": -0.325705,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_numpy",
+      "statement": "max |crossCorrelation - independent numpy normalized cross-correlation| over all lags (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "scipy_peak_lag_abs",
+      "statement": "peak-lag magnitude from scipy.signal.correlate (within the matched window) -- agrees with the op",
+      "expect": 49,
+      "artifact": 49,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_lags",
+      "statement": "lags in the cross-correlation profile (2*max_lag + 1)",
+      "expect": 181,
+      "artifact": 181,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

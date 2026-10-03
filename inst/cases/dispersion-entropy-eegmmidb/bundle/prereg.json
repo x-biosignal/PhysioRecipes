@@ -1,0 +1,34 @@
+{
+  "registered_at": "2026-09-06T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real eyes-closed posterior EEG channel (eegmmidb S002R02, POz), the newly-authored dispersionEntropy reproduces NeuroKit2 entropy_dispersion BIT-FOR-BIT for BOTH the dispersion entropy (DispEn) and the reverse dispersion entropy (RDEn) across (c, dimension, delay) settings; the signal realizes only a fraction of the c^m possible dispersion patterns; and DispEn lies below the normalization ceiling 1/ln(2) implied by NeuroKit2's base-2/natural-log convention.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "dispersion_entropy"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "dispersionEntropy",
+        "params": {
+          "c": 6,
+          "dimension": 3,
+          "delay": 1
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "dispersion_entropy",
+      "threshold": "descriptive: dispersionEntropy equals NeuroKit2 entropy_dispersion to machine precision (max |diff| < 1e-9) for both DispEn and RDEn across settings"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "aa8edd70bc48d8c11f6a486f14dd31c7e60c262ca9baee5d78011f250c4843e2",
+    "registered_at": "2026-09-06T00:00:00Z"
+  }
+}

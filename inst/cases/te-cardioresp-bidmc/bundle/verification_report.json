@@ -1,0 +1,62 @@
+{
+  "paper": "te-cardioresp-bidmc",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "te_resp_pleth",
+      "statement": "transfer entropy respiration -> PPG pulse (model-free directed info flow, bits)",
+      "expect": 0.03577692,
+      "artifact": 0.035777,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "te_pleth_resp",
+      "statement": "transfer entropy PPG pulse -> respiration",
+      "expect": 0.02395327,
+      "artifact": 0.023953,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "net",
+      "statement": "net transfer entropy (respiration->pulse minus pulse->respiration) -- the directed asymmetry",
+      "expect": 0.01182365,
+      "artifact": 0.011824,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_numpy",
+      "statement": "max |transferEntropy - independent numpy transfer entropy| over both directions (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "te_constructed_xy",
+      "statement": "TE in the DRIVING direction of a constructed x->y coupling -- directed recovery (large)",
+      "expect": 0.667948,
+      "artifact": 0.667948,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "te_constructed_yx",
+      "statement": "TE in the REVERSE direction of the constructed coupling -- much smaller (directed recovery)",
+      "expect": 0.064132,
+      "artifact": 0.064132,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

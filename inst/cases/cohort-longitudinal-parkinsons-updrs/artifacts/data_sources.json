@@ -1,0 +1,11 @@
+{
+  "dataset": "Oxford Parkinson's Disease Telemonitoring",
+  "authors": "Tsanas A, Little MA, McSharry PE, Ramig LO",
+  "repository": "UCI Machine Learning Repository #189",
+  "doi": "10.24432/C5ZS3N",
+  "url": "https://archive.ics.uci.edu/dataset/189/parkinsons+telemonitoring",
+  "license": "CC-BY 4.0",
+  "citation": "Tsanas A, Little MA, McSharry PE, Ramig LO. Accurate telemonitoring of Parkinson's disease progression by non-invasive speech tests. IEEE Trans Biomed Eng. 2010;57(4):884-893.",
+  "record_used": "42 early-stage Parkinson's patients; ~5875 biweekly voice recordings over ~6 months; total_UPDRS + 16 dysphonia features + age/sex",
+  "public": true
+}

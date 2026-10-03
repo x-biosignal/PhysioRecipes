@@ -1,0 +1,53 @@
+{
+  "paper": "eeg-aperiodic-exponent-eegmmidb",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "exp_corr",
+      "statement": "spatial correlation of the aperiodic exponent between eegAperiodic and fooof across the 64 channels",
+      "expect": 0.980294,
+      "artifact": 0.980294,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_abs_exp_diff",
+      "statement": "mean absolute difference in the per-channel aperiodic exponent (eegAperiodic vs fooof)",
+      "expect": 0.069977,
+      "artifact": 0.069977,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_exp_specparam",
+      "statement": "mean aperiodic exponent across channels (eegAperiodic / specparam engine)",
+      "expect": 1.384365,
+      "artifact": 1.384365,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_exp_fooof",
+      "statement": "mean aperiodic exponent across channels (canonical fooof)",
+      "expect": 1.454238,
+      "artifact": 1.454238,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_channels",
+      "statement": "EEG channels parameterized",
+      "expect": 64,
+      "artifact": 64,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

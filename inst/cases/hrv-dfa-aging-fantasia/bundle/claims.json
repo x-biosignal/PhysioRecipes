@@ -1,0 +1,85 @@
+{
+  "paper": "hrv-dfa-aging-fantasia",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "alpha1",
+      "statement": "short-term DFA scaling exponent alpha1 of subject f1y01 (young)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "alpha1",
+        "val_col": "value"
+      },
+      "expect": 0.7964557416,
+      "tol": 1e-06,
+      "render": [
+        "0.80"
+      ]
+    },
+    {
+      "id": "abs_diff",
+      "statement": "max |ecgDFA - independent standard-DFA| over alpha1/alpha2 (machine precision)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "abs_diff",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "1e-15"
+      ]
+    },
+    {
+      "id": "young_mean_a1",
+      "statement": "mean DFA alpha1 in the young subjects (healthy fractal scaling ~1.0)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "young_mean_a1",
+        "val_col": "value"
+      },
+      "expect": 1.045212743,
+      "tol": 1e-06,
+      "render": [
+        "1.05"
+      ]
+    },
+    {
+      "id": "old_mean_a1",
+      "statement": "mean DFA alpha1 in the elderly subjects (elevated toward Brownian)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "old_mean_a1",
+        "val_col": "value"
+      },
+      "expect": 1.3868264795,
+      "tol": 1e-06,
+      "render": [
+        "1.39"
+      ]
+    },
+    {
+      "id": "aging_effect",
+      "statement": "the aging effect on alpha1 (elderly minus young) -- loss of fractal complexity",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "aging_effect",
+        "val_col": "value"
+      },
+      "expect": 0.3416137365,
+      "tol": 1e-06,
+      "render": [
+        "0.34"
+      ]
+    }
+  ]
+}

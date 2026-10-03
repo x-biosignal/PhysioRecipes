@@ -1,0 +1,42 @@
+{
+  "registered_at": "2026-08-10T00:00:00Z",
+  "hypothesis": {
+    "statement": "MIT-BIH record 100 exhibits a normal resting heart rate.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "resting_mean_heart_rate"
+  },
+  "analysis_plan": {
+    "dataset": "MIT-BIH Arrhythmia Database, record 100 (MLII/V5, 360 Hz), full 30-min record",
+    "seed": 100,
+    "ops": [
+      {
+        "activity": "ecgDetectRpeaks",
+        "params": {
+          "method": "pan_tompkins"
+        }
+      },
+      {
+        "activity": "ecgRRintervals",
+        "params": []
+      },
+      {
+        "activity": "ecgHRVtime",
+        "params": {
+          "rhythm_check": false
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "mean_hr",
+      "estimand": "resting_mean_heart_rate",
+      "threshold": "60 <= mean_hr <= 100 bpm (normal resting sinus range)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "70050c8c9f3b455aadaf5f82cc7deb1d6020ce52a4895790e3e6968bb23c1e1d",
+    "registered_at": "2026-08-10T00:00:00Z"
+  }
+}

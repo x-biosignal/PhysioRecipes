@@ -1,0 +1,36 @@
+{
+  "registered_at": "2026-09-02T00:00:00Z",
+  "hypothesis": {
+    "statement": "Running intensityToOD -> mbll -> nirsActivationGLM on the real MNE fnirs_motor finger-tapping recording, the Tapping-vs-Control contrast recovers the canonical fNIRS activation signature: a significant HbO INCREASE (>= half of the 28 channels) with a concurrent HbR DECREASE (most channels), the grand-average HbO response peaking a few seconds after onset.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "fnirs_motor_activation"
+  },
+  "analysis_plan": {
+    "dataset": "MNE-Python fNIRS motor dataset (public finger-tapping NIRx, converted to SNIRF); 28 source-detector channels, 7.81 Hz; three conditions (Control / Tapping_Left / Tapping_Right), 30 blocks each",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "intensityToOD",
+        "params": []
+      },
+      {
+        "activity": "mbll",
+        "params": {
+          "assay_name": "OD"
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "n_sig_hbo_activation",
+      "estimand": "fnirs_motor_activation",
+      "threshold": "descriptive: the Tapping-Control contrast must show HbO up (significant in >= half the channels) and HbR down (most channels), with the grand-average HbO response peaking 3-8 s after onset"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "176e3a6a61fc46e5c9daf0e55dae71d2761b5888111f4c77b4687871ed582c00",
+    "registered_at": "2026-09-02T00:00:00Z"
+  }
+}

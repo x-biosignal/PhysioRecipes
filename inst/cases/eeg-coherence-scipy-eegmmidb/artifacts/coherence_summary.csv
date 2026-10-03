@@ -1,0 +1,7 @@
+"metric","value"
+"max_diff_scipy",2.22044604925031e-16
+"mean_coherence",0.627992
+"max_coherence",0.896151
+"min_coherence",0.363215
+"n_channels",8
+"n_pairs",28

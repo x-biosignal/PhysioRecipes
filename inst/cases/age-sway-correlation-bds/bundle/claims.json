@@ -1,0 +1,130 @@
+{
+  "paper": "age-sway-correlation-bds",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "correlation_foam",
+      "statement": "Pearson correlation of age vs foam-surface COP path length",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "correlation_foam",
+        "val_col": "value"
+      },
+      "expect": 0.62131426,
+      "tol": 1e-06,
+      "render": [
+        "0.62"
+      ]
+    },
+    {
+      "id": "neg_log10_p",
+      "statement": "-log10(two-sided p) of the age-foam correlation (significant)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "neg_log10_p",
+        "val_col": "value"
+      },
+      "expect": 5.831639,
+      "tol": 0.001,
+      "render": [
+        "5.8"
+      ]
+    },
+    {
+      "id": "df",
+      "statement": "degrees of freedom (n - 2)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "df",
+        "val_col": "value"
+      },
+      "expect": 48,
+      "tol": 0.5,
+      "render": [
+        "48"
+      ]
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|correlationTest r - scipy.stats.pearsonr r| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "max_diff_baser",
+      "statement": "|correlationTest r - base R cor.test r| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_baser",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "correlation_firm",
+      "statement": "Pearson correlation of age vs firm-surface COP path length (weaker)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "correlation_firm",
+        "val_col": "value"
+      },
+      "expect": 0.3921671237,
+      "tol": 1e-06,
+      "render": [
+        "0.39"
+      ]
+    },
+    {
+      "id": "foam_gt_firm_corr",
+      "statement": "the age-sway correlation is stronger on foam than firm (proprioceptive challenge unmasks the age decline)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "foam_gt_firm_corr",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "n_subjects",
+      "statement": "subjects in the cross-sectional cohort",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_subjects",
+        "val_col": "value"
+      },
+      "expect": 50,
+      "tol": 0.5,
+      "render": [
+        "50"
+      ]
+    }
+  ]
+}

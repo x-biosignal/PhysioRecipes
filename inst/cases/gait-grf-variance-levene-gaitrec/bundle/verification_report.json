@@ -1,0 +1,98 @@
+{
+  "paper": "gait-grf-variance-levene-gaitrec",
+  "n_claims": 10,
+  "n_grounded": 10,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "f_statistic",
+      "statement": "Levene (Brown-Forsythe) F-statistic for variance homogeneity across the five classes",
+      "expect": 3.4157175076,
+      "artifact": 3.415718,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "neg_log10_p",
+      "statement": "-log10(Levene p): the class variances differ significantly",
+      "expect": 2.064849,
+      "artifact": 2.064849,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "df1",
+      "statement": "between-groups degrees of freedom (k - 1)",
+      "expect": 4,
+      "artifact": 4,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "df2",
+      "statement": "within-groups degrees of freedom (N - k)",
+      "expect": 1839,
+      "artifact": 1839,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|leveneTest F - scipy.stats.levene F| (machine precision, < 1e-9)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_car",
+      "statement": "|leveneTest F - car::leveneTest F| (machine precision, < 1e-9)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "bartlett_p",
+      "statement": "classical Bartlett-test p (normality-sensitive): non-significant, for contrast",
+      "expect": 0.0790715,
+      "artifact": 0.079072,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "variances_differ",
+      "statement": "the robust Levene test finds the class variances differ (p < 0.05)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "bartlett_disagrees",
+      "statement": "Levene and Bartlett disagree (Bartlett ns while Levene significant)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n",
+      "statement": "total subjects across the five classes",
+      "expect": 1844,
+      "artifact": 1844,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

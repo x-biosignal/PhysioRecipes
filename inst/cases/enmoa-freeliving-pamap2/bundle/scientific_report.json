@@ -1,0 +1,110 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:enmoa_vs_ggir_freeliving",
+      "status": "PASS",
+      "detail": "6/6 agree [enmoa_max_abs_diff_g=2.4147e-14 vs ref 0; enmoa_correlation=1 vs ref 1; n_epochs=749 vs ref 749; mean_enmoa_mg=224.33 vs ref 224.33; enmoa_ge_enmo=1 vs ref 1; enmoa_minus_enmo_mg=62.643 vs ref 62.643]",
+      "citation": "van Hees VT, et al. (2013). Separating movement and gravity components in an acceleration signal (ENMO/ENMOa). PLoS ONE 8(4):e61691. Reference impl: GGIR (CRAN) g.applymetrics ENMOa. Data: PAMAP2 (PhysioNet/UCI), hand accel."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "enmoa_max_abs_diff_g": 2.41473507855972e-14,
+    "enmoa_correlation": 1,
+    "n_epochs": 749,
+    "mean_enmoa_mg": 224.325129307033,
+    "enmoa_ge_enmo": 1,
+    "enmoa_minus_enmo_mg": 62.6425428309351
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "enmoa_vs_ggir_freeliving",
+    "citation": "van Hees VT, et al. (2013). Separating movement and gravity components in an acceleration signal (ENMO/ENMOa). PLoS ONE 8(4):e61691. Reference impl: GGIR (CRAN) g.applymetrics ENMOa. Data: PAMAP2 (PhysioNet/UCI), hand accel.",
+    "description": "re-computes the per-epoch ENMOa with GGIR::g.applymetrics on the identical PAMAP2 hand-acc signal (749 epochs, both in g); reports the max abs difference, the correlation, the epoch count, the mean ENMOa (mg), that ENMOa >= ENMO, and the ENMOa-minus-ENMO gap (mg)",
+    "from_step": {},
+    "scores": {
+      "enmoa_max_abs_diff_g": 2.41473507855972e-14,
+      "enmoa_correlation": 1,
+      "n_epochs": 749,
+      "mean_enmoa_mg": 224.325129307033,
+      "enmoa_ge_enmo": 1,
+      "enmoa_minus_enmo_mg": 62.6425428309351
+    },
+    "checks": [
+      {
+        "metric": "enmoa_max_abs_diff_g",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 2.41473507855972e-14
+      },
+      {
+        "metric": "enmoa_correlation",
+        "expect": 1,
+        "tol": 1e-09,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "n_epochs",
+        "expect": 749,
+        "tol": 0.5,
+        "ref_value": 749,
+        "term_value": 749
+      },
+      {
+        "metric": "mean_enmoa_mg",
+        "expect": 224.325129,
+        "tol": 0.01,
+        "ref_value": 224.325129,
+        "term_value": 224.325129307033
+      },
+      {
+        "metric": "enmoa_ge_enmo",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "enmoa_minus_enmo_mg",
+        "expect": 62.642543,
+        "tol": 0.1,
+        "ref_value": 62.642543,
+        "term_value": 62.6425428309351
+      }
+    ]
+  }
+}

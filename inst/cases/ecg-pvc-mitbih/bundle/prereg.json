@@ -1,0 +1,40 @@
+{
+  "registered_at": "2026-08-31T00:00:00Z",
+  "hypothesis": {
+    "statement": "On MIT-BIH record 106, classifying the cardiologists' reference beats by prematurity + QRS morphology (ecgDetectPVC) recovers the V (PVC) beats precisely (PPV ~0.99) with high recall on isolated ectopy (F1 ~0.98).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "pvc_classification_score"
+  },
+  "analysis_plan": {
+    "dataset": "MIT-BIH Arrhythmia Database record 106, 2027 cardiologist-annotated beats (520 PVCs), MLII @ 360 Hz",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "ecgDetectRpeaks",
+        "params": {
+          "method": "pan_tompkins"
+        }
+      },
+      {
+        "activity": "ecgRRintervals",
+        "params": []
+      },
+      {
+        "activity": "ecgDetectPVC",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "f1",
+      "estimand": "pvc_classification_score",
+      "threshold": "descriptive: PVC detection F1 vs the .atr V labels on the reference beats"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "1e6a1dc62cd1c5075b55c6acec6e3ee5e16742f0b7716b1784856064d89473ce",
+    "registered_at": "2026-08-31T00:00:00Z"
+  }
+}

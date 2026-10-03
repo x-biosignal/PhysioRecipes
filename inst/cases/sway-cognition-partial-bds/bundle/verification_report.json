@@ -1,0 +1,98 @@
+{
+  "paper": "sway-cognition-partial-bds",
+  "n_claims": 10,
+  "n_grounded": 10,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "partial_spearman_r",
+      "statement": "rank (Spearman) partial correlation of sway and TMT-A controlling for age",
+      "expect": 0.2008706993,
+      "artifact": 0.200871,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "neg_log10_p",
+      "statement": "-log10(two-sided p) of the age-adjusted association: still significant",
+      "expect": 1.933653,
+      "artifact": 1.933653,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "df",
+      "statement": "degrees of freedom (n - 2 - k, one covariate)",
+      "expect": 155,
+      "artifact": 155,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_ppcor",
+      "statement": "|partialCorrelation - ppcor::pcor.test| (machine precision, < 1e-9)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_formula",
+      "statement": "|partialCorrelation - closed-form recompute| (machine precision, < 1e-9)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "partial_pearson_r",
+      "statement": "linear (Pearson) partial correlation controlling for age -- vanishes",
+      "expect": 0.047520292,
+      "artifact": 0.04752,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "partial_pearson_p",
+      "statement": "p of the linear partial correlation (non-significant)",
+      "expect": 0.554518,
+      "artifact": 0.554518,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "marginal_spearman",
+      "statement": "marginal (unadjusted) Spearman rho of sway and TMT-A",
+      "expect": 0.5316791333,
+      "artifact": 0.531679,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "attenuated",
+      "statement": "the partial correlation is attenuated relative to the marginal (age accounts for much of the link)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n",
+      "statement": "subjects with sway, TMT-A and age (complete triples)",
+      "expect": 158,
+      "artifact": 158,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "paper": "eeg-bandpower-welch-eegmmidb",
+  "n_claims": 8,
+  "n_grounded": 8,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "mean_delta_power",
+      "statement": "mean Welch delta-band (0.5-4 Hz) power across the 64-channel montage",
+      "expect": 264.39038,
+      "artifact": 264.39038,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_alpha_power",
+      "statement": "mean Welch alpha-band (8-13 Hz) power across the montage",
+      "expect": 617.382241,
+      "artifact": 617.382241,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "mean_rel_alpha",
+      "statement": "mean relative alpha power (alpha / total) across the montage",
+      "expect": 0.418457,
+      "artifact": 0.418457,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_rel_alpha",
+      "statement": "peak relative alpha power -- the posterior alpha-dominant channel (eyes-closed)",
+      "expect": 0.734383,
+      "artifact": 0.734383,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "max |bandPower Welch - scipy.signal.welch| over all 64 channels x 5 bands (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "posterior_mean_relalpha",
+      "statement": "mean relative alpha over posterior (O/PO/Iz) channels",
+      "expect": 0.685932,
+      "artifact": 0.685932,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "frontal_mean_relalpha",
+      "statement": "mean relative alpha over frontal (Fp/AF/F) channels -- much lower",
+      "expect": 0.283871,
+      "artifact": 0.283871,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_channels",
+      "statement": "EEG channels validated (full eegmmidb montage)",
+      "expect": 64,
+      "artifact": 64,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

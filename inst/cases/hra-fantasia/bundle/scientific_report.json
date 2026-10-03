@@ -1,0 +1,139 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:hra_c1_cohort",
+      "status": "PASS",
+      "detail": "9/9 agree [gi=50.417 vs ref 50.417; si=50.515 vs ref 50.515; pi=53.968 vs ref 53.968; c1d=0.58429 vs ref 0.58429; c1a=0.41571 vs ref 0.41571; c2d=0.41129 vs ref 0.41129; c2a=0.58871 vs ref 0.58871; max_diff_nk=7.1054e-15 vs ref 0; n_rr=392 vs ref 392]",
+      "citation": "Guzik P et al. (2006). Heart rate asymmetry by Poincare plots of RR intervals. Biomed Tech 51(4):272-275. Piskorski J, Guzik P (2011). Asymmetric properties of long-term and total HRV. Med Biol Eng Comput 49(11):1289-1297. Reference impl: NeuroKit2 hrv_nonlinear (Makowski et al. 2021). Data: Fantasia Database, PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "n_rr": 392,
+    "gi": 50.416983,
+    "si": 50.514533,
+    "pi": 53.968254,
+    "c1d": 0.584288,
+    "c1a": 0.415712,
+    "c2d": 0.411294,
+    "c2a": 0.588706,
+    "max_diff_nk": 7.105427357601e-15,
+    "n_subj_c1d_gt_c1a": 8
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "hra_c1_cohort",
+    "citation": "Guzik P et al. (2006). Heart rate asymmetry by Poincare plots of RR intervals. Biomed Tech 51(4):272-275. Piskorski J, Guzik P (2011). Asymmetric properties of long-term and total HRV. Med Biol Eng Comput 49(11):1289-1297. Reference impl: NeuroKit2 hrv_nonlinear (Makowski et al. 2021). Data: Fantasia Database, PhysioNet.",
+    "description": "re-computes the heart-rate-asymmetry indices with NeuroKit2 hrv_nonlinear (GI/SI/PI + the deceleration/acceleration contributions C1d/C1a/C2d/C2a) and confirms the newly-authored ecgHRVasymmetry op reproduces them bit-for-bit; reports the op's indices, the bit-exact NeuroKit2 agreement, and the RR count",
+    "from_step": {},
+    "scores": {
+      "gi": 50.416983,
+      "si": 50.514533,
+      "pi": 53.968254,
+      "c1d": 0.584288,
+      "c1a": 0.415712,
+      "c2d": 0.411294,
+      "c2a": 0.588706,
+      "max_diff_nk": 7.105427357601e-15,
+      "n_rr": 392,
+      "n_subj_c1d_gt_c1a": 8
+    },
+    "checks": [
+      {
+        "metric": "gi",
+        "expect": 50.416983,
+        "tol": 0.001,
+        "ref_value": 50.416983,
+        "term_value": 50.416983
+      },
+      {
+        "metric": "si",
+        "expect": 50.514533,
+        "tol": 0.001,
+        "ref_value": 50.514533,
+        "term_value": 50.514533
+      },
+      {
+        "metric": "pi",
+        "expect": 53.968254,
+        "tol": 0.001,
+        "ref_value": 53.968254,
+        "term_value": 53.968254
+      },
+      {
+        "metric": "c1d",
+        "expect": 0.584288,
+        "tol": 0.0001,
+        "ref_value": 0.584288,
+        "term_value": 0.584288
+      },
+      {
+        "metric": "c1a",
+        "expect": 0.415712,
+        "tol": 0.0001,
+        "ref_value": 0.415712,
+        "term_value": 0.415712
+      },
+      {
+        "metric": "c2d",
+        "expect": 0.411294,
+        "tol": 0.0001,
+        "ref_value": 0.411294,
+        "term_value": 0.411294
+      },
+      {
+        "metric": "c2a",
+        "expect": 0.588706,
+        "tol": 0.0001,
+        "ref_value": 0.588706,
+        "term_value": 0.588706
+      },
+      {
+        "metric": "max_diff_nk",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 7.105427357601e-15
+      },
+      {
+        "metric": "n_rr",
+        "expect": 392,
+        "tol": 0.5,
+        "ref_value": 392,
+        "term_value": 392
+      }
+    ]
+  }
+}

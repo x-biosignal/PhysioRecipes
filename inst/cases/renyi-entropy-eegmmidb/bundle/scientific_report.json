@@ -1,0 +1,101 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:renyi_vs_neurokit",
+      "status": "PASS",
+      "detail": "5/5 agree [renyi_collision=2.1665 vs ref 2.1665; renyi_shannon=2.3248 vs ref 2.3248; max_diff_nk=4.4409e-16 vs ref 0; n_bins=16 vs ref 16; monotonic=1 vs ref 1]",
+      "citation": "Renyi A (1961). On measures of entropy and information. Proc 4th Berkeley Symp Math Stat Prob 1:547-561. Reference impl: NeuroKit2 entropy_renyi (Makowski et al. 2021). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "renyi_collision": 2.16653247,
+    "renyi_shannon": 2.32476577,
+    "max_diff_nk": 4.44089209850063e-16,
+    "n_bins": 16,
+    "monotonic": 1
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "renyi_vs_neurokit",
+    "citation": "Renyi A (1961). On measures of entropy and information. Proc 4th Berkeley Symp Math Stat Prob 1:547-561. Reference impl: NeuroKit2 entropy_renyi (Makowski et al. 2021). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the Renyi entropy with NeuroKit2 entropy_renyi across alpha = {0.5, 1, 2, 3} on the identical amplitude histogram; reports the collision (alpha=2) and Shannon (alpha=1) entropies, the bit-exact NeuroKit2 agreement over the family, the bin count, and whether the family is monotonically decreasing in alpha",
+    "from_step": {},
+    "scores": {
+      "renyi_collision": 2.16653247,
+      "renyi_shannon": 2.32476577,
+      "max_diff_nk": 4.44089209850063e-16,
+      "n_bins": 16,
+      "monotonic": 1
+    },
+    "checks": [
+      {
+        "metric": "renyi_collision",
+        "expect": 2.1665324673,
+        "tol": 1e-06,
+        "ref_value": 2.1665324673,
+        "term_value": 2.16653247
+      },
+      {
+        "metric": "renyi_shannon",
+        "expect": 2.3247657693,
+        "tol": 1e-06,
+        "ref_value": 2.3247657693,
+        "term_value": 2.32476577
+      },
+      {
+        "metric": "max_diff_nk",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 4.44089209850063e-16
+      },
+      {
+        "metric": "n_bins",
+        "expect": 16,
+        "tol": 0.5,
+        "ref_value": 16,
+        "term_value": 16
+      },
+      {
+        "metric": "monotonic",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      }
+    ]
+  }
+}

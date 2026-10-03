@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-07T00:00:00Z",
+  "hypothesis": {
+    "statement": "On a real eyes-closed posterior EEG channel (eegmmidb S002R02, POz), the newly-authored jarqueBeraTest reproduces scipy.stats.jarque_bera BIT-FOR-BIT for both the statistic and the p-value; and the test REJECTS normality (JB above the 95% chi-square critical value) even though signalMoments finds the distribution descriptively near-Gaussian -- the large-N power nuance.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "jarque_bera_normality"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), channel POz (posterior), first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "jarqueBeraTest",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "jarque_bera_normality",
+      "threshold": "descriptive: jarqueBeraTest equals scipy.stats.jarque_bera to machine precision (|diff| < 1e-9); the statistic exceeds the 95% critical value"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "52160374e296617f08ca7becbc7fab604c7587f051d16f85c100d96edb289be6",
+    "registered_at": "2026-09-07T00:00:00Z"
+  }
+}

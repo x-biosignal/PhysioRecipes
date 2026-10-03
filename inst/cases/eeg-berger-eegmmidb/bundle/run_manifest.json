@@ -1,0 +1,73 @@
+{
+  "schema": "runtrace/1",
+  "seed": 3,
+  "env": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "platform": "x86_64-pc-linux-gnu",
+    "packages": {
+      "PhysioCore": "0.2.0",
+      "PhysioIO": "0.2.3",
+      "PhysioPreprocess": "0.4.0",
+      "PhysioAnalysis": "0.3.5"
+    },
+    "renv_lock": "renv.lock",
+    "renv_lock_hash": "c110eee44b476fb2"
+  },
+  "op_dag": [
+    {
+      "op": 1,
+      "activity": "readEDF",
+      "package": "PhysioIO",
+      "version": "0.2.3",
+      "params": {
+        "channels": "O1.."
+      }
+    },
+    {
+      "op": 2,
+      "activity": "butterworthFilter",
+      "package": "PhysioPreprocess",
+      "version": "0.4.0",
+      "params": {
+        "low": 1,
+        "high": 45
+      }
+    },
+    {
+      "op": 3,
+      "activity": "bandPower",
+      "package": "PhysioAnalysis",
+      "version": "0.3.5",
+      "params": {
+        "relative": true
+      }
+    }
+  ],
+  "prov_hash": "f0c3cd3a9b79fc18",
+  "outputs": {
+    "terminal_table.csv": "87e4ffdcf04e34da"
+  },
+  "algo": "xxhash64",
+  "op_dag_source": "executor",
+  "provenance_op_dag": [
+    {
+      "op": 1,
+      "activity": "readEDF",
+      "used": null,
+      "generated": "raw",
+      "package": null,
+      "version": "0.2.3",
+      "params": "{\"path\":\"S001R02.edf\",\"channels\":\"O1..\",\"resample\":false}"
+    },
+    {
+      "op": 2,
+      "activity": "butterworthFilter",
+      "used": "raw",
+      "generated": "filtered",
+      "package": null,
+      "version": "0.4.0",
+      "params": "{\"low\":1,\"high\":45,\"order\":4,\"type\":\"pass\",\"use_sos\":true,\"causal\":false,\"output_assay\":\"filtered\"}"
+    }
+  ],
+  "provenance_consistent": true
+}

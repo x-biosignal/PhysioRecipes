@@ -1,0 +1,98 @@
+{
+  "paper": "gait-grf-anova-pathology-gaitrec",
+  "n_claims": 10,
+  "n_grounded": 10,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "F_statistic",
+      "statement": "one-way ANOVA omnibus F-statistic of the vertical-GRF dynamic range across the five gait classes",
+      "expect": 73.4071188266,
+      "artifact": 73.407119,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "neg_log10_p",
+      "statement": "-log10(omnibus p): the group difference is overwhelmingly significant",
+      "expect": 57.048778,
+      "artifact": 57.048778,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "df1",
+      "statement": "between-groups degrees of freedom (k - 1)",
+      "expect": 4,
+      "artifact": 4,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "df2",
+      "statement": "within-groups degrees of freedom (N - k)",
+      "expect": 1839,
+      "artifact": 1839,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|oneWayAnova F - scipy.stats.f_oneway F| (machine precision; multi-group SS accumulation diverges at the last ULP)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_diff_baser",
+      "statement": "|oneWayAnova F - base R oneway.test(var.equal=TRUE) F| (bit-for-bit)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "hc_pathology_ratio",
+      "statement": "mean healthy-control dynamic range / mean pooled-pathology dynamic range (the effect size)",
+      "expect": 1.6466485511,
+      "artifact": 1.646649,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "hc_gt_pathology",
+      "statement": "healthy controls have a larger vGRF dynamic range than the pooled pathology classes (group means)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_total",
+      "statement": "total subjects across the five classes",
+      "expect": 1844,
+      "artifact": 1844,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "k_groups",
+      "statement": "number of gait classes compared",
+      "expect": 5,
+      "artifact": 5,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

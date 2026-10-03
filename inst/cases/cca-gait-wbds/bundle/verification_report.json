@@ -1,0 +1,53 @@
+{
+  "paper": "cca-gait-wbds",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "cca_r1",
+      "statement": "first canonical correlation between gait kinematics and kinetics, WBDS01",
+      "expect": 0.7371211004,
+      "artifact": 0.737121,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "cca_r2",
+      "statement": "second canonical correlation",
+      "expect": 0.2987900654,
+      "artifact": 0.29879,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "max_abs_diff",
+      "statement": "max |cca - stats::cancor| over the canonical correlations (machine precision)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "r1_mean5",
+      "statement": "mean first canonical correlation across all five WBDS subjects",
+      "expect": 0.7949007814,
+      "artifact": 0.794901,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "r1_min5",
+      "statement": "minimum first canonical correlation across the five subjects (robustness floor)",
+      "expect": 0.7371211004,
+      "artifact": 0.737121,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "schema": "runtrace/1",
+  "seed": 1,
+  "env": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "platform": "x86_64-pc-linux-gnu",
+    "packages": {
+      "PhysioCore": "0.4.0",
+      "PhysioWearable": "0.5.3"
+    },
+    "renv_lock": "renv.lock",
+    "renv_lock_hash": "c110eee44b476fb2"
+  },
+  "op_dag": [
+    {
+      "op": 1,
+      "activity": "computeENMO",
+      "package": "PhysioWearable",
+      "version": "0.5.3",
+      "params": {
+        "sampling_rate": 100,
+        "epoch_sec": 5,
+        "unit": "mg"
+      }
+    },
+    {
+      "op": 2,
+      "activity": "summarizeFreeLiving",
+      "package": "PhysioWearable",
+      "version": "0.5.3",
+      "params": {
+        "epoch_sec": 5,
+        "valid_wear_hours": 1
+      }
+    }
+  ],
+  "prov_hash": null,
+  "outputs": {
+    "terminal_table.csv": "93b9d0e5ca1f753f"
+  },
+  "algo": "xxhash64",
+  "op_dag_source": "executor",
+  "provenance_op_dag": [],
+  "provenance_consistent": true
+}

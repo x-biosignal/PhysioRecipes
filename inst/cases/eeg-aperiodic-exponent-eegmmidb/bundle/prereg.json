@@ -1,0 +1,36 @@
+{
+  "registered_at": "2026-09-03T00:00:00Z",
+  "hypothesis": {
+    "statement": "On the eyes-closed resting EEG of eegmmidb S001 (run R02, 64 channels, 160 Hz), the aperiodic exponent estimated by eegAperiodic (specparam/FOOOF engine, Donoghue et al. 2020) reproduces the canonical Python fooof to a strong cross-tool agreement: the per-channel exponents correlate r ~ 0.98 across the 64 channels, with a small mean absolute difference, and both engines yield physiologically plausible resting exponents (~1.4).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "eeg_aperiodic_exponent_reproduction"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S001, baseline run R02 (eyes-closed rest), all 64 channels, 160 Hz, ~61 s",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "eegAperiodic",
+        "params": {
+          "freq_range": [
+            1,
+            40
+          ],
+          "aperiodic_mode": "fixed"
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "exp_corr",
+      "estimand": "eeg_aperiodic_exponent_reproduction",
+      "threshold": "descriptive: the per-channel aperiodic exponents of eegAperiodic and the canonical fooof correlate strongly across the 64 channels (r >= 0.95) with a small mean |exponent diff| (<= 0.1), both means physiologically plausible (~1-2)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "04762ba77dd58e1405e2f17306886546a1d70af5679989589dda36f2b9b27c1f",
+    "registered_at": "2026-09-03T00:00:00Z"
+  }
+}

@@ -1,0 +1,12 @@
+"metric","value"
+"n_components",6
+"n100_latency",115
+"p180_latency",188
+"canonical_order",1
+"polarity_match",92.1
+"tep_min_channel_corr_vs_mne",1
+"tep_max_abs_diff_vs_mne_uv",8.88178419700125e-16
+"n100_latency_mne",115
+"p180_latency_mne",188
+"polarity_match_mne",92.1
+"tep_latency_max_abs_diff_vs_mne",0

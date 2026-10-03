@@ -1,0 +1,11 @@
+"metric","value"
+"iqr",76
+"q1",724
+"q3",800
+"max_diff_scipy",0
+"max_diff_baser",0
+"sdnn",73.6963099023
+"robust_sd_iqr",56.3388843032
+"robust_classical_ratio",0.7644736131
+"rr_skewness",0.0739512301
+"n_intervals",392

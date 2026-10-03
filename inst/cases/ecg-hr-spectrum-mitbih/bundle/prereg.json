@@ -1,0 +1,42 @@
+{
+  "registered_at": "2026-08-12T00:00:00Z",
+  "hypothesis": {
+    "statement": "MIT-BIH record 117 resting mean heart rate (bradycardia).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "resting_mean_hr_rec117"
+  },
+  "analysis_plan": {
+    "dataset": "MIT-BIH Arrhythmia Database (mitdb 1.0.0), MLII lead, 360 Hz, 30-min records",
+    "seed": 117,
+    "ops": [
+      {
+        "activity": "ecgDetectRpeaks",
+        "params": {
+          "method": "pan_tompkins"
+        }
+      },
+      {
+        "activity": "ecgRRintervals",
+        "params": []
+      },
+      {
+        "activity": "ecgHRVtime",
+        "params": {
+          "rhythm_check": false
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "mean_hr",
+      "estimand": "resting_mean_hr_rec117",
+      "threshold": "resting mean heart rate (bpm), MLII lead"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "82ea061269652fc7383645d2e51dcffc2b5853aca18034f19b8964474d4f2f85",
+    "registered_at": "2026-08-12T00:00:00Z"
+  }
+}

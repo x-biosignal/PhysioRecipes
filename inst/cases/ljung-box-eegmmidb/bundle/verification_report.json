@@ -1,0 +1,62 @@
+{
+  "paper": "ljung-box-eegmmidb",
+  "n_claims": 6,
+  "n_grounded": 6,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "lb_statistic",
+      "statement": "Ljung-Box Q statistic at lag h=10 of the POz signal",
+      "expect": 4165.456393,
+      "artifact": 4165.456393,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "lb_stat_diff_sm",
+      "statement": "|Ljung-Box Q - statsmodels acorr_ljungbox| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "lb_pvalue_diff_sm",
+      "statement": "|Ljung-Box p-value - statsmodels p-value| (bit-exact)",
+      "expect": 0,
+      "artifact": 0,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "critical_value_95",
+      "statement": "95% chi-square critical value at 10 df (the rejection threshold)",
+      "expect": 18.307038,
+      "artifact": 18.307038,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "reject_white_noise",
+      "statement": "the white-noise null is rejected (Q > critical; 1 = rejected)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "q_over_critical",
+      "statement": "Q as a multiple of the 95% critical value -- how decisively white noise is rejected",
+      "expect": 227.5333,
+      "artifact": 227.5331,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

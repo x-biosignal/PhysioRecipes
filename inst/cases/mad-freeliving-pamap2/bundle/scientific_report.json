@@ -1,0 +1,110 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:mad_vs_ggir_freeliving",
+      "status": "PASS",
+      "detail": "6/6 agree [mad_max_abs_diff_g=4.8184e-14 vs ref 0; mad_correlation=1 vs ref 1; n_epochs=749 vs ref 749; mean_mad_mg=232.39 vs ref 232.39; max_mad_mg=1221.9 vs ref 1221.9; min_mad_mg=4.9858 vs ref 4.9858]",
+      "citation": "Vaha-Ypya H, et al. (2015). Validation of cut-points for evaluating the intensity of physical activity with accelerometry-based mean amplitude deviation (MAD). Clin Physiol Funct Imaging 35(1):64-70. Reference impl: GGIR (CRAN) g.applymetrics MAD. Data: PAMAP2 (PhysioNet/UCI), hand accel."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "mad_max_abs_diff_g": 4.81836792687318e-14,
+    "mad_correlation": 1,
+    "n_epochs": 749,
+    "mean_mad_mg": 232.391241068152,
+    "max_mad_mg": 1221.91190781145,
+    "min_mad_mg": 4.98576815680442
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "mad_vs_ggir_freeliving",
+    "citation": "Vaha-Ypya H, et al. (2015). Validation of cut-points for evaluating the intensity of physical activity with accelerometry-based mean amplitude deviation (MAD). Clin Physiol Funct Imaging 35(1):64-70. Reference impl: GGIR (CRAN) g.applymetrics MAD. Data: PAMAP2 (PhysioNet/UCI), hand accel.",
+    "description": "re-computes the per-epoch MAD with GGIR::g.applymetrics on the identical PAMAP2 hand-acc signal (749 epochs, both in g) and reports the max abs difference, the correlation, the epoch count, and the mean/max/min MAD (mg)",
+    "from_step": {},
+    "scores": {
+      "mad_max_abs_diff_g": 4.81836792687318e-14,
+      "mad_correlation": 1,
+      "n_epochs": 749,
+      "mean_mad_mg": 232.391241068152,
+      "max_mad_mg": 1221.91190781145,
+      "min_mad_mg": 4.98576815680442
+    },
+    "checks": [
+      {
+        "metric": "mad_max_abs_diff_g",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 4.81836792687318e-14
+      },
+      {
+        "metric": "mad_correlation",
+        "expect": 1,
+        "tol": 1e-09,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "n_epochs",
+        "expect": 749,
+        "tol": 0.5,
+        "ref_value": 749,
+        "term_value": 749
+      },
+      {
+        "metric": "mean_mad_mg",
+        "expect": 232.391241,
+        "tol": 0.01,
+        "ref_value": 232.391241,
+        "term_value": 232.391241068152
+      },
+      {
+        "metric": "max_mad_mg",
+        "expect": 1221.911908,
+        "tol": 0.1,
+        "ref_value": 1221.911908,
+        "term_value": 1221.91190781145
+      },
+      {
+        "metric": "min_mad_mg",
+        "expect": 4.985768,
+        "tol": 0.01,
+        "ref_value": 4.985768,
+        "term_value": 4.98576815680442
+      }
+    ]
+  }
+}

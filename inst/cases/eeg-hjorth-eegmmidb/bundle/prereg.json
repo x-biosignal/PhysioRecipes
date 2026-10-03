@@ -1,0 +1,35 @@
+{
+  "registered_at": "2026-09-04T00:00:00Z",
+  "hypothesis": {
+    "statement": "On real eyes-closed 64-channel EEG (eegmmidb S002R02), eegComplexity's Hjorth mobility + complexity reproduce an independent numpy implementation (matched unbiased variance) bit-for-bit and antropy.hjorth_params to machine precision up to its biased-variance (ddof) convention, across all channels; and mobility is lowest over the posterior (parieto-occipital) region where the eyes-closed alpha rhythm dominates (slow oscillation = low mobility).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "hjorth_parameters_montage"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb, PhysioNet), subject S002, baseline run R02 (eyes-closed), all 64 EEG channels, first 10 s at 160 Hz (1600 samples)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "eegComplexity",
+        "params": {
+          "measures": [
+            "hjorth_mobility",
+            "hjorth_complexity"
+          ]
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "hjorth_parameters_montage",
+      "threshold": "descriptive: the Hjorth mobility + complexity equal an independent numpy implementation (unbiased n-1 variance) to machine precision (max |diff| < 1e-10) across all 64 channels, and antropy.hjorth_params to < 1e-5 (up to its biased-variance convention), AND mobility is lowest over the posterior alpha region"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "7ccfa5d32e3457202ff37eba319c76cfa735ec7f2c28b2a2b1a3402f6a5b3d00",
+    "registered_at": "2026-09-04T00:00:00Z"
+  }
+}

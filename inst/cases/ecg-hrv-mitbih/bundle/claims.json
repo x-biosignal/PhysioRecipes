@@ -1,0 +1,40 @@
+{
+  "paper": "ecg-hrv-mitbih",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "mean_hr",
+      "statement": "Mean heart rate on MIT-BIH record 100",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "channel",
+        "key": "1",
+        "val_col": "mean_hr"
+      },
+      "expect": 75.51,
+      "tol": 0.07551,
+      "render": [
+        "75.51"
+      ]
+    },
+    {
+      "id": "mean_rr",
+      "statement": "Mean RR interval (ms) on MIT-BIH record 100",
+      "artifact": "terminal_table.csv",
+      "lookup": {
+        "key_col": "channel",
+        "key": "1",
+        "val_col": "mean_rr"
+      },
+      "expect": 794.63,
+      "tol": 0.79463,
+      "render": [
+        "794.63"
+      ]
+    }
+  ]
+}

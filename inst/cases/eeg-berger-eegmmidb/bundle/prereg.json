@@ -1,0 +1,45 @@
+{
+  "registered_at": "2026-08-12T00:00:00Z",
+  "hypothesis": {
+    "statement": "Eyes-closed occipital (O1..) EEG is dominated by the alpha rhythm.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "eyes_closed_alpha_O1.."
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb), subject S001, 64ch, 160 Hz",
+    "seed": 3,
+    "ops": [
+      {
+        "activity": "readEDF",
+        "params": {
+          "channels": "O1.."
+        }
+      },
+      {
+        "activity": "butterworthFilter",
+        "params": {
+          "low": 1,
+          "high": 45
+        }
+      },
+      {
+        "activity": "bandPower",
+        "params": {
+          "relative": true
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "alpha_dominance",
+      "estimand": "eyes_closed_alpha_O1..",
+      "threshold": "relative alpha power > every other band"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "0cf08b7b159ada0ba6383eb0548173a765699a9bc3abd7eacb5253dd43622f61",
+    "registered_at": "2026-08-12T00:00:00Z"
+  }
+}

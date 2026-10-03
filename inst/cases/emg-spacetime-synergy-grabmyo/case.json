@@ -1,0 +1,35 @@
+{
+  "id": "emg-spacetime-synergy-grabmyo",
+  "title": "Which muscles, and when: space-by-time (sNM3F) muscle synergies from real forearm EMG",
+  "modality": ["emg", "muscle-synergy", "dimensionality-reduction"],
+  "packages": ["PhysioEMG"],
+  "dataset": {
+    "name": "GRABMyo (Gesture Recognition and Biometrics ElectroMyogram)",
+    "version": "PhysioNet (Pradhan, He & Jiang)",
+    "record": "session 1, participant 1, 16 forearm channels; 2 gestures x 7 trials; 20-450 Hz bandpass, rectified, 8 Hz envelope, per-muscle normalised, time-normalised to 60 points",
+    "url": "https://physionet.org/content/grabmyo/",
+    "public": true,
+    "citation": "Pradhan A, He J, Jiang N. Multi-day dataset of forearm and wrist electromyogram for hand gesture recognition and biometrics. Sci Data 2022; PhysioNet doi:10.13026/rd4p-4w49."
+  },
+  "proposition": "Spatial NMF asks WHICH muscles group; space-by-time (sNM3F) also asks WHEN. On real forearm EMG the ecosystem factorises each trial's 16-muscle x 60-time envelope (960 values) into a few SHARED spatial modules and SHARED temporal modules plus a tiny per-trial activation matrix: a 2x2 model (4 shared modules) reconstructs the multi-trial EMG at VAF 0.958, and a 3x3 model at 0.968 -- so each trial is compressed to just a handful of activation coefficients over common modules, and those activations carry the gesture above chance (leave-one-out accuracy 0.64 vs 0.50).",
+  "opdag": ["spaceByTimeSynergy"],
+  "claims": [
+    { "id": "vaf_2x2",     "statement": "reconstruction VAF of the 2 spatial x 2 temporal model",              "value": 0.958, "artifact": "artifacts/spacetime_summary.csv", "status": "PASS" },
+    { "id": "vaf_1x1",     "statement": "VAF of the single spatial x single temporal model",                   "value": 0.930, "artifact": "artifacts/spacetime_summary.csv", "status": "PASS" },
+    { "id": "vaf_3x3",     "statement": "VAF of the 3 spatial x 3 temporal model",                             "value": 0.968, "artifact": "artifacts/spacetime_summary.csv", "status": "PASS" },
+    { "id": "gesture_acc", "statement": "leave-one-out gesture accuracy from the activation coefficients",     "value": 0.643, "artifact": "artifacts/spacetime_summary.csv", "status": "PASS" },
+    { "id": "n_trials",    "statement": "EMG trials decomposed",                                               "value": 14,    "artifact": "artifacts/spacetime_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "The sample-based non-negative matrix tri-factorisation (sNM3F; Delis et al. 2014) reconstructs a set of muscle x time EMG trials from a SMALL number of shared spatial modules (which muscles co-activate) and shared temporal modules (when), combined by a per-trial activation matrix -- achieving high variance-accounted-for with few modules, and with the activations carrying task identity. A correct implementation must (1) reach high VAF with a compact model, (2) increase VAF monotonically with module count, and (3) let the activations discriminate the task above chance.",
+    "data": "REAL -- GRABMyo (PhysioNet), 16 forearm EMG channels, 2 gestures x 7 trials",
+    "artifacts": ["artifacts/spacetime_summary.csv", "artifacts/vaf_curve.csv"],
+    "all_pass": true,
+    "note": "The headline is COMPRESSION with interpretable structure: a 2x2 model -- two shared spatial modules (16x2) and two shared temporal modules (60x2) common to all 14 trials, plus a per-trial 2x2 activation -- reconstructs each trial's 960-value EMG at 0.958 VAF, so a new trial adds only four numbers. VAF rises monotonically (0.930 / 0.958 / 0.968 / 0.973 for 1..4 modules, vaf_curve.csv). Honest scope: the activation-based gesture discrimination is MODEST (leave-one-out 0.64 vs 0.50 chance) because only two similar gestures x seven trials from one participant are used -- it shows the activations carry task information, not a strong classifier; more gestures/participants would sharpen it. The spatial/temporal modules are shared by construction; the task-specificity lives in the activations, which is the sNM3F design."
+  },
+  "open_questions": [
+    { "q": "With more gestures and participants the activation coefficients should separate tasks much more sharply (a decoding case in its own right), and the shared spatial/temporal modules could be tested for cross-participant invariance. Documented, not escalated.", "artifact": "artifacts/spacetime_summary.csv", "escalate": null }
+  ],
+  "reference_tools": [],
+  "status": "validated"
+}

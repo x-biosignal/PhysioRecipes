@@ -1,0 +1,53 @@
+{
+  "paper": "emg-network-grabmyo",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "coherence_edge_r",
+      "statement": "split-half edge-weight correlation, coherence network",
+      "expect": 0.9942,
+      "artifact": 0.994178,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "partial_edge_r",
+      "statement": "split-half edge-weight correlation, partial coherence",
+      "expect": 0.9747,
+      "artifact": 0.97472,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "wpli_edge_r",
+      "statement": "split-half edge-weight correlation, wPLI",
+      "expect": 0.8352,
+      "artifact": 0.83515,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "gc_edge_r",
+      "statement": "split-half edge-weight correlation, directed Granger causality",
+      "expect": 0.9389,
+      "artifact": 0.940057,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "coherence_node_r",
+      "statement": "split-half node-strength correlation, coherence network",
+      "expect": 0.9969,
+      "artifact": 0.994299,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

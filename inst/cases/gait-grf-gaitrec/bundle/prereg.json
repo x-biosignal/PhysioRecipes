@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-09-02T00:00:00Z",
+  "hypothesis": {
+    "statement": "On real GaitRec vertical GRF, time-normalised to the stance phase in body-weight units, the knee-pathology cohort (K) shows the classic reduced weight-acceptance modulation versus healthy controls (HC): a lower loading (first) peak and a raised mid-stance trough -- a flatter double hump.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "grf_landmark_cohort_contrast"
+  },
+  "analysis_plan": {
+    "dataset": "GaitRec (figshare collection 4788012), processed vertical GRF (F_V_PRO left+right); HC self-selected speed + standardised footwear (208 subjects) vs K at initial presentation + standardised footwear (499 subjects); per-subject stance-normalised body-weight curves (101 pts).",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "grfLandmarks",
+        "params": []
+      }
+    ],
+    "decision": {
+      "statistic": "control_peak1_bw - patient_peak1_bw",
+      "estimand": "grf_landmark_cohort_contrast",
+      "threshold": "descriptive: the three stance landmarks (loading peak / mid-stance trough / push-off peak) per cohort; the pathological pattern is patient loading peak < control (peak1) AND patient mid-stance trough > control (trough), with a first-peak effect size for scale"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "7502c402d609bd4bd722afdeb4b1786d742e0d61f7384dcee7d7218c0f186235",
+    "registered_at": "2026-09-02T00:00:00Z"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "gait-multimodal-fusion-fukuchi",
+  "title": "Integrating kinematics and kinetics: the shared, speed-driven structure of gait across modalities",
+  "modality": ["gait", "biomechanics", "kinematics", "kinetics", "multimodal-fusion"],
+  "packages": ["PhysioCrossModal"],
+  "dataset": {
+    "name": "A public dataset of overground and treadmill walking kinematics and kinetics (WBDS)",
+    "version": "figshare 5722711 (Fukuchi et al. 2018)",
+    "record": "42 adults x 8 treadmill speeds; KINEMATICS = right hip/knee/ankle sagittal angle over the gait cycle, KINETICS = vertical ground reaction force time-normalised to the gait cycle; 328 observations",
+    "url": "https://peerj.com/articles/4640/",
+    "public": true,
+    "citation": "Fukuchi CA, Fukuchi RK, Duarte M. A public dataset of overground and treadmill walking kinematics and kinetics in healthy individuals. PeerJ 2018;6:e4640; data figshare doi:10.6084/m9.figshare.5722711 (CC-BY 4.0)."
+  },
+  "proposition": "Gait is measured in many modalities; the question is what they SHARE. Integrating real kinematics (joint angles) and kinetics (ground reaction force) of 42 adults across 8 speeds, the ecosystem finds a strong cross-modal coupling that a single number would miss: canonical correlation analysis gives a top canonical correlation of 0.87 between kinematics and kinetics, and JIVE's cross-modal JOINT component tracks walking speed (r = -0.70) -- the shared, speed-driven gait pattern -- while most of each modality's variance (kinematics 79%, kinetics 62%) is modality-specific. The whole-block RV is only 0.088, which is exactly why CCA and JIVE, not RV alone, reveal the coupling.",
+  "opdag": ["jive", "cca", "rvCoefficient"],
+  "claims": [
+    { "id": "cca1",          "statement": "top canonical correlation between kinematics and kinetics",          "value": 0.874,  "artifact": "artifacts/fusion_summary.csv", "status": "PASS" },
+    { "id": "joint_speed_r", "statement": "correlation of the JIVE joint (shared) score with walking speed",     "value": -0.700, "artifact": "artifacts/fusion_summary.csv", "status": "PASS" },
+    { "id": "joint_kin",     "statement": "JIVE joint (shared) variance fraction of the kinematics block",       "value": 0.211,  "artifact": "artifacts/fusion_summary.csv", "status": "PASS" },
+    { "id": "joint_kinet",   "statement": "JIVE joint (shared) variance fraction of the kinetics block",         "value": 0.381,  "artifact": "artifacts/fusion_summary.csv", "status": "PASS" },
+    { "id": "rv",            "statement": "RV coefficient (whole-block association), modest but significant",     "value": 0.088,  "artifact": "artifacts/fusion_summary.csv", "status": "PASS" },
+    { "id": "n_obs",         "statement": "subject-speed observations fused",                                     "value": 328,    "artifact": "artifacts/fusion_summary.csv", "status": "PASS" }
+  ],
+  "validation": {
+    "reference": "Gait kinematics and kinetics are physically coupled (through the body's dynamics) and both scale systematically with walking speed. A correct multi-modal fusion must (1) recover a strong canonical coupling between the two modalities (CCA), and (2) identify a SHARED (cross-modal) component that tracks walking speed (JIVE joint), while acknowledging that most of each modality's variance is modality-specific -- so a single whole-block statistic (RV) understates the coupling.",
+    "data": "REAL -- Fukuchi et al. 2018 (figshare 5722711), 42 subjects x 8 treadmill speeds, kinematics + kinetics",
+    "artifacts": ["artifacts/fusion_summary.csv", "artifacts/jive_variance.csv"],
+    "all_pass": true,
+    "note": "The reproducible finding is the SHARED, speed-driven cross-modal structure: CCA's top canonical correlation is 0.87 (strong kinematics<->kinetics coupling), and JIVE's joint component correlates -0.70 with walking speed -- the common gait driver -- while the JIVE individual components hold most of each modality's variance (kinematics 60%, kinetics 51% individual). The whole-block RV is only 0.088 (significant, p=0.0005) BECAUSE the shared structure is a low-dimensional (~speed) direction within otherwise modality-specific variance -- the case's teaching point: RV, CCA and JIVE answer different questions, and you need more than RV to see the coupling. Honest scope: (1) the treadmill vertical GRF (one belt) is in the dataset's own force units; each block is centred/scaled so absolute GRF units do not affect the shared-structure analysis; (2) speed is the ordinal trial level T01..T08, not m/s; (3) GRF cycles were time-normalised by heel-strike detection on Fz, so the kinetics block is a normalised vertical-GRF profile, not the full 3-D kinetics."
+  },
+  "open_questions": [
+    { "q": "Adding EMG and IMU blocks (a genuine 4-modality fusion) and using coupledNMF / multimodalGaitIndex would extend this to a full multi-modal gait signature; that needs a synchronised EMG+kinematics+kinetics+IMU cohort. Documented, not escalated.", "artifact": "artifacts/jive_variance.csv", "escalate": null }
+  ],
+  "reference_tools": [],
+  "status": "validated"
+}

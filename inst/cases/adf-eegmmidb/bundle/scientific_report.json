@@ -1,0 +1,110 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:adf_vs_statsmodels",
+      "status": "PASS",
+      "detail": "6/6 agree [adf_statistic=-22.361 vs ref -22.361; adf_stat_diff_sm=7.1054e-15 vs ref 0; sm_critical_5pct=-2.8634 vs ref -2.8634; reject_unit_root=1 vs ref 1; margin_below_critical=-19.497 vs ref -19.497; n_obs=1598 vs ref 1598]",
+      "citation": "Dickey DA, Fuller WA (1979). Distribution of the estimators for autoregressive time series with a unit root. JASA 74:427-431. Reference impl: statsmodels.tsa.stattools.adfuller (Seabold & Perktold 2010). Data: eegmmidb, PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "adf_statistic": -22.36064585,
+    "adf_stat_diff_sm": 7.105427357601e-15,
+    "sm_critical_5pct": -2.86335,
+    "reject_unit_root": 1,
+    "margin_below_critical": -19.4973,
+    "n_obs": 1598
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "adf_vs_statsmodels",
+    "citation": "Dickey DA, Fuller WA (1979). Distribution of the estimators for autoregressive time series with a unit root. JASA 74:427-431. Reference impl: statsmodels.tsa.stattools.adfuller (Seabold & Perktold 2010). Data: eegmmidb, PhysioNet.",
+    "description": "re-computes the ADF statistic with statsmodels.tsa.stattools.adfuller(autolag=None) on the identical signal; reports the statistic, the bit-exact agreement, statsmodels' 5% critical value, whether the unit-root null is rejected (stationary), the margin, and n",
+    "from_step": {},
+    "scores": {
+      "adf_statistic": -22.36064585,
+      "adf_stat_diff_sm": 7.105427357601e-15,
+      "sm_critical_5pct": -2.86335,
+      "reject_unit_root": 1,
+      "margin_below_critical": -19.4973,
+      "n_obs": 1598
+    },
+    "checks": [
+      {
+        "metric": "adf_statistic",
+        "expect": -22.36064585,
+        "tol": 1e-06,
+        "ref_value": -22.36064585,
+        "term_value": -22.36064585
+      },
+      {
+        "metric": "adf_stat_diff_sm",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 7.105427357601e-15
+      },
+      {
+        "metric": "sm_critical_5pct",
+        "expect": -2.86335,
+        "tol": 0.0001,
+        "ref_value": -2.86335,
+        "term_value": -2.86335
+      },
+      {
+        "metric": "reject_unit_root",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      },
+      {
+        "metric": "margin_below_critical",
+        "expect": -19.4973,
+        "tol": 0.01,
+        "ref_value": -19.4973,
+        "term_value": -19.4973
+      },
+      {
+        "metric": "n_obs",
+        "expect": 1598,
+        "tol": 0.5,
+        "ref_value": 1598,
+        "term_value": 1598
+      }
+    ]
+  }
+}

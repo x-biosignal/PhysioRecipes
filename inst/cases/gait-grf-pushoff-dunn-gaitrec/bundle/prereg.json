@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-09-11T00:00:00Z",
+  "hypothesis": {
+    "statement": "In Dunn's post-hoc of the vertical-GRF push-off peak across GaitRec's five gait classes, healthy controls differ from all four pathology classes AND -- unlike the dynamic range -- several pathology-pathology pairs also differ; the newly-authored dunnTest reproduces the PMCMRplus package and scikit_posthocs.posthoc_dunn to machine precision.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "pairwise_rank_comparisons"
+  },
+  "analysis_plan": {
+    "dataset": "GaitRec (Horsak et al. 2020); Dunn's test (Bonferroni) of the vertical-GRF push-off peak (grfLandmarks 3rd landmark) across the five gait classes",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "dunnTest",
+        "params": {
+          "p_adjust": "bonferroni"
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "abs_diff",
+      "estimand": "pairwise_rank_comparisons",
+      "threshold": "descriptive: dunnTest equals PMCMRplus::kwAllPairsDunnTest and scipy scikit_posthocs.posthoc_dunn to machine precision (|diff| < 1e-9); all four healthy-vs-pathology pairs are significant and several pathology-pathology pairs are too"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "eff6d473810afc8b9198af015a697a2fee20ea88b91e74d0b6d78d935cfad342",
+    "registered_at": "2026-09-11T00:00:00Z"
+  }
+}

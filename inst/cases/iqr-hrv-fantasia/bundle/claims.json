@@ -1,0 +1,145 @@
+{
+  "paper": "iqr-hrv-fantasia",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "iqr",
+      "statement": "interquartile range of the RR intervals (robust HRV dispersion)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "iqr",
+        "val_col": "value"
+      },
+      "expect": 76,
+      "tol": 0.076,
+      "render": [
+        "76"
+      ]
+    },
+    {
+      "id": "q1",
+      "statement": "first quartile (25th percentile) of the RR intervals",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "q1",
+        "val_col": "value"
+      },
+      "expect": 724,
+      "tol": 0.724,
+      "render": [
+        "724"
+      ]
+    },
+    {
+      "id": "q3",
+      "statement": "third quartile (75th percentile) of the RR intervals",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "q3",
+        "val_col": "value"
+      },
+      "expect": 800,
+      "tol": 0.8,
+      "render": [
+        "800"
+      ]
+    },
+    {
+      "id": "max_diff_scipy",
+      "statement": "|interquartileRange - scipy.stats.iqr| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_scipy",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 0.02,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "max_diff_baser",
+      "statement": "|interquartileRange - base R IQR| (bit-exact)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "max_diff_baser",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 0.02,
+      "render": [
+        "0"
+      ]
+    },
+    {
+      "id": "sdnn",
+      "statement": "SDNN (classical SD of the RR intervals) for the robust-vs-classical comparison",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "sdnn",
+        "val_col": "value"
+      },
+      "expect": 73.6963099023275,
+      "tol": 0.0736963099023275,
+      "render": [
+        "73.6963099"
+      ]
+    },
+    {
+      "id": "robust_classical_ratio",
+      "statement": "robust IQR-based SD / SDNN -- below 1 for a heavy-tailed distribution",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "robust_classical_ratio",
+        "val_col": "value"
+      },
+      "expect": 0.764461996044049,
+      "tol": 0.02,
+      "render": [
+        "0.764461996"
+      ]
+    },
+    {
+      "id": "rr_skewness",
+      "statement": "skewness of the RR distribution (non-Gaussian, right-skewed)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "rr_skewness",
+        "val_col": "value"
+      },
+      "expect": 0.073951230122033,
+      "tol": 0.02,
+      "render": [
+        "0.07395123012"
+      ]
+    },
+    {
+      "id": "n_intervals",
+      "statement": "RR intervals in the 5-minute window",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_intervals",
+        "val_col": "value"
+      },
+      "expect": 392,
+      "tol": 0.392,
+      "render": [
+        "392"
+      ]
+    }
+  ]
+}

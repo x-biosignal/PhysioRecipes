@@ -1,0 +1,85 @@
+{
+  "paper": "ppg-hr-bidmc",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "pearson_r",
+      "statement": "Pearson correlation of PPG pulse rate vs ECG heart rate across records",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "pearson_r",
+        "val_col": "value"
+      },
+      "expect": 0.9598,
+      "tol": 0.02,
+      "render": [
+        "0.9598"
+      ]
+    },
+    {
+      "id": "mean_bias",
+      "statement": "Bland-Altman mean bias (PPG - ECG), bpm",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mean_bias",
+        "val_col": "value"
+      },
+      "expect": -2.14,
+      "tol": 0.02,
+      "render": [
+        "-2.14"
+      ]
+    },
+    {
+      "id": "loa_lower",
+      "statement": "Bland-Altman lower 95% limit of agreement, bpm",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "loa_lower",
+        "val_col": "value"
+      },
+      "expect": -9.36,
+      "tol": 0.02,
+      "render": [
+        "-9.36"
+      ]
+    },
+    {
+      "id": "loa_upper",
+      "statement": "Bland-Altman upper 95% limit of agreement, bpm",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "loa_upper",
+        "val_col": "value"
+      },
+      "expect": 5.09,
+      "tol": 0.02,
+      "render": [
+        "5.09"
+      ]
+    },
+    {
+      "id": "within5",
+      "statement": "percent of records agreeing within +/-5 bpm",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "within5",
+        "val_col": "value"
+      },
+      "expect": 90.4,
+      "tol": 0.0904,
+      "render": [
+        "90.4"
+      ]
+    }
+  ]
+}

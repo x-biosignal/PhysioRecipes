@@ -1,0 +1,9 @@
+"metric","value"
+"coherence_edge_r",0.9941782559
+"partial_coherence_edge_r",0.974719581
+"wpli_edge_r",0.8351501085
+"directed_gc_edge_r",0.9400573363
+"coherence_node_r",0.9942985571
+"partial_coherence_node_r",0.8764399683
+"wpli_node_r",0.8944187546
+"directed_gc_node_r",0.9354323471

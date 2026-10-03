@@ -1,0 +1,45 @@
+{
+  "registered_at": "2026-08-12T00:00:00Z",
+  "hypothesis": {
+    "statement": "S001 eyes-closed occipital O1 relative band power.",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "eyes_closed_alpha_O1_S001"
+  },
+  "analysis_plan": {
+    "dataset": "EEG Motor Movement/Imagery Database (eegmmidb), subjects S001-S010, 64ch, 160 Hz",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "readEDF",
+        "params": {
+          "channels": "O1.."
+        }
+      },
+      {
+        "activity": "butterworthFilter",
+        "params": {
+          "low": 1,
+          "high": 45
+        }
+      },
+      {
+        "activity": "bandPower",
+        "params": {
+          "relative": true
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "alpha_relative_power",
+      "estimand": "eyes_closed_alpha_O1_S001",
+      "threshold": "relative alpha power at O1 (Berger reactivity contrast at case level)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "1f75bf3035731c085a877fc049715e03571f4136a0edb1045f1f19ad484623d3",
+    "registered_at": "2026-08-12T00:00:00Z"
+  }
+}

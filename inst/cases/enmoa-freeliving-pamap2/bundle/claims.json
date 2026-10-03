@@ -1,0 +1,100 @@
+{
+  "paper": "enmoa-freeliving-pamap2",
+  "artifacts_root": ".",
+  "manuscript": [
+    "report.md"
+  ],
+  "whitelist_regex": [],
+  "claims": [
+    {
+      "id": "enmoa_max_abs_diff_g",
+      "statement": "max |computeENMOa - GGIR g.applymetrics ENMOa| over all epochs (g) -- bit-exact",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "enmoa_max_abs_diff_g",
+        "val_col": "value"
+      },
+      "expect": 0,
+      "tol": 1e-09,
+      "render": [
+        "2e-14"
+      ]
+    },
+    {
+      "id": "enmoa_correlation",
+      "statement": "correlation between computeENMOa and GGIR ENMOa across epochs",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "enmoa_correlation",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 1e-09,
+      "render": [
+        "1.000"
+      ]
+    },
+    {
+      "id": "n_epochs",
+      "statement": "number of 5 s epochs certified against GGIR",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "n_epochs",
+        "val_col": "value"
+      },
+      "expect": 749,
+      "tol": 0.5,
+      "render": [
+        "749"
+      ]
+    },
+    {
+      "id": "mean_enmoa_mg",
+      "statement": "mean ENMOa across the recording (mg) -- a physical movement-intensity descriptor",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "mean_enmoa_mg",
+        "val_col": "value"
+      },
+      "expect": 224.325129,
+      "tol": 0.01,
+      "render": [
+        "224 mg"
+      ]
+    },
+    {
+      "id": "enmoa_ge_enmo",
+      "statement": "ENMOa >= ENMO at every epoch (the abs retains sub-1 g dips ENMO truncates)",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "enmoa_ge_enmo",
+        "val_col": "value"
+      },
+      "expect": 1,
+      "tol": 0.5,
+      "render": [
+        "yes"
+      ]
+    },
+    {
+      "id": "enmoa_minus_enmo_mg",
+      "statement": "mean ENMOa - mean ENMO (mg) -- the sub-1 g movement ENMO discards",
+      "artifact": "benchmark_table.csv",
+      "lookup": {
+        "key_col": "metric",
+        "key": "enmoa_minus_enmo_mg",
+        "val_col": "value"
+      },
+      "expect": 62.642543,
+      "tol": 0.1,
+      "render": [
+        "63 mg"
+      ]
+    }
+  ]
+}

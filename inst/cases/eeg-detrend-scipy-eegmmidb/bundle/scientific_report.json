@@ -1,0 +1,110 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:detrend_vs_scipy",
+      "status": "PASS",
+      "detail": "6/6 agree [max_diff_scipy=9.9476e-13 vs ref 0; slope_removed_uv_per_sample=0.014031 vs ref 0.014031; lowfreq_power_raw=1283.7 vs ref 1283.7; lowfreq_power_linear=58.852 vs ref 58.852; lowfreq_power_constant=111.88 vs ref 111.88; leakage_reduction_pct=47.397 vs ref 47.397]",
+      "citation": "scipy.signal.detrend (Virtanen et al. 2020); least-squares linear/constant detrending. Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "max_diff_scipy": 9.9475983006414e-13,
+    "slope_removed_uv_per_sample": 0.014031,
+    "lowfreq_power_raw": 1283.7017,
+    "lowfreq_power_linear": 58.8515,
+    "lowfreq_power_constant": 111.8781,
+    "leakage_reduction_pct": 47.3968
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "detrend_vs_scipy",
+    "citation": "scipy.signal.detrend (Virtanen et al. 2020); least-squares linear/constant detrending. Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "re-computes the linear and constant detrend with scipy.signal.detrend (bit-exact) and quantifies the spectral leakage -- the sub-1-Hz Welch power of the raw, linear-detrended, and constant-detrended signal -- reporting the scipy agreement, the removed slope, the three low-frequency powers, and the linear-vs-constant leakage reduction",
+    "from_step": {},
+    "scores": {
+      "max_diff_scipy": 9.9475983006414e-13,
+      "slope_removed_uv_per_sample": 0.014031,
+      "lowfreq_power_raw": 1283.7017,
+      "lowfreq_power_linear": 58.8515,
+      "lowfreq_power_constant": 111.8781,
+      "leakage_reduction_pct": 47.3968
+    },
+    "checks": [
+      {
+        "metric": "max_diff_scipy",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 9.9475983006414e-13
+      },
+      {
+        "metric": "slope_removed_uv_per_sample",
+        "expect": 0.014031,
+        "tol": 0.0001,
+        "ref_value": 0.014031,
+        "term_value": 0.014031
+      },
+      {
+        "metric": "lowfreq_power_raw",
+        "expect": 1283.7017,
+        "tol": 1,
+        "ref_value": 1283.7017,
+        "term_value": 1283.7017
+      },
+      {
+        "metric": "lowfreq_power_linear",
+        "expect": 58.8515,
+        "tol": 0.5,
+        "ref_value": 58.8515,
+        "term_value": 58.8515
+      },
+      {
+        "metric": "lowfreq_power_constant",
+        "expect": 111.8781,
+        "tol": 0.5,
+        "ref_value": 111.8781,
+        "term_value": 111.8781
+      },
+      {
+        "metric": "leakage_reduction_pct",
+        "expect": 47.3968,
+        "tol": 0.5,
+        "ref_value": 47.3968,
+        "term_value": 47.3968
+      }
+    ]
+  }
+}

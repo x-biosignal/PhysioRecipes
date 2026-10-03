@@ -1,0 +1,10 @@
+{
+  "dataset": "openhdemg sample file (emg_from_samplefile)",
+  "authors": "Valli G, Ritsche P, Casolo A, Negro F, De Vito G",
+  "repository": "distributed with the openhdemg project (Python library sample data)",
+  "url": "https://www.giacomovalli.com/openhdemg/",
+  "license": "distributed with openhdemg (GPL-3.0-licensed project); sample recording shipped for tutorial use",
+  "citation": "Valli G, Ritsche P, Casolo A, Negro F, De Vito G. Tutorial: analysis of central and peripheral motor unit properties from decomposed High-Density surface EMG signals with openhdemg. J Electromyogr Kinesiol. 2024;74:102850.",
+  "record_used": "real HD-sEMG, OT Bioelettronica, 64 channels x 66,560 samples @ 2048 Hz, with the bundled reference motor-unit decomposition",
+  "public": true
+}

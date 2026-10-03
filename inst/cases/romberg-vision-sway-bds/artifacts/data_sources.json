@@ -1,0 +1,10 @@
+{
+  "dataset": "A public data set of human balance evaluations (BDS)",
+  "source": "figshare",
+  "url": "https://doi.org/10.6084/m9.figshare.3394432",
+  "license": "CC BY 4.0",
+  "citation": "Santos DA, Duarte M. A public data set of human balance evaluations. PeerJ 2016;4:e2648. doi:10.7717/peerj.2648.",
+  "record_used": "50 subjects, one eyes-closed and one eyes-open trial on a foam surface each (60 s quiet standing, force-plate COP at 100 Hz); the derived quantity is the COP path length per trial.",
+  "pipeline": "For each of 50 subjects, the eyes-closed and eyes-open foam COP trials -> PhysioMoCap::swayMetrics (certified bit-for-bit against the Prieto reference in the sway-posturography-bds case) -> COP path length (cm). The 50x2 (ec, eo) path-length matrix -> PhysioAnalysis::pairedTTest. The benchmark reference re-computes the paired t-test with scipy.stats.ttest_rel AND base R t.test(paired=TRUE) and reports the eyes-closed/eyes-open effect. Deterministic.",
+  "note": "This REUSES the certified pairedTTest op (validated bit-for-bit against scipy.stats.ttest_rel and base R in the sibling posturography-foam-firm-bds case) -- it is a NEW FINDING, not a new op. The paired t reproduces BOTH scipy.stats.ttest_rel AND base R t.test(paired=TRUE) BIT-FOR-BIT (|diff| 0 vs each) on the new data. The per-subject COP path lengths come from swayMetrics, itself certified against the Prieto reference, so the test's inputs are validated. Finding (the Romberg / vision effect): eyes-closed foam-surface sway (mean 217 cm) exceeds eyes-open sway (mean 167 cm), a ratio of about 1.30, the difference is highly significant (t=7.57 on 49 df, p~8.8e-10), and eyes-closed exceeds eyes-open in 43 of 50 subjects. On a foam surface, where ankle proprioception is already unreliable, vision carries the balance load, so removing it destabilizes. Together with the foam-vs-firm (proprioception) and age effects, this completes the posturographic sensory triad -- the three inputs to standing balance (somatosensory, visual, and the age-related capacity to use them)."
+}

@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-09-07T00:00:00Z",
+  "hypothesis": {
+    "statement": "On real Fantasia RR intervals, the newly-authored trimmedMean reproduces BOTH scipy.stats.trim_mean AND base R mean(x, trim) BIT-FOR-BIT; and because the RR distribution is right-skewed, the plain mean exceeds the trimmed mean, which exceeds the median (mean > trimmed > median).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "trimmed_mean"
+  },
+  "analysis_plan": {
+    "dataset": "Fantasia database (PhysioNet), subject f1y01 (young healthy adult), first 5-minute RR window (392 intervals, ms)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "trimmedMean",
+        "params": {
+          "trim": 0.1
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "trimmed_mean",
+      "threshold": "descriptive: trimmedMean equals scipy.stats.trim_mean AND base R mean(x, trim) to machine precision (max |diff| < 1e-9 vs each)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "6e317cf801dafefbdda87126b26e1417da8153afff88bc6c17d0aff3bd2c983b",
+    "registered_at": "2026-09-07T00:00:00Z"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:lz_sleep_vs_antropy",
+      "status": "PASS",
+      "detail": "5/5 agree [abs_diff=0 vs ref 0; lz_n3_op=0.36397 vs ref 0.36397; lz_wake=0.46438 vs ref 0.46438; lz_rem=0.46438 vs ref 0.46438; wake_minus_n3=0.10041 vs ref 0.10041]",
+      "citation": "Lempel A, Ziv J (1976). On the complexity of finite sequences. IEEE Trans Inf Theory 22(1):75-81. Reference impl: antropy.lziv_complexity. Sleep/ consciousness: Schartner et al. (2017). Data: Sleep-EDF Expanded (PhysioNet)."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "lz_n3_op": 0.3639716568,
+    "lz_n3_antropy": 0.3639716568,
+    "abs_diff": 0,
+    "lz_wake": 0.4643776311,
+    "lz_n2": 0.4204500173,
+    "lz_rem": 0.4643776311,
+    "wake_minus_n3": 0.1004059743
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "lz_sleep_vs_antropy",
+    "citation": "Lempel A, Ziv J (1976). On the complexity of finite sequences. IEEE Trans Inf Theory 22(1):75-81. Reference impl: antropy.lziv_complexity. Sleep/ consciousness: Schartner et al. (2017). Data: Sleep-EDF Expanded (PhysioNet).",
+    "description": "validates the op's deep-sleep (N3) LZ against antropy.lziv_complexity (machine precision) and reports the per-stage LZ gradient; N3 is lowest (0.364), wake and REM highest (0.464), N2 intermediate (0.420) -- the consciousness/complexity gradient",
+    "from_step": {},
+    "scores": {
+      "lz_n3_op": 0.3639716568,
+      "lz_n3_antropy": 0.3639716568,
+      "abs_diff": 0,
+      "lz_wake": 0.4643776311,
+      "lz_n2": 0.4204500173,
+      "lz_rem": 0.4643776311,
+      "wake_minus_n3": 0.1004059743
+    },
+    "checks": [
+      {
+        "metric": "abs_diff",
+        "expect": 0,
+        "tol": 1e-09,
+        "ref_value": 0,
+        "term_value": 0
+      },
+      {
+        "metric": "lz_n3_op",
+        "expect": 0.3639716568,
+        "tol": 1e-06,
+        "ref_value": 0.3639716568,
+        "term_value": 0.3639716568
+      },
+      {
+        "metric": "lz_wake",
+        "expect": 0.4643776311,
+        "tol": 1e-06,
+        "ref_value": 0.4643776311,
+        "term_value": 0.4643776311
+      },
+      {
+        "metric": "lz_rem",
+        "expect": 0.4643776311,
+        "tol": 1e-06,
+        "ref_value": 0.4643776311,
+        "term_value": 0.4643776311
+      },
+      {
+        "metric": "wake_minus_n3",
+        "expect": 0.1004059743,
+        "tol": 1e-06,
+        "ref_value": 0.1004059743,
+        "term_value": 0.1004059743
+      }
+    ]
+  }
+}

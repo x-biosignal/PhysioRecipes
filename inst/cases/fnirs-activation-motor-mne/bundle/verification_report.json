@@ -1,0 +1,53 @@
+{
+  "paper": "fnirs-activation-motor-mne",
+  "n_claims": 5,
+  "n_grounded": 5,
+  "n_artifact_mismatch": 0,
+  "claims": [
+    {
+      "id": "mbll_r_mne",
+      "statement": "minimum per-channel correlation of the ecosystem's mbll() HbO with MNE-Python beer_lambert_law() (cross-validation of the Beer-Lambert step)",
+      "expect": 1,
+      "artifact": 1,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "hbo_activation",
+      "statement": "channels with a SIGNIFICANT positive HbO activation (Tapping - Control, p<0.05)",
+      "expect": 18,
+      "artifact": 18,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "hbr_decrease",
+      "statement": "channels with a negative HbR contrast (Tapping - Control) -- HbR falls on activation",
+      "expect": 25,
+      "artifact": 25,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "hbo_peak",
+      "statement": "grand-average HbO response peak (uM) after tapping onset",
+      "expect": 0.2139,
+      "artifact": 0.213899,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    },
+    {
+      "id": "n_channels",
+      "statement": "source-detector channels analysed",
+      "expect": 28,
+      "artifact": 28,
+      "artifact_ok": true,
+      "grounded": true,
+      "status": "GROUNDED"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "registered_at": "2026-09-05T00:00:00Z",
+  "hypothesis": {
+    "statement": "On real cardiorespiratory signals (BIDMC-01 RESP + PLETH), the newly-authored mutualInformation (histogram estimator, 16 equal-width bins, nats) reproduces sklearn.metrics.mutual_info_score on the identical binning BIT-FOR-BIT; and the mutual information of the real pair (~0.077 nats) exceeds a shuffled-surrogate control (~0.024, the histogram estimator's finite-sample bias) -- a genuine undirected dependence (the respiratory modulation shared by the two signals).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "mutual_information"
+  },
+  "analysis_plan": {
+    "dataset": "BIDMC PPG and Respiration Dataset (PhysioNet), subject 01, RESP + PLETH decimated to 25 Hz, 200 s (5001 samples each)",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "mutualInformation",
+        "params": {
+          "bins": 16
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "max_abs_diff",
+      "estimand": "mutual_information",
+      "threshold": "descriptive: the mutual information equals sklearn.metrics.mutual_info_score to machine precision (max |diff| < 1e-9), AND the real MI exceeds the shuffled-control MI"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "3fccf3db514c5ae61608be4c0d6039329d56c849cb5e7da984d7a6111906e642",
+    "registered_at": "2026-09-05T00:00:00Z"
+  }
+}

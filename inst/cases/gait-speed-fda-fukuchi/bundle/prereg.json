@@ -1,0 +1,33 @@
+{
+  "registered_at": "2026-09-02T00:00:00Z",
+  "hypothesis": {
+    "statement": "On real WBDS knee-angle gait cycles across 8 treadmill speeds (42 subjects, within-subject centred), function-on-scalar regression recovers the established speed-dependence of the knee: the speed-coefficient curve is significant (curve-wide permutation p<0.001), positive, and peaks at the swing-flexion (~65% cycle) at ~+3.3 deg per speed level; pooled peak knee flexion rises with speed (r~0.63).",
+    "direction": "two-sided"
+  },
+  "estimand": {
+    "name": "knee_waveform_speed_dependence"
+  },
+  "analysis_plan": {
+    "dataset": "WBDS (figshare 5722711), 42 adults x 8 treadmill speeds; sagittal RKneeAngleZ over the gait cycle (101 pts); 328 subject-speed curves",
+    "seed": 1,
+    "ops": [
+      {
+        "activity": "functionalRegression",
+        "params": {
+          "n_perm": 1999,
+          "seed": 1
+        }
+      }
+    ],
+    "decision": {
+      "statistic": "beta_peak_value",
+      "estimand": "knee_waveform_speed_dependence",
+      "threshold": "descriptive: the pointwise speed-coefficient curve (deg per speed level) + its curve-wide permutation p; the coefficient should be significant (p<0.05), positive at its peak, and peak in the swing phase (55-75% cycle), with peak flexion rising with speed (r>0.4)"
+    }
+  },
+  "freeze": {
+    "algo": "sha256",
+    "hash": "296850071c5f2e9ac79a6ebe08c31e38bc88fe46f2ee4a0d44dc2a683c337c54",
+    "registered_at": "2026-09-02T00:00:00Z"
+  }
+}

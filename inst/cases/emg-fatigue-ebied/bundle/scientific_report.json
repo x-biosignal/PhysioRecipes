@@ -1,0 +1,101 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "0/1 ops validated, 1 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:emg_fatigue_cohort",
+      "status": "PASS",
+      "detail": "5/5 agree [n_fatigued=14 vs ref 14; mean_fatigue_index=0.9183 vs ref 0.9183; mean_pct_change=-8.17 vs ref -8.17; mean_initial_mdf=63.35 vs ref 63.35; mean_final_mdf=58.19 vs ref 58.19]",
+      "citation": "De Luca, C.J. (1984). Myoelectrical manifestations of localized muscular fatigue in humans. Crit. Rev. Biomed. Eng. 11(4):251-279. Merletti & Parker (2004), Electromyography, Wiley-IEEE (median frequency)."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "n_fatigued": 14,
+    "mean_fatigue_index": 0.9183,
+    "mean_pct_change": -8.17,
+    "mean_initial_mdf": 63.35,
+    "mean_final_mdf": 58.19
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "emg_fatigue_cohort",
+    "citation": "De Luca, C.J. (1984). Myoelectrical manifestations of localized muscular fatigue in humans. Crit. Rev. Biomed. Eng. 11(4):251-279. Merletti & Parker (2004), Electromyography, Wiley-IEEE (median frequency).",
+    "description": "independent base-R median-frequency fatigue index (channel 1) vs the op's per-channel MDF",
+    "from_step": "dataset",
+    "scores": {
+      "n_fatigued": 14,
+      "mean_fatigue_index": 0.9183,
+      "mean_pct_change": -8.17,
+      "mean_initial_mdf": 63.35,
+      "mean_final_mdf": 58.19
+    },
+    "checks": [
+      {
+        "metric": "n_fatigued",
+        "expect": 14,
+        "tol": 0.02,
+        "ref_value": 14,
+        "term_value": 14
+      },
+      {
+        "metric": "mean_fatigue_index",
+        "expect": 0.9183,
+        "tol": 0.02,
+        "ref_value": 0.9183,
+        "term_value": 0.9183
+      },
+      {
+        "metric": "mean_pct_change",
+        "expect": -8.17,
+        "tol": 0.02,
+        "ref_value": -8.17,
+        "term_value": -8.17
+      },
+      {
+        "metric": "mean_initial_mdf",
+        "expect": 63.35,
+        "tol": 0.06335,
+        "ref_value": 63.35,
+        "term_value": 63.35
+      },
+      {
+        "metric": "mean_final_mdf",
+        "expect": 58.19,
+        "tol": 0.05819,
+        "ref_value": 58.19,
+        "term_value": 58.19
+      }
+    ]
+  }
+}

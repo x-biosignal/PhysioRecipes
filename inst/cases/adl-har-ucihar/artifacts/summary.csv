@@ -1,0 +1,6 @@
+"metric","value"
+"overall_accuracy",0.834
+"n_train_windows",7352
+"n_test_windows",2947
+"n_activities",6
+"chance_level",0.167

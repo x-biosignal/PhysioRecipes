@@ -1,0 +1,101 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "2/2 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:netphys_sleep",
+      "status": "PASS",
+      "detail": "5/5 agree [n_states=4 vs ref 4; rem_n_links=11 vs ref 11; rem_density=0.73333 vs ref 0.7333; wake_rem_reconfig=6 vs ref 6; hub_is_delta=1 vs ref 1]",
+      "citation": "Sleep-EDF Expanded (PhysioNet sleep-edfx); network-physiology framework Bashan, Bartsch, Kantelhardt, Havlin, Ivanov, Nat Commun 2012;3:702. One overnight polysomnogram, 6-node time-delay-stability network by sleep stage."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "n_states": 4,
+    "rem_n_links": 11,
+    "rem_density": 0.733333333333333,
+    "wake_rem_reconfig": 6,
+    "hub_is_delta": 1
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "netphys_sleep",
+    "citation": "Sleep-EDF Expanded (PhysioNet sleep-edfx); network-physiology framework Bashan, Bartsch, Kantelhardt, Havlin, Ivanov, Nat Commun 2012;3:702. One overnight polysomnogram, 6-node time-delay-stability network by sleep stage.",
+    "description": "the surrogate-thresholded TDS network split by sleep stage reproduces the network-physiology reconfiguration: 4 stages, REM most integrated (11 links, density 0.733), 6/15 couplings change wake->REM, and the EEG-delta rhythm is the network hub",
+    "from_step": {},
+    "scores": {
+      "n_states": 4,
+      "rem_n_links": 11,
+      "rem_density": 0.733333333333333,
+      "wake_rem_reconfig": 6,
+      "hub_is_delta": 1
+    },
+    "checks": [
+      {
+        "metric": "n_states",
+        "expect": 4,
+        "tol": 0.5,
+        "ref_value": 4,
+        "term_value": 4
+      },
+      {
+        "metric": "rem_n_links",
+        "expect": 11,
+        "tol": 0.5,
+        "ref_value": 11,
+        "term_value": 11
+      },
+      {
+        "metric": "rem_density",
+        "expect": 0.7333,
+        "tol": 0.001,
+        "ref_value": 0.7333,
+        "term_value": 0.733333333333333
+      },
+      {
+        "metric": "wake_rem_reconfig",
+        "expect": 6,
+        "tol": 0.5,
+        "ref_value": 6,
+        "term_value": 6
+      },
+      {
+        "metric": "hub_is_delta",
+        "expect": 1,
+        "tol": 0.5,
+        "ref_value": 1,
+        "term_value": 1
+      }
+    ]
+  }
+}

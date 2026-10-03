@@ -1,0 +1,11 @@
+"metric","value"
+"f_statistic",3.4157175076
+"neg_log10_p",2.064849
+"df1",4
+"df2",1839
+"max_diff_scipy",3.5527136788005e-15
+"max_diff_car",5.72875080706581e-14
+"bartlett_p",0.0790715
+"variances_differ",1
+"bartlett_disagrees",1
+"n",1844

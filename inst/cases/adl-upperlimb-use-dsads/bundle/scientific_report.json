@@ -1,0 +1,83 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:upperlimb_per_activity",
+      "status": "PASS",
+      "detail": "3/3 agree [n_dynamic=14 vs ref 14; max_abs_mag=0.343 vs ref 0.343; mean_abs_mag=0.119 vs ref 0.119]",
+      "citation": "Bailey RR et al. (2014) Arch Phys Med Rehabil 95:2213-2219; Barshan B, Altun K (2013) DSADS, UCI ML Repository #256."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "n_dynamic": 14,
+    "max_abs_mag": 0.343,
+    "mean_abs_mag": 0.119
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "upperlimb_per_activity",
+    "citation": "Bailey RR et al. (2014) Arch Phys Med Rehabil 95:2213-2219; Barshan B, Altun K (2013) DSADS, UCI ML Repository #256.",
+    "description": "Independent per-activity bilateral upper-limb use (upperLimbUse per DSADS activity block) recomputed from the two raw accelerometer streams; n_dynamic + max/mean |magnitude ratio| over the dynamic set.",
+    "from_step": "ulu",
+    "scores": {
+      "n_dynamic": 14,
+      "max_abs_mag": 0.343,
+      "mean_abs_mag": 0.119
+    },
+    "checks": [
+      {
+        "metric": "n_dynamic",
+        "expect": 14,
+        "tol": 0.02,
+        "ref_value": 14,
+        "term_value": 14
+      },
+      {
+        "metric": "max_abs_mag",
+        "expect": 0.343,
+        "tol": 0.02,
+        "ref_value": 0.343,
+        "term_value": 0.343
+      },
+      {
+        "metric": "mean_abs_mag",
+        "expect": 0.119,
+        "tol": 0.02,
+        "ref_value": 0.119,
+        "term_value": 0.119
+      }
+    ]
+  }
+}

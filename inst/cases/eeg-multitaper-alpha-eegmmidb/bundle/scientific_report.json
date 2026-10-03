@@ -1,0 +1,114 @@
+{
+  "verdict": "PROCEED",
+  "gates": [
+    {
+      "name": "validated-ops",
+      "status": "PASS",
+      "detail": "1/1 ops validated, 0 package-validated, 0 unlinked",
+      "citation": {}
+    },
+    {
+      "name": "domain-guideline",
+      "status": "SKIP",
+      "detail": "no guideline applies to these ops",
+      "citation": {}
+    },
+    {
+      "name": "effect-size+CI",
+      "status": "SKIP",
+      "detail": "descriptive/reference-range decision — effect size not applicable",
+      "citation": {}
+    },
+    {
+      "name": "multiple-comparison",
+      "status": "SKIP",
+      "detail": "0 confirmatory test(s)",
+      "citation": {}
+    },
+    {
+      "name": "power/N",
+      "status": "SKIP",
+      "detail": "no comparative test declared",
+      "citation": {}
+    },
+    {
+      "name": "reference-agreement:multitaper_vs_scipy_mne",
+      "status": "PASS",
+      "detail": "6/6 agree [peak_freq_hz=10.5 vs ref 10.5; alpha_power_fraction=0.46138 vs ref 0.46143; dpss_max_diff_vs_scipy=5.7072e-14 vs ref 0; psd_max_diff_vs_scipy=1.0743e-10 vs ref 0; psd_corr_vs_mne=0.99046 vs ref 1; n_tapers=7 vs ref 7]",
+      "citation": "Thomson DJ (1982). Spectrum estimation and harmonic analysis. Proc IEEE 70(9):1055-1096. Slepian D (1978). Bell Syst Tech J 57:1371-1430. Reference impls: scipy.signal.windows.dpss (Virtanen et al. 2020) + mne.time_frequency. psd_array_multitaper (Gramfort et al. 2013). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet."
+    }
+  ],
+  "review": [],
+  "worst": "PASS",
+  "result_metrics": {
+    "peak_freq_hz": 10.5,
+    "alpha_power_fraction": 0.46137829,
+    "dpss_max_diff_vs_scipy": 5.70716434181162e-14,
+    "psd_max_diff_vs_scipy": 1.07434061646927e-10,
+    "psd_corr_vs_mne": 0.99045743,
+    "mne_scale": 2.002802,
+    "n_tapers": 7,
+    "n_freq": 801
+  },
+  "reference": {
+    "kind": "benchmark",
+    "id": "multitaper_vs_scipy_mne",
+    "citation": "Thomson DJ (1982). Spectrum estimation and harmonic analysis. Proc IEEE 70(9):1055-1096. Slepian D (1978). Bell Syst Tech J 57:1371-1430. Reference impls: scipy.signal.windows.dpss (Virtanen et al. 2020) + mne.time_frequency. psd_array_multitaper (Gramfort et al. 2013). Data: EEG Motor Movement/Imagery Database (eegmmidb), PhysioNet.",
+    "description": "validates eegMultitaper's DPSS tapers against scipy.signal.windows.dpss and its full PSD against an independent scipy+numpy non-adaptive multitaper reconstruction (both machine precision), reports the structure correlation vs MNE psd_array_multitaper (~0.99, up to the one-sided factor-of-2) and the mne scale, and the occipital alpha peak + alpha power fraction",
+    "from_step": {},
+    "scores": {
+      "peak_freq_hz": 10.5,
+      "alpha_power_fraction": 0.46137829,
+      "dpss_max_diff_vs_scipy": 5.70716434181162e-14,
+      "psd_max_diff_vs_scipy": 1.07434061646927e-10,
+      "psd_corr_vs_mne": 0.99045743,
+      "mne_scale": 2.002802,
+      "n_tapers": 7,
+      "n_freq": 801
+    },
+    "checks": [
+      {
+        "metric": "peak_freq_hz",
+        "expect": 10.5,
+        "tol": 0.6,
+        "ref_value": 10.5,
+        "term_value": 10.5
+      },
+      {
+        "metric": "alpha_power_fraction",
+        "expect": 0.46143,
+        "tol": 0.005,
+        "ref_value": 0.46143,
+        "term_value": 0.46137829
+      },
+      {
+        "metric": "dpss_max_diff_vs_scipy",
+        "expect": 0,
+        "tol": 1e-10,
+        "ref_value": 0,
+        "term_value": 5.70716434181162e-14
+      },
+      {
+        "metric": "psd_max_diff_vs_scipy",
+        "expect": 0,
+        "tol": 1e-06,
+        "ref_value": 0,
+        "term_value": 1.07434061646927e-10
+      },
+      {
+        "metric": "psd_corr_vs_mne",
+        "expect": 1,
+        "tol": 0.02,
+        "ref_value": 1,
+        "term_value": 0.99045743
+      },
+      {
+        "metric": "n_tapers",
+        "expect": 7,
+        "tol": 0.5,
+        "ref_value": 7,
+        "term_value": 7
+      }
+    ]
+  }
+}

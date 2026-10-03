@@ -1,0 +1,13 @@
+"metric","value"
+"enmo_max_abs_diff_g",1.34198208101566e-14
+"enmo_correlation",1
+"n_epochs",749
+"intensity_gradient",-1.19318290973464
+"mvpa_min",28.5833333333333
+"astp",0.11283185840708
+"mean_enmo_mg",161.682586476098
+"intensity_gradient_ggir",-1.19318290973464
+"ig_intercept_ggir",6.57629509876308
+"ig_rsquared_ggir",0.756929512644977
+"ig_max_abs_diff_vs_ggir",0
+"n_epochs_over_4000mg",0
